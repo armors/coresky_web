@@ -4,14 +4,18 @@ import router from './router'
 import i18n from '@/languages/i18n'
 import store from '@/store'
 import VueClipboard from 'vue-clipboard2'
-
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
+import 'uno.css'
+// If you want to use ElMessage, import it.
+import "element-plus/theme-chalk/src/message.scss"
 
 import Web3 from 'web3'
 import { Web3Connector } from './util/rpc'
 import { PageLocales } from '@/util/locale'
 
 import './permission'
-
+import './styles/index.scss'
 import 'babel-polyfill'
 import Es6Promise from 'es6-promise'
 import directives from './directives/index'
@@ -20,6 +24,7 @@ Es6Promise.polyfill()
 
 const app = createApp(App)
 app.use(directives) // 调用安装指令
+app.use(ElementPlus) // 调用安装指令
 
 if(!String.prototype.myformat){
 	String.prototype.myformat = function(){

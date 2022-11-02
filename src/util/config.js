@@ -1,7 +1,7 @@
-const isDebug = false
+const isDebug = true
 export default {
   isDebug,
-  chainName: 'HECO',
+  chainName: 'Sepolia test network',
   // cdn地址
   cdnUrl: import.meta.env.VITE_APP_CDN_URL,
   // 请求地址
@@ -26,78 +26,5 @@ export default {
       local: 'en',
       txt: 'English'
     },
-    // {
-    //   local: 'tr',
-    //   txt: 'Türk'
-    // },
-    // {
-    //   local: 'fa',
-    //   txt: 'فارسی'
-    // }
   ],
-  noMoreHtml: (txt = '') => {
-    return `<p class="upwarp-nodata">${txt}</p>`
-  },
-  tradeUrls: [
-    '/trade/index',
-    '/trade/detail',
-    '/trade/history',
-    '/trade/record',
-    '/trade/kline',
-    '/mine/index',
-    '/mine/detail',
-    '/mine/withlist',
-    '/mine/rule',
-    '/mine/rebate',
-    '/mine/rebatewithlist',
-    '/rebate/index',
-    '/rebate/withlist',
-    '/box/index',
-    '/box/child',
-    '/map/index',
-    '/pool/index',
-    '/pool/detail'
-  ],
-  tradeMenus: [
-    {
-      key: 'menu.index',
-      url: '/trade/index',
-      type: 'market'
-    },
-    {
-      key: 'menu.trade',
-      url: '/trade/detail',
-      type: 'trade'
-    },
-    {
-      key: 'menu.mine',
-      url: '/mine/index',
-      type: 'mine'
-    },
-    {
-      key: 'menu.minerebate',
-      url: '/mine/rebate',
-      type: 'mine'
-    },
-    {
-      key: 'menu.pool',
-      url: '/pool/index',
-      type: 'pool'
-    },
-    {
-      key: 'menu.rebate',
-      url: '/rebate/index',
-      type: 'rebate'
-    },
-    {
-      key: 'menu.box',
-      url: '/box/index',
-      type: 'box'
-    },
-    {
-      key: 'menu.map',
-      url: '/map/index',
-      type: 'map'
-    }
-  ]
 }

@@ -49,7 +49,7 @@ module.exports = {
 			},
 			"alias": {
 				"map": [["@", "./src"]],
-				"extensions": [".js"]
+				"extensions": [".js", ".vue"]
 			}
 		},
 	}

@@ -1,23 +1,25 @@
 <template>
-  <div class="scroll">
+  <Container>
     <router-view v-slot="{ Component }">
-<!--      <keep-alive>-->
-<!--        <component :is="Component" v-if="$route.meta.keepAlive" :key="$route.path"/>-->
-<!--      </keep-alive>-->
+      <!--      <keep-alive>-->
+      <!--        <component :is="Component" v-if="$route.meta.keepAlive" :key="$route.path"/>-->
+      <!--      </keep-alive>-->
       <component :is="Component"/>
     </router-view>
-  </div>
+  </Container>
 </template>
 
 <script>
   import { computed, onMounted, onBeforeUnmount, getCurrentInstance, reactive, toRefs, watch } from "vue";
   import { useRoute } from 'vue-router'
   import { useStore } from 'vuex'
+  import Container from '@/components/Container/index'
   // import {formatAddress, formatAjaxDatas, formatDataList} from '@/util/main'
   // import Config from '@/util/config'
   export default {
     name: 'App',
     components: {
+      Container
     },
     setup () {
       // let theInterval = null
@@ -56,7 +58,7 @@
         // await _root.$rpc.contractObjInit()
         // console.log('rpc inited')
         console.log( _root.$rpc)
-        _root.$rpc.initConnection({
+        await _root.$rpc.initConnection({
           onConnect: (account, errmsg) => {
             // console.log(account)
             if (errmsg) {
@@ -105,10 +107,8 @@
   }
 </script>
 
-<style lang="less">
+<style lang="scss">
   .scroll{
-    div{
-      color: #fff;
-    }
+
   }
 </style>

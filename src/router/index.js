@@ -1,12 +1,13 @@
 // import Vue from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
+// eslint-disable-next-line import/no-unresolved
 const Index = () => import(/* webpackChunkName: "index" */ '@/pages/index')
 const routes = [
   {path: '/index', redirect: '/'},
   {
     path: '/',
-    name: 'index',
+    name: 'home',
     component: Index,
     meta: {
       keepAlive: true

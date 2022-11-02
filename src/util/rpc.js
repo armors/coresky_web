@@ -3,15 +3,20 @@ import axios from "axios";
 import BigNumber from "bignumber.js";
 import _store from '@/store'
 import WalletConnectProvider from "@walletconnect/web3-provider";
-import Web3Modal from 'web3modal';
+// import Web3Modal from 'web3modal';
+// import Web3Modal from '../plugins/web3modal';
 import Web3 from 'web3';
 import ethConfig from '@/assets/abi/eth/config'
 
 export class Web3Connector {
 	chainList = [
 		{
-			'name': 'eth',
+			'name': 'mainnet',
 			'showname': 'ETH'
+		},
+		{
+			'name': 'sepolia',
+			'showname': 'sepolia'
 		},
 	]
 
@@ -23,9 +28,7 @@ export class Web3Connector {
 		if (isNaN(tmpidx)) {
 			tmpidx = 0
 		}
-		this.chainNameIdx = tmpidx
 		this.chainName = this.chainList[tmpidx].name
-		this.chainShowName = this.chainList[tmpidx].showname
 		this.config = ethConfig()
 		this.chainId = this.getChainId(this.config)
 		this.chainUrl = this.getConfig('chain')
@@ -34,7 +37,7 @@ export class Web3Connector {
 		this.web3 = new Web3(new Web3.providers.HttpProvider(this.chainUrl));
 		// console.log(this.web3)
 
-		this.web3Ethereum = null
+		this.web3Ethereum = window.ethereum
 		//存放智能合约
 		this.contracts = {};
 		this.tool = new RpcTools(this)
@@ -107,6 +110,8 @@ export class Web3Connector {
 
 	switchChain(theConfig) {
 		let chainid = theConfig ? this.getConfig('chainid', theConfig) : this.getConfig('chainid')
+		console.log(chainid)
+		console.log(this.web3Ethereum)
 		// console.log(chainid)
 		return this.web3Ethereum.request({
 			method: 'wallet_switchEthereumChain',
@@ -129,35 +134,54 @@ export class Web3Connector {
 			}]
 		})
 	}
-
-	async initConnection({onConnect, onSpender}) {
-		console.log(this.onConnect, onSpender)
+	/**
+	 * 初始化链接
+	 */
+	initConnection({onConnect, onSpender}) {
 		if (onConnect) {
 			this.onConnect = onConnect
 		}
-		this.initWalletConnect()
-		console.log(this.provider)
-		if (this.provider.isConnecting || this.provider.connect) {
-			this.initWalletConnect()
-		}
-		this.provider.enable().then(res => {
-			console.log(res)
-			this.handleAccountsChanged(res)
-			this.listenerEthereum()
-		}).catch(error => {
-			console.log(error)
-			this.resetConnect()
-			if (this.onConnect) {
-				this.onConnect(null, 'Connection Failure')
-			}
-			if (error.code === 4001) {
-				console.log('Please connect to MetaMask.')
-			} else {
-				console.error(error)
-			}
-		})
-		if (onSpender) {
-			onSpender()
+		window.ethereum.request({method: 'eth_requestAccounts'})
+			.then(this.handleAccountsChanged.bind(this))
+			.catch((error) => {
+				if (this.onConnect) {
+					this.onConnect(null, 'Connection Failure')
+				}
+				if (error.code === 4001) {
+					console.log('Please connect to MetaMask.')
+				} else {
+					console.error(error)
+				}
+			})
+			.then(async () => {
+				//获取spender
+				// let res = await this.mainReq.getDVoteAddress()
+				// console.log('invoke getDVoteAddress get spender = >',res)
+				// this.spender = res
+				if (onSpender) {
+					onSpender()
+				}
+			})
+
+		if (!this.listenerInit) {
+			window.ethereum.on('accountsChanged', (accounts) => {
+				console.log("window.ethereum.on('accountsChanged'", accounts)
+				this.handleAccountsChanged(accounts)
+				if (this.accountsChangedListeners) {
+					for (let i = 0; i < this.accountsChangedListeners.length; i++) {
+						this.accountsChangedListeners[i](accounts)
+					}
+				}
+			});
+			window.ethereum.on('chainChanged', (chainId) => {
+				console.log("window.ethereum.on('chainChanged'", chainId)
+				if (this.chainChangedListeners) {
+					for (let i = 0; i < this.chainChangedListeners.length; i++) {
+						this.chainChangedListeners[i](chainId)
+					}
+				}
+			});
+			this.listenerInit = true
 		}
 	}
 

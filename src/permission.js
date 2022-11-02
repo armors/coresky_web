@@ -23,16 +23,12 @@ router.beforeEach(async (to, from, next) => {
     next(m)
   }
   // 各路由需要修改title，便于神策系统收集数据
-  document.title = translate('pagetitles.' + to.name);
+  document.title = translate('pageTitle.' + to.name);
   // 帮助中心移动端pc端切换
-  if (isMobile() && to.path.indexOf('/question') >= 0) {
-    if (query.aidx) {
-      next({ path: '/ques/m/detail', query})
-    } else {
-      next({ path: '/ques/m/index', query})
-    }
-  } else if (!isMobile() && to.path.indexOf('/ques/m') >= 0) {
-    next({ path: '/question', query})
+  if (isMobile()) {
+    next()
+  } else if (!isMobile()) {
+    next()
   } else {
     next()
   }
