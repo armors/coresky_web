@@ -3,5 +3,4 @@
 /dist/
 /*.js
 .eslintrc.cjs
-src/plugins
 /node_modules/

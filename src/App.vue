@@ -1,114 +1,108 @@
 <template>
-  <Container>
-    <router-view v-slot="{ Component }">
-      <!--      <keep-alive>-->
-      <!--        <component :is="Component" v-if="$route.meta.keepAlive" :key="$route.path"/>-->
-      <!--      </keep-alive>-->
-      <component :is="Component"/>
-    </router-view>
-  </Container>
+  <div class="app-wrapper">
+    <div class="web-loading" v-if="!webLoading" v-loading.fullscreen.lock="!webLoading">
+    </div>
+    <div v-else>
+      <router-view v-if="isRouterAlive" :current-view="currentView" />
+    </div>
+  </div>
 </template>
 
 <script>
-  import { computed, onMounted, onBeforeUnmount, getCurrentInstance, reactive, toRefs, watch } from "vue";
-  import { useRoute } from 'vue-router'
-  import { useStore } from 'vuex'
-  import Container from '@/components/Container/index'
-  // import {formatAddress, formatAjaxDatas, formatDataList} from '@/util/main'
-  // import Config from '@/util/config'
+  import { mapState, mapActions } from "vuex";
+
   export default {
-    name: 'App',
-    components: {
-      Container
+    name: "App",
+    beforeCreate: async function () {
+      await this.$store.dispatch("config");
+      await this.$store.dispatch("categorys");
+      await this.$store.dispatch("payTokens");
+      this.$store.dispatch("countNotices");
+      this.$store.commit("WEB_LOADING");
     },
-    setup () {
-      // let theInterval = null
-      const { proxy } = getCurrentInstance()
-      const _root = proxy.$root
-      const store = useStore()
-      const route = useRoute()
-      const doMounted = async () => {
-        // console.log(_root.$rpc.initial)
-        if (!_root.$rpc.initial) {
-          await checkChain()
-          await doConnect()
-          _root.$rpc.addAccountUsableListener(act => {
-            console.log('switch to account ' + act + ' re init account')
-          })
-        } else {
-          await checkChain()
-        }
-      }
-      const checkChain = async () => {
-        // 判断公链链接是否正确
-        try {
-          await _root.$rpc.switchChain()
-        } catch (e) {
-          // 切换
-          if (e.code === 4902) {
-            try {
-              _root.$rpc.addChain()
-            } catch (ee) {
-              console.log(ee)
-            }
-          }
-        }
-      }
-      const doConnect = async (cb) => {
-        // await _root.$rpc.contractObjInit()
-        // console.log('rpc inited')
-        console.log( _root.$rpc)
-        await _root.$rpc.initConnection({
-          onConnect: (account, errmsg) => {
-            // console.log(account)
-            if (errmsg) {
-              console.log('加载回调的msg ' + errmsg)
-              let emsg = _root.$t('pageerror.connectfail')
-              // _root.$message({text: emsg, type: 'warning'})
-            } else {
-              _root.$rpc.initial = true;
-              store.dispatch('system/setAccount', account)
-              cb && cb()
-            }
-          },
-          onSpender: async () => {
-            // console.log('spender attached == ' + spender)
-            // _root.checkAllowance()
-            // 获取交易挖矿合约并缓存
-            // let res = await _root.$rpc.mainReq.getMiningAddress()
-            // // console.log(res)
-            // // 初始化交易挖矿合约
-            // await _root.$rpc.miningReq.miningContractInit(res)
-          }
-        })
-      }
-      const data = reactive({
-      })
-      // eslint-disable-next-line no-unused-vars
-      watch(() => route.path, (newval) => {
-      }, { immediate: false })
-      watch(route, () => {
-        // console.log('df')
-        _root.$i18n.locale = localStorage.getItem('locale')
-      })
-      onMounted(() => {
-        doMounted()
-      })
-      onBeforeUnmount(() => {
-      })
-      const account = computed(() => store.state.system.account)
-      console.log(account)
+    data () {
       return {
-        ...toRefs(data),
-        doConnect
-        // androidCheckEthereum
+        isRouterAlive: true,
+      };
+    },
+    computed: {
+      user () {
+        return this.$store.state.user;
+      },
+      ...mapState({
+        currentView: (state) => state.currentView,
+      }),
+      webLoading () {
+        return this.$store.state.webLoading;
+      },
+    },
+    watch: {
+      $route (newRoute) {
+        this["changeCurrentRouteTo"](newRoute);
+        this["setCurrentView"](newRoute);
+      },
+      user (val1, val2) {
+        if (val1.coinbase != val2.coinbase && this.user.coinbase) {
+          this.reload();
+        }
       }
-    }
-  }
+    },
+    mounted () {
+      this["changeCurrentRouteTo"](this.$route);
+      this["setCurrentView"](this.$route);
+      setTimeout(() => {
+        this.initWeb3()
+      }, 300);
+    },
+    destroyed () {
+      clearInterval(this.$store.state.heartbeatTimer)
+    },
+    methods: {
+      reload () {
+        this.isRouterAlive = false;
+        this.$nextTick(function () {
+          this.isRouterAlive = true;
+        });
+      },
+      async initWeb3 () {
+        var connected = this.$web3.checkWeb3();
+        if (connected) {
+          let result = await this.$store.dispatch("connect", true);
+          if (result) {
+            // 连接成功，则重新加载用户信息
+            this.$store.dispatch("reload");
+          }
+        }
+      },
+      ...mapActions(["changeCurrentRouteTo", "setCurrentView"]),
+    },
+  };
 </script>
 
-<style lang="scss">
-  .scroll{
 
+<style lang="scss">
+  html,
+  body {
+    height: 100%;
+  }
+  #app {
+    height: 100%;
+    font-family: Montserrat-Regular;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #2c3e50;
+  }
+  .router-view {
+    width: 100%;
+    height: auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: 0 auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .app-wrapper {
+    height: 100%;
   }
 </style>
+

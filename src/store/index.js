@@ -1,22 +1,22 @@
-import { createStore } from 'vuex'
-import getters from './getters'
-import system from './modules/system'
-import kline from './modules/kline'
-import map from './modules/map'
+import { createStore } from "vuex";
+import VuexPersist from "vuex-persist";
+import state from "./state";
+import actions from "./actions";
+import getters from "./getters";
+import mutations from "./mutations";
 
-export default createStore({
-  state: {
-    lang: ''
-  },
-  mutations: {
-  },
-  actions: {
-  },
+const vuexLocalStorage = new VuexPersist({
+  key: "vuex",
+  storage: window.localStorage,
+  reducer: (state) => ({ user: state.user, netWork: state.netWork }),
+});
 
-  modules: {
-    system,
-    kline,
-    map
-  },
-  getters
-})
+const store = createStore({
+  plugins: [vuexLocalStorage.plugin],
+  state,
+  actions,
+  getters,
+  mutations,
+});
+
+export default store;
