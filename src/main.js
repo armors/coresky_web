@@ -15,7 +15,7 @@ import LoadStatus from "@/components/LoadStatus";
 import Avatar from "@/components/Avatar";
 import sdk from "@/util/sdk/index.js";
 import Window from "@/components/Window.vue";
-import 'element-plus/theme-chalk/dark/css-vars.css'
+// import 'element-plus/theme-chalk/dark/css-vars.css'
 
 
 import ProfilePopover from "@/components/ProfilePopover";

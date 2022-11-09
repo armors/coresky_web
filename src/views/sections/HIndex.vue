@@ -36,9 +36,9 @@
         </div>
       </div>
 
-      <div class="flex-box" v-infinite-scroll="loadNftList">
-        <nft-item v-for="(nft, i) in nftList" :nft="nft" :key="i" :index="i" @showDialog="showDialog" @onLike="onLike">
-        </nft-item>
+      <div v-infinite-scroll="loadNftList">
+        <nft-list :nftList="nftList" @showDialog="showDialog" @onLike="onLike"></nft-list>
+<!--        <nft-item v-for="(nft, i) in nftList" :nft="nft" :key="i" :index="i" @showDialog="showDialog" @onLike="onLike"></nft-item>-->
         <nft-item-load :loadStatus="loadStatus"></nft-item-load>
       </div>
 
@@ -68,11 +68,12 @@
   import NftDialog from "@/mixins/NftDialog";
   import NftInfo from "@/mixins/NftInfo";
   import NftItem from "@/mixins/NftItem";
-
+  import nftList from '@/components/self/nftList/index'
   export default {
     name: "HIndex",
     components: {
       FilterAndSort,
+      nftList
     },
     mixins: [
       NftDialog,

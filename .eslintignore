@@ -2,5 +2,6 @@
 /config/
 /dist/
 /*.js
+/*.vue
 .eslintrc.cjs
 /node_modules/

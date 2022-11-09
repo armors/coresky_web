@@ -15,7 +15,6 @@
               <el-image class="error-image" :src="require('@/assets/create-img/non-existent.png')" fit="contain"></el-image>
             </template>
           </el-image>
-
           <div class="collection-btn" :class="nft.like ? 'active' : ''" @click.stop="clickLike()">
             <span class="iconfont" :class="nft.like ? 'icon-collection-fill' : 'icon-collection'"></span>
           </div>
@@ -277,16 +276,13 @@
   }
 
   .nft-item {
-    width: 25%;
+    width: 100%;
     position: relative;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
     margin-bottom: 20px;
     padding: 0 10px;
-    &.big {
-      width: 33.33%;
-    }
     .inner {
       position: relative;
       background: #fff;
@@ -313,7 +309,8 @@
     }
     .cover-padding {
       position: relative;
-      padding-bottom: calc(var(--coverWidth) / 1.1);
+      width: 120px;
+      height: 120px;
     }
     .cover {
       position: absolute;

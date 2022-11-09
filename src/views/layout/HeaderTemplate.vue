@@ -150,7 +150,7 @@ export default {
         }else{
           this.style.backgroundColor = "#fff";
         }
-      } else if (scrollTop == 0) {
+      } else if (scrollTop === 0) {
         this.style.backgroundColor = "transparent";
       }
     },

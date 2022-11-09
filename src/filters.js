@@ -4,6 +4,7 @@ import i18n from "@/i18n/i18n";
 const isAbsoluteURL = (str) => /^[a-z][a-z0-9+.-]*:/.test(str);
 
 export function fullImageUrl(url) {
+  console.log(url)
   if (!url) return "";
   if (url.toLowerCase().startsWith("ipfs:/")) {
     let urlArr = url.split("/");
