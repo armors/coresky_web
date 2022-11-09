@@ -2,18 +2,18 @@
 	<div class="nft-list">
 		<div class="display-flex box-center-Y nft-title">
 			<div class="index-num"></div>
-			<div class="nft-info">合集</div>
-			<div class="price">地板价</div>
-			<div class="exchange-volume">成交量</div>
-			<div class="total-exchange-volume">总成交量</div>
-			<div class="holder">持有人</div>
-			<div class="total">总数</div>
-			<div class="order-volume">挂单量</div>
+			<div class="nft-info">{{ $t('home.nftListTitle1') }}</div>
+			<div class="price">{{ $t('home.nftListTitle2') }}</div>
+			<div class="exchange-volume">{{ $t('home.nftListTitle3') }}</div>
+			<div class="total-exchange-volume">{{ $t('home.nftListTitle4') }}</div>
+			<div class="holder">{{ $t('home.nftListTitle5') }}</div>
+			<div class="total">{{ $t('home.nftListTitle6') }}</div>
+			<div class="order-volume">{{ $t('home.nftListTitle7') }}</div>
 		</div>
 		<div class="nft-item display-flex box-center-Y" v-for="(v, i) in nftList" :key="`nft-item-${i}`">
 			<div class="index-num">{{i + 1}}</div>
 			<div class="nft-info display-flex box-center-Y">
-				<el-image class="cover-image" placeholder="loading" :src="$filters.fullImageUrl(nftURI(v).image)" fit="cover">
+				<el-image class="cover-image" placeholder="loading" :src="$filters.fullImageUrl($filters.nftURI(v).image)" fit="cover">
 					<template v-slot:placeholder>
 						<el-skeleton class="placeholder-image" animated>
 							<template #template>
@@ -25,7 +25,7 @@
 						<el-image class="error-image" :src="require('@/assets/create-img/non-existent.png')" fit="contain"></el-image>
 					</template>
 				</el-image>
-				<div class="nft-name">{{ nftURI(v).name }}</div>
+				<div class="nft-name">{{ $filters.nftURI(v).name }}</div>
 			</div>
 			<div class="price">{{0.05 + i}}ETH</div>
 			<div class="exchange-volume">123</div>
@@ -104,24 +104,8 @@
 			user () {
 				return this.$store.state.user;
 			},
-			// nftURI (v) {
-			// 	if (v.metadataContent) {
-			// 		return this.$tools.analysis(v.metadataContent);
-			// 	} else if (v.media) {
-			// 		return this.$tools.analysis(v.media);
-			// 	}
-			// 	return {};
-			// },
 		},
 		methods: {
-			nftURI (v) {
-				if (v.metadataContent) {
-					return this.$tools.analysis(v.metadataContent);
-				} else if (v.media) {
-					return this.$tools.analysis(v.media);
-				}
-				return {};
-			},
 			goUser (address) {
 				this.$router.push({ path: "/account/" + address });
 			},

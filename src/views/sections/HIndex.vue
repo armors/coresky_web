@@ -3,15 +3,22 @@
     <div class="carousel-section">
       <el-carousel id="home-banner" class="home-banner" arrow="always" :interval="6000" :height="bannerHeight">
         <el-carousel-item v-for="(banner, i) in banners" :key="i">
-          <div class="banner-box">
-            <div class="banner-content">
-              <div class="banner-name">{{banner.name}}</div>
-              <div class="banner-title">{{banner.title}}</div>
-              <div class="banner-text">{{banner.text}}</div>
-              <el-button type="primary" v-if="banner.url" @click="toRouter(banner.url)" class="banner-url" round>{{banner.urlText}}</el-button>
-            </div>
-            <div class="banner-img" v-if="banner.src">
-              <img :src="banner.src" />
+          <div class="banner-box display-flex box-center-Y">
+            <div class="banner-item" v-for="(v, i1) in banner" :key="`popular-${i}`">
+              <el-image class="cover-image" placeholder="loading" :src="$filters.fullImageUrl($filters.nftURI(v).image)" fit="cover">
+                <template v-slot:placeholder>
+                  <el-skeleton class="placeholder-image" animated>
+                    <template #template>
+                      <el-skeleton-item class="nft-image-skeleton" variant="h3" />
+                    </template>
+                  </el-skeleton>
+                </template>
+                <template v-slot:error>
+                  <el-image class="error-image" :src="require('@/assets/create-img/non-existent.png')" fit="contain"></el-image>
+                </template>
+              </el-image>
+              <div class="nft-name">{{ $filters.nftURI(v).name }}</div>
+              <div class="nft-price">{{$t('home.nftListTitle2')}} {{v.quantity}}</div>
             </div>
           </div>
         </el-carousel-item>
@@ -21,7 +28,7 @@
     <div class="home-wrapper main-wrapper">
 
       <div class="search-options justify-between">
-        <div class="title">{{ $t("home.saleList") }}</div>
+        <div class="home-title">{{ $t("home.saleList") }}</div>
         <div class="nft-sorts">
           <div class="nft-sorts-item" :class="sortKey == 'update_time' ? 'active' : ''" @click="seleteSort('update_time')">
             <span class="text">{{ $t("hindex.time") }}</span>
@@ -41,7 +48,8 @@
 <!--        <nft-item v-for="(nft, i) in nftList" :nft="nft" :key="i" :index="i" @showDialog="showDialog" @onLike="onLike"></nft-item>-->
         <nft-item-load :loadStatus="loadStatus"></nft-item-load>
       </div>
-
+      <nftPopular :popularList="popularList"></nftPopular>
+<!--      <nft-item-load :loadStatus="loadStatus"></nft-item-load>-->
     </div>
     <sale-dialog :show="showSaleDialog" @close="closeDialog" @confirm="dialogConfirm" :asset="dialogOrder" :nft="dialogNft" :uri="dialogNftURI">
     </sale-dialog>
@@ -69,11 +77,13 @@
   import NftInfo from "@/mixins/NftInfo";
   import NftItem from "@/mixins/NftItem";
   import nftList from '@/components/self/nftList/index'
+  import nftPopular from '@/components/self/popular/index'
   export default {
     name: "HIndex",
     components: {
       FilterAndSort,
-      nftList
+      nftList,
+      nftPopular
     },
     mixins: [
       NftDialog,
@@ -88,6 +98,7 @@
         filters: [],
         sortValue: "",
         nftList: [],
+        popularList: [],
         query: {
           page: 1,
           limit: this.$store.state.pageLimit,
@@ -95,14 +106,14 @@
         loadStatus: "",
         bannerHeight: "500px",
         banners: [
-          {
-            src: null,
-            name: "Fingerchar NFT",
-            title: this.$t('home.tip1'),
-            text: this.$t('home.tip2'),
-            url: "https://github.com/fingerchar/fingernft",
-            urlText: this.$t('home.explore')
-          },
+          // {
+          //   src: null,
+          //   name: "Fingerchar NFT",
+          //   title: this.$t('home.tip1'),
+          //   text: this.$t('home.tip2'),
+          //   url: "https://github.com/fingerchar/fingernft",
+          //   urlText: this.$t('home.explore')
+          // },
         ],
       };
     },
@@ -191,8 +202,14 @@
         this.$api("home.list", data).then((res) => {
           this.loadStatus = "";
           if (this.$tools.checkResponse(res)) {
-            if (data.page == 1) this.nftList = [];
+            if (data.page == 1){
+              this.popularList = []
+              this.nftList = [];
+              this.banner = []
+            }
             this.nftList = this.nftList.concat(res.data.list);
+            this.popularList = this.popularList.concat(res.data.list);
+            this.banners = this.$tools.sliceArrayTo(res.data.list, 4);
             this.queryFunction(res.data.list, this.nftList);
             if (res.data.list.length < data.limit) {
               this.loadStatus = "over";
@@ -238,41 +255,32 @@
       width: 85%;
       height: 100%;
       margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      .banner-content {
-        color: white;
-        flex: 1;
-        padding-right: 30px;
-        .banner-name {
-          font-family: kust;
-          font-size: 90px;
-          color: #002573;
+      .banner-item{
+        width: 23%;
+        height: 80%;
+        margin-right: 2.6%;
+        position: relative;
+        &:last-child{
+          margin-right: 0;
         }
-        .banner-title {
-          font-family: kust;
-          font-size: 40px;
-          color: #002573;
-        }
-        .banner-text {
-          font-size: 24px;
-          line-height: 36px;
-          color: #121c38;
-        }
-        .banner-url {
-          font-size: 18px;
-          border-radius: 10px;
-          padding: 20px 60px;
-          margin-top: 20px;
-          background: #253874;
-        }
-      }
-      .banner-img {
-        width: 35%;
-        height: auto;
-        img {
+        .cover-image{
           width: 100%;
+          height: 100%;
+          position: relative;
+        }
+        .nft-name{
+          padding-left: 32px;
+          position: absolute;
+          font-size: 24px;
+          text-align: center;
+          bottom: 56px;
+        }
+        .nft-price{
+          padding-left: 32px;
+          position: absolute;
+          font-size: 24px;
+          text-align: center;
+          bottom: 24px;
         }
       }
     }
@@ -412,6 +420,10 @@
     justify-content: flex-start;
   }
 
+</style>
+
+
+<style lang="scss" scoped>
 </style>
 
 

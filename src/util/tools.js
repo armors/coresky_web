@@ -65,6 +65,21 @@ const AUCTION_STATUS_CODE = {
 let messageBoxStatus = true;
 
 export default {
+  nftURI (v) {
+    if (v.metadataContent) {
+      return this.$tools.analysis(v.metadataContent);
+    } else if (v.media) {
+      return this.$tools.analysis(v.media);
+    }
+    return {};
+  },
+  sliceArrayTo(list, spliceLen = 6) {
+    let result = []
+    for(let i=0,len=list.length;i<len;i+=spliceLen){
+      result.push(list.slice(i,i+spliceLen));
+    }
+    return result
+  },
   getNotifyType(type) {
     return NOTIFY_TYPE[type];
   },

@@ -30,6 +30,17 @@ module.exports = {
     ctg: "点击查看",
     saleList: "出售列表",
     more: "更多",
+
+    // add
+    nftListTitle1: "合集",
+    nftListTitle2: "地板价",
+    nftListTitle3: "成交量",
+    nftListTitle4: "总成交量",
+    nftListTitle5: "持有人",
+    nftListTitle6: "总数",
+    nftListTitle7: "挂单量",
+    popularTitle: "时下流行",
+
   },
   messageBox: {
     wrongNetwork: "错误的网络",

@@ -1,6 +1,6 @@
 import store from "@/store";
 import i18n from "@/i18n/i18n";
-
+import tools from "@/util/tools";
 const isAbsoluteURL = (str) => /^[a-z][a-z0-9+.-]*:/.test(str);
 
 export function fullImageUrl(url) {
@@ -56,4 +56,12 @@ export function timeFormat(time) {
   } else {
     return Math.round(elapsed / msPerYear) + i18n.global.t("time.yearsAgo");
   }
+}
+export function nftURI (v) {
+  if (v.metadataContent) {
+    return tools.analysis(v.metadataContent);
+  } else if (v.media) {
+    return tools.analysis(v.media);
+  }
+  return {};
 }
