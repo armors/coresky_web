@@ -49,7 +49,8 @@
         <nft-item-load :loadStatus="loadStatus"></nft-item-load>
       </div>
       <nftPopular :popularList="popularList"></nftPopular>
-<!--      <nft-item-load :loadStatus="loadStatus"></nft-item-load>-->
+      <launchCalendar :launchList="launchList" :loadStatus="loadStatus"></launchCalendar>
+      <!--      <nft-item-load :loadStatus="loadStatus"></nft-item-load>-->
     </div>
     <sale-dialog :show="showSaleDialog" @close="closeDialog" @confirm="dialogConfirm" :asset="dialogOrder" :nft="dialogNft" :uri="dialogNftURI">
     </sale-dialog>
@@ -78,12 +79,14 @@
   import NftItem from "@/mixins/NftItem";
   import nftList from '@/components/self/nftList/index'
   import nftPopular from '@/components/self/popular/index'
+  import launchCalendar from '@/components/self/launchCalendar/index'
   export default {
     name: "HIndex",
     components: {
       FilterAndSort,
       nftList,
-      nftPopular
+      nftPopular,
+      launchCalendar
     },
     mixins: [
       NftDialog,
@@ -99,6 +102,7 @@
         sortValue: "",
         nftList: [],
         popularList: [],
+        launchList: [],
         query: {
           page: 1,
           limit: this.$store.state.pageLimit,
@@ -204,11 +208,13 @@
           if (this.$tools.checkResponse(res)) {
             if (data.page == 1){
               this.popularList = []
-              this.nftList = [];
+              this.nftList = []
               this.banner = []
+              this.launchList = []
             }
             this.nftList = this.nftList.concat(res.data.list);
             this.popularList = this.popularList.concat(res.data.list);
+            this.launchList = this.launchList.concat(res.data.list);
             this.banners = this.$tools.sliceArrayTo(res.data.list, 4);
             this.queryFunction(res.data.list, this.nftList);
             if (res.data.list.length < data.limit) {

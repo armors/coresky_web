@@ -39,7 +39,13 @@ module.exports = {
     nftListTitle5: "持有人",
     nftListTitle6: "总数",
     nftListTitle7: "挂单量",
+
+    nftListTitle8: "时间",
+    nftListTitle9: "链",
+    nftListTitle10: "铸造链接",
+    nftListTitle11: "社区",
     popularTitle: "时下流行",
+    launchCalendar: "发射日历",
 
   },
   messageBox: {
