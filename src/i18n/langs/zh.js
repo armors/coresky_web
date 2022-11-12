@@ -31,6 +31,13 @@ module.exports = {
     saleList: "出售列表",
     more: "更多",
 
+    sortBtnText1: "热门",
+    sortBtnText2: "蓝筹",
+    sortBtnText3: "铸造",
+    sortBtnText4: "收藏",
+    sortBtnText5: "查看全部",
+    sortFloor: "地板价",
+
     // add
     nftListTitle1: "合集",
     nftListTitle2: "地板价",

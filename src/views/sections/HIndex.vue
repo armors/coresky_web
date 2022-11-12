@@ -27,19 +27,50 @@
 
     <div class="home-wrapper main-wrapper">
 
-      <div class="search-options justify-between">
-        <div class="home-title">{{ $t("home.saleList") }}</div>
-        <div class="nft-sorts">
-          <div class="nft-sorts-item" :class="sortKey == 'update_time' ? 'active' : ''" @click="seleteSort('update_time')">
-            <span class="text">{{ $t("hindex.time") }}</span>
-            <template v-if="sortKey == 'update_time'">
-              <img v-if="sortValue == 'desc'" class="sort-icon" src="@/assets/img/sort_desc.png" />
-              <img v-else class="sort-icon" src="@/assets/img/sort_asc.png" />
-            </template>
-            <img v-else class="sort-icon" src="@/assets/img/no_sort.png" alt="" />
-          </div>
-          <filter-and-sort :filters="filters" :filterId="filterId" @selectFilter="selectFilter">
-          </filter-and-sort>
+<!--      <div class="search-options justify-between">-->
+<!--        <div class="home-title">{{ $t("home.saleList") }}</div>-->
+<!--        <div class="nft-sorts">-->
+<!--          <div class="nft-sorts-item" :class="sortKey == 'update_time' ? 'active' : ''" @click="seleteSort('update_time')">-->
+<!--            <span class="text">{{ $t("hindex.time") }}</span>-->
+<!--            <template v-if="sortKey == 'update_time'">-->
+<!--              <img v-if="sortValue == 'desc'" class="sort-icon" src="@/assets/img/sort_desc.png" />-->
+<!--              <img v-else class="sort-icon" src="@/assets/img/sort_asc.png" />-->
+<!--            </template>-->
+<!--            <img v-else class="sort-icon" src="@/assets/img/no_sort.png" alt="" />-->
+<!--          </div>-->
+<!--          <filter-and-sort :filters="filters" :filterId="filterId" @selectFilter="selectFilter">-->
+<!--          </filter-and-sort>-->
+<!--        </div>-->
+<!--      </div>-->
+      <div class="sort-box display-flex box-center-Y box-between">
+        <div class="display-flex box-center-Y">
+          <el-button class="filter"><el-icon><IceCream /></el-icon>{{ $t("home.sortBtnText1") }}</el-button>
+          <el-button class="filter"><el-icon><MapLocation /></el-icon>{{ $t("home.sortBtnText2") }}</el-button>
+          <el-button class="filter"><el-icon><MagicStick /></el-icon>{{ $t("home.sortBtnText3") }}</el-button>
+          <el-button class="filter"><el-icon><Star /></el-icon>{{ $t("home.sortBtnText4") }}</el-button>
+        </div>
+        <div class="display-flex box-center-Y">
+          <div class="text">{{ $t("home.sortFloor") }}</div>
+          <el-input-number :controls="false" v-model="sortParams.minPrice" size="small" />
+          <div class="line"></div>
+          <el-input-number :controls="false" v-model="sortParams.maxPrice" size="small" />
+          <el-select v-model="sortParams.valueChain" placeholder="Select">
+            <el-option
+              v-for="item in optionsChain"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+          <el-select v-model="sortParams.valueTime" placeholder="Select">
+            <el-option
+              v-for="item in optionsTimes"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+          <el-button class="filter all-nft">{{ $t("home.sortBtnText5") }}</el-button>
         </div>
       </div>
 
@@ -95,6 +126,40 @@
     ],
     data: function () {
       return {
+        sortParams: {
+          minPrice: undefined,
+          maxPrice: undefined,
+          valueChain: undefined,
+          valueTime: undefined,
+        },
+        optionsChain: [
+          {
+            value: 'eth',
+            label: 'ETH'
+          },
+          {
+            value: 'heco',
+            label: 'HECO'
+          },
+          {
+            value: 'bsc',
+            label: 'BSC'
+          }
+        ],
+        optionsTimes: [
+          {
+            value: '1',
+            label: '1 hour'
+          },
+          {
+            value: '2',
+            label: '2 hour'
+          },
+          {
+            value: '4',
+            label: '6 hour'
+          }
+        ],
         banner: require("@/assets/img/home/index_bg.png"),
         sortKey: "",
         filterId: "",
@@ -376,6 +441,8 @@
       border-radius: 0;
     }
   }
+
+  /*
   .search-options {
     position: relative;
     display: flex;
@@ -410,7 +477,7 @@
     &.active {
       color: $primaryColor;
     }
-  }
+  } */
 
   .content-bottom {
     padding-bottom: 100px;
@@ -429,7 +496,39 @@
 </style>
 
 
-<style lang="scss" scoped>
+<style lang="scss">
+  .body-wrapper{
+    .sort-box{
+      padding-top: 48px;
+      .text{
+        font-size: 16px;
+        padding-right: 12px;
+      }
+      .line{
+        width: 16px;
+        height: 1px;
+        margin: 0 10px;
+        background-color: $grayColor;
+      }
+      .el-input-number.is-without-controls .el-input__inner{
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
+      .all-nft{
+        margin-left: 10px;
+      }
+      .el-select{
+        width: 120px;
+        margin-left: 10px;
+        &:first-child{
+          margin-left: 10px;
+        }
+        .el-input__inner{
+          height: 32px;
+        }
+      }
+    }
+  }
 </style>
 
 
