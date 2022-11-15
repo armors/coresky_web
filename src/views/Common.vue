@@ -29,7 +29,8 @@ export default {
 </script>
 
 <style lang="scss">
-#home {
+  @import "../styles/variables";
+  #home {
   width: 100%;
 }
 .common-wraper {
@@ -40,7 +41,7 @@ export default {
 }
 .widClass {
   width: 100%;
-  padding-top: 112px;
+  padding-top: $headerHeight;
   min-height: 100vh;
 }
 </style>

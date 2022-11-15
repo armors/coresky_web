@@ -121,7 +121,7 @@ export default {
 <!--      cursor: pointer;-->
 <!--      margin-right: 5px;-->
 <!--      margin-top: 6px;-->
-<!--      font-size: 18px;-->
+<!--      fonts-size: 18px;-->
 <!--      border-radius: 18px;-->
 <!--      color: #aaa;-->
 <!--      &.active {-->
@@ -159,7 +159,7 @@ export default {
 <!--    top: 0;-->
 <!--    background: #fff;-->
 <!--    border-bottom-left-radius: 5px;-->
-<!--    font-size: 16px;-->
+<!--    fonts-size: 16px;-->
 <!--    color: #666;-->
 <!--    &.active{-->
 <!--      color: #ffd200;-->
@@ -193,23 +193,23 @@ export default {
 <!--    white-space: nowrap;-->
 <!--    color: $primaryColor;-->
 <!--    cursor: pointer;-->
-<!--    font-weight: 400;-->
-<!--    font-size: 12px;-->
+<!--    fonts-weight: 400;-->
+<!--    fonts-size: 12px;-->
 <!--  }-->
 <!--  .price {-->
 <!--    text-overflow: ellipsis;-->
 <!--    overflow: hidden;-->
 <!--    white-space: nowrap;-->
-<!--    font-size: 12px;-->
-<!--    font-family: Montserrat-Regular;-->
-<!--    font-weight: 400;-->
+<!--    fonts-size: 12px;-->
+<!--    fonts-family: Montserrat-Regular;-->
+<!--    fonts-weight: 400;-->
 <!--    color: #1d1e22;-->
 <!--    margin-right: 5px;-->
 <!--  }-->
 <!--  .nosale {-->
 <!--    text-overflow: ellipsis;-->
-<!--    font-size: 12px;-->
-<!--    font-weight: 400;-->
+<!--    fonts-size: 12px;-->
+<!--    fonts-weight: 400;-->
 <!--    color: $grayColor;-->
 <!--  }-->
 <!--  .stock {-->
@@ -219,8 +219,8 @@ export default {
 <!--    margin-left: 4px;-->
 <!--    margin-right: 6px;-->
 <!--    white-space: nowrap;-->
-<!--    font-size: 12px;-->
-<!--    font-weight: 400;-->
+<!--    fonts-size: 12px;-->
+<!--    fonts-weight: 400;-->
 <!--    color: #999;-->
 <!--    text-align: center;-->
 <!--  }-->
@@ -239,8 +239,8 @@ export default {
 <!--  .menu {-->
 <!--    cursor: pointer;-->
 <!--    padding: 8px 7px;-->
-<!--    font-size: 13px;-->
-<!--    font-weight: normal;-->
+<!--    fonts-size: 13px;-->
+<!--    fonts-weight: normal;-->
 <!--    border-radius: $borderRadius;-->
 <!--    &:hover,-->
 <!--    &:active {-->
@@ -255,9 +255,9 @@ export default {
 <!--  button {-->
 <!--    border: none;-->
 <!--    background: none;-->
-<!--    font-size: 14px;-->
-<!--    font-family: Montserrat-Regular;-->
-<!--    font-weight: 500;-->
+<!--    fonts-size: 14px;-->
+<!--    fonts-family: Montserrat-Regular;-->
+<!--    fonts-weight: 500;-->
 <!--    color: #1d1e22;-->
 <!--    line-height: 26px;-->
 <!--    cursor: pointer;-->

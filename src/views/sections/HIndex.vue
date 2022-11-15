@@ -1,29 +1,6 @@
 <template>
   <div class="body-wrapper">
-    <div class="carousel-section">
-      <el-carousel id="home-banner" class="home-banner" arrow="always" :interval="6000" :height="bannerHeight">
-        <el-carousel-item v-for="(banner, i) in banners" :key="i">
-          <div class="banner-box display-flex box-center-Y">
-            <div class="banner-item" v-for="(v, i1) in banner" :key="`popular-${i}`">
-              <el-image class="cover-image" placeholder="loading" :src="$filters.fullImageUrl($filters.nftURI(v).image)" fit="cover">
-                <template v-slot:placeholder>
-                  <el-skeleton class="placeholder-image" animated>
-                    <template #template>
-                      <el-skeleton-item class="nft-image-skeleton" variant="h3" />
-                    </template>
-                  </el-skeleton>
-                </template>
-                <template v-slot:error>
-                  <el-image class="error-image" :src="require('@/assets/create-img/non-existent.png')" fit="contain"></el-image>
-                </template>
-              </el-image>
-              <div class="nft-name">{{ $filters.nftURI(v).name }}</div>
-              <div class="nft-price">{{$t('home.nftListTitle2')}} {{v.quantity}}</div>
-            </div>
-          </div>
-        </el-carousel-item>
-      </el-carousel>
-    </div>
+    <div class="home-banner"></div>
 
     <div class="home-wrapper main-wrapper">
 
@@ -296,11 +273,6 @@
   };
 </script>
 <style lang="scss" scoped>
-  .home-wrapper {
-    max-width: 1320px;
-    margin: 0 auto;
-    width: 100%;
-  }
   .no-margin {
     margin: 0 !important;
   }
@@ -314,47 +286,6 @@
     width: 100%;
     /*background: #dde8ff;*/
     min-height: 100vh;
-  }
-
-  .home-banner {
-    padding-top: 122px;
-    margin-top: -112px;
-    padding-bottom: 40px;
-    background: url("../../assets/img/home/index_bg.png") no-repeat;
-    background-size: cover;
-    .banner-box {
-      width: 85%;
-      height: 100%;
-      margin: 0 auto;
-      .banner-item{
-        width: 23%;
-        height: 80%;
-        margin-right: 2.6%;
-        position: relative;
-        &:last-child{
-          margin-right: 0;
-        }
-        .cover-image{
-          width: 100%;
-          height: 100%;
-          position: relative;
-        }
-        .nft-name{
-          padding-left: 32px;
-          position: absolute;
-          font-size: 24px;
-          text-align: center;
-          bottom: 56px;
-        }
-        .nft-price{
-          padding-left: 32px;
-          position: absolute;
-          font-size: 24px;
-          text-align: center;
-          bottom: 24px;
-        }
-      }
-    }
   }
   .carousel-section {
     position: relative;
@@ -449,7 +380,7 @@
     align-items: center;
     margin: 20px 0;
     .title {
-      font-size: 28px;
+      fonts-size: 28px;
       color: #000;
     }
   }
@@ -461,9 +392,9 @@
   .nft-sorts-item {
     white-space: nowrap;
     display: flex;
-    font-size: 13px;
+    fonts-size: 13px;
     align-items: center;
-    font-weight: 400;
+    fonts-weight: 400;
     cursor: pointer;
     margin-right: 16px;
     .text {
@@ -497,6 +428,50 @@
 
 
 <style lang="scss">
+  @import "../../styles/variables";
+  .home-wrapper {
+    max-width: $maxWidth;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .home-banner {
+    height: 524px;
+    background: url("../../assets/images/bg_home.png") no-repeat;
+    background-size: cover;
+    .banner-box {
+      width: $maxWidthRate;
+      height: 100%;
+      margin: 0 auto;
+      .banner-item{
+        width: 23%;
+        height: 80%;
+        margin-right: 2.6%;
+        position: relative;
+        &:last-child{
+          margin-right: 0;
+        }
+        .cover-image{
+          width: 100%;
+          height: 100%;
+          position: relative;
+        }
+        .nft-name{
+          padding-left: 32px;
+          position: absolute;
+          font-size: 24px;
+          text-align: center;
+          bottom: 56px;
+        }
+        .nft-price{
+          padding-left: 32px;
+          position: absolute;
+          font-size: 24px;
+          text-align: center;
+          bottom: 24px;
+        }
+      }
+    }
+  }
   .body-wrapper{
     .sort-box{
       padding-top: 48px;

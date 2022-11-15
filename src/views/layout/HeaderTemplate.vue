@@ -3,7 +3,7 @@
     <div class="header-container header-padding" :style="style">
       <router-link to="/" class="head-logo header-margin-r">
         <img fit="contain" class="logo-image"
-          :src="require('@/assets/img/logo.jpg')"
+          :src="require('../../assets/images/logo.png')"
         />
       </router-link>
 
@@ -15,19 +15,33 @@
           :placeholder="$t('navigation.searchTip')"
         >
           <template #prefix>
-            <span class="iconfont icon-search"></span>
+            <div class="img-search"><img src="../../assets/images/icons/icon_search.png" alt=""></div>
           </template>
         </el-input>
       </div>
 
       <div class="head-navs">
-
-        <router-link class="nav-link header-margin-r"
-          :class="$route.name == 'Items' ? 'active' : ''"
-          :to="!connected ? '/connect' : '/items'"
-        >
-          {{ $t("navigation.myItems") }}
+        <router-link class="nav-link" to="/erc721">
+          {{ $t("navigation.launchpad") }}
         </router-link>
+        <router-link class="nav-link" to="/erc721">
+          {{ $t("navigation.marketplace") }}
+        </router-link>
+        <router-link class="nav-link" to="/erc721">
+          {{ $t("navigation.collection") }}
+        </router-link>
+        <router-link class="nav-link" to="/erc721">
+          {{ $t("navigation.create") }}
+        </router-link>
+        <router-link class="nav-link" to="/erc721">
+          {{ $t("navigation.ETH") }}
+        </router-link>
+<!--        <router-link class="nav-link header-margin-r"-->
+<!--          :class="$route.name == 'Items' ? 'active' : ''"-->
+<!--          :to="!connected ? '/connect' : '/items'"-->
+<!--        >-->
+<!--          {{ $t("navigation.myItems") }}-->
+<!--        </router-link>-->
 
         <router-link v-if="connected"
           class="nav-link header-margin-r" to="/message?tab=unread"
@@ -36,30 +50,34 @@
           {{$t('navigation.news')}}
           <span v-if="message.unread" class="red-tip"></span>
         </router-link>
-        <el-popover v-model:visible="languagePopover" placement="bottom" trigger="click" :show-arrow="false"
+        <el-popover v-model:visible="languagePopover" placement="bottom" trigger="hover" :show-arrow="false"
           popper-class="nav-popover" :offset="-8">
           <template #reference>
-            <div class="nav-link header-margin-r">
-              <!-- {{$t('footer.language')}} -->{{language}}
-              <span class="iconfont icon-arrow-down bfont"></span>
-            </div>
+            <el-button class="wallet-link" >
+              <img src="../../assets/images/icons/icon_lang.png" alt="">
+            </el-button>
+<!--            <div class="nav-link header-margin-r">-->
+<!--              &lt;!&ndash; {{$t('footer.language')}} &ndash;&gt;{{language}}-->
+<!--              <span class="iconfont icon-arrow-down bfont"></span>-->
+<!--            </div>-->
           </template>
           <div class="popover-menu-item" @click="languageSelect('English')" :class="language =='English' ? 'active':''">English</div>
           <div class="popover-menu-item" @click="languageSelect('中文')" :class="language =='中文' ? 'active':''">中文</div>
         </el-popover>
       </div>
       <div class="head-menus">
-        <el-button class="link-btn" @click="toggleDark">
-          <el-icon v-if="isDark"><Sunny /></el-icon>
-          <el-icon v-else><Moon /></el-icon>
+        <el-button class="wallet-link" @click="toggleDark">
+          <img src="../../assets/images/icons/icon_sun.png" alt="">
+<!--          <el-icon v-if="isDark"><Sunny /></el-icon>-->
+<!--          <el-icon v-else><Moon /></el-icon>-->
         </el-button>
-        <router-link class="create-link header-margin-l" to="/erc721" >
-          <el-button class="link-btn">
-            {{ $t("navigation.create") }}
+        <router-link to="/erc721" >
+          <el-button class="wallet-link" >
+            <img src="../../assets/images/icons/icon_wallet.png" alt="">
           </el-button>
         </router-link>
 
-        <router-link to="/connect" class="head-connect align-center header-margin-l" v-if="!connected">
+        <router-link to="/connect" class="head-connect display-flex box-center" v-if="!connected">
           {{ $t("navigation.connectWallet") }}
         </router-link>
 
@@ -187,30 +205,33 @@ export default {
   .search-input {
     border-radius: 10px;
     overflow: hidden;
-    background: rgba(0,0,0,0.1);
     height: 40px;
     color: #fff;
     display: flex;
     align-items: center;
     font-size: 16px;
+    border-radius: 12px;
     .el-input__wrapper{
       height: 100%;
       padding: 0;
+      border-radius: 12px;
     }
     .el-input__inner {
       font-size:13px;
-      padding-left: 30px !important;
+      padding-left: 38px !important;
       height: 100%;
       border: none;
-      background: hsla(0,0%,100%,.5);
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.04);
+      border-radius: 12px;
     }
     .el-input__prefix {
       line-height: 40px;
+      left: 20px;
     }
-    .iconfont {
-      font-size: 22px;
-      font-weight: bold;
-      color: #000;
+    .img-search{
+      width: 16px;
+      height: 16px;
     }
   }
 
@@ -231,22 +252,24 @@ export default {
 </style>
 
 <style lang="scss" scoped>
-
+@import "../../styles/variables";
 .home-header{
   position: fixed;
   right: 0;
   left: 0;
   top: 0;
   z-index: 100;
-
+  background: $bg-white;
   .header-container {
+    max-width: $maxWidthRate;
+    margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     font-size: 15px;
     line-height: 40px;
-    height: 112px;
-    color: #fff;
+    height: $headerHeight;
+    color: $color-white;
   }
 }
 
@@ -271,7 +294,7 @@ export default {
   }
 }
 .link-btn {
-  background: #0D3079;
+  background: $primaryColor;
   border-radius: 10px;
   color: #fff;
   border: 0;
@@ -291,6 +314,7 @@ export default {
   color: #000;
   font-size: 15px;
   cursor: pointer;
+  margin-right: 20px;
   &.active {
     border-bottom: 2px solid #333;
     line-height: 23px;
@@ -324,13 +348,25 @@ export default {
 .head-connect {
   display: flex;
   padding: 0 15px;
-  color: #fff;
-  background: #0D3079;
+  color: $color-white;
+  background: $primaryColor;
   border-radius: 10px;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
+  width: 140px;
+  height: 48px;
+  margin-left: 24px;
 }
-
+.wallet-link{
+  border: none;
+  width: 50px;
+  padding: 0;
+  height: 48px;
+  .el-icon{
+    font-size: 30px;
+    font-weight: 600;
+  }
+}
 .red-tip {
   position: absolute;
   cursor: pointer;

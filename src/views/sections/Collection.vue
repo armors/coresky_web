@@ -354,7 +354,7 @@
     display: flex;
     flex-direction: column;
     margin: 3% auto;
-    width: 1320px !important;
+    width: 1200px !important;
   }
   .item-content {
     border-bottom: $border;
