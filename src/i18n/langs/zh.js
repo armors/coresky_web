@@ -26,9 +26,9 @@ module.exports = {
   home: {
     tip1: "开源的去中心化NFT市场",
     tip2: "技术: Spring Boot Java框架 + 主流的前端框架Vue",
-    explore: "探索",
     ctg: "点击查看",
-    saleList: "出售列表",
+    moreDetail: "More detailed",
+    discord: "Discord",
     more: "更多",
 
     sortBtnText1: "热门",

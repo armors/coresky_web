@@ -1,5 +1,7 @@
+@import "variables";
 .el-button{
   height: unset;
+  color: $primaryColor;
 }
 .el-message{
   justify-content: center;

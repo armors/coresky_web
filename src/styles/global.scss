@@ -1,3 +1,4 @@
+@import "variables";
 html, body{
   font-family: Plus Jakarta Display;
   margin: 0;
@@ -7,6 +8,10 @@ html, body{
 *{
   font-family: Plus Jakarta Display;
 }
+html * {
+  outline-color: transparent;
+}
+
 .main-wrapper{
   flex: 1;
   width: 100%;
@@ -204,10 +209,18 @@ input{
   flex-direction: column;
 }
 
-
+.max-width{
+  max-width: $maxWidthRate;
+  min-width: $maxWidth;
+  margin: 0 auto;
+}
 
 .home-title {
-  font-size: 28px;
-  color: #000;
+  font-weight: 700;
+  font-size: 32px;
+  color: $primaryColor;
+  line-height: 41px;
 }
+
+
 

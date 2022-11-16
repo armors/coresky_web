@@ -21,8 +21,10 @@ $maxWidthRate: 85%;
 
 $color-black: #000;
 $alpha5: 0.5;
-
-
+$alpha6: 0.6;
+$mainLiner: linear-gradient(90deg, #AA79F7 0%, #6F5DF6 100%);
+$elButtonHoverBg: rgba(0, 0, 0, 0.04);
+$color-black3: rgba(0, 0, 0, 0.6);
 //@used "element-plus/theme-chalk/src/dark/var.scss" with (
 //	$primaryColor: #f359d4
 //);

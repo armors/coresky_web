@@ -3,7 +3,7 @@ import App from "./App.vue";
 import router from "./router";
 import i18n from "./i18n/i18n.js";
 import store from "./store";
-import "lib-flexible/flexible";
+// import "lib-flexible/flexible";
 import api from "@/api/index.js";
 import tools from "@/util/tools.js";
 import web3 from "@/util/web3/index.js";
@@ -34,7 +34,7 @@ import BurnDialog from "@/components/dialogs/Burn";
 import NoFound from "@/components/NoFound";
 
 // import "@/styles/myicon/iconfont.css";
-import "@/styles/font_icon/iconfont.css";
+// import "@/styles/font_icon/iconfont.css";
 import "element-plus/dist/index.css";
 
 import { VueClipboard } from "@soerenmartius/vue3-clipboard";

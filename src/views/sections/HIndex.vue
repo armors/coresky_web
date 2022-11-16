@@ -1,6 +1,31 @@
 <template>
   <div class="body-wrapper">
-    <div class="home-banner"></div>
+    <div class="home-banner">
+      <div class="max-width">
+        <div class="display-flex box-between banner-box">
+          <div class="create-app-box">
+            <div class="title">{{$t('home.createApp')}}</div>
+            <div class="desc">{{$t('home.createAppDesc')}}</div>
+
+            <div class="btn-list display-flex box-center-Y">
+              <router-link to="/connect" class="btn-more btn display-flex box-center">
+                {{ $t("home.moreDetail") }}
+              </router-link>
+              <router-link to="/connect" class="btn display-flex box-center">
+                {{ $t("home.discord") }}
+              </router-link>
+            </div>
+          </div>
+          <div class="carousel-box">
+            <el-carousel :autoplay="false" arrow="never">
+              <el-carousel-item v-for="item in 4" :key="item">
+                <div class="img-box">{{ item }}</div>
+              </el-carousel-item>
+            </el-carousel>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="home-wrapper main-wrapper">
 
@@ -19,18 +44,31 @@
 <!--          </filter-and-sort>-->
 <!--        </div>-->
 <!--      </div>-->
+      <div class="home-title">{{$t('home.realTitle')}}</div>
       <div class="sort-box display-flex box-center-Y box-between">
         <div class="display-flex box-center-Y">
-          <el-button class="filter"><el-icon><IceCream /></el-icon>{{ $t("home.sortBtnText1") }}</el-button>
-          <el-button class="filter"><el-icon><MapLocation /></el-icon>{{ $t("home.sortBtnText2") }}</el-button>
-          <el-button class="filter"><el-icon><MagicStick /></el-icon>{{ $t("home.sortBtnText3") }}</el-button>
-          <el-button class="filter"><el-icon><Star /></el-icon>{{ $t("home.sortBtnText4") }}</el-button>
+          <el-button class="filter display-flex box-center">
+            <div class="icon-img"><img src="../../assets/images/icons/icon_top.svg" alt=""></div>
+            <div>{{ $t("home.sortBtnText1") }}</div>
+          </el-button>
+          <el-button class="filter display-flex box-center">
+            <div class="icon-img"><img src="../../assets/images/icons/icon_trending.svg" alt=""></div>
+            <div>{{ $t("home.sortBtnText2") }}</div>
+          </el-button>
+          <el-button class="filter display-flex box-center">
+            <div class="icon-img"><img src="../../assets/images/icons/icon_mints.svg" alt=""></div>
+            <div>{{ $t("home.sortBtnText3") }}</div>
+          </el-button>
+          <el-button class="filter display-flex box-center">
+            <div class="icon-img"><img src="../../assets/images/icons/icon_watchlist.svg" alt=""></div>
+            <div>{{ $t("home.sortBtnText4") }}</div>
+          </el-button>
         </div>
         <div class="display-flex box-center-Y">
           <div class="text">{{ $t("home.sortFloor") }}</div>
-          <el-input-number :controls="false" v-model="sortParams.minPrice" size="small" />
+          <el-input-number class="input-number" :controls="false" v-model="sortParams.minPrice" :placeholder="$t('home.minPlaceholder')"/>
           <div class="line"></div>
-          <el-input-number :controls="false" v-model="sortParams.maxPrice" size="small" />
+          <el-input-number class="input-number" :controls="false" v-model="sortParams.maxPrice" :placeholder="$t('home.maxPlaceholder')"/>
           <el-select v-model="sortParams.valueChain" placeholder="Select">
             <el-option
               v-for="item in optionsChain"
@@ -47,7 +85,6 @@
               :value="item.value"
             />
           </el-select>
-          <el-button class="filter all-nft">{{ $t("home.sortBtnText5") }}</el-button>
         </div>
       </div>
 
@@ -438,59 +475,154 @@
     height: 524px;
     background: url("../../assets/images/bg_home.png") no-repeat;
     background-size: cover;
-    .banner-box {
-      width: $maxWidthRate;
-      height: 100%;
-      margin: 0 auto;
-      .banner-item{
-        width: 23%;
-        height: 80%;
-        margin-right: 2.6%;
-        position: relative;
-        &:last-child{
-          margin-right: 0;
+    padding-top: 76px;
+
+    .banner-box{
+      padding-left: 20px;
+      padding-right: 32px;
+      .create-app-box{
+        .title{
+          width: 583px;
+          font-family: 'Plus Jakarta Display';
+          font-style: normal;
+          font-weight: 700;
+          font-size: 50px;
+          line-height: 65px;
+          color: $primaryColor;
         }
-        .cover-image{
+        .desc{
+          padding-top: 30px;
+          width: 621px;
+          /* Body_1_regular */
+          font-family: 'Plus Jakarta Display';
+          font-style: normal;
+          font-weight: 400;
+          font-size: 20px;
+          line-height: 150%;
+          /* 黑-3 */
+          color: $color-black3;
+        }
+        .btn-list{
+          margin-top: 60px;
+          .btn{
+            width: 180px;
+            height: 48px;
+            /* 黑 */
+            background: $bg-white;
+            border-radius: 12px;
+            border: 1px solid $primaryColor;
+            font-weight: 500;
+            font-size: 16px;
+            color: $primaryColor;
+            &.btn-more{
+              background: $primaryColor;
+              border-color: transparent;
+              margin-right: 20px;
+              color: $color-white;
+            }
+          }
+        }
+      }
+      .carousel-box{
+        width: 520px;
+        height: 328px;
+        .el-carousel{
           width: 100%;
           height: 100%;
-          position: relative;
         }
-        .nft-name{
-          padding-left: 32px;
-          position: absolute;
-          font-size: 24px;
-          text-align: center;
-          bottom: 56px;
+        .el-carousel__container{
+          width: 100%;
+          height: 294px !important;
         }
-        .nft-price{
-          padding-left: 32px;
-          position: absolute;
-          font-size: 24px;
-          text-align: center;
-          bottom: 24px;
+        .el-carousel__item{
+          border-radius: 20px !important;
+          .img-box{
+            width: 100%;
+            height: 100%;
+            background-color: $color-white !important;
+            border: 10px solid #FFFFFF !important;
+            filter: drop-shadow(0px 0px 40px rgba(82, 77, 255, 0.2));
+            border-radius: 20px !important;
+          }
+        }
+
+        .el-carousel__indicators{
+          .el-carousel__indicator{
+
+            margin-right: 10px;
+            &:last-child{
+              margin-right: 0;
+            }
+            .el-carousel__button{
+              width: 20px;
+              height: 8px;
+              /* 紫色背景 */
+              background: rgba(118, 74, 246, 0.1);
+              border-radius: 4px;
+            }
+            &.is-active{
+              .el-carousel__button{
+                width: 70px;
+                height: 8px;
+                /* 主色渐变 */
+                background: $mainLiner;
+              }
+            }
+          }
         }
       }
     }
+
   }
   .body-wrapper{
     .sort-box{
-      padding-top: 48px;
+      padding-top: 40px;
+      .filter{
+        padding: 10px 20px;
+        border: none;
+        color: $color-black3;
+        border-radius: 12px;
+        .icon-img{
+          margin-right: 4px;
+        }
+        &:hover, &:focus, &.active{
+          background-color: $elButtonHoverBg !important;
+          color: $color-black3;
+        }
+
+      }
+      .el-button + .el-button{
+        margin-left: 6px;
+      }
       .text{
-        font-size: 16px;
         padding-right: 12px;
+        font-weight: 400;
+        font-size: 14px;
+        color: $primaryColor;
       }
       .line{
-        width: 16px;
+        width: 8px;
         height: 1px;
         margin: 0 10px;
         background-color: $grayColor;
       }
-      .el-input-number.is-without-controls .el-input__inner{
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-      }
-      .all-nft{
-        margin-left: 10px;
+      .input-number{
+        width: 80px;
+        .el-input__wrapper{
+          padding-left: 0 !important;
+          padding-right: 0 !important;
+          border: none;
+          box-shadow: none;
+        }
+        .el-input__inner{
+          border: none;
+          /*padding: 11px 16px;*/
+          gap: 8px;
+          height: 40px;
+          /* 黑_4 */
+          background: $elButtonHoverBg;
+          border-radius: 8px;
+        }
       }
       .el-select{
         width: 120px;
