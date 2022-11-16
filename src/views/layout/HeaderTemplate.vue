@@ -1,9 +1,9 @@
 <template>
   <div class="home-header">
-    <div class="header-container header-padding" :style="style">
+    <div class="header-container" :style="style">
       <router-link to="/" class="head-logo header-margin-r">
         <img fit="contain" class="logo-image"
-          :src="require('../../assets/images/logo.png')"
+          :src="require('../../assets/images/logo_black.svg')"
         />
       </router-link>
 
@@ -15,7 +15,7 @@
           :placeholder="$t('navigation.searchTip')"
         >
           <template #prefix>
-            <div class="img-search"><img src="../../assets/images/icons/icon_search.png" alt=""></div>
+            <div class="img-search"><img src="../../assets/images/icons/icon_search.svg" alt=""></div>
           </template>
         </el-input>
       </div>
@@ -43,18 +43,18 @@
 <!--          {{ $t("navigation.myItems") }}-->
 <!--        </router-link>-->
 
-        <router-link v-if="connected"
-          class="nav-link header-margin-r" to="/message?tab=unread"
-          :class="$route.name == 'Message' ? 'active' : ''"
-        >
-          {{$t('navigation.news')}}
-          <span v-if="message.unread" class="red-tip"></span>
-        </router-link>
+<!--        <router-link v-if="connected"-->
+<!--          class="nav-link header-margin-r" to="/message?tab=unread"-->
+<!--          :class="$route.name == 'Message' ? 'active' : ''"-->
+<!--        >-->
+<!--          {{$t('navigation.news')}}-->
+<!--          <span v-if="message.unread" class="red-tip"></span>-->
+<!--        </router-link>-->
         <el-popover v-model:visible="languagePopover" placement="bottom" trigger="hover" :show-arrow="false"
           popper-class="nav-popover" :offset="-8">
           <template #reference>
             <el-button class="wallet-link" >
-              <img src="../../assets/images/icons/icon_lang.png" alt="">
+              <img src="../../assets/images/icons/icon_lang.svg" alt="">
             </el-button>
 <!--            <div class="nav-link header-margin-r">-->
 <!--              &lt;!&ndash; {{$t('footer.language')}} &ndash;&gt;{{language}}-->
@@ -67,13 +67,13 @@
       </div>
       <div class="head-menus">
         <el-button class="wallet-link" @click="toggleDark">
-          <img src="../../assets/images/icons/icon_sun.png" alt="">
+          <img src="../../assets/images/icons/icon_sun.svg" alt="">
 <!--          <el-icon v-if="isDark"><Sunny /></el-icon>-->
 <!--          <el-icon v-else><Moon /></el-icon>-->
         </el-button>
         <router-link to="/erc721" >
           <el-button class="wallet-link" >
-            <img src="../../assets/images/icons/icon_wallet.png" alt="">
+            <img src="../../assets/images/icons/icon_cart.svg" alt="">
           </el-button>
         </router-link>
 

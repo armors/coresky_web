@@ -33,7 +33,8 @@ import TransferDialog from "@/components/dialogs/Transfer";
 import BurnDialog from "@/components/dialogs/Burn";
 import NoFound from "@/components/NoFound";
 
-import "@/styles/myicon/iconfont.css";
+// import "@/styles/myicon/iconfont.css";
+import "@/styles/font_icon/iconfont.css";
 import "element-plus/dist/index.css";
 
 import { VueClipboard } from "@soerenmartius/vue3-clipboard";
