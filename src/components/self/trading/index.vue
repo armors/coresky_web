@@ -17,7 +17,10 @@
 									<el-image class="error-image" :src="require('@/assets/create-img/non-existent.png')" fit="contain"></el-image>
 								</template>
 							</el-image>
-<!--							<div class="nft-name">{{ ($filters.nftURI(v)).name }}</div>-->
+							<div class="nft-name">
+								{{ ($filters.nftURI(v)).name }}
+								<div class="img-logo"><img :src="$filters.fullImageUrl(($filters.nftURI(v)).image)" alt=""></div>
+							</div>
 						</div>
 					</div>
 			</el-carousel-item>
@@ -76,10 +79,13 @@
 		padding-top: 14px;
 		.trading-banner{
 			margin-top: 40px;
-			height: 286px;
+			height: 318px;
 			.el-carousel__container{
-				height: 286px;
+				height: 100%;
+				padding-left: 4px;
+				padding-right: 4px;
 			}
+
 			.el-carousel__indicators{
 				display: none !important;
 			}
@@ -110,7 +116,7 @@
 			}
 			.trading-box{
 				width: 100%;
-				height: 286px;
+				height: 308px;
 				margin: 0 auto;
 
 				.trading-item{
@@ -119,15 +125,40 @@
 					width: 388px;
 					height: 308px;
 					/* 紫色 */
-					box-shadow: 0px 0px 10px $arrowBtnShadow;
+					/* box-shadow:
+						-5px 5px 10px -4px $arrowBtnShadow,
+						5px 5px 10px -4px $arrowBtnShadow;*/
 					.cover-image{
 						width: 100%;
 						height: 236px;
 						border-radius: 20px 20px 0px 0px;
 					}
 					.nft-name{
-						font-size: 24px;
-						text-align: center;
+						padding: 16px 24px 0 110px;
+						height: 72px;
+						border-radius: 0 0 20px 20px;
+						box-shadow:
+							-5px 5px 10px -4px $arrowBtnShadow,
+							5px 5px 10px -4px $arrowBtnShadow;
+						font-family: 'Plus Jakarta Display';
+						font-style: normal;
+						font-weight: 700;
+						font-size: 22px;
+						position: relative;
+						.img-logo{
+							position: absolute;
+							width: 79px;
+							height: 79px;
+							border-radius: 50%;
+							border: 4px solid $bg-white;
+							top: -20px;
+							left: 20px;
+							overflow: hidden;
+							img{
+								width: 100%;
+								height: 100%;
+							}
+						}
 					}
 				}
 			}
