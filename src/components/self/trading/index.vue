@@ -1,10 +1,10 @@
 <template>
-	<div class="popular-list">
-		<div class="home-title">{{$t("home.exploreTitle")}}</div>
-		<el-carousel class="popular-banner" arrow="always" :interval="6000">
+	<div class="trading-list">
+		<div class="home-title title-margin-top">{{$t("home.tradeTitle")}}</div>
+		<el-carousel class="trading-banner" arrow="always" :interval="6000">
 			<el-carousel-item v-for="(popular, i) in _popularList" :key="i">
-					<div class="popular-box display-flex box-between">
-						<div class="popular-item" v-for="(v, i1) in popular" :key="`popular-${i}`">
+					<div class="trading-box display-flex box-between">
+						<div class="trading-item" v-for="(v, i1) in popular" :key="`trading-${i}`">
 							<el-image class="cover-image" placeholder="loading" :src="$filters.fullImageUrl(($filters.nftURI(v)).image)" fit="cover">
 								<template v-slot:placeholder>
 									<el-skeleton class="placeholder-image" animated>
@@ -45,7 +45,7 @@
 		},
 		computed: {
 			_popularList () {
-				return this.$tools.sliceArrayTo(this.popularList, 4)
+				return this.$tools.sliceArrayTo(this.popularList, 3)
 			},
 		},
 		data () {
@@ -56,7 +56,7 @@
 		methods: {
 			handleResize () {
 				let header_height = 112;
-				let banner = document.getElementById("popular-banner");
+				let banner = document.getElementById("trading-banner");
 				if (!banner) return;
 				banner.style.paddingTop = header_height + 10 + "px";
 				let width = banner.clientWidth;
@@ -72,9 +72,9 @@
 </script>
 
 <style lang="scss">
-	.popular-list{
+	.trading-list{
 		padding-top: 14px;
-		.popular-banner{
+		.trading-banner{
 			margin-top: 40px;
 			height: 286px;
 			.el-carousel__container{
@@ -108,20 +108,22 @@
 					}
 				}
 			}
-			.popular-box{
+			.trading-box{
 				width: 100%;
 				height: 286px;
 				margin: 0 auto;
 
-				.popular-item{
+				.trading-item{
 					cursor: pointer;
-					width: 286px;
-					height: 286px;
 					border-radius: 20px;
+					width: 388px;
+					height: 308px;
+					/* 紫色 */
+					box-shadow: 0px 0px 10px $arrowBtnShadow;
 					.cover-image{
-						border-radius: 20px;
 						width: 100%;
-						height: 100%;
+						height: 236px;
+						border-radius: 20px 20px 0px 0px;
 					}
 					.nft-name{
 						font-size: 24px;

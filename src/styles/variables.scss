@@ -7,7 +7,7 @@ $secondPrimaryColor: #dbe9f7;
 $redColor: #ee0a24;
 $blueColor: #7381FF;
 $grayColor: #999;
-$greenColor: #00c657;
+$greenColor: #6BE1B0;
 $border: 1px solid #dcdfe6;
 $borderRadius: 8px;
 
@@ -23,8 +23,13 @@ $color-black: #000;
 $alpha5: 0.5;
 $alpha6: 0.6;
 $mainLiner: linear-gradient(90deg, #AA79F7 0%, #6F5DF6 100%);
+$bgPurple: #7D47FF;
 $elButtonHoverBg: rgba(0, 0, 0, 0.04);
+$borderBg: rgba(0, 0, 0, 0.1);
 $color-black3: rgba(0, 0, 0, 0.6);
+$color-black2: rgba(0, 0, 0, 0.3);
+$arrowBtnShadow: rgba(82, 77, 255, 0.1);
+$bgItem: #F5F5F5;
 //@used "element-plus/theme-chalk/src/dark/var.scss" with (
 //	$primaryColor: #f359d4
 //);

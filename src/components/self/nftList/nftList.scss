@@ -1,0 +1,57 @@
+.nft-list{
+	>.display-flex{
+		>.box-flex1{
+			text-align: right;
+		}
+	}
+	font-style: normal;
+	font-weight: 400;
+	font-size: 14px;
+	font-family: 'Plus Jakarta Display';
+	.nft-title{
+		padding: 0 16px;
+		height: 72px;
+		color: $color-black3;
+	}
+	.nft-item{
+		padding: 0 16px;
+		height: 72px;
+		color: $primaryColor;
+		font-weight: 500;
+		&.bg-gray{
+			background-color: $bgItem;
+			border-top: 1px solid $borderBg;
+		}
+		.cover-image{
+			width: 44px;
+			height: 44px;
+			border-radius: 50%;
+		}
+		border-bottom: 1px solid $borderBg;
+	}
+	.nft-info{
+		width: 230px;
+		.nft-name{
+			padding-left: 16px;
+			font-size: 16px;
+		}
+		.icon-tag{
+			width: 16px;
+			height: 16px;
+			margin-left: 6px;
+		}
+	}
+	.icon-token{
+		width: 10px;
+		height: 16px;
+		margin-right: 6px;
+		img{
+			height: 100%;
+		}
+	}
+	.index-num{
+		width: 28px;
+		text-align: left;
+		color: $color-black2;
+	}
+}

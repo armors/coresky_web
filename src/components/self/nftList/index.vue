@@ -3,14 +3,20 @@
 		<div class="display-flex box-center-Y nft-title">
 			<div class="index-num"></div>
 			<div class="nft-info">{{ $t('home.nftListTitle1') }}</div>
-			<div class="price">{{ $t('home.nftListTitle2') }}</div>
-			<div class="exchange-volume">{{ $t('home.nftListTitle3') }}</div>
-			<div class="total-exchange-volume">{{ $t('home.nftListTitle4') }}</div>
-			<div class="holder">{{ $t('home.nftListTitle5') }}</div>
-			<div class="total">{{ $t('home.nftListTitle6') }}</div>
-			<div class="order-volume">{{ $t('home.nftListTitle7') }}</div>
+			<div class="price box-flex1 display-flex box-center-Y">
+				<div class="box-flex1"></div><div class="icon-token"></div>
+				{{ $t('home.nftListTitle2') }}</div>
+			<div class="exchange-volume box-flex1 display-flex box-center-Y">
+				<div class="box-flex1"></div><div class="icon-token"></div>
+				{{ $t('home.nftListTitle3') }}</div>
+			<div class="total-exchange-volume box-flex1 display-flex box-center-Y">
+				<div class="box-flex1"></div><div class="icon-token"></div>
+				{{ $t('home.nftListTitle4') }}</div>
+			<div class="holder box-flex1">{{ $t('home.nftListTitle5') }}</div>
+			<div class="total box-flex1">{{ $t('home.nftListTitle6') }}</div>
+			<div class="order-volume box-flex1">{{ $t('home.nftListTitle7') }}</div>
 		</div>
-		<div class="nft-item display-flex box-center-Y" v-for="(v, i) in nftList" :key="`nft-item-${i}`">
+		<div class="nft-item display-flex box-center-Y" v-for="(v, i) in nftList" :key="`nft-item-${i}`" :class="{'bg-gray': i === 0}">
 			<div class="index-num">{{i + 1}}</div>
 			<div class="nft-info display-flex box-center-Y">
 				<el-image class="cover-image" placeholder="loading" :src="$filters.fullImageUrl($filters.nftURI(v).image)" fit="cover">
@@ -26,13 +32,26 @@
 					</template>
 				</el-image>
 				<div class="nft-name">{{ $filters.nftURI(v).name }}</div>
+				<div class="icon-tag"><img src="../../../assets/images/icons/icon_tag.svg" alt=""></div>
 			</div>
-			<div class="price">{{0.05 + i}}ETH</div>
-			<div class="exchange-volume">123</div>
-			<div class="total-exchange-volume">3242</div>
-			<div class="holder">234</div>
-			<div class="total">3242</div>
-			<div class="order-volume">93847</div>
+			<div class="price box-flex1 display-flex box-center-Y">
+				<div class="box-flex1"></div>
+				<div class="icon-token"><img src="../../../assets/images/icons/token/token_eth.svg" alt=""></div>
+				<div>{{0.05 + i}}ETH</div>
+			</div>
+			<div class="exchange-volume box-flex1 display-flex box-center-Y">
+				<div class="box-flex1"></div>
+				<div class="icon-token"><img src="../../../assets/images/icons/token/token_eth.svg" alt=""></div>
+				<div>123</div>
+			</div>
+			<div class="total-exchange-volume box-flex1 display-flex box-center-Y">
+				<div class="box-flex1"></div>
+				<div class="icon-token"><img src="../../../assets/images/icons/token/token_eth.svg" alt=""></div>
+				<div>123</div>
+			</div>
+			<div class="holder box-flex1">234</div>
+			<div class="total box-flex1">3242</div>
+			<div class="order-volume box-flex1">93847</div>
 		</div>
 	</div>
 </template>
@@ -150,51 +169,5 @@
 </script>
 
 <style scoped lang="scss">
-	.nft-list{
-		.nft-title{
-			height: 80px;
-			border-bottom: 1px solid $grayColor;
-		}
-		.nft-item{
-			padding: 20px 0;
-			.cover-image{
-				width: 60px;
-				height: 60px;
-				border-radius: 8px;
-			}
-		}
-		.nft-info{
-			width: 560px;
-			.nft-name{
-				padding-left: 16px;
-				font-size: 16px;
-			}
-		}
-		.index-num{
-			width: 100px;
-			text-align: center;
-		}
-		.price{
-			width: 100px;
-		}
-		.exchange-volume{
-			width: 100px;
-		}
-		.total-exchange-volume{
-			width: 120px;
-		}
-		.holder{
-			width: 100px;
-
-		}
-		.total{
-			width: 100px;
-
-		}
-		.order-volume{
-			width: 100px;
-
-		}
-		border-bottom: 1px solid $grayColor;
-	}
+	@import "./nftList";
 </style>

@@ -44,46 +44,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  @import "./nftList";
   .loading-over{
     text-align: center;
     padding: 30px 0;
     color: $grayColor;
-  }
-  .nft-item{
-    padding: 20px 0;
-    .cover-image{
-      width: 60px;
-      height: 60px;
-      border-radius: 8px;
-    }
-  }
-  .nft-info{
-    width: 560px;
-  }
-  .index-num{
-    width: 80px;
-    text-align: center;
-  }
-  .price{
-    width: 80px;
-  }
-  .exchange-volume{
-    width: 80px;
-  }
-  .total-exchange-volume{
-    width: 120px;
-  }
-  .holder{
-    width: 80px;
-
-  }
-  .total{
-    width: 80px;
-
-  }
-  .order-volume{
-    width: 80px;
-
   }
 </style>
 

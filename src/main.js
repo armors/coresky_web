@@ -9,7 +9,7 @@ import tools from "@/util/tools.js";
 import web3 from "@/util/web3/index.js";
 import NoContent from "@/components/NoContent";
 import NFTItem from "@/components/NFTItem";
-import NFTItemLoad from "@/components/loading/NFTItemLoad";
+import NFTItemLoad from "@/components/self/nftList/NFTItemLoad";
 import FollowLoad from "@/components/loading/FollowLoad";
 import LoadStatus from "@/components/LoadStatus";
 import Avatar from "@/components/Avatar";

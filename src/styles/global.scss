@@ -11,12 +11,15 @@ html, body{
 html * {
   outline-color: transparent;
 }
-
+img{
+  width: 100%;
+  display: block;
+  height: auto;
+}
 .main-wrapper{
   flex: 1;
   width: 100%;
-  max-width: 1200px;
-  padding: 0 40px;
+  max-width: $maxWidth;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -220,6 +223,9 @@ input{
   font-size: 32px;
   color: $primaryColor;
   line-height: 41px;
+}
+.title-margin-top{
+  margin-top: 60px;
 }
 
 

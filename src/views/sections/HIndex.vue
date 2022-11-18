@@ -44,7 +44,8 @@
 <!--          </filter-and-sort>-->
 <!--        </div>-->
 <!--      </div>-->
-      <div class="home-title">{{$t('home.realTitle')}}</div>
+      <nftPopular :popularList="popularList"></nftPopular>
+      <div class="home-title title-margin-top">{{$t('home.realTitle')}}</div>
       <div class="sort-box display-flex box-center-Y box-between">
         <div class="display-flex box-center-Y">
           <el-button class="filter display-flex box-center">
@@ -65,11 +66,16 @@
           </el-button>
         </div>
         <div class="display-flex box-center-Y">
+          <el-switch
+            v-model="sortParams.valueRewards"
+            :inactive-text="$t('home.reward')"
+            class="ml-2"
+          />
           <div class="text">{{ $t("home.sortFloor") }}</div>
           <el-input-number class="input-number" :controls="false" v-model="sortParams.minPrice" :placeholder="$t('home.minPlaceholder')"/>
           <div class="line"></div>
           <el-input-number class="input-number" :controls="false" v-model="sortParams.maxPrice" :placeholder="$t('home.maxPlaceholder')"/>
-          <el-select v-model="sortParams.valueChain" placeholder="Select">
+          <el-select v-model="sortParams.valueChain" placeholder="Select" class="select-chain">
             <el-option
               v-for="item in optionsChain"
               :key="item.value"
@@ -77,7 +83,7 @@
               :value="item.value"
             />
           </el-select>
-          <el-select v-model="sortParams.valueTime" placeholder="Select">
+          <el-select v-model="sortParams.valueTime" placeholder="Select" class="select-times">
             <el-option
               v-for="item in optionsTimes"
               :key="item.value"
@@ -87,15 +93,14 @@
           </el-select>
         </div>
       </div>
-
       <div v-infinite-scroll="loadNftList">
         <nft-list :nftList="nftList" @showDialog="showDialog" @onLike="onLike"></nft-list>
 <!--        <nft-item v-for="(nft, i) in nftList" :nft="nft" :key="i" :index="i" @showDialog="showDialog" @onLike="onLike"></nft-item>-->
         <nft-item-load :loadStatus="loadStatus"></nft-item-load>
+        <router-link to="/erc721" class="see-more display-flex box-center">{{$t("home.seeMoreCollects")}}</router-link>
       </div>
-      <nftPopular :popularList="popularList"></nftPopular>
-      <launchCalendar :launchList="launchList" :loadStatus="loadStatus"></launchCalendar>
-      <!--      <nft-item-load :loadStatus="loadStatus"></nft-item-load>-->
+      <nftTrade :popularList="popularList"></nftTrade>
+<!--      <nft-item-load :loadStatus="loadStatus"></nft-item-load>-->
     </div>
     <sale-dialog :show="showSaleDialog" @close="closeDialog" @confirm="dialogConfirm" :asset="dialogOrder" :nft="dialogNft" :uri="dialogNftURI">
     </sale-dialog>
@@ -124,14 +129,14 @@
   import NftItem from "@/mixins/NftItem";
   import nftList from '@/components/self/nftList/index'
   import nftPopular from '@/components/self/popular/index'
-  import launchCalendar from '@/components/self/launchCalendar/index'
+  import nftTrade from '@/components/self/trading/index'
   export default {
     name: "HIndex",
     components: {
       FilterAndSort,
       nftList,
       nftPopular,
-      launchCalendar
+      nftTrade,
     },
     mixins: [
       NftDialog,
@@ -143,8 +148,9 @@
         sortParams: {
           minPrice: undefined,
           maxPrice: undefined,
-          valueChain: undefined,
-          valueTime: undefined,
+          valueChain: 'eth',
+          valueTime: '1',
+          valueRewards: false
         },
         optionsChain: [
           {
@@ -575,6 +581,7 @@
 
   }
   .body-wrapper{
+    padding-bottom: 120px;
     .sort-box{
       padding-top: 40px;
       .filter{
@@ -599,6 +606,7 @@
         font-weight: 400;
         font-size: 14px;
         color: $primaryColor;
+        margin-left: 20px;
       }
       .line{
         width: 8px;
@@ -622,18 +630,55 @@
           /* 黑_4 */
           background: $elButtonHoverBg;
           border-radius: 8px;
+
+          font-style: normal;
+          font-weight: 500;
+          font-size: 14px;
+          color: $primaryColor;
         }
       }
+
       .el-select{
-        width: 120px;
+        width: unset;
         margin-left: 10px;
+        height: 40px;
+        &.select-chain{
+          width: 140px;
+        }
+        &.select-times{
+          width: 90px;
+        }
+        .el-input__suffix{
+          right: 16px;
+        }
+        .el-input__wrapper{
+          padding: 10px 16px;
+          border-radius: 12px;
+          box-shadow: none;
+          border: 1px solid $borderBg;
+        }
+        .el-input.is-focus .el-input__wrapper{
+          box-shadow: none !important;
+        }
         &:first-child{
           margin-left: 10px;
         }
         .el-input__inner{
-          height: 32px;
+          height: 20px;
+          padding: 0;
         }
       }
+    }
+    .see-more{
+      width: 180px;
+      height: 48px;
+      background-color: $primaryColor;
+      border-radius: 10px;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 16px;
+      color: $color-white;
+      margin: 40px auto 0;
     }
   }
 </style>
