@@ -61,7 +61,11 @@ module.exports = {
     nftListTitle11: "社区",
     popularTitle: "Explore, collect and sell NFT",
     tradeTitle: "Trending Now",
-    dropTitle: "Drop Calendar",
+
+    launchingTime: "Launching Time:",
+    blockchain: "Blockchain:",
+    community: "Community:",
+    mintingLink: "Minting link:",
   },
   messageBox: {
     wrongNetwork: "Please switch to BSC Network",

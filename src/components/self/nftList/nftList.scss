@@ -18,9 +18,12 @@
 		height: 72px;
 		color: $primaryColor;
 		font-weight: 500;
+		cursor: pointer;
 		&.bg-gray{
-			background-color: $bgItem;
 			border-top: 1px solid $borderBg;
+		}
+		&:hover{
+			background-color: $bgItem;
 		}
 		.cover-image{
 			width: 44px;

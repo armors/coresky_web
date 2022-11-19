@@ -100,6 +100,7 @@
         <router-link to="/erc721" class="see-more display-flex box-center">{{$t("home.seeMoreCollects")}}</router-link>
       </div>
       <nftTrade :popularList="popularList"></nftTrade>
+      <nftDrop :popularList="popularList"></nftDrop>
 <!--      <nft-item-load :loadStatus="loadStatus"></nft-item-load>-->
     </div>
     <sale-dialog :show="showSaleDialog" @close="closeDialog" @confirm="dialogConfirm" :asset="dialogOrder" :nft="dialogNft" :uri="dialogNftURI">
@@ -130,6 +131,7 @@
   import nftList from '@/components/self/nftList/index'
   import nftPopular from '@/components/self/popular/index'
   import nftTrade from '@/components/self/trading/index'
+  import nftDrop from '@/components/self/drop/index'
   export default {
     name: "HIndex",
     components: {
@@ -137,6 +139,7 @@
       nftList,
       nftPopular,
       nftTrade,
+      nftDrop,
     },
     mixins: [
       NftDialog,
