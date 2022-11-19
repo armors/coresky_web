@@ -101,6 +101,7 @@
       </div>
       <nftTrade :popularList="popularList"></nftTrade>
       <nftDrop :popularList="popularList"></nftDrop>
+      <partners></partners>
 <!--      <nft-item-load :loadStatus="loadStatus"></nft-item-load>-->
     </div>
     <sale-dialog :show="showSaleDialog" @close="closeDialog" @confirm="dialogConfirm" :asset="dialogOrder" :nft="dialogNft" :uri="dialogNftURI">
@@ -132,6 +133,7 @@
   import nftPopular from '@/components/self/popular/index'
   import nftTrade from '@/components/self/trading/index'
   import nftDrop from '@/components/self/drop/index'
+  import partners from '@/components/self/partners'
   export default {
     name: "HIndex",
     components: {
@@ -140,6 +142,7 @@
       nftPopular,
       nftTrade,
       nftDrop,
+      partners
     },
     mixins: [
       NftDialog,
