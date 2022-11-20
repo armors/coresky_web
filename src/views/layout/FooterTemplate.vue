@@ -1,77 +1,28 @@
 <template>
   <div class="footer-wrapper">
-    <div class="inner global-lr">
-      <div class="main-section">
-        <div class="flex1">
-          <router-link to="/">
-            <img fit="contain"
-              class="logo-image"
-              :src="require('@/assets/img/logo.jpg')"
-            />
-          </router-link>
+    <div class="footer-box display-flex box-center-Y box-between">
+      <div class="box-flex1">
+        <div class="display-flex box-center-Y">
+          <div class="logo-white"><img src="../../assets/images/logo_white.svg" alt=""></div>
+          <div class="project-desc">{{$t('footer.projectDesc')}}</div>
         </div>
-        <div class="navs">
-          <router-link to="/"
-            class="nav-item"
-            :class="$route.path == '/' ? 'active' : ''"
-          >
-            {{ $t("footer.explore") }}
-          </router-link>
-          <router-link
-            v-if="connected && user.coinbase"
-            class="nav-item"
-            :class="$route.name == 'Items' ? 'active' : ''"
-            to="/items"
-          >
-            {{ $t("footer.myItems") }}</router-link
-          >
-          <router-link v-else class="nav-item"
-            to="/connect">
-            {{ $t("footer.myItems") }}
-          </router-link>
-          <div class="language-router">
-            <el-popover v-model:visible="languagePopover" placement="top-start" trigger="click"
-              :show-arrow="false" popper-class="footPopover">
-              <template #reference>
-                <div class="nav-item flex-column">
-                  <div class="language">{{$t('footer.language')}}</div>
-                  <div class="language-text" v-if="language != '中文'">
-                    English
-                    <span class="iconfont icon-arrow-right"></span>
-                  </div>
-                  <div class="language-text" v-else>
-                    中文
-                    <span class="iconfont icon-arrow-right"></span>
-                  </div>
-                </div>
-              </template>
-              <div class="popover">
-                <div class="popover-item" @click="languageSelect('English')">
-                  <span>English</span>
-                  <span v-if="language != '中文'" class="iconfont icon-seleted"></span>
-                </div>
-                <div class="popover-item" @click="languageSelect('中文')">
-                  <span>中文</span>
-                  <span v-if="language == '中文'" class="iconfont icon-seleted"></span>
-                </div>
-              </div>
-            </el-popover>
-          </div>
-
+        <div class="display-flex box-center-Y item-list">
+          <div class="item-box">{{$t('footer.itemDocs')}}</div>
+          <div class="item-box">{{$t('footer.itemAuditReport')}}</div>
+          <div class="item-box">{{$t('footer.itemJobs')}}</div>
+          <div class="item-box">{{$t('footer.itemDeveloper')}}</div>
+          <div class="item-box">{{$t('footer.itemAPI')}}</div>
+          <div class="item-box">{{$t('footer.itemCommunity')}}</div>
+          <div class="item-box">{{$t('footer.itemPrivacyStatement')}}</div>
+          <div class="item-box">{{$t('footer.itemTermsService')}}</div>
         </div>
       </div>
-      <div class="last-section">
-        <div class="flex1 footer-search">
-          <el-input
-            class="search-input"
-            v-model="searchKey"
-            @keyup.enter="searchClick"
-            :placeholder="$t('navigation.searchTip')"
-          >
-            <template #prefix>
-              <span class="iconfont icon-search"></span>
-            </template>
-          </el-input>
+      <div class="footer-right">
+        <div>{{$t('footer.joinCommunity')}}</div>
+        <div class="media-list display-flex box-center-Y">
+          <div class="media-item" v-for="(v, i) in mediaList" :key="`media-item-${i}`">
+            <img :src="require(`../../assets/images/icons/media/media_${v}_white.svg`)" alt="">
+          </div>
         </div>
       </div>
     </div>
@@ -84,7 +35,16 @@ export default {
   data: function () {
     return {
       languagePopover: false,
-      searchKey: this.$route.query.keyword
+      searchKey: this.$route.query.keyword,
+      mediaList: [
+        'twitter',
+        'ins',
+        'discord',
+        'reddit',
+        'youtube',
+        'tiktok',
+        'email',
+      ]
     };
   },
   computed: {
@@ -148,7 +108,6 @@ export default {
       }
       this.languagePopover = false;
     },
- 
   },
 };
 </script>
@@ -184,109 +143,54 @@ export default {
 <style lang="scss" scoped>
 .footer-wrapper {
   width: 100%;
-  background: url("../../assets/img/home/index_bg.png");
-  background-size: 100% 100%;
-  background-size: cover;
-  color: #000;
-  padding-bottom: 50px;
-  .inner{
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-  }
-}
-
-.main-section{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px 0;
-}
-
-.header-section {
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
-  align-items: center;
-}
-.logo-image{
-  width: 200px;
-}
-
-
-.navs{
-  display: flex;
-  flex: 1;
-  justify-content: flex-end;
-  align-items: flex-start;
-  .nav-item{
-    cursor: pointer;
-    display: flex;
-    font-size: 14px;
+  backdrop-filter: blur(28px);
+  background-color: $primaryColor;
+  height: 111px;
+  .footer-box{
+    max-width: $maxWidth;
+    margin: 0 auto;
+    height: 100%;
+    padding: 26px 0;
+    font-family: 'Plus Jakarta Display';
+    font-style: normal;
     font-weight: 400;
-    margin-left: 20px;
-    &.active{
-      color: #fff;
+    font-size: 14px;
+    color: $color-white3;
+    line-height: 1.5;
+    .logo-white{
+      width: 110px;
+      height: 28.55px;
+    }
+    .project-desc{
+      margin-left: 20px;
+      /* Body_3_regular */
+      color: $color-white4;
+    }
+    .item-list{
+      margin-top: 10px;
+      .item-box{
+        cursor: pointer;
+        line-height: 1.5;
+      }
+      .item-box + .item-box{
+        margin-left: 30px;
+      }
+    }
+    .footer-right{
+      .media-list{
+        margin-top: 12px;
+        .media-item{
+          cursor: pointer;
+          width: 24px;
+          height: 24px;
+        }
+        .media-item + .media-item{
+          margin-left: 12px;
+        }
+      }
+
     }
   }
-}
-
-.last-section {
-  padding: 22px 0px;
-  display: flex;
-  flex-direction: row;
-  border-top: 1px solid rgba(4, 4, 5, 0.1);
-  align-items: center;
-}
-.copyright{
-  display: flex;
-  flex: 1;
-  justify-content: flex-end;
-  .item{
-    margin-left: 10px;
-  }
-}
-
-.language-router{
-  display: flex;
-  flex-direction: column;
-  font-size: 14px;
-  cursor: pointer;
-  .language{
-    opacity: 0.7;
-  }
-  .language-text{
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-  }
-}
-
-.popover {
-  .popover-item{
-    display: flex;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 30px;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .icon-seleted{
-    font-size: 24px;
-    color: $primaryColor;
-    font-weight: bold;
-  }
-}
-
-
-.footer-search{
-  display: flex;
-  flex: 1;
-  align-items: center;
-  color: #333;;
-  font-size: 15px;
-  font-weight: 900;
 }
 
 

@@ -1,8 +1,8 @@
 <template>
-  <div class="common-wraper">
+  <div class="common-wraper no-scroller">
     <HeaderTemplate />
     <div class="widClass"><router-view /></div>
-<!--    <FooterTemplate />-->
+    <FooterTemplate />
   </div>
 </template>
 

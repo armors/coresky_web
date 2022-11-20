@@ -1,5 +1,5 @@
 <template>
-  <div class="app-wrapper">
+  <div class="app-wrapper no-scroller">
     <div class="web-loading" v-if="!webLoading" v-loading.fullscreen.lock="!webLoading">
     </div>
     <div v-else>
