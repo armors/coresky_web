@@ -112,34 +112,6 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.footer-search{
-  .search-input {
-    border-radius: 15px;
-    overflow: hidden;
-    background: #fff;
-    height: 30px;
-    color: black;
-    display: flex;
-    align-items: center;
-    .el-input__inner {
-      padding-left: 30px !important;
-      height: 100%;
-      border: none;
-      background: #eeeeee6e;
-    }
-    .el-input__prefix {
-      line-height: 30px;
-    }
-    .iconfont {
-      font-size: 22px;
-      font-weight: bold;
-      color: #000;
-    }
-  }
-}
-</style>
-
 <style lang="scss" scoped>
 .footer-wrapper {
   width: 100%;
@@ -156,7 +128,6 @@ export default {
     font-weight: 400;
     font-size: 14px;
     color: $color-white3;
-    line-height: 1.5;
     .logo-white{
       width: 110px;
       height: 28.55px;
