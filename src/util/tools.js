@@ -78,6 +78,7 @@ export default {
     for(let i=0,len=list.length;i<len;i+=spliceLen){
       result.push(list.slice(i,i+spliceLen));
     }
+    console.log(result)
     return result
   },
   getNotifyType(type) {

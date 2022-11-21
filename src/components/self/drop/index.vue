@@ -1,52 +1,54 @@
 <template>
 	<div class="drop-list">
 		<div class="home-title title-margin-top">{{$t("home.dropTitle")}}</div>
-		<el-carousel class="drop-banner" arrow="always" :interval="10000">
-			<el-carousel-item v-for="(v, i) in _popularList" :key="i">
-				<div class="drop-box display-flex">
-					<el-image class="cover-image" placeholder="loading" :src="$filters.fullImageUrl(($filters.nftURI(v)).image)" fit="cover">
-						<template v-slot:placeholder>
-							<el-skeleton class="placeholder-image" animated>
-								<template #template>
-									<el-skeleton-item class="nft-image-skeleton" variant="h3" />
-								</template>
-							</el-skeleton>
-						</template>
-						<template v-slot:error>
-							<el-image class="error-image" :src="require('@/assets/create-img/non-existent.png')" fit="contain"></el-image>
-						</template>
-					</el-image>
-					<div class="box-flex1">
-						<div class="nft-name">
-							{{ ($filters.nftURI(v)).name }}
+		<div class="drop-banner-box">
+			<div class="arrow-prev arrow-icon" @click="arrowClick('prev')"></div>
+			<div class="arrow-next arrow-icon" @click="arrowClick('next')"></div>
+			<el-carousel class="drop-banner" arrow="never" ref="dropBanner" :interval="10000">
+				<el-carousel-item v-for="(v, i) in _dropList" :key="i">
+					<div class="drop-box display-flex">
+						<el-image class="cover-image" placeholder="loading" :src="v.ckCollectionsInfoEntity.bannerImage" fit="cover">
+							<template v-slot:placeholder>
+								<el-skeleton class="placeholder-image" animated>
+									<template #template>
+										<el-skeleton-item class="nft-image-skeleton" variant="h3" />
+									</template>
+								</el-skeleton>
+							</template>
+							<template v-slot:error>
+								<div class="display-flex box-center error-image-box">
+									<el-image class="error-image" :src="require('@/assets/create-img/non-existent.png')" fit="contain"></el-image>
+								</div>
+							</template>
+						</el-image>
+						<div class="box-flex1">
+							<div class="nft-name">
+								{{ v.ckCollectionsInfoEntity.name }}
+							</div>
+							<div class="display-flex box-center-Y info-item launch-time">
+								<div class="label">{{$t("home.launchingTime")}}</div>
+								<div>{{v.ckCollectionsInfoEntity.updateDate}}</div>
+							</div>
+							<div class="display-flex box-center-Y info-item">
+								<div class="label">{{$t("home.blockchain")}}</div>
+								<div class="chain-icon"><img src="../../../assets/images/icons/token/token_eth.svg" alt=""></div>
+								<div>Ethereum</div>
+							</div>
+							<div class="display-flex box-center-Y info-item">
+								<div class="label">{{$t("home.community")}}</div>
+								<div v-for="(name, i) in mediaList" @click="openWindow(name, v)" class="icon-img" :class="`icon-img-${name}`" :key="`info-item-${i}`"></div>
+							</div>
+							<div class="display-flex box-center-Y info-item">
+								<div class="label">{{$t("home.mintingLink")}}</div>
+								<div class="icon-img icon-link-img"></div>
+							</div>
 						</div>
-						<div class="display-flex box-center-Y info-item launch-time">
-							<div class="label">{{$t("home.launchingTime")}}</div>
-							<div>2022.12.12</div>
-						</div>
-						<div class="display-flex box-center-Y info-item">
-							<div class="label">{{$t("home.blockchain")}}</div>
-							<div class="chain-icon"><img src="../../../assets/images/icons/token/token_eth.svg" alt=""></div>
-							<div>Ethereum</div>
-						</div>
-						<div class="display-flex box-center-Y info-item">
-							<div class="label">{{$t("home.community")}}</div>
-							<div class="icon-img icon-img-lang"></div>
-							<div class="icon-img icon-img-tg"></div>
-							<div class="icon-img icon-img-twitter"></div>
-							<div class="icon-img icon-img-collect"></div>
-							<div class="icon-img icon-img-share"></div>
-							<div class="icon-img icon-img-more"></div>
-						</div>
-						<div class="display-flex box-center-Y info-item">
-							<div class="label">{{$t("home.mintingLink")}}</div>
-							<div class="icon-img icon-link-img"></div>
-						</div>
-					</div>
 
-				</div>
-			</el-carousel-item>
-		</el-carousel>
+					</div>
+				</el-carousel-item>
+			</el-carousel>
+		</div>
+
 	</div>
 </template>
 
@@ -54,7 +56,7 @@
 	export default {
 		name: "index",
 		props: {
-			popularList: {
+			dropList: {
 				type: Array,
 				default: () => {
 					return []
@@ -62,23 +64,47 @@
 			}
 		},
 		watch: {
-			popularList: {
+			dropList: {
 				handler: (newValue) => {
 				},
 				immediate: false
 			}
 		},
 		computed: {
-			_popularList () {
-				return this.popularList
+			_dropList () {
+				return this.dropList
 			},
 		},
 		data () {
 			return {
 				bannerHeight: "500px",
+				mediaList: [
+					'website',
+					'discord',
+					'twitter',
+					'collect',
+					'share',
+					'more'
+				]
 			}
 		},
 		methods: {
+			openWindow(name, v) {
+				if (['collect',
+					'share',
+					'more'].indexOf(name) > -1) {
+
+				} else {
+					window.open(v.ckCollectionsInfoEntity[name])
+				}
+			},
+			arrowClick (val) {
+				if(val === 'next') {
+					this.$refs.dropBanner.next()
+				} else {
+					this.$refs.dropBanner.prev()
+				}
+			},
 			handleResize () {
 				let header_height = 112;
 				let banner = document.getElementById("drop-banner");
@@ -99,9 +125,13 @@
 <style lang="scss">
 	.drop-list{
 		padding-top: 14px;
-		.drop-banner{
+		.drop-banner-box{
+			position: relative;
 			margin-top: 40px;
 			height: 414px;
+		}
+		.drop-banner{
+			height: 100%;
 			.el-carousel__container{
 				height: 100%;
 				padding-left: 4px;
@@ -212,14 +242,14 @@
 						}
 					}
 
-					.icon-img-lang {
+					.icon-img-website {
 						background-image: url("../../../assets/images/icons/icon_lang_active_gray.svg");
 						&:hover {
 							background-image: url("../../../assets/images/icons/icon_lang_active.svg");
 						}
 					}
 
-					.icon-img-tg {
+					.icon-img-discord {
 						background-image: url("../../../assets/images/icons/media/media_tg.svg");
 						&:hover {
 							background-image: url("../../../assets/images/icons/media/media_tg_active.svg");

@@ -3,6 +3,7 @@ import i18n from "@/i18n/i18n";
 import router from '@/router';
 import tools from '@/util/tools.js'
 import store from '@/store'
+const CryptoJS = require("crypto-js");
 
 const service = axios.create({
   // baseURL: process.env.VUE_APP_BASE_API, // api 的 base_url
@@ -17,7 +18,7 @@ service.interceptors.request.use(
         'Authorization'
       ) || ''}`;
     }
- 
+
     return config;
   },
   err => Promise.reject(err)
@@ -27,13 +28,27 @@ service.interceptors.request.use(
 // response interceptor
 service.interceptors.response.use(
   response => {
-    const res = response.data
+    console.log(response)
+    let res = response.data
+    console.log(typeof res.data)
+    if (typeof res.data === 'string') {
+      console.log(res.data)
+      var bytes  = CryptoJS.AES.decrypt(res.data, CryptoJS.enc.Utf8.parse(process.env.VUE_APP_AES_SECRET_KEY), {
+        mode: CryptoJS.mode.ECB,
+        padding: CryptoJS.pad.Pkcs7,
+        iv: '',
+      });
+      console.log(bytes)
+      var decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+      console.log(decryptedData)
+      res.data = decryptedData
+    }
     if (res.errno === 501) {
       if(!store.state.connected){
         tools.message(i18n.global.t('global.needLogin'), "error");
         setTimeout(() => {
           router.push("/connect");
-        }, 1500)    
+        }, 1500)
       }else{
         store.dispatch("signLogin");
       }

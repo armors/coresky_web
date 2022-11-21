@@ -65,3 +65,8 @@ export function nftURI (v) {
   }
   return {};
 }
+
+export function ckCollectionsInfoEntity(v) {
+  console.log(v, v.ckCollectionsInfoEntity, v.ckCollectionsInfoEntity.bannerImage)
+  return v.ckCollectionsInfoEntity.bannerImage
+}

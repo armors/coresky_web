@@ -19,7 +19,7 @@
 		<div class="nft-item display-flex box-center-Y" v-for="(v, i) in nftList" :key="`nft-item-${i}`" :class="{'bg-gray': i === 0}">
 			<div class="index-num">{{i + 1}}</div>
 			<div class="nft-info display-flex box-center-Y">
-				<el-image class="cover-image" placeholder="loading" :src="$filters.fullImageUrl($filters.nftURI(v).image)" fit="cover">
+				<el-image class="cover-image" placeholder="loading" :src="v.ckCollectionsInfoEntity.image" fit="cover">
 					<template v-slot:placeholder>
 						<el-skeleton class="placeholder-image" animated>
 							<template #template>
@@ -31,27 +31,27 @@
 						<el-image class="error-image" :src="require('@/assets/create-img/non-existent.png')" fit="contain"></el-image>
 					</template>
 				</el-image>
-				<div class="nft-name">{{ $filters.nftURI(v).name }}</div>
+				<div class="nft-name">{{ v.ckCollectionsInfoEntity.name }}</div>
 				<div class="icon-tag"><img src="../../../assets/images/icons/icon_tag.svg" alt=""></div>
 			</div>
 			<div class="price box-flex1 display-flex box-center-Y">
 				<div class="box-flex1"></div>
 				<div class="icon-token"><img src="../../../assets/images/icons/token/token_eth.svg" alt=""></div>
-				<div>{{0.05 + i}}ETH</div>
+				<div>{{ v.ckCollectionsInfoEntity.foolPrice}}ETH</div>
 			</div>
 			<div class="exchange-volume box-flex1 display-flex box-center-Y">
 				<div class="box-flex1"></div>
 				<div class="icon-token"><img src="../../../assets/images/icons/token/token_eth.svg" alt=""></div>
-				<div>123</div>
+				<div>{{v.dayAmount}}</div>
 			</div>
 			<div class="total-exchange-volume box-flex1 display-flex box-center-Y">
 				<div class="box-flex1"></div>
 				<div class="icon-token"><img src="../../../assets/images/icons/token/token_eth.svg" alt=""></div>
-				<div>123</div>
+				<div>{{v.totalAmount}}</div>
 			</div>
-			<div class="holder box-flex1">234</div>
-			<div class="total box-flex1">3242</div>
-			<div class="order-volume box-flex1">93847</div>
+			<div class="holder box-flex1">{{v.ownerCount}}</div>
+			<div class="total box-flex1">{{v.totalCount}}</div>
+			<div class="order-volume box-flex1">{{v.orderCount}}</div>
 		</div>
 	</div>
 </template>

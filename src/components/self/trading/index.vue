@@ -1,11 +1,14 @@
 <template>
 	<div class="trading-list">
 		<div class="home-title title-margin-top">{{$t("home.tradeTitle")}}</div>
-		<el-carousel class="trading-banner" arrow="always" :interval="6000">
-			<el-carousel-item v-for="(popular, i) in _popularList" :key="i">
+		<div class="trading-banner-box">
+			<div class="arrow-prev arrow-icon" @click="arrowClick('prev')"></div>
+			<div class="arrow-next arrow-icon" @click="arrowClick('next')"></div>
+			<el-carousel class="trading-banner" arrow="never" ref="tradingBanner" :interval="6000">
+				<el-carousel-item v-for="(popular, i) in _popularList" :key="i">
 					<div class="trading-box display-flex box-between">
 						<div class="trading-item" v-for="(v, i1) in popular" :key="`trading-${i}`">
-							<el-image class="cover-image" placeholder="loading" :src="$filters.fullImageUrl(($filters.nftURI(v)).image)" fit="cover">
+							<el-image class="cover-image" placeholder="loading" :src="v.ckCollectionsInfoEntity.bannerImage" fit="cover">
 								<template v-slot:placeholder>
 									<el-skeleton class="placeholder-image" animated>
 										<template #template>
@@ -14,17 +17,20 @@
 									</el-skeleton>
 								</template>
 								<template v-slot:error>
-									<el-image class="error-image" :src="require('@/assets/create-img/non-existent.png')" fit="contain"></el-image>
+									<div class="display-flex box-center error-image-box">
+										<el-image class="error-image" :src="require('@/assets/create-img/non-existent.png')" fit="contain"></el-image>
+									</div>
 								</template>
 							</el-image>
 							<div class="nft-name">
-								{{ ($filters.nftURI(v)).name }}
-								<div class="img-logo"><img :src="$filters.fullImageUrl(($filters.nftURI(v)).image)" alt=""></div>
+								{{ v.ckCollectionsInfoEntity.name }}
+								<div class="img-logo"><img :src="v.ckCollectionsInfoEntity.image" alt=""></div>
 							</div>
 						</div>
 					</div>
-			</el-carousel-item>
-		</el-carousel>
+				</el-carousel-item>
+			</el-carousel>
+		</div>
 	</div>
 </template>
 
@@ -57,6 +63,13 @@
 			}
 		},
 		methods: {
+			arrowClick (val) {
+				if(val === 'next') {
+					this.$refs.tradingBanner.next()
+				} else {
+					this.$refs.tradingBanner.prev()
+				}
+			},
 			handleResize () {
 				let header_height = 112;
 				let banner = document.getElementById("trading-banner");
@@ -77,9 +90,13 @@
 <style lang="scss">
 	.trading-list{
 		padding-top: 14px;
-		.trading-banner{
+		.trading-banner-box{
 			margin-top: 40px;
 			height: 318px;
+			position: relative;
+		}
+		.trading-banner{
+			height: 100%;
 			.el-carousel__container{
 				height: 100%;
 				padding-left: 4px;

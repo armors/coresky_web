@@ -1,7 +1,7 @@
 export default {
   home: {
     list: {
-      url: "/home/list",
+      url: "/home/query",
       method: "post",
     },
     search: {

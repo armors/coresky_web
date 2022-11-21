@@ -16,7 +16,7 @@ module.exports = defineConfig({
   },
   devServer: {
     proxy: {
-      "/fingernft": {
+      "/api": {
         target: process.env.VUE_APP_API_URL,
       },
       "/static": {

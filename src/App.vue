@@ -14,10 +14,10 @@
   export default {
     name: "App",
     beforeCreate: async function () {
-      await this.$store.dispatch("config");
-      await this.$store.dispatch("categorys");
-      await this.$store.dispatch("payTokens");
-      this.$store.dispatch("countNotices");
+      // await this.$store.dispatch("config");
+      // await this.$store.dispatch("categorys");
+      // await this.$store.dispatch("payTokens");
+      // this.$store.dispatch("countNotices");
       this.$store.commit("WEB_LOADING");
     },
     data () {

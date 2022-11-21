@@ -228,5 +228,38 @@ input{
   margin-top: 60px;
 }
 
+.arrow-icon{
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  background-position: center;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  top: 50%;
+  margin-top: -40px;
+  cursor: pointer;
+  z-index: 10;
+  &.arrow-prev{
+    left: -40px;
+    background-image: url("../assets/images/icons/icon_arrow_left.svg");
+    &:hover{
+      background-image: url("../assets/images/icons/icon_arrow_left_active.svg");
+    }
+  }
+  &.arrow-next{
+    right: -40px;
+    background-image: url("../assets/images/icons/icon_arrow_right.svg");
+    &:hover{
+      background-image: url("../assets/images/icons/icon_arrow_right_active.svg");
+    }
+  }
+}
+
+.icon-tag{
+  width: 16px;
+  height: 16px;
+  margin-left: 6px;
+}
+
 
 
