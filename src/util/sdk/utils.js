@@ -138,6 +138,16 @@ function contractAbi(type){
     case "NFT":
       file = require("./abi/NFT.json");
       break;
+    case 'MARKET_REGISTRY':
+      file = require('./abi/MarketRegistry.json')
+      break;
+    case "MARKET_EXCHANGE":
+      file = require('./abi/MarketExchange.json')
+      break;
+    case "IERC721":
+      file = require('./abi/IERC721.json')
+      break;
+
   }
   return file || {};
 }
@@ -155,7 +165,7 @@ const calcGas = async (web3, key, args, lastArg, ts) => {
   } else {
     gasPrice = await web3.eth.getGasPrice();
   }
- 
+
   const gas = await new Promise((resolve, reject) => {
     ts.estimateGas(
       {

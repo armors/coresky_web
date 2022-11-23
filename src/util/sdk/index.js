@@ -1,12 +1,57 @@
 import utils_web3 from "@/util/web3/index";
-var Web3 = require("web3");
 import types from "./types";
 import utils from "./utils";
 import constants from "./constants";
-import BigNumber from "bignumber.js";
+import BigNumber from 'bignumber.js'
+import {BIG_TEN} from './bigBumer'
+var Web3 = require("web3");
 const eth_util = require("ethereumjs-util");
 
 export default {
+  async getMarketRegistryContract () {
+    let abi = utils.contractAbi("MARKET_REGISTRY");
+    return await utils.contractAt({abi}, process.env.VUE_APP_MARKET_REGISTRY);
+  },
+  async getMarketExchangeContract () {
+    let abi = utils.contractAbi("MARKET_EXCHANGE");
+    return await utils.contractAt({abi}, process.env.VUE_APP_MARKET_EXCHANGE);
+  },
+  async getOwnerProxy (address) {
+    let contract = await this.getMarketRegistryContract();
+    console.log(contract)
+    if (contract.error) return contract;
+    let proxiesAddress = null
+    try {
+      proxiesAddress =  await contract.proxies(address);
+      console.log(proxiesAddress)
+      if (proxiesAddress === this.NULL_ADDRESS()) {
+        return await contract.registerProxy()
+      } else {
+        return {
+          proxiesAddress
+        }
+      }
+    } catch (e) {
+      console.log(e)
+      return { error: e.message };
+    }
+  },
+
+  async callhashOrder_(params) {
+    let contract = await this.getMarketExchangeContract();
+    let tx = await contract.hashOrder_(...params)
+    return tx
+  },
+  async callhashToSign_(params) {
+    let contract = await this.getMarketExchangeContract();
+    let tx = await contract.hashToSign_(...params)
+    return tx
+  },
+  getDecimalAmount  (amount, decimals = 18)  {
+    return new BigNumber(amount).times(BIG_TEN.pow(decimals))
+  },
+
+
   async totalSupply(asset) {
     asset = this.getFullAsset(asset);
     let contract = await this.getAssetContract(asset);
@@ -249,4 +294,19 @@ export default {
   NULL_ADDRESS() {
     return constants.NULL_ADDRESS;
   },
+  ERC721_REPLACEMENT_SELL() {
+    return constants.ERC721_REPLACEMENT_SELL;
+  },
+  RELAYER_FEE () {
+    return constants.RELAYER_FEE;
+  },
+  FEE_ADDRESS () {
+    return constants.FEE_ADDRESS;
+  },
+  ERC721_REPLACEMENT_BUY () {
+    return constants.ERC721_REPLACEMENT_BUY;
+  },
+  ADDRESS_ZERO () {
+    return constants.ADDRESS_ZERO;
+  }
 };

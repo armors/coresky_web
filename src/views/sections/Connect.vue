@@ -48,12 +48,13 @@ export default {
     async login(value) {
       this.$store.dispatch("connectAndSign", value).then(res=>{
         if(res && this.$tools.checkResponse(res)){
-          var query = this.$route.query;
-          if (query && query.redirect) {
-            this.$router.push(query.redirect);
-          } else {
-            this.$router.push("/");
-          }
+          console.log(res)
+          // var query = this.$route.query;
+          // if (query && query.redirect) {
+          //   this.$router.push(query.redirect);
+          // } else {
+          //   this.$router.push("/");
+          // }
         }
       });
     },
