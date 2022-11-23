@@ -14,7 +14,7 @@ import FollowLoad from "@/components/loading/FollowLoad";
 import LoadStatus from "@/components/LoadStatus";
 import Avatar from "@/components/Avatar";
 import sdk from "@/util/sdk/index.js";
-import Window from "@/components/Window.vue";
+// import Window from "@/components/Window.vue";
 // import 'element-plus/theme-chalk/dark/css-vars.css'
 
 
@@ -64,7 +64,7 @@ app.use(VueClipboard);
 app.use(ElementPlus);
 
 app.component("Avatar", Avatar);
-app.component("popup-window", Window);
+// app.component("popup-window", Window);
 app.component("no-content", NoContent);
 app.component("nft-item", NFTItem);
 app.component("nft-item-load", NFTItemLoad);
