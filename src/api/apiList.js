@@ -252,6 +252,11 @@ export default {
     },
   },
   order: {
+    create: {
+      url: "/order/create",
+      method: "post",
+    },
+
     submit: {
       url: "/order/submit",
       method: "post",

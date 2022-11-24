@@ -145,6 +145,7 @@
 				const flatSig = await this.$web3.librarySign(hashBytes, this.user.coinbase)
 				console.log(flatSig)
 				const sig = ethers.utils.splitSignature(flatSig);
+				console.log(sig)
 				const orderParams = {
 					basePrice: params.basePrice,
 					callData: params.calldata,
@@ -173,12 +174,15 @@
 					v: sig.v,
 					r: sig.r,
 					s: sig.s,
+					hashOriginal: hash,
 					hash: hashToSign,
-					sign: "100000",
-					takerProtocolFee: "100000",
+					sign: sig,
+					takerProtocolFee: '0',
 				}
-				console.log(orderParams)
-
+				console.log(JSON.stringify(orderParams))
+				this.$api("order.create", orderParams).then((res) => {
+					console.log(res)
+				})
 			}
 			//	挂单结束
 		}
