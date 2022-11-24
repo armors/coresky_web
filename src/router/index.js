@@ -13,7 +13,7 @@ import Account from "../views/sections/Account.vue"
 
 import Search from "../views/sections/Search.vue"
 import Collection from "../views/sections/Collection.vue"
-
+import AllCollection from "../views/sections/AllCollection.vue"
 import Message from "../views/sections/Message.vue"
 
 import NoFound from '@/views/sections/NoFound.vue';
@@ -62,6 +62,11 @@ const routes = [
         path: '/search',
         name: "Search",
         component: Search
+      },
+      {
+        path: '/allcollection',
+        name: "allcollection",
+        component: AllCollection
       },
       {
         path: '/collection/:address',

@@ -1,27 +1,15 @@
 <template>
   <div class="main-wrapper">
-    <div class="tab-wrap">
-      <div class="tabClass" :class="sortIndex == 'first' ? 'active' : ''" @click="handleClick('first')">
-        Collection results
-      </div>
-      <div class="tabClass m-left-20" :class="sortIndex == 'second' ? 'active' : ''" @click="handleClick('second')">
-        NFT results
-      </div>
-      <div class="tabClass m-left-20" :class="sortIndex == 'three' ? 'active' : ''" @click="handleClick('three')">
-        User results
-      </div>
+    <div class="page-top">
+      <div class="page-title">Werfen Sie einen Blick！</div>
+      <div class="page-title-sub">Kaufen und gehen，Zögern Sie nicht！Bitte wählen Sie die gewünschte Kategorie aus!</div>
     </div>
-    <div class="search-wrap">
-      <el-input class="search-input-wrap" style="width:400px" v-model="keyword" @keyup.enter="searchClick">
-        <template #prefix>
-          <div class="img-search"><img src="../../assets/images/icons/icon_search.svg" alt=""></div>
-        </template>
-      </el-input>
-      <div class="sort-wrap">
-        <span class="icon-wrap icon_filter01 active">
-        </span>
-        <span class="icon-wrap icon_filter02"></span>
-      </div>
+    <div class="top-nav">
+      <div class="item-nav active">PFP</div>
+      <div class="item-nav">Art</div>
+      <div class="item-nav">Passcard</div>
+      <div class="item-nav">Game</div>
+      <div class="item-nav">Music</div>
     </div>
     <div class="collection-list">
       <div class="collection-card" v-for="i in 12" :key="i">
@@ -59,6 +47,7 @@
 <script>
 export default {
   mixins: [],
+  name: 'AllCollection',
   components: {},
   data: function () {
     return {
@@ -171,165 +160,47 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.title {
-  margin-bottom: 20px;
-  margin-top: 13px;
-  font-size: 17px;
-  font-weight: 400;
-  color: #999;
-}
-
-.m-list {
-  margin-top: 28px;
-  width: 100%;
-}
-
-.user-tab {
-  width: 80%;
-  margin-bottom: 40px;
-}
-.user-item {
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 10px;
-  width: 50%;
-  .inner {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    background: #fff;
-    padding: 10px;
-    border-radius: $borderRadius;
-    margin: 0 5px;
-    cursor: pointer;
-  }
-  .user-item-left {
-    cursor: pointer;
-    align-items: center;
-    flex: 1;
-    .image2 {
-      align-self: flex-end;
-      margin-left: -13px;
-      width: 13px;
-      height: 13px;
-    }
-    .name {
-      margin-left: 9px;
-      font-size: 13px;
-      font-weight: bold;
-      color: #1b1b1b;
-    }
-  }
-  .user-item-right {
-    font-size: 12px;
-    color: #999;
-  }
-}
-
-.nft-tab {
-  width: 100%;
-}
-
-.account-item {
-  width: 50%;
-}
-
-.tab-wrap {
-  display: flex;
-  margin: 40px 0;
-  width: 100%;
-  display: flex;
-  border-bottom: 1px solid $borderBg;
-}
-.tabClass {
-  cursor: pointer;
-  font-style: normal;
-  font-weight: 700;
-  font-size: 32px;
-  line-height: 41px;
-  margin-right: 60px;
-  color: $color-black2;
-  padding-bottom: 16px;
-  &.active {
+.main-wrapper {
+  padding: 40px 0;
+  .page-title {
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 41px;
     color: $primaryColor;
-    border-bottom: 4px solid $bgPurple;
   }
-}
-.search-wrap {
-  height: 40px;
-  margin-bottom: 30px;
-  display: flex;
-  justify-content: space-between;
-
-  .sort-wrap {
+  .page-title-sub {
+    margin-top: 20px;
+    font-weight: 400;
+    font-size: 20px;
+    color: $color-black3;
+    letter-spacing: 0.05em;
+  }
+  .top-nav {
+    margin: 60px 0 30px;
     display: flex;
-    background: $elButtonHoverBg;
-    border-radius: 12px;
-    align-items: center;
-    width: 128px;
-    padding: 4px;
-    .icon-wrap {
-      height: 32px;
-      width: 58px;
-      line-height: 32px;
-      border-radius: 8px;
-
-      &.icon_filter01 {
-        background-image: url('../../assets/images/icons/icon_filter01.svg');
-        &.active {
-          background-image: url('../../assets/images/icons/icon_filter01_active.svg');
-          background-color: $bg-white;
-        }
-      }
-      &.icon_filter02 {
-        background-image: url('../../assets/images/icons/icon_filter02.svg');
-        &.active {
-          background-image: url('../../assets/images/icons/icon_filter02_active.svg');
-          background-color: $bg-white;
-        }
-      }
+    .item-nav {
+      height: 40px;
+      margin-right: 20px;
+      line-height: 40px;
+      padding: 0 20px;
+      border-radius: 20px;
+      font-weight: 400;
+      font-size: 16px;
+      color: $color-black2;
+      border: 1px solid $borderBg;
       &:hover {
         cursor: pointer;
       }
-      // &.active {
-      //   background: $bg-white;
-      // }
-    }
-  }
-}
-.search-input-wrap {
-  overflow: hidden;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  font-size: 16px;
-  // height: 40px;
-  border: none;
-  ::v-deep {
-    .el-input__inner {
-      height: 40px;
-      border: none;
-      font-size: 14px;
-    }
-    .el-input__wrapper {
-      border-radius: 12px;
-      box-shadow: 0 0 0 0px var(--el-input-border-color, var(--el-border-color)) inset;
-      background: $elButtonHoverBg;
-      border: none;
-      .el-input__inner {
-        background-color: transparent;
+      &:hover,
+      &.active {
+        font-weight: 500;
+        background: $mainLiner;
+        color: $color-white;
       }
     }
-    .el-input__prefix {
-      line-height: 40px;
-      left: 15px;
-    }
-    .img-search {
-      width: 16px;
-      height: 16px;
-    }
   }
 }
+
 .collection-list {
   display: flex;
   flex-flow: row wrap;
