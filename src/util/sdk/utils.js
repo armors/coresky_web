@@ -207,6 +207,7 @@ class MyContract {
         return new Promise((resolve, reject) => {
           try {
             const web3 = utils_web3.getWeb3();
+            console.log(a.inputs.length === args.length)
             if (a.inputs.length === args.length) {
               this.contract.methods[key](...args).call(
                 (e, r) => {
@@ -220,21 +221,35 @@ class MyContract {
             } else {
               const lastArg = args.pop();
               const ts = this.contract.methods[key](...args);
-              calcGas(web3, key, args, lastArg, ts).then((res) => {
-                if(res.error){
-                  return resolve(res);
+              ts.send(
+                {
+                  ...lastArg,
+                  // gasPrice,
+                  // gas,
                 }
-                var { gas, gasPrice } = res;
-                ts.send(
-                  {
-                    ...lastArg,
-                    gasPrice,
-                    gas,
-                  }
-                ).then(res => {
-                  resolve(res);
-                })
-              });
+              ).then(res => {
+                resolve(res);
+              })
+              // calcGas(web3, key, args, lastArg, ts).then((res) => {
+              //   if(res.error){
+              //     return resolve(res);
+              //   }
+              //   // var { gas, gasPrice } = res;
+              //   console.log({
+              //     ...lastArg,
+              //     // gasPrice,
+              //     // gas,
+              //   })
+              //   ts.send(
+              //     {
+              //       ...lastArg,
+              //       // gasPrice,
+              //       // gas,
+              //     }
+              //   ).then(res => {
+              //     resolve(res);
+              //   })
+              // });
             }
           } catch (e) {
             reject({ error: e });

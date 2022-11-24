@@ -8,6 +8,7 @@ var Web3 = require("web3");
 const eth_util = require("ethereumjs-util");
 
 export default {
+  // self start
   async getMarketRegistryContract () {
     let abi = utils.contractAbi("MARKET_REGISTRY");
     return await utils.contractAt({abi}, process.env.VUE_APP_MARKET_REGISTRY);
@@ -47,10 +48,18 @@ export default {
     let tx = await contract.hashToSign_(...params)
     return tx
   },
-  getDecimalAmount  (amount, decimals = 18)  {
+  getDecimalAmount (amount, decimals = 18)  {
     return new BigNumber(amount).times(BIG_TEN.pow(decimals))
   },
-
+  async atomicMatch (params, owner) {
+    let contract = await this.getMarketExchangeContract();
+    let tx = await contract.atomicMatch_(
+      ...params,
+      { from: owner }
+    )
+    return tx
+  },
+  // self start
 
   async totalSupply(asset) {
     asset = this.getFullAsset(asset);

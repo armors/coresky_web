@@ -252,11 +252,16 @@ export default {
     },
   },
   order: {
+    // self start
     create: {
       url: "/order/create",
       method: "post",
     },
-
+    orderInfo: {
+      url: "/order/info",
+      method: "post",
+    },
+    // self end
     submit: {
       url: "/order/submit",
       method: "post",

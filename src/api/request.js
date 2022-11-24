@@ -7,7 +7,7 @@ const CryptoJS = require("crypto-js");
 
 const service = axios.create({
   // baseURL: process.env.VUE_APP_BASE_API, // api 的 base_url
-  timeout: 50000, // request timeout
+  timeout: 120000, // request timeout
 })
 
 // request interceptor
