@@ -136,9 +136,9 @@ export default {
       return { error: e.message };
     }
   },
-  async librarySign (message, address) {
+  getSigner (message, address) {
     const library = window.walletLibrary
-    return library.getSigner(address).signMessage(message)
+    return library.getSigner(address)
   },
   checkWeb3() {
     return window.ethereum && window.ethereum.isConnected();
