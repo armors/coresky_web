@@ -14,6 +14,9 @@ import Account from "../views/sections/Account.vue"
 import Search from "../views/sections/Search.vue"
 import Collection from "../views/sections/Collection.vue"
 import AllCollection from "../views/sections/AllCollection.vue"
+import Markterplace from "../views/sections/Markterplace.vue"
+
+
 import Message from "../views/sections/Message.vue"
 
 import NoFound from '@/views/sections/NoFound.vue';
@@ -67,6 +70,11 @@ const routes = [
         path: '/allcollection',
         name: "allcollection",
         component: AllCollection
+      },
+      {
+        path: '/markterplace',
+        name: "markterplace",
+        component: Markterplace
       },
       {
         path: '/collection/:address',
