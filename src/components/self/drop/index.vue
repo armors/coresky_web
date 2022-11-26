@@ -7,7 +7,7 @@
 			<el-carousel class="drop-banner" arrow="never" ref="dropBanner" :interval="10000">
 				<el-carousel-item v-for="(v, i) in _dropList" :key="i">
 					<div class="drop-box display-flex">
-						<el-image class="cover-image" placeholder="loading" :src="v.ckCollectionsInfoEntity.bannerImage" fit="cover">
+						<el-image class="cover-image" placeholder="loading" :src="v.bannerImage" fit="cover">
 							<template v-slot:placeholder>
 								<el-skeleton class="placeholder-image" animated>
 									<template #template>
@@ -23,11 +23,12 @@
 						</el-image>
 						<div class="box-flex1">
 							<div class="nft-name">
-								{{ v.ckCollectionsInfoEntity.name }}
+								{{ v.name }}
 							</div>
 							<div class="display-flex box-center-Y info-item launch-time">
 								<div class="label">{{$t("home.launchingTime")}}</div>
-								<div>{{v.ckCollectionsInfoEntity.updateDate}}</div>
+								<div>{{v.createDate}}</div>
+<!--								<div>2022-09-11</div>-->
 							</div>
 							<div class="display-flex box-center-Y info-item">
 								<div class="label">{{$t("home.blockchain")}}</div>

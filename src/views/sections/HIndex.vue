@@ -19,7 +19,7 @@
           <div class="carousel-box">
             <el-carousel :autoplay="false" arrow="never" v-if="topCollection.length > 0">
               <el-carousel-item v-for="(v, i) in topCollection" :key="`recommend-item-${i}`">
-                <el-image class="img-box" placeholder="loading" :src="v.ckCollectionsInfoEntity.bannerImage" fit="cover">
+                <el-image class="img-box" placeholder="loading" :src="v.image" fit="cover">
 <!--                <el-image class="img-box" placeholder="loading" src="https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840" fit="cover">-->
                   <template v-slot:placeholder>
                     <el-skeleton class="placeholder-image" animated>
@@ -324,8 +324,8 @@
             this.topCollection = res.debug.topCollection
             this.recommendCollection = res.debug.recommendCollection
             this.nftList = res.debug.dataCollection
-            this.popularList = res.debug.recommendCollection
-            this.dropList = res.debug.recommendCollection
+            this.popularList = res.debug.popularCollection
+            this.dropList = res.debug.dropCalendar
             // this.banners = this.$tools.sliceArrayTo(res.data.list, 4);
             // this.queryFunction(res.data.list, this.nftList);
             // if (res.data.list.length < data.limit) {
