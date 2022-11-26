@@ -3,6 +3,7 @@ import store from "@/store";
 import i18n from "@/i18n/i18n";
 import tools from "@/util/tools.js";
 import { removeLocalStorage } from "@/util/local-storage.js";
+import { providers, getDefaultProvider } from 'ethers'
 
 const promisify = (inner) =>
   new Promise((resolve, reject) =>
@@ -33,6 +34,7 @@ export default {
         }
         var web3 = new Web3(window.ethereum);
         window.wallet = web3;
+        window.walletLibrary = new providers.Web3Provider(window.web3.currentProvider)
         var networkId = await promisify((cb) => web3.eth.getChainId(cb));
         var coinbase = await promisify((cb) => web3.eth.getCoinbase(cb));
 
@@ -133,6 +135,10 @@ export default {
     } catch (e) {
       return { error: e.message };
     }
+  },
+  getSigner (message, address) {
+    const library = window.walletLibrary
+    return library.getSigner(address)
   },
   checkWeb3() {
     return window.ethereum && window.ethereum.isConnected();

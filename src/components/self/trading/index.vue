@@ -6,9 +6,9 @@
 			<div class="arrow-next arrow-icon" @click="arrowClick('next')"></div>
 			<el-carousel class="trading-banner" arrow="never" ref="tradingBanner" :interval="6000">
 				<el-carousel-item v-for="(popular, i) in _popularList" :key="i">
-					<div class="trading-box display-flex box-between">
+					<div class="trading-box display-flex">
 						<div class="trading-item" v-for="(v, i1) in popular" :key="`trading-${i}`">
-							<el-image class="cover-image" placeholder="loading" :src="v.ckCollectionsInfoEntity.bannerImage" fit="cover">
+							<el-image class="cover-image" placeholder="loading" :src="v.bannerImage" fit="cover">
 								<template v-slot:placeholder>
 									<el-skeleton class="placeholder-image" animated>
 										<template #template>
@@ -23,8 +23,8 @@
 								</template>
 							</el-image>
 							<div class="nft-name">
-								{{ v.ckCollectionsInfoEntity.name }}
-								<div class="img-logo"><img :src="v.ckCollectionsInfoEntity.image" alt=""></div>
+								{{ v.name }}
+								<div class="img-logo"><img :src="v.image" alt=""></div>
 							</div>
 						</div>
 					</div>
@@ -176,6 +176,9 @@
 								height: 100%;
 							}
 						}
+					}
+					& + .trading-item{
+						margin-left: 18px;
 					}
 				}
 			}

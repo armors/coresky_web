@@ -8,7 +8,7 @@
 				<el-carousel-item v-for="(popular, i) in _recommendCollection" :key="i">
 					<div class="popular-box display-flex box-center-Y">
 						<div class="popular-item" v-for="(v, i1) in popular" :key="`popular-${i1}`">
-							<el-image class="cover-image" placeholder="loading" :src="v.ckCollectionsInfoEntity.bannerImage" fit="cover">
+							<el-image class="cover-image" placeholder="loading" :src="v.image" fit="cover">
 <!--							<el-image class="cover-image" placeholder="loading" src="https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840" fit="cover">-->
 								<template v-slot:placeholder>
 									<el-skeleton class="placeholder-image" animated>
@@ -24,7 +24,7 @@
 								</template>
 							</el-image>
 							<div class="nft-name display-flex box-center-Y">
-								<div>{{ v.ckCollectionsInfoEntity.name }}</div>
+								<div>{{ v.name }}</div>
 								<div class="icon-tag"><img src="../../../assets/images/icons/icon_tag.svg" alt=""></div>
 							</div>
 						</div>

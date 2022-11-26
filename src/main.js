@@ -16,6 +16,7 @@ import Avatar from "@/components/Avatar";
 import sdk from "@/util/sdk/index.js";
 // import Window from "@/components/Window.vue";
 // import 'element-plus/theme-chalk/dark/css-vars.css'
+var Web3 = require("web3");
 
 
 import ProfilePopover from "@/components/ProfilePopover";
@@ -55,6 +56,7 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 	app.component(key, component)
 }
 app.config.globalProperties.$web3 = web3;
+app.config.globalProperties.$Web3 = Web3;
 app.config.globalProperties.$api = api;
 app.config.globalProperties.$tools = tools;
 app.config.globalProperties.$sdk = sdk;
