@@ -1,562 +1,1003 @@
 <template>
   <div class="collection-detail">
-    <div class="bg-box" :style=" imgUrl ? 'background: url('+$filters.fullImageUrl(imgUrl)+') no-repeat; background-size: cover;':'' ">
-      <div class="head-portrait">
-        <avatar class="u-info-avatar" :imageUrl="$filters.fullImageUrl(contract.cover)" :address="contract.address" :imgWidth="88" :imgHeight="88" shape="circular"></avatar>
-      </div>
+    <div class="bg-box"
+      :style=" dataInfo.imgUrl ? 'background: url('+$filters.fullImageUrl(dataInfo.imgUrl)+') no-repeat; background-size: cover;':'' ">
     </div>
     <div class="collection-info">
-      <div class="u-info-name" v-if="contract.name">{{ contract.name }}</div>
-      <div class="u-info-address justify-center">
-        <span>{{ showAddress }}</span>
-        <span class="u-info-copy iconfont icon-copy" v-clipboard:copy="contract.address" v-clipboard:success="onSuccessCopy" v-clipboard:error="onErrorCopy"></span>
-      </div>
-      <div class="u-info-introduction">
-        {{ contract.description || $t('collection.introduction') }}
-      </div>
-    </div>
-    <div class="item-page main-wrapper">
-      <div class="item-tab">
-        <el-tabs class="user-tab-menus" v-model="tab">
-          <el-tab-pane class="tab-content-info" v-for="(tab,i) in tabs" :key="i" :name="tab.name">
-            <template #label>
-              <div class="tab-content-title">
-                <span>{{tab.title}}</span>
-                <span>({{tab.count}})</span>
-              </div>
-            </template>
+      <div class="info-top">
+        <div class="avatar-box">
+          <img
+            src="https://storage.nfte.ai/asset/collection/featured/MFYROFVZKZSCSHUWXRGBZAAQPZWMOKFM.jpg?x-oss-process=image/resize,m_fill,w_108,h_108,limit_0"
+            alt="">
+        </div>
+        <div class="info-title">
+          <div class="title">
+            <span>Azuki</span>
+            <img class="tag" src="../../assets/images/icons/icon_tag.svg" alt="">
+          </div>
+          <div class="creator">
+            <span class="txt">By</span>
+            <span class="name">TeamAzuki</span>
+            <img src="../../assets/images/icons/icon_tag_purple.svg" alt="">
+          </div>
+        </div>
+        <div class="info-share">
 
-            <div class="new-nft-list" v-infinite-scroll="loadList">
-              <div class="tab-content-none" v-if="!nftList[tab.name].length && loadStatus != 'loading'">
-                <div class="tab-info">
-                  <div class="tab-title">{{$t('account.noFound')}}</div>
-                  <div class="tab-intro">{{$t('account.noFoundText')}}</div>
-                  <el-button class="tab-btn" @click="goHome">{{$t('account.browseMarketplace')}}
-                  </el-button>
-                </div>
-              </div>
-              <template v-else>
-                <div class="nft">
-                  <nft-item v-for="(nft, i) in nftList[tab.name]" :nft="nft" :index="i" @showDialog="showDialog" @onLike="onLike" :key="i">
-                  </nft-item>
-                  <nft-item-load :loadStatus="loadStatus"></nft-item-load>
-                </div>
+        </div>
+      </div>
+      <div class="info-val">
+        <div class="item">
+          <span class="lable">Items:</span>
+          <span class="value">10,000</span>
+        </div>
+        <div class="item">
+          <span class="lable">Created:</span>
+          <span class="value">Jul 2022</span>
+        </div>
+        <div class="item">
+          <span class="lable">Creator fee:</span>
+          <span class="value">10%</span>
+        </div>
+        <div class="item">
+          <span class="lable">Chain:</span>
+          <span class="value">Ethereum</span>
+        </div>
+        <div class="item">
+          <span class="lable">Contract ADD:</span>
+          <span class="value">:0x595…da687</span>
+          <el-icon>
+            <CopyDocument />
+          </el-icon>
+        </div>
+      </div>
+      <div class="info-rem">
+        Introduction of the project introduction of the project Introduction of the project
+      </div>
+      <div class="info-card">
+        <div class="item">
+          <div class="lable">Floor Price</div>
+          <div class="value">
+            <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
+            <span>530.73</span>
+          </div>
+          <div class="rise">
+            <span class="time">24h</span>
+            <span class="ratio red">-254.75%</span>
+          </div>
+        </div>
+        <div class="item">
+          <div class="lable">Floor Price</div>
+          <div class="value">
+            <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
+            <span>530.73</span>
+          </div>
+          <div class="rise">
+            <span class="time">24h</span>
+            <span class="ratio green">-254.75%</span>
+          </div>
+        </div>
+        <div class="item">
+          <div class="lable">Floor Price</div>
+          <div class="value">
+            <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
+            <span>530.73</span>
+          </div>
+          <div class="rise">
+            <span class="time">24h</span>
+            <span class="ratio green">-254.75%</span>
+          </div>
+        </div>
+        <div class="item">
+          <div class="lable">Floor Price</div>
+          <div class="value">
+            <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
+            <span>530.73</span>
+          </div>
+          <div class="rise">
+            <span class="time">24h</span>
+            <span class="ratio green">-254.75%</span>
+          </div>
+        </div>
+        <div class="item">
+          <div class="lable">Floor Price</div>
+          <div class="value">
+            <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
+            <span>530.73</span>
+          </div>
+          <div class="rise">
+            <span class="time">24h</span>
+            <span class="ratio green">-254.75%</span>
+          </div>
+        </div>
+        <div class="item">
+          <div class="lable">Floor Price</div>
+          <div class="value">
+            <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
+            <span>530.73</span>
+          </div>
+          <div class="rise">
+            <span class="time">24h</span>
+            <span class="ratio green">-254.75%</span>
+          </div>
+        </div>
+      </div>
+      <div class="tab-wrap">
+        <div class="tabClass active">
+          Collected
+        </div>
+        <div class="tabClass">
+          Transaction dynamics
+        </div>
+        <div class="tabClass">
+          Data analysis
+        </div>
+      </div>
 
-              </template>
+      <div class="item-page">
+
+        <div class="filter-wrap">
+          <div class="filter-head">
+            <span class="left">
+              <el-icon>
+                <ArrowLeft />
+              </el-icon>Filter
+            </span>
+            <span class="right">
+              <el-icon>
+                <Refresh />
+              </el-icon>
+            </span>
+          </div>
+          <div class="filter-item flex border">
+            <span class="left">Buy Now</span>
+            <span class="right">
+              <el-switch v-model="queryParams.isNowBuy" class="ml-2" />
+            </span>
+          </div>
+          <div class="filter-item border">
+            <div class="flex">
+              <span class="left">Price</span>
+              <span class="right">
+                <el-icon style="font-size:16px">
+                  <ArrowUp />
+                </el-icon>
+              </span>
             </div>
-          </el-tab-pane>
-        </el-tabs>
+            <el-select v-model="queryParams.sort" placeholder="ETH" :teleported="false" popper-class="select-popper"
+              class="select-sort">
+              <el-option value="ETH">ETH</el-option>
+            </el-select>
+            <div class="price-range" style="margin-top:15px">
+              <el-input-number class="input-number" :controls="false" v-model="queryParams.minPrice"
+                :placeholder="$t('home.minPlaceholder')" />
+              <div class="line"></div>
+              <el-input-number class="input-number" :controls="false" v-model="queryParams.maxPrice"
+                :placeholder="$t('home.maxPlaceholder')" />
+            </div>
+            <div class="btn-apply">Application</div>
+          </div>
+          <div class="filter-item">
+            <div class="flex">
+              <span class="left">Attributes</span>
+              <span class="right">
+                <el-icon style="font-size:16px">
+                  <ArrowUp />
+                </el-icon>
+              </span>
+            </div>
+            <div class="gruop-wrap">
+              <div class="type-item">
+                <div class="type-head">
+                  <span class="type-name">Background</span>
+                  <div class="type-num">
+                    <span>100</span>
+                    <el-icon class="down" style="font-size:15px">
+                      <ArrowUp />
+                    </el-icon>
+                  </div>
+                </div>
+                <div class="attr-content">
+                </div>
+              </div>
+              <div class="type-item">
+                <div class="type-head">
+                  <span class="type-name">Background</span>
+                  <div class="type-num">
+                    <span>100</span>
+                    <el-icon class="down" style="font-size:15px">
+                      <ArrowUp />
+                    </el-icon>
+                  </div>
+                </div>
+                <div class="attr-content">
+                </div>
+              </div>
+              <div class="type-item">
+                <div class="type-head">
+                  <span class="type-name">Background</span>
+                  <div class="type-num">
+                    <span>100</span>
+                    <el-icon class="down" style="font-size:15px">
+                      <ArrowUp />
+                    </el-icon>
+                  </div>
+                </div>
+                <div class="attr-content">
+                </div>
+              </div>
+              <div class="type-item">
+                <div class="type-head">
+                  <span class="type-name">Background</span>
+                  <div class="type-num">
+                    <span>100</span>
+                    <el-icon>
+                      <ArrowUp />
+                    </el-icon>
+                  </div>
+                </div>
+                <div class="attr-content">
+                  <div class="attr-item">
+                    <span>Pearl</span>
+                    <div class="attr-num">
+                      <span>100</span>
+                      <el-checkbox v-model="checked1" label="" />
+                    </div>
+                  </div>
+                  <div class="attr-item">
+                    <span>Pearl</span>
+                    <div class="attr-num">
+                      <span>100</span>
+                      <el-checkbox v-model="checked1" label="" />
+                    </div>
+                  </div>
+                  <div class="attr-item">
+                    <span>Pearl</span>
+                    <div class="attr-num">
+                      <span>100</span>
+                      <el-checkbox v-model="checked1" label="" />
+                    </div>
+                  </div>
+                  <div class="attr-item">
+                    <span>Pearl</span>
+                    <div class="attr-num">
+                      <span>100</span>
+                      <el-checkbox v-model="checked1" label="" />
+                    </div>
+                  </div>
+                  <div class="attr-item">
+                    <span>Pearl</span>
+                    <div class="attr-num">
+                      <span>100</span>
+                      <el-checkbox v-model="checked1" label="" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="right-content">
+          <div class="search-wrap">
+            <div class="btnfilter">
+              <img src="../../assets/images/icons/icon_filter.svg" alt="">
+              Filter
+            </div>
+            <el-input class="search-input-wrap" style="width:400px" placeholder="Search by name or attribute"
+              v-model="keyword" @keyup.enter="searchClick">
+              <template #prefix>
+                <div class="img-search"><img src="../../assets/images/icons/icon_search.svg" alt=""></div>
+              </template>
+            </el-input>
+            <el-select v-model="queryParams.sort" placeholder="Recently listed" :teleported="false"
+              popper-class="select-popper" class="select-sort">
+              <el-option value="Recently listed1">Recently listed</el-option>
+              <el-option value="Recently listed2">Recently listed</el-option>
+              <el-option value="Recently listed3">Recently listed</el-option>
+              <el-option value="Recently listed4">Recently listed</el-option>
+              <el-option value="Recently listed5">Recently listed</el-option>
+            </el-select>
+            <div class="sort-wrap">
+              <span class="icon-wrap icon_filter01 active">
+              </span>
+              <span class="icon-wrap icon_filter02"></span>
+            </div>
+          </div>
+          <div class="nft-list">
+            <div class="nft-card" v-for="i in 20" :key="i">
+              <div class="nft-content">
+                <div class="card-top">
+                  <div class="card-img">
+                    <img class="img-lazy"
+                      src="https://storage.nfte.ai/asset/collection/featured/BEEWQLPGNIJCWCXJUDSRUWRWOWSOYCCT.jpg?x-oss-process=image/resize,m_fill,w_504,h_288,limit_0"
+                      alt="Image" _nk="p/rO21">
+                  </div>
+                </div>
+                <div class="card-bottom">
+                  <div class="nft-txt">
+                    Azuki #9251
+                  </div>
+                  <div class="nft-price">
+                    <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="">
+                    <span class="nft-price">0.073 ETH</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="custom-pagination">
+            <div class="content">
+              <el-pagination background layout="prev, pager, next" align="center" :total="1000" />
+            </div>
+          </div>
+        </div>
       </div>
-
-      <sale-dialog :show="showSaleDialog" @close="closeDialog" @confirm="dialogConfirm" :asset="dialogOrder" :nft="dialogNft" :uri="dialogNftURI">
-      </sale-dialog>
-      <cancel-sale-dialog :show="showCancelSaleDialog" @close="closeDialog" @confirm="dialogConfirm" :asset="dialogOrder" :nft="dialogNft" :uri="dialogNftURI">
-      </cancel-sale-dialog>
-      <buy-dialog :show="showBuyDialog" @close="closeDialog" @confirm="dialogConfirm" :asset="dialogOrder" :nft="dialogNft" :uri="dialogNftURI">
-      </buy-dialog>
-
-      <bid-dialog :show="showBidDialog" @close="closeDialog" @confirm="dialogConfirm" :bid="dialogOrder" :nft="dialogNft" :uri="dialogNftURI">
-      </bid-dialog>
-      <cancel-bid-dialog :show="showCancelBidDialog" @close="closeDialog" @confirm="dialogConfirm" :bid="dialogOrder" :nft="dialogNft" :uri="dialogNftURI">
-      </cancel-bid-dialog>
-      <accept-dialog :show="showAcceptDialog" @close="closeDialog" @confirm="dialogConfirm" :bid="dialogOrder" :nft="dialogNft" :uri="dialogNftURI">
-      </accept-dialog>
-      <transfer-dialog :show="showTransferDialog" @close="closeDialog" @confirm="dialogConfirm" :asset="dialogOrder" :nft="dialogNft" :uri="dialogNftURI">
-      </transfer-dialog>
-      <burn-dialog :show="showBurnDialog" @close="closeDialog" @confirm="dialogConfirm" :asset="dialogOrder" :nft="dialogNft" :uri="dialogNftURI">
-      </burn-dialog>
-
-
     </div>
+
   </div>
 </template>
 <script>
-  import NftDialog from "@/mixins/NftDialog";
-  import NftItem from "@/mixins/NftItem";
-  export default {
-    name: "Items",
-    mixins: [NftDialog, NftItem],
-    data () {
-      return {
-        imgUrl: "",
+export default {
+  name: "Collection",
+  mixins: [],
+  data () {
+    return {
+      dataInfo: {
+        imgUrl: "https://storage.nfte.ai/asset/collection/featured/LSIWBMDTLHJRKSITPNVQWFNCVCOKRIGG.jpg?x-oss-process=image/resize,m_fill,w_4096,h_180",
         address: "",
-        tab: "collectibles",
-        tabs: [
-          { name: "sale", title: "On sale", count: 0 },
-          { name: "collectibles", title: "Collitibles", count: 0 },
-        ],
-        page: 1,
-        limit: this.$store.state.pageLimit,
-        nftList: {
-          sale: [],
-          collectibles: [],
-        },
-        loadStatus: "",
-        contract: {},
-      };
-    },
-    created () {
-      this.init();
-    },
-    computed: {
-      user () {
-        return this.$store.state.user;
       },
-      showAddress () {
-        let address = this.contract.address;
-        if (!address) return "";
-        var showAddress =
-          address.slice(0, 11) + "..." + address.slice(address.length - 4);
-        return showAddress;
+      queryParams: {
+        pageNum: 1,
+        pageSize: 10,
+        sort: '',
+        minPrice: '',
+        maxPrice: '',
+        isNowBuy: true,
       },
-    },
-    watch: {
-      tab (val, old) {
-        if (val == old) return;
-        this.page = 1;
-        this.$router.push({
-          path: "/collection/" + this.address,
-          query: { tab: this.tab },
-        });
-        this.loadStatus = "";
-        this.getList();
-      },
-    },
-    methods: {
-      init () {
-        this.address = this.$route.params.address;
-        if (this.$route.query.tab) {
-          this.tab = this.$route.query.tab;
-        }
+    };
+  },
+  created () {
+  },
+  computed: {
 
-        this.getContract();
-        if (this.$route.query.tab) {
-          this.tab = this.$route.query.tab;
-        }
-        this.getList();
-        this.statContract();
-      },
-      onSuccessCopy () {
-        this.$tools.message(this.$t("request.copySuccess"), "success");
-      },
-      onErrorCopy () {
-        this.$tools.message("Copy error");
-      },
-      goHome () {
-        this.$router.push("/");
-      },
-      loadList () {
-        if (this.loadStatus == "over") return;
-        this.getList();
-      },
-      reloadList () {
-        this.page = 1;
-        this.getList();
-      },
-      statContract () {
-        let params = {
-          address: this.address,
-        };
-        this.$api("contract.stat", params).then((res) => {
-          if (this.$tools.checkResponse(res)) {
-            this.tabs[0].count = !res.data.saleCount ? 0 : res.data.saleCount;
-            this.tabs[1].count = !res.data.collectionCount ? 0 : res.data.collectionCount;
-            this.tabs = [].concat(this.tabs);
-          }
-        });
-      },
-      getContract () {
-        let address = {
-          caddress: this.address, //待获取合约信息
-        };
-        this.$api("contract.info", address).then((res) => {
-          if (this.$tools.checkResponse(res)) {
-            this.contract = res.data;
-            this.imgUrl = res.data.bannerUrl;
-            if (!this.contract.name || !this.contract.symbol) {
-              this.getinfo();
-            }
-          }
-        });
-      },
-      getinfo () {
-        let address = {
-          address: this.address, //待获取合约信息
-        };
-        this.$api("contract.getinfo", address).then((res) => {
-          if (this.$tools.checkResponse && res.data.length) {
-            this.contract.name = res.data.name;
-            this.contract.symbol = res.data.symbol;
-          }
-        });
-      },
-      getOnSale: function () {
-        this.getContractItems("sale");
-      },
-      getCollectiable () {
-        this.getContractItems("collectibles");
-      },
-      getContractItems (tab) {
-        let isSell = tab == "sale" ? true : null;
-        let params = {
-          page: this.page,
-          limit: this.limit,
-          address: this.address,
-          isSell: isSell,
-        };
-        if (this.loadStatus == "loading") return;
-        this.loadStatus = "loading";
-        var that = this;
-        this.$api("contract.listitems", params).then((res) => {
-          this.loadStatus = "loaded";
-          if (that.$tools.checkResponse(res)) {
-            if (params.page == 1) this.nftList[tab] = [];
-            that.nftList[tab] = that.nftList[tab].concat(res.data.list);
-            that._queryFunction(res.data.list, this.nftList[tab]);
-            that.page = params.page + 1;
-            that.loadStatus =
-              res.data.list.length < res.data.limit ? "over" : this.loadStatus;
-          } else {
-            that.$tools.message(res.errmsg);
-          }
-        });
-      },
-      getList () {
-        switch (this.tab) {
-          case "sale":
-            this.getOnSale();
-            break;
-          case "collectibles":
-            this.getCollectiable();
-            break;
-        }
-      },
-      onLike(data, like){
-        this._onLike(data, like, this.nftList[this.tab]);
-      },
-    },
-  };
+  },
+
+  methods: {
+  },
+};
 </script>
 <style lang="scss" scoped>
-  .main-wrapper {
-    max-width: 100% !important;
+.collection-detail {
+  .bg-box {
+    height: 320px;
+    width: 100%;
   }
-  .collection-detail {
-    padding: 0;
-    .bg-box {
+  .collection-info {
+    width: 1200px;
+    margin: 0 auto;
+    margin-top: 15px;
+    margin-bottom: 40px;
+    .info-top {
+      height: 80px;
       position: relative;
-      width: calc(var(--coverWidth));
-      .head-portrait {
-        width: 100%;
-        height: 200px;
-        background: linear-gradient(-90deg, #e7d5cb, #e3c7c4, #82aabe);
-      }
-      .u-info-avatar {
+      .avatar-box {
         position: absolute;
         left: 0;
-        right: 0;
-        bottom: -44px;
+        bottom: 0;
+        z-index: 1;
+        width: 168px;
+        height: 168px;
+        padding: 5px;
+        background-color: $bg-white;
+        border-radius: 50%;
+      }
+      .info-title {
+        margin-left: 178px;
+        .title {
+          display: flex;
+          // width: 700px;
+          align-items: center;
+          font-style: normal;
+          font-weight: 700;
+          font-size: 32px;
+          line-height: 41px;
+        }
+        .tag {
+          margin-left: 10px;
+          width: 24px;
+          height: 24px;
+        }
+        .creator {
+          .txt {
+            font-size: 20px;
+            line-height: 30px;
+            color: $color-black2;
+          }
+          .name {
+            margin-left: 8px;
+            font-weight: 500;
+            font-size: 20px;
+            line-height: 30px;
+          }
+          img {
+            margin-left: 8px;
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+          }
+        }
+      }
+    }
+    .info-val {
+      display: flex;
+      margin-top: 15px;
+      .item {
+        margin-right: 30px;
+        color: $color-black2;
+        font-size: 16px;
+        line-height: 24px;
+        .value {
+          font-weight: 700;
+          margin-left: 3px;
+          color: $color-black;
+        }
+        .el-icon {
+          font-size: 15px;
+          cursor: pointer;
+          margin-left: 5px;
+          color: $color-black;
+        }
+      }
+    }
+    .info-rem {
+      margin-top: 15px;
+      font-weight: 400;
+      font-size: 20px;
+      line-height: 30px;
+      color: $color-black3;
+    }
+    .info-card {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 60px;
+      margin-bottom: 60px;
+      color: $color-black3;
+      .item {
         display: flex;
+        flex-direction: column;
         justify-content: center;
+        align-items: center;
+        padding: 8px;
+        width: 186px;
+        height: 108px;
+        border-radius: 12px;
+        border: 1px solid $borderBg;
+        .lable {
+          font-size: 14px;
+          line-height: 20px;
+          margin-bottom: 12px;
+        }
+        .value {
+          display: flex;
+          align-items: center;
+          line-height: 24px;
+          font-weight: 700;
+          font-size: 18px;
+          color: $primaryColor;
+          .token-icon {
+            display: inline-block;
+            width: 15px;
+            height: 20px;
+            margin-right: 5px;
+          }
+        }
+        .rise {
+          display: flex;
+          margin-top: 12px;
+          .time {
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 16px;
+            height: 20px;
+            padding: 2px 6px;
+            background: $elButtonHoverBg;
+            border-radius: 10px;
+            color: $bgPurple;
+          }
+          .ratio {
+            margin-left: 6px;
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 20px;
+            height: 20px;
+            &.green {
+              color: $greenColor;
+            }
+            &.red {
+              color: $redColor;
+            }
+          }
+        }
+      }
+    }
+    .tab-wrap {
+      display: flex;
+      width: 100%;
+      display: flex;
+      border-bottom: 1px solid $borderBg;
+    }
+    .tabClass {
+      cursor: pointer;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 24px;
+      margin-right: 60px;
+      color: $color-black2;
+      padding-bottom: 16px;
+      &.active {
+        color: $primaryColor;
+        border-bottom: 4px solid $bgPurple;
       }
     }
   }
+}
 
-  .mt-50 {
-    margin-top: -50px !important;
-  }
-  .mr-5 {
-    margin-right: 5px !important;
-  }
-  .margin-left-xs {
-    margin-left: 10px !important;
-  }
-  .pt-0 {
-    padding-top: 0 !important;
-  }
-  .flex {
-    display: flex;
-  }
-  .justify-center {
-    justify-content: center;
-  }
-  .align-center {
-    align-items: center;
-  }
-  .cursor-pointer {
-    cursor: pointer;
-  }
-  .margin-bottom-xs {
-    margin-bottom: 10px;
-  }
-  .collection-info {
-    margin-top: 50px;
-    text-align: center;
-  }
-  .coinbase-text {
-    font-size: 9px;
-    color: #333333;
-  }
-  .name-text {
-    font-size: 15px;
-    font-weight: bold;
-    color: #000000;
-  }
-  .brief-text {
-    font-size: 9px;
-    color: #666666;
-  }
-
-  .filter-sort {
-    min-width: 80px;
-    font-size: 9px;
-    color: #000000;
-    position: absolute;
-    top: 10px;
-    right: 150px;
-  }
-  .sort-icon {
-    width: 7px;
-    height: 4px;
-    margin-left: 5px;
-  }
-
-  .collection-info {
-    .u-info-name {
-      padding-top: 10px;
-      font-size: 15px;
-      font-weight: bold;
-      color: #1d1e22;
-    }
-    .u-info-address {
-      font-size: 15px;
-      font-weight: 400;
-      color: #444444;
+.item-page {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  .filter-wrap {
+    width: 210px;
+    // height: 520px;
+    flex-shrink: 0;
+    margin-right: 30px;
+    background: $bg-white;
+    border: 1px solid $borderBg;
+    border-radius: 12px;
+    overflow: hidden;
+    .filter-head {
       display: flex;
-      align-items: center;
-      padding: 10px 0;
+      justify-content: space-between;
+      // height: 56px;
+      padding: 16px;
+      line-height: 24px;
+      background: #ffffff;
+      font-weight: 400;
+      font-size: 14px;
+      color: $primaryColor;
+      border-bottom: 1px solid $borderBg;
+      .left {
+        display: flex;
+        align-items: center;
+        font-weight: 400;
+        font-size: 14px;
+        color: $primaryColor;
+        cursor: pointer;
+        .el-icon {
+          margin-right: 2px;
+        }
+      }
+      .right {
+        cursor: pointer;
+      }
     }
-    .u-info-copy {
-      font-size: 18px;
-      padding-left: 5px;
+    .flex {
+      display: flex;
+      justify-content: space-between;
+    }
+    .filter-item {
+      padding: 16px;
+      line-height: 24px;
+      &.border {
+        border-bottom: 1px solid $borderBg;
+      }
+      .left {
+        font-weight: 500;
+        font-size: 14px;
+        color: $primaryColor;
+      }
+      .right {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+      }
+    }
+    ::v-deep .el-select {
+      margin-top: 15px;
+      position: relative;
+      // width: 180px;
+      height: 32px;
+      .el-popper {
+        top: 42px !important;
+      }
+      .el-select-dropdown__item {
+        height: 32px;
+        line-height: 32px;
+      }
+      .el-input__suffix {
+        right: 16px;
+      }
+      .el-input__wrapper {
+        padding: 6px 10px;
+        border-radius: 8px;
+        box-shadow: none;
+        height: 32px;
+        box-sizing: border-box;
+        border: none;
+        box-shadow: none;
+        background-color: $elButtonHoverBg;
+      }
+      .el-input.is-focus .el-input__wrapper {
+        box-shadow: none !important;
+      }
+      &:first-child {
+        margin-left: 10px;
+      }
+      .el-input__inner {
+        height: 20px;
+        background-color: transparent;
+        padding: 0;
+      }
+    }
+    .price-range {
+      margin-top: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .input-number {
+        width: 80px;
+        ::v-deep {
+          .el-input__wrapper {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            border: none;
+            box-shadow: none;
+          }
+          .el-input__inner {
+            border: none;
+            gap: 8px;
+            height: 32px;
+            background: $elButtonHoverBg;
+            border-radius: 8px;
+
+            font-style: normal;
+            font-weight: 500;
+            font-size: 14px;
+            color: $primaryColor;
+          }
+        }
+      }
+      .line {
+        width: 8px;
+        height: 1px;
+        margin: 0 10px;
+        background-color: $grayColor;
+      }
+    }
+    .btn-apply {
+      margin-top: 15px;
+      height: 32px;
+      line-height: 32px;
+      color: $color-white;
+      background: $mainLiner;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 16px;
       cursor: pointer;
     }
-    .u-info-introduction {
-      font-size: 12px;
-      font-weight: 400;
-      color: #999;
-    }
-  }
-  .iconfont.icon-upload {
-    font-weight: bold;
-  }
-  .item-page {
-    display: flex;
-    flex-direction: column;
-    margin: 3% auto;
-    width: 1200px !important;
-  }
-  .item-content {
-    border-bottom: $border;
-    padding-bottom: 20px;
-    padding-top: 20px;
-    margin-bottom: 10px;
-    .u-detail {
-      .u-header {
-        width: 88px;
-        height: 88px;
-        background: rgb(167, 163, 163);
-        img {
-          width: 88px;
-          height: 88px;
-        }
-      }
-    }
-  }
-  .item-tab {
-    position: relative;
-    .tab-content-info {
-      min-height: 200px;
-      .tab-content-none {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        text-align: center;
-        margin: 43px auto;
-      }
-      .tab-info {
-        .tab-title {
-          font-size: 24px;
-          font-family: 'Montserrat-Regular';
-          font-weight: bold;
-          color: #1d1e22;
-          margin: 45px auto 23px;
-        }
-        .tab-intro {
-          width: 313px;
-          /* height: 38px; */
-          font-size: 16px;
-          font-family: 'Montserrat-Regular';
-          font-weight: 400;
-          color: #1d1e22;
-          line-height: 22px;
-          opacity: 0.5;
-        }
-        .tab-btn {
-          width: 250px;
-          height: 54px;
-          background: $primaryColor;
-          border-radius: 8px;
-          color: #ffffff;
-          font-family: 'Montserrat-Regular';
-          margin-top: 21px;
-        }
-      }
-      .new-nft-list {
-        margin: 0 -10px;
-        .nft {
+    .gruop-wrap {
+      margin-top: 15px;
+      .type-item {
+        margin: 16px 0;
+        .type-head {
           display: flex;
-          flex-wrap: wrap;
-          justify-content: flex-start;
+          font-size: 12px;
+          height: 18px;
+          line-height: 18px;
+          justify-content: space-between;
+          .type-num {
+            display: flex;
+            align-items: center;
+          }
+          .el-icon {
+            cursor: pointer;
+            font-size: 15px;
+            margin-left: 5px;
+            &.down {
+              transform: rotate(180deg);
+            }
+          }
         }
-        .loading-status {
-          padding-bottom: 50px;
-          width: 100%;
+        .attr-content {
+          .attr-item {
+            margin: 16px 0;
+            display: flex;
+            font-size: 12px;
+            height: 18px;
+            line-height: 18px;
+            justify-content: space-between;
+            color: $color-black3;
+            .attr-num {
+              display: flex;
+              align-items: center;
+              color: $color-black2;
+            }
+            .el-checkbox {
+              margin-left: 5px;
+              height: 18px;
+            }
+          }
         }
-        .nft-loading {
-          height: 60px;
-        }
-        .nft-loading-over {
-          text-align: center;
-          padding: 30px 0;
-          color: $grayColor;
-        }
-      }
-      .tab-actdetail {
-        border: 1px solid #e5e5e5;
-        margin: 10px;
-        border-radius: 20px;
       }
     }
   }
-  .dialog-title {
+
+  .list-wrap {
+    margin-top: 15px;
+    .list-item {
+      display: flex;
+      padding: 8px;
+      border-radius: 12px;
+      cursor: pointer;
+      &:hover {
+        background: $elButtonHoverBg;
+      }
+
+      .head-img {
+        width: 40px;
+        height: 40px;
+        background-color: $bg-white;
+        border-radius: 50px;
+        padding: 2px;
+        flex-shrink: 0;
+        position: relative;
+        .tag {
+          width: 16px;
+          height: 16px;
+          position: absolute;
+          bottom: 4px;
+          right: 0;
+          z-index: 2;
+        }
+      }
+      .head-txt {
+        margin-left: 8px;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 40px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: $primaryColor;
+      }
+    }
+  }
+
+  .search-wrap {
+    height: 40px;
+    margin-bottom: 30px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    .dialog-title-left {
-      font-size: 40px;
-      font-weight: 400;
-      color: #1d1e22;
-      line-height: 22px;
-      .dialog-title-num {
-        font-size: 16px;
-        font-weight: 400;
-        color: #444444;
-        line-height: 22px;
-      }
-    }
-    .close-icon {
-      width: 26px;
-      height: 26px;
-    }
-  }
-
-  .dialog-follow {
-    font-family: 'Montserrat-Regular';
-    .dialog-content {
+    .btnfilter {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      margin: 20px auto;
-      .dialog-u-detail {
-        display: flex;
-        width: 160px;
-        justify-content: space-between;
-        .dialog-u-header {
-          width: 58px;
-          height: 58px;
-          background: #313131;
-          border-radius: 50%;
-        }
-        .dialog-u-info {
-          display: flex;
-          flex-direction: column;
-          justify-content: space-around;
-        }
-      }
-      .dialog-follow-btn {
-        width: 88px;
-        height: 44px;
-        background: $primaryColor;
-        border-radius: 8px;
-        color: aliceblue;
+      padding: 0px 16px;
+      width: 93px;
+      height: 40px;
+      border: 1px solid $borderBg;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-right: 20px;
+      img {
+        width: 18px;
+        height: 18px;
+        margin-right: 7px;
       }
     }
-  }
-  .dialog-report {
-    .report-header {
+    ::v-deep .el-select {
+      position: relative;
+      width: 180px;
+      margin-left: 10px;
+      height: 40px;
+      .el-popper {
+        top: 42px !important;
+      }
+      .el-select-dropdown__item {
+        height: 40px;
+        line-height: 40px;
+      }
+      .el-input__suffix {
+        right: 16px;
+      }
+      .el-input__wrapper {
+        padding: 10px 16px;
+        border-radius: 12px;
+        box-shadow: none;
+        height: 40px;
+        box-sizing: border-box;
+        border: 1px solid $borderBg;
+      }
+      .el-input.is-focus .el-input__wrapper {
+        box-shadow: none !important;
+      }
+      &:first-child {
+        margin-left: 10px;
+      }
+      .el-input__inner {
+        height: 20px;
+        padding: 0;
+      }
+    }
+    .select-sort {
+      margin-right: 20px;
+    }
+    .sort-wrap {
       display: flex;
-      justify-content: space-between;
-    }
-    .dialog-title-report {
-      width: 300px;
-      height: 81px;
-      font-size: 40px;
-      font-family: 'Montserrat-Regular';
-      font-weight: 400;
-      color: #1d1e22;
-      line-height: 42px;
-    }
-    .report-describe {
-      width: 466px;
-      height: 46px;
-      font-size: 16px;
-      font-family: 'Montserrat-Regular';
-      font-weight: 400;
-      color: #333333;
-      line-height: 30px;
-      opacity: 0.6;
-    }
-    .submit-btn {
-      width: 100%;
-      height: 54px;
-      background: $primaryColor;
-      border-radius: 8px;
-      margin-top: 66px;
-    }
-    .dialog-report-content {
-      margin-top: 60px;
-      font-size: 16px;
-      font-family: 'Montserrat-Regular';
-      font-weight: 400;
-      color: #333333;
-      line-height: 30px;
+      background: $elButtonHoverBg;
+      border-radius: 12px;
+      align-items: center;
+      width: 128px;
+      padding: 4px;
+      .icon-wrap {
+        height: 32px;
+        width: 58px;
+        line-height: 32px;
+        border-radius: 8px;
+        &.icon_filter01 {
+          background-image: url('../../assets/images/icons/icon_filter01.svg');
+          &.active {
+            background-image: url('../../assets/images/icons/icon_filter01_active.svg');
+            background-color: $bg-white;
+          }
+        }
+        &.icon_filter02 {
+          background-image: url('../../assets/images/icons/icon_filter02.svg');
+          &.active {
+            background-image: url('../../assets/images/icons/icon_filter02_active.svg');
+            background-color: $bg-white;
+          }
+        }
+        &:hover {
+          cursor: pointer;
+        }
+      }
     }
   }
 
-  .tab-content-title {
-    min-width: $tabTitleWidth;
+  .search-input-wrap {
+    overflow: hidden;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    // height: 40px;
+    margin-right: 20px;
+    border: none;
+    flex-grow: 1;
+    ::v-deep {
+      .el-input__inner {
+        height: 40px;
+        border: none;
+        font-size: 14px;
+      }
+      .el-input__wrapper {
+        border-radius: 12px;
+        box-shadow: 0 0 0 0px var(--el-input-border-color, var(--el-border-color)) inset;
+        background: $elButtonHoverBg;
+        border: none;
+        .el-input__inner {
+          background-color: transparent;
+        }
+      }
+      .el-input__prefix {
+        line-height: 40px;
+        left: 15px;
+      }
+      .img-search {
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+  .custom-pagination {
     text-align: center;
+    margin: 20px;
+    .content {
+      display: inline-block;
+    }
+    ::v-deep {
+      .el-pagination.is-background .btn-prev,
+      .el-pagination.is-background .btn-next {
+        padding: 0;
+        height: 32px;
+        border-radius: 8px;
+      }
+      .el-pagination.is-background .el-pager li {
+        height: 32px;
+        border-radius: 8px;
+        &.is-active {
+          background-color: $bgPurple;
+          color: $color-white;
+        }
+      }
+    }
   }
-</style>
+  .nft-list {
+    display: flex;
+    flex-flow: row wrap;
+    margin-left: -9px;
+    margin-right: -9px;
+    row-gap: 18px;
+    .nft-card {
+      min-height: 1px;
+      position: relative;
+      display: block;
+      flex: 0 0 225.6px;
+      width: 225.6px;
+      margin-left: 9px;
+      margin-right: 9px;
+      .nft-content {
+        height: 302px;
+        border-radius: 20px;
+        overflow: hidden;
+        transition: all 0.23s;
+        background: $bg-white;
+        border: 1px solid $borderBg;
+        filter: drop-shadow(0px 0px 10px rgba(82, 77, 255, 0.05));
+        &:hover {
+          box-shadow: 0 7px 16px -8px rgba(0, 0, 0, 0.15);
+        }
+        .card-top {
+          overflow: hidden;
+          position: relative;
+          width: 100%;
+          height: 225.6px;
+          .card-img {
+            left: 0;
+            position: absolute;
+            top: 0;
+            transition: all 0.23s;
+            height: 225.6px;
+            img {
+              height: 100%;
+              width: 100%;
+            }
+          }
+        }
+        .card-bottom {
+          height: 75px;
+          padding: 12px 12px;
+          padding-right: 20px;
 
-<style lang="scss">
-  .user-tab-menus {
-    .el-tabs__item {
-      color: #999;
-      height: 35px;
-      line-height: 35px;
-      &:hover,
-      &:active,
-      &:focus {
-        color: #333;
+          .nft-txt {
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 24px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: $color-black3;
+          }
+          .nft-price {
+            display: flex;
+            height: 22px;
+            .token-icon {
+              width: 15px;
+              height: 20px;
+              margin-right: 5px;
+            }
+            .nft-price {
+              font-weight: 700;
+              font-size: 14px;
+              line-height: 22px;
+              color: $primaryColor;
+            }
+          }
+        }
       }
-      &.is-active {
-        color: #333;
-      }
-    }
-    .el-tabs__active-bar {
-      background-color: #333;
     }
   }
+}
 </style>
