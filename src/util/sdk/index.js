@@ -55,6 +55,14 @@ export default {
 		let tx = await contract.hashOrder_(...params)
 		return tx
 	},
+	async cancelOrder_(params, owner) {
+		let contract = await this.getMarketExchangeContract();
+		let tx = await contract.cancelOrder_(...params,
+			{
+				from: owner
+			})
+		return tx
+	},
 	async callhashToSign_(params) {
 		let contract = await this.getMarketExchangeContract();
 		let tx = await contract.hashToSign_(...params)

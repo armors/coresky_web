@@ -17,8 +17,8 @@
           <div>{{$t('connect.text3')}}</div>
         </div>
 
-        <div class="wallet-item" @click="login('metamask')">
-          <img src="@/assets/img/metamask.png" width="20" />
+        <div class="wallet-item display-flex box-center-Y" @click="login('metamask')">
+          <div class="wallet-icon"><img src="@/assets/img/metamask.png"/></div>
           <div class="text">{{$t('connect.text4')}}</div>
         </div>
 
@@ -67,19 +67,13 @@ export default {
 <style lang="scss" scoped>
 .wallet-item {
   cursor: pointer;
-  width: 333px;
-  height: 37px;
-  background: #fff;
-  border-radius: 7px;
-  display: flex;
-  align-items: center;
-  margin-bottom: 35px;
-  justify-content: center;
-  position: relative;
-  img {
-    position: absolute;
-    left: 20px;
+  padding-bottom: 12px;
+  .wallet-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 12px;
   }
+
   .text {
     font-size: 9px;
     font-weight: 400;
@@ -128,7 +122,7 @@ export default {
 }
 .sub-title{
   margin-top: 14px;
-  margin-bottom: 35px;
+  margin-bottom: 12px;
   font-size: 9px;
   font-weight: 400;
   color: #999;

@@ -110,9 +110,10 @@ export default {
     return window.wallet;
   },
   async loginWallet(address) {
-    let timestamp = parseInt(new Date().getTime() / 1000);
-    var message = store.state.config.loginMessage + " " + timestamp;
+    let timestamp = parseInt(new Date().getTime());
+    var message = store.state.config.loginMessage + "+" + timestamp;
     try {
+      console.log(message, address)
       let signature = await this.sign(message, address);
       if (signature.error) return signature;
 

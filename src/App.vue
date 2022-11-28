@@ -14,7 +14,7 @@
   export default {
     name: "App",
     beforeCreate: async function () {
-      // await this.$store.dispatch("config");
+      await this.$store.dispatch("config");
       // await this.$store.dispatch("categorys");
       // await this.$store.dispatch("payTokens");
       // this.$store.dispatch("countNotices");
@@ -70,7 +70,8 @@
           let result = await this.$store.dispatch("connect", true);
           if (result) {
             // 连接成功，则重新加载用户信息
-            this.$store.dispatch("reload");
+            // this.$store.dispatch("reload");
+            this.$store.dispatch("authinfo");
           }
         }
       },

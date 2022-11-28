@@ -12,6 +12,9 @@
 				<el-button type="primary" @click="getExchangeHashOrder">orderCreate</el-button>
 			</el-row>
 			<el-row class="mb-2">
+				<el-button type="primary" @click="cancelOrderEvent">cancelOrder</el-button>
+			</el-row>
+			<el-row class="mb-2">
 				<el-button type="primary" @click="getOrderDetail">getOrderDetail{{orderId}}</el-button>
 			</el-row>
 			<el-row class="mb-2">
@@ -41,7 +44,7 @@
 				// registryOwner: this.$sdk.NULL_ADDRESS(),
 				registryOwner: '0x82e96E71D6414570393D6285cAb7DDfc5AdE62a1',
 				sellPrice: 0.02,
-				tokenId: 13,
+				tokenId: 14,
 				orderId: '13',
 				nftToBuy: null,
 			}
@@ -171,7 +174,16 @@
 				const hashToSign = await this.$sdk.callhashToSign_(arrayParams)
 				console.log(hashToSign)
 				const sig = await this.$sdk.signature(params, this.user.coinbase)
-				const resvalidateOrder_ = await this.$sdk.validateOrder_(
+				const validateOrderArrayParams = [
+					...arrayParams,
+					...[
+						sig.v,
+						sig.r,
+						sig.s
+					]
+				]
+				console.log(validateOrderArrayParams)
+				const validateOrderArrayParams1 =[
 					[
 						params.exchange,
 						params.maker,
@@ -202,40 +214,21 @@
 					sig.v,
 					sig.r,
 					sig.s
-				)
-				console.log(resvalidateOrder_)
+				]
+				console.log(validateOrderArrayParams1)
+				// const resvalidateOrder_ = await this.$sdk.validateOrder_(validateOrderArrayParams)
+				// console.log(resvalidateOrder_)
 				const orderParams = {
-					basePrice: params.basePrice,
-					callData: params.calldata,
-					contract: params.target,
-					exchange: params.exchange,
-					expirationTime: params.expirationTime,
-					extra: params.extra,
-					feeMethod: params.feeMethod,
-					feeRecipient: params.feeRecipient,
-					howToCall: params.howToCall,
-					listingTime: params.listingTime,
-					maker: params.maker,
-					makerProtocolFee: params.makerProtocolFee,
-					makerRelayerFee: params.makerRelayerFee,
-					paymentToken: params.paymentToken,
-					replacementPattern: params.replacementPattern,
-					saleKind: params.saleKind,
-					salt: params.salt,
-					side: params.side,
-					staticExtradata: params.staticExtradata,
-					staticTarget: params.staticTarget,
-					taker: params.taker,
-					takerRelayerFee: params.takerRelayerFee,
-					target: params.target,
-					tokenId: this.tokenId,
-					v: sig.v,
-					r: sig.r,
-					s: sig.s,
-					hashOriginal: hash,
-					hash: hashToSign,
-					sign: JSON.stringify(sig),
-					takerProtocolFee: 0,
+					...params,
+					...{
+						v: sig.v,
+						r: sig.r,
+						s: sig.s,
+						hashOriginal: hash,
+						hash: hashToSign,
+						sign: JSON.stringify(sig),
+						takerProtocolFee: 0,
+					}
 				}
 				this.nftToBuy = {
 					...params,
@@ -257,6 +250,44 @@
 				this.$api("order.create", orderParams).then((res) => {
 					console.log(res)
 				})
+			},
+			async cancelOrderEvent () {
+				console.log(this.nftToBuy)
+				const params = this.nftToBuy
+				const arrayParams = [
+					[
+						params.exchange,
+						params.maker,
+						params.taker,
+						params.feeRecipient,
+						params.target,
+						params.staticTarget,
+						params.paymentToken
+					],
+					[
+						params.makerRelayerFee,
+						params.takerRelayerFee,
+						params.makerProtocolFee,
+						params.takerProtocolFee,
+						params.basePrice,
+						params.extra,
+						params.listingTime,
+						params.expirationTime,
+						params.salt
+					],
+					params.feeMethod,
+					params.side,
+					params.saleKind,
+					params.howToCall,
+					params.calldata,
+					params.replacementPattern,
+					params.staticExtradata,
+					params.v,
+					params.r,
+					params.s
+				]
+				const hash = await this.$sdk.cancelOrder_(arrayParams, this.user.coinbase);
+				console.log(hash)
 			},
 			// 挂单结束
 
