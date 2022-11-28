@@ -19,7 +19,7 @@ export default {
   },
   config: {
     fetch: {
-      url: "/config/fetch",
+      url: "/user/config",
       method: "post",
     },
     gasTracker:{

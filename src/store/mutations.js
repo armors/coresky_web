@@ -61,7 +61,7 @@ export default {
     state.isLogin = true;
     state.connected = true;
     setLocalStorage({
-      Authorization: payload.token,
+      CoreskyAuthorization: payload.token,
     });
     setLocalStorage({
       connected: true,
@@ -86,7 +86,7 @@ export default {
       walletType: "",
       networkId: null,
     };
-    removeLocalStorage("Authorization");
+    removeLocalStorage("CoreskyAuthorization");
     removeLocalStorage("connected");
     state.ethBalance = "0";
     state.erc20Balance = {};
@@ -101,8 +101,8 @@ export default {
   },
   RELOAD(state) {
     state.isLogin = true;
-    var items = getLocalStorage("Authorization");
-    state.token = items.Authorization;
+    var items = getLocalStorage("CoreskyAuthorization");
+    state.token = items.CoreskyAuthorization;
   },
   USERINFO(state, payload) {
     if (payload.address) payload.address = payload.address.toLocaleLowerCase();

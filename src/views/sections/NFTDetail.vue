@@ -466,7 +466,7 @@
         let data = { address: this.info.creator };
         this.$api('user.info', data).then(res => {
           if (this.$tools.checkResponse(res)) {
-            this.creator = res.data;
+            this.creator = res.debug;
           }
         })
       },

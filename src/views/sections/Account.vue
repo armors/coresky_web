@@ -318,7 +318,7 @@
         };
         this.$api("user.info", params).then((res) => {
           if (this.$tools.checkResponse(res)) {
-            let _data = Object.assign({}, res.data, {
+            let _data = Object.assign({}, res.debug, {
               address: this.address,
             });
             this.userinfo = _data;

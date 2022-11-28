@@ -23,7 +23,7 @@ export default {
     return new Promise((resolve, reject) => {
       api("config.fetch").then((res) => {
         if (tools.checkResponse(res)) {
-          commit("CONFIG", res.data);
+          commit("CONFIG", res.debug);
         }
         resolve();
       });
@@ -41,8 +41,8 @@ export default {
   },
   reload({ state, commit, dispatch }) {
     return new Promise(function(resolve, reject) {
-      var items = getLocalStorage("Authorization");
-      if (items.Authorization) {
+      var items = getLocalStorage("CoreskyAuthorization");
+      if (items.CoreskyAuthorization) {
         api("user.reload")
           .then(async function(response) {
             if (tools.checkResponse(response)) {
@@ -50,7 +50,7 @@ export default {
                 state.user.coinbase !=
                 response.data.user.address.toLocaleLowerCase()
               ) {
-                removeLocalStorage("Authorization");
+                removeLocalStorage("CoreskyAuthorization");
                 resolve(response);
               } else {
                 commit("RELOAD");
@@ -58,12 +58,12 @@ export default {
                 dispatch("heartbeat");
               }
             } else {
-              removeLocalStorage("Authorization");
+              removeLocalStorage("CoreskyAuthorization");
             }
             resolve(response);
           })
           .catch((err) => {
-            removeLocalStorage("Authorization");
+            removeLocalStorage("CoreskyAuthorization");
             resolve(response);
           });
       } else {
@@ -165,7 +165,7 @@ export default {
       };
       api("user.info", data).then((res) => {
         if (tools.checkResponse(res)) {
-          let _data = Object.assign({}, res.data, {
+          let _data = Object.assign({}, res.debug, {
             address: state.user.coinbase,
           });
           commit("USERINFO", _data);
@@ -223,26 +223,32 @@ export default {
         return resolve();
       }
       var data = {
+        ...{
+          "address": user.coinbase
+        },
+        ...signature
+      };
+      console.log(data)
+      console.log(JSON.stringify(data))
+      commit("LOGIN", {
         userAddress: user.coinbase,
         user: {
           address: user.coinbase
         }
-      };
-      console.log(data)
-      commit("LOGIN", data);
+      });
       dispatch("authinfo");
       resolve(data);
-
-      // api("user.login", data).then((res) => {
-      //   if (tools.checkResponse(res)) {
-      //     let _data = Object.assign(res.data, {
-      //       walletType: state.web3.walletType,
-      //     });
-      //     commit("LOGIN", _data);
-      //     dispatch("authinfo");
-      //   }
-      //   resolve(res);
-      // });
+      api("user.login", data).then((res) => {
+        console.log(res)
+        if (tools.checkResponse(res)) {
+          let _data = Object.assign(res.debug, {
+            walletType: state.web3.walletType,
+          });
+          commit("LOGIN", _data);
+          dispatch("authinfo");
+        }
+        resolve(res);
+      });
     });
   },
   connectAndSign({ state, commit, dispatch }, type) {
