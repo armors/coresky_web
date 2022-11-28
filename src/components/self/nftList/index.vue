@@ -19,7 +19,7 @@
 		<div class="nft-item display-flex box-center-Y" v-for="(v, i) in nftList" :key="`nft-item-${i}`" :class="{'bg-gray': i === 0}">
 			<div class="index-num">{{i + 1}}</div>
 			<div class="nft-info display-flex box-center-Y">
-				<el-image class="cover-image" placeholder="loading" :src="v.ckCollectionsInfoEntity.image" fit="cover">
+				<el-image class="cover-image" placeholder="loading" :src="v.image" fit="cover">
 					<template v-slot:placeholder>
 						<el-skeleton class="placeholder-image" animated>
 							<template #template>
@@ -31,13 +31,13 @@
 						<el-image class="error-image" :src="require('@/assets/create-img/non-existent.png')" fit="contain"></el-image>
 					</template>
 				</el-image>
-				<div class="nft-name">{{ v.ckCollectionsInfoEntity.name }}</div>
+				<div class="nft-name">{{ v.name }}</div>
 				<div class="icon-tag"><img src="../../../assets/images/icons/icon_tag.svg" alt=""></div>
 			</div>
 			<div class="price box-flex1 display-flex box-center-Y">
 				<div class="box-flex1"></div>
 				<div class="icon-token"><img src="../../../assets/images/icons/token/token_eth.svg" alt=""></div>
-				<div>{{ v.ckCollectionsInfoEntity.foolPrice}}ETH</div>
+				<div>{{ v.foolPrice}}ETH</div>
 			</div>
 			<div class="exchange-volume box-flex1 display-flex box-center-Y">
 				<div class="box-flex1"></div>

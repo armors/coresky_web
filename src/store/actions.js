@@ -224,19 +224,25 @@ export default {
       }
       var data = {
         userAddress: user.coinbase,
-        signature: signature.signature,
-        timestamp: signature.timestamp,
-      };
-      api("user.login", data).then((res) => {
-        if (tools.checkResponse(res)) {
-          let _data = Object.assign(res.data, {
-            walletType: state.web3.walletType,
-          });
-          commit("LOGIN", _data);
-          dispatch("authinfo");
+        user: {
+          address: user.coinbase
         }
-        resolve(res);
-      });
+      };
+      console.log(data)
+      commit("LOGIN", data);
+      dispatch("authinfo");
+      resolve(data);
+
+      // api("user.login", data).then((res) => {
+      //   if (tools.checkResponse(res)) {
+      //     let _data = Object.assign(res.data, {
+      //       walletType: state.web3.walletType,
+      //     });
+      //     commit("LOGIN", _data);
+      //     dispatch("authinfo");
+      //   }
+      //   resolve(res);
+      // });
     });
   },
   connectAndSign({ state, commit, dispatch }, type) {

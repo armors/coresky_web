@@ -20,7 +20,7 @@ import Markterplace from "../views/sections/Markterplace.vue"
 import Message from "../views/sections/Message.vue"
 
 import NoFound from '@/views/sections/NoFound.vue';
-
+import orderMock from '../views/sections/orderMock/index.vue'
 const routes = [
   {
     path: "/",
@@ -31,6 +31,11 @@ const routes = [
         path: '/',
         name: "home",
         component: HIndex
+      },
+      {
+        path: '/orderMock',
+        name: "orderMock",
+        component: orderMock
       },
       {
         path: '/items',

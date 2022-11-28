@@ -138,6 +138,16 @@ function contractAbi(type){
     case "NFT":
       file = require("./abi/NFT.json");
       break;
+    case 'MARKET_REGISTRY':
+      file = require('./abi/MarketRegistry.json')
+      break;
+    case "MARKET_EXCHANGE":
+      file = require('./abi/MarketExchange.json')
+      break;
+    case "IERC721":
+      file = require('./abi/IERC721.json')
+      break;
+
   }
   return file || {};
 }
@@ -155,7 +165,7 @@ const calcGas = async (web3, key, args, lastArg, ts) => {
   } else {
     gasPrice = await web3.eth.getGasPrice();
   }
- 
+
   const gas = await new Promise((resolve, reject) => {
     ts.estimateGas(
       {
@@ -197,6 +207,7 @@ class MyContract {
         return new Promise((resolve, reject) => {
           try {
             const web3 = utils_web3.getWeb3();
+            console.log(a.inputs.length === args.length)
             if (a.inputs.length === args.length) {
               this.contract.methods[key](...args).call(
                 (e, r) => {
@@ -210,21 +221,35 @@ class MyContract {
             } else {
               const lastArg = args.pop();
               const ts = this.contract.methods[key](...args);
-              calcGas(web3, key, args, lastArg, ts).then((res) => {
-                if(res.error){
-                  return resolve(res);
+              ts.send(
+                {
+                  ...lastArg,
+                  // gasPrice,
+                  // gas,
                 }
-                var { gas, gasPrice } = res;
-                ts.send(
-                  {
-                    ...lastArg,
-                    gasPrice,
-                    gas,
-                  }
-                ).then(res => {
-                  resolve(res);
-                })
-              });
+              ).then(res => {
+                resolve(res);
+              })
+              // calcGas(web3, key, args, lastArg, ts).then((res) => {
+              //   if(res.error){
+              //     return resolve(res);
+              //   }
+              //   // var { gas, gasPrice } = res;
+              //   console.log({
+              //     ...lastArg,
+              //     // gasPrice,
+              //     // gas,
+              //   })
+              //   ts.send(
+              //     {
+              //       ...lastArg,
+              //       // gasPrice,
+              //       // gas,
+              //     }
+              //   ).then(res => {
+              //     resolve(res);
+              //   })
+              // });
             }
           } catch (e) {
             reject({ error: e });

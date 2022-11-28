@@ -1,7 +1,7 @@
 import request from "@/api/request";
 import apiList from "@/api/apiList";
-import qs from "qs";
-import store from "@/store";
+// import qs from "qs";
+// import store from "@/store";
 
 function getApiObj(url, data = {}) {
   let apiArray = url.split(".");
@@ -29,7 +29,8 @@ export default function api(url, data = {}) {
   } else {
     var method = api.method.toLowerCase();
     if (method == "post") {
-      post.data = qs.stringify(data);
+      // post.data = qs.stringify(data);
+      post.data = data;
     } else {
       post.post = data;
     }
