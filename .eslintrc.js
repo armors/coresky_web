@@ -1,7 +1,7 @@
 module.exports = {
   root: true,
   env: {
-    node: true
+    node: true,
   },
   extends: [
     // "plugin:vue/vue3-essential",
@@ -10,25 +10,26 @@ module.exports = {
 
     "eslint:recommended",
     "plugin:vue/essential",
-    'plugin:import/recommended' // 使用插件支持vue3
+    "plugin:import/recommended", // 使用插件支持vue3
   ],
   parserOptions: {
-    parser: "babel-eslint"
+    parser: "babel-eslint",
   },
   // "plugins": ["transform-remove-strict-mode"],
   rules: {
+    "vue/multi-word-component-names": "off",
     "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
-    "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off"
+    "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
   },
   overrides: [
     {
       files: [
         "**/__tests__/*.{j,t}s?(x)",
-        "**/tests/unit/**/*.spec.{j,t}s?(x)"
+        "**/tests/unit/**/*.spec.{j,t}s?(x)",
       ],
       env: {
-        jest: true
-      }
-    }
-  ]
+        jest: true,
+      },
+    },
+  ],
 };
