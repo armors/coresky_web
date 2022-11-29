@@ -11,8 +11,8 @@
         User results
       </div>
     </div>
-    <div class="search-wrap">
-      <el-input class="search-input-wrap" style="width:400px" v-model="keyword" @keyup.enter="searchClick">
+    <div class="list-search-wrap">
+      <el-input class="search-input-wrap" v-model="keyword" @keyup.enter="searchClick">
         <template #prefix>
           <div class="img-search"><img src="../../assets/images/icons/icon_search.svg" alt=""></div>
         </template>
@@ -179,61 +179,6 @@ export default {
   color: #999;
 }
 
-.m-list {
-  margin-top: 28px;
-  width: 100%;
-}
-
-.user-tab {
-  width: 80%;
-  margin-bottom: 40px;
-}
-.user-item {
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 10px;
-  width: 50%;
-  .inner {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    background: #fff;
-    padding: 10px;
-    border-radius: $borderRadius;
-    margin: 0 5px;
-    cursor: pointer;
-  }
-  .user-item-left {
-    cursor: pointer;
-    align-items: center;
-    flex: 1;
-    .image2 {
-      align-self: flex-end;
-      margin-left: -13px;
-      width: 13px;
-      height: 13px;
-    }
-    .name {
-      margin-left: 9px;
-      font-size: 13px;
-      font-weight: bold;
-      color: #1b1b1b;
-    }
-  }
-  .user-item-right {
-    font-size: 12px;
-    color: #999;
-  }
-}
-
-.nft-tab {
-  width: 100%;
-}
-
-.account-item {
-  width: 50%;
-}
-
 .tab-wrap {
   display: flex;
   margin: 40px 0;
@@ -255,184 +200,10 @@ export default {
     border-bottom: 4px solid $bgPurple;
   }
 }
-.search-wrap {
-  height: 40px;
-  margin-bottom: 30px;
-  display: flex;
-  justify-content: space-between;
 
-  .sort-wrap {
-    display: flex;
-    background: $elButtonHoverBg;
-    border-radius: 12px;
-    align-items: center;
-    width: 128px;
-    padding: 4px;
-    .icon-wrap {
-      height: 32px;
-      width: 58px;
-      line-height: 32px;
-      border-radius: 8px;
-
-      &.icon_filter01 {
-        background-image: url('../../assets/images/icons/icon_filter01.svg');
-        &.active {
-          background-image: url('../../assets/images/icons/icon_filter01_active.svg');
-          background-color: $bg-white;
-        }
-      }
-      &.icon_filter02 {
-        background-image: url('../../assets/images/icons/icon_filter02.svg');
-        &.active {
-          background-image: url('../../assets/images/icons/icon_filter02_active.svg');
-          background-color: $bg-white;
-        }
-      }
-      &:hover {
-        cursor: pointer;
-      }
-      // &.active {
-      //   background: $bg-white;
-      // }
-    }
-  }
-}
 .search-input-wrap {
-  overflow: hidden;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  font-size: 16px;
-  // height: 40px;
-  border: none;
-  ::v-deep {
-    .el-input__inner {
-      height: 40px;
-      border: none;
-      font-size: 14px;
-    }
-    .el-input__wrapper {
-      border-radius: 12px;
-      box-shadow: 0 0 0 0px var(--el-input-border-color, var(--el-border-color)) inset;
-      background: $elButtonHoverBg;
-      border: none;
-      .el-input__inner {
-        background-color: transparent;
-      }
-    }
-    .el-input__prefix {
-      line-height: 40px;
-      left: 15px;
-    }
-    .img-search {
-      width: 16px;
-      height: 16px;
-    }
-  }
-}
-.collection-list {
-  display: flex;
-  flex-flow: row wrap;
-  margin-left: -9px;
-  margin-right: -9px;
-  row-gap: 20px;
-  margin-bottom: 20px;
-  .collection-card {
-    min-height: 1px;
-    position: relative;
-    display: block;
-    flex: 0 0 33.3333333333%;
-    max-width: 33.3333333333%;
-    padding-left: 9px;
-    padding-right: 9px;
-    .collection-content {
-      height: 308px;
-      border-radius: 20px;
-      overflow: hidden;
-      transition: all 0.23s;
-      background: $bg-white;
-      filter: drop-shadow(0px 0px 10px rgba(82, 77, 255, 0.05));
-      &:hover {
-        box-shadow: 0 7px 16px -8px rgba(0, 0, 0, 0.15);
-      }
-      .card-top {
-        overflow: hidden;
-        height: 237px;
-        position: relative;
-        width: 100%;
-        .card-img {
-          left: 0;
-          position: absolute;
-          top: 0;
-          transition: all 0.23s;
-          height: 237px;
-          img {
-            height: 100%;
-            width: 100%;
-          }
-        }
-      }
-      .card-bottom {
-        display: flex;
-        height: 71px;
-        padding: 0 20px;
-        padding-right: 30px;
-        .head-img {
-          margin-top: -20px;
-          z-index: 1;
-          width: 79px;
-          height: 79px;
-          background-color: $bg-white;
-          border-radius: 50px;
-          padding: 5px;
-          flex-shrink: 0;
-          position: relative;
-          .tag {
-            width: 24px;
-            height: 24px;
-            position: absolute;
-            bottom: 4px;
-            right: 0;
-            z-index: 2;
-          }
-        }
-        .head-txt {
-          margin-left: 15px;
-          margin-top: 16px;
-          font-weight: 700;
-          font-size: 22px;
-          line-height: 28px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          color: $primaryColor;
-        }
-      }
-    }
-  }
-}
-.custom-pagination {
-  text-align: center;
-  margin: 20px;
-  .content {
-    display: inline-block;
-  }
-  ::v-deep {
-    .el-pagination.is-background .btn-prev,
-    .el-pagination.is-background .btn-next {
-      padding: 0;
-      height: 32px;
-      border-radius: 8px;
-    }
-    .el-pagination.is-background .el-pager li {
-      height: 32px;
-      border-radius: 8px;
-      &.is-active {
-        background-color: $bgPurple;
-        color: $color-white;
-      }
-    }
-  }
+  width: 600px;
+  flex-grow: 0;
 }
 </style>
 
