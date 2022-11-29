@@ -52,11 +52,13 @@ const AssetType = {
   "ERC20": 1,
   "ERC721": 3,
   "ERC721Deprecated": 4,
+  "WETH": 5,
 }
 const AssetKeys = Object.getOwnPropertyNames(AssetType);
 const AssetValues = Object.keys(AssetType).map(function (e) { return AssetType[e] });
 
 function keyAssetType(value){
+  console.log(value)
   for(var i = 0; i < AssetValues.length; i++){
     if(AssetValues[i] == value) return AssetKeys[i];
   }

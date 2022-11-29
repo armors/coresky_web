@@ -20,6 +20,14 @@
 			<el-row class="mb-2">
 				<el-button type="primary" @click="buyerEvent">buyer</el-button>
 			</el-row>
+
+			<el-row class="mb-2">
+				<el-button type="primary" @click="makerBuyer">makerBuyer</el-button>
+			</el-row>
+
+			<el-row class="mb-2">
+				<el-button type="primary" @click="makerSeller">makerSeller</el-button>
+			</el-row>
 		</div>
 	</div>
 </template>
@@ -44,7 +52,7 @@
 				// registryOwner: this.$sdk.NULL_ADDRESS(),
 				registryOwner: '0x82e96E71D6414570393D6285cAb7DDfc5AdE62a1',
 				sellPrice: 0.02,
-				tokenId: 14,
+				tokenId: 13,
 				orderId: '13',
 				nftToBuy: null,
 			}
@@ -174,6 +182,7 @@
 				const hashToSign = await this.$sdk.callhashToSign_(arrayParams)
 				console.log(hashToSign)
 				const sig = await this.$sdk.signature(params, this.user.coinbase)
+				console.log(sig)
 				const validateOrderArrayParams = [
 					...arrayParams,
 					...[
@@ -183,7 +192,7 @@
 					]
 				]
 				console.log(validateOrderArrayParams)
-				const validateOrderArrayParams1 =[
+				const validateOrderArrayParams1 = [
 					[
 						params.exchange,
 						params.maker,
@@ -251,7 +260,7 @@
 					console.log(res)
 				})
 			},
-			async cancelOrderEvent () {
+			async cancelOrderEvent() {
 				console.log(this.nftToBuy)
 				const params = this.nftToBuy
 				const arrayParams = [
@@ -472,10 +481,174 @@
 				console.log(await this.$sdk.validateOrderParameters(buyer))
 				console.log(buyer, nftToBuy)
 				console.log(await this.$sdk.orderCanMatch(buyer, nftToBuy))
-				const hashAtomicMatch = await this.$sdk.atomicMatch(arrayParams, this.user.coinbase);
+				const hashAtomicMatch = await this.$sdk.atomicMatch(nftToBuy, buyer, this.user.coinbase, this.user.coinbase);
 				console.log(hashAtomicMatch)
 			},
 			// 购买结束
+
+			// 报价开始
+			async makerBuyer() {
+				let buyer = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, token_contract)
+				buyer = {
+					...buyer,
+					...{
+						side: 0,
+						expirationTime: 0,
+						paymentToken: process.env.VUE_APP_WETH,
+						replacementPattern: encodeERC721ReplacementPatternBuy,
+						calldata: this.$sdk.buyERC721ABI(this.user.coinbase, this.tokenId),
+						listingTime: Date.parse(new Date().toString()) / 1000 - 24 * 3600,
+						feeRecipient: this.$sdk.FEE_ADDRESS(),
+						basePrice: this.$Web3.utils.toWei('0.02')
+					}
+				}
+				const sigBuyer = await this.$sdk.signature(buyer, this.user.coinbase)
+				console.log(sigBuyer)
+				buyer = {
+					...buyer,
+					...{
+						v: sigBuyer.v,
+						r: sigBuyer.r,
+						s: sigBuyer.s,
+						sign: JSON.stringify(sigBuyer),
+					}
+				}
+				console.log(buyer)
+				console.log(JSON.stringify(buyer))
+				const allowancePayToken = await this.$sdk.allowancePayToken({
+					type: 5,
+					address: process.env.VUE_APP_WETH
+				}, this.user.coinbase, process.env.VUE_APP_MARKET_TOKEN_TRANSFER_PROXY)
+				console.log(allowancePayToken)
+				if (parseFloat(allowancePayToken) === 0) {
+					const approve = await this.$sdk.approvePayToken({
+						type: 5,
+						address: process.env.VUE_APP_WETH
+					}, this.user.coinbase, process.env.VUE_APP_MARKET_TOKEN_TRANSFER_PROXY)
+					console.log(approve)
+					const allowancePayToken1 = await this.$sdk.allowancePayToken({
+						type: 5,
+						address: process.env.VUE_APP_WETH
+					}, this.user.coinbase, process.env.VUE_APP_MARKET_TOKEN_TRANSFER_PROXY)
+					console.log(parseFloat(allowancePayToken1))
+				}
+			},
+			async makerSeller() {
+				await this.getRegistryOwner()
+				await this.setApproveAll()
+				const buyer = {"exchange":"0x3ef043cBA294460a12d5A2d6Bc0B4bC932e89028","maker":"0xb55add32e4608eb7965ec234e6c0b3f009c3d9d6","taker":"0x0000000000000000000000000000000000000000","makerRelayerFee":250,"takerRelayerFee":0,"makerProtocolFee":0,"takerProtocolFee":0,"feeRecipient":"0xC35b21166eDC2B29d273223B3cD15d19617238F2","feeMethod":1,"side":0,"saleKind":0,"target":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","howToCall":0,"calldata":"0x23b872dd0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000b55add32e4608eb7965ec234e6c0b3f009c3d9d6000000000000000000000000000000000000000000000000000000000000000d","replacementPattern":"0x00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000","staticTarget":"0x0000000000000000000000000000000000000000","staticExtradata":"0x","paymentToken":"0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6","basePrice":"20000000000000000","extra":0,"listingTime":1669621846,"expirationTime":0,"salt":1669708208045,"_sender":"0xb55add32e4608eb7965ec234e6c0b3f009c3d9d6","v":28,"r":"0xb09fd62bf331dd6d8f3af7a98c4224b05c5134b87bdbcc37c7060e031f9453eb","s":"0x194e67d429cbf5af9338ffa940d96ed464624b448941da024c64c8fedb9e7d37","sign":"{\"signature\":\"0xb09fd62bf331dd6d8f3af7a98c4224b05c5134b87bdbcc37c7060e031f9453eb194e67d429cbf5af9338ffa940d96ed464624b448941da024c64c8fedb9e7d371c\",\"v\":28,\"s\":\"0x194e67d429cbf5af9338ffa940d96ed464624b448941da024c64c8fedb9e7d37\",\"r\":\"0xb09fd62bf331dd6d8f3af7a98c4224b05c5134b87bdbcc37c7060e031f9453eb\"}"}
+				let seller = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, token_contract)
+				seller = {
+					...seller,
+					// taker: buyer.maker,
+					side: 1,
+					expirationTime: 0,
+					paymentToken: process.env.VUE_APP_WETH,
+					replacementPattern: encodeERC721ReplacementPatternSell,
+					calldata: this.$sdk.sellERC721ABI(this.user.coinbase, this.tokenId),
+					listingTime: buyer.listingTime,
+					// feeRecipient: this.$sdk.FEE_ADDRESS(),
+					basePrice: buyer.basePrice
+				}
+				const arrayParams = [
+					[
+						seller.exchange,
+						seller.maker,
+						seller.taker,
+						seller.feeRecipient,
+						seller.target,
+						seller.staticTarget,
+						seller.paymentToken
+					],
+					[
+						seller.makerRelayerFee,
+						seller.takerRelayerFee,
+						seller.makerProtocolFee,
+						seller.takerProtocolFee,
+						seller.basePrice,
+						seller.extra,
+						seller.listingTime,
+						seller.expirationTime,
+						seller.salt
+					],
+					seller.feeMethod,
+					seller.side,
+					seller.saleKind,
+					seller.howToCall,
+					seller.calldata,
+					seller.replacementPattern,
+					seller.staticExtradata
+				]
+				const hash = await this.$sdk.callhashOrder_(arrayParams);
+				console.log(hash)
+				const hashToSign = await this.$sdk.callhashToSign_(arrayParams)
+				console.log(hashToSign)
+				const sig = await this.$sdk.signature(seller, this.user.coinbase)
+				console.log(sig)
+				seller = {
+					...seller,
+					...{
+						v: sig.v,
+						r: sig.r,
+						s: sig.s,
+						hashOriginal: hash,
+						hash: hashToSign,
+						sign: JSON.stringify(sig),
+					}
+				}
+				const validateOrderArrayParams = [
+					...arrayParams,
+					...[
+						sig.v,
+						sig.r,
+						sig.s
+					]
+				]
+				console.log(validateOrderArrayParams)
+				const validateOrderArrayParams1 = [
+					[
+						seller.exchange,
+						seller.maker,
+						seller.taker,
+						seller.feeRecipient,
+						seller.target,
+						seller.staticTarget,
+						seller.paymentToken
+					],
+					[
+						seller.makerRelayerFee,
+						seller.takerRelayerFee,
+						seller.makerProtocolFee,
+						seller.takerProtocolFee,
+						seller.basePrice,
+						seller.extra,
+						seller.listingTime,
+						seller.expirationTime,
+						seller.salt
+					],
+					seller.feeMethod,
+					seller.side,
+					seller.saleKind,
+					seller.howToCall,
+					seller.calldata,
+					seller.replacementPattern,
+					seller.staticExtradata,
+					sig.v,
+					sig.r,
+					sig.s
+				]
+				console.log(validateOrderArrayParams1)
+				console.log(arrayParams)
+				console.log(JSON.stringify(buyer))
+				console.log(JSON.stringify(seller))
+				console.log(await this.$sdk.validateOrderParameters(seller))
+				console.log(await this.$sdk.validateOrderParameters(buyer))
+				console.log(buyer, seller)
+				console.log(await this.$sdk.orderCanMatch(buyer, seller))
+				const hashAtomicMatch = await this.$sdk.atomicMatch(seller, buyer, this.user.coinbase, buyer.maker);
+				console.log(hashAtomicMatch)
+			},
+			// 报价结束
 		}
 	}
 </script>

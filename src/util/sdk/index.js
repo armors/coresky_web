@@ -202,7 +202,7 @@ export default {
 			takerRelayerFee: 0,            // 手续费  default: 0
 			makerProtocolFee: 0,           // 协议费  default: 0
 			takerProtocolFee: 0,           // 协议费  default: 0
-			feeRecipient: ZERO_ADDRESS,    // 平台费 接收账户 default: 0x0
+			feeRecipient: ZERO_ADDRESS,    // 平台费 接收账户 default: 0x0 买方和买方必须有一个是零地址
 			feeMethod: 1,                  // enum FeeMethod { ProtocolFee, SplitFee }  费用收取方法：只用支付协议费，或者 是需要同时支付协议费 和 平台费
 			side: 0,                       // enum Side { Buy, Sell } 该订单是 卖方单 还是 买方单
 			saleKind: 0,                   // { FixedPrice, DutchAuction } 销售方式是 固定价格，还是采用 竞拍的方式
@@ -260,15 +260,163 @@ export default {
 			sell.staticExtradata
 		);
 	},
-	async atomicMatch(params, owner) {
+	async calculateMatchPrice_ (seller, buyer) {
+		let contract = await this.getMarketExchangeContract();
+		const params = [
+			[
+				buyer.exchange,
+				buyer.maker,
+				buyer.taker,
+				buyer.feeRecipient,
+				buyer.target,
+				buyer.staticTarget,
+				buyer.paymentToken,
+				seller.exchange,
+				seller.maker,
+				seller.taker,
+				seller.feeRecipient,
+				seller.target,
+				seller.staticTarget,
+				seller.paymentToken,
+			],
+			[
+				buyer.makerRelayerFee,
+				buyer.takerRelayerFee,
+				buyer.makerProtocolFee,
+				buyer.takerProtocolFee,
+				buyer.basePrice,
+				buyer.extra,
+				buyer.listingTime,
+				buyer.expirationTime,
+				buyer.salt,
+				seller.makerRelayerFee,
+				seller.takerRelayerFee,
+				seller.makerProtocolFee,
+				seller.takerProtocolFee,
+				seller.basePrice,
+				seller.extra,
+				seller.listingTime,
+				seller.expirationTime,
+				seller.salt
+			],
+			[
+				buyer.feeMethod,
+				buyer.side,
+				buyer.saleKind,
+				buyer.howToCall,
+				seller.feeMethod,
+				seller.side,
+				seller.saleKind,
+				seller.howToCall,
+			],
+			buyer.calldata,
+			seller.calldata,
+			buyer.replacementPattern,
+			seller.replacementPattern,
+			buyer.staticExtradata,
+			seller.staticExtradata,
+			[
+				buyer.v,
+				parseInt(seller.v)
+			],
+			[
+				buyer.r,
+				buyer.s,
+				seller.r,
+				seller.s,
+				ethers.constants.HashZero
+			],
+		]
+		let tx = await contract.calculateMatchPrice_(
+			...params
+		)
+		return tx
+	},
+	async atomicMatch(seller, buyer, owner, sender) {
 		let contract = await this.getMarketExchangeContract();
 		console.log(ethers.utils.parseEther("2"))
+		const params = [
+			[
+				buyer.exchange,
+				buyer.maker,
+				buyer.taker,
+				buyer.feeRecipient,
+				buyer.target,
+				buyer.staticTarget,
+				buyer.paymentToken,
+				seller.exchange,
+				seller.maker,
+				seller.taker,
+				seller.feeRecipient,
+				seller.target,
+				seller.staticTarget,
+				seller.paymentToken,
+				sender,
+			],
+			[
+				buyer.makerRelayerFee,
+				buyer.takerRelayerFee,
+				buyer.makerProtocolFee,
+				buyer.takerProtocolFee,
+				buyer.basePrice,
+				buyer.extra,
+				buyer.listingTime,
+				buyer.expirationTime,
+				buyer.salt,
+				seller.makerRelayerFee,
+				seller.takerRelayerFee,
+				seller.makerProtocolFee,
+				seller.takerProtocolFee,
+				seller.basePrice,
+				seller.extra,
+				seller.listingTime,
+				seller.expirationTime,
+				seller.salt
+			],
+			[
+				buyer.feeMethod,
+				buyer.side,
+				buyer.saleKind,
+				buyer.howToCall,
+				seller.feeMethod,
+				seller.side,
+				seller.saleKind,
+				seller.howToCall,
+			],
+			buyer.calldata,
+			seller.calldata,
+			buyer.replacementPattern,
+			seller.replacementPattern,
+			buyer.staticExtradata,
+			seller.staticExtradata,
+			[
+				buyer.v,
+				parseInt(seller.v)
+			],
+			[
+				buyer.r,
+				buyer.s,
+				seller.r,
+				seller.s,
+				ethers.constants.HashZero
+			],
+		]
+		console.log(params)
+		let pa = {}
+		if (seller.feeRecipient === ZERO_ADDRESS && buyer.feeRecipient === ZERO_ADDRESS) {
+			pa = {
+				value: this.calculateMatchPrice_(seller, buyer),
+			}
+		}
 		let tx = await contract.atomicMatch_(
 			...params,
 			{
-				from: owner,
-				value: ethers.utils.parseEther("0.3"),
-				gasLimit: 4100000
+				...{
+					from: owner,
+				},
+				...{
+					pa
+				}
 			}
 		)
 		return tx
@@ -329,6 +477,7 @@ export default {
 	},
 	getFullAsset(asset) {
 		let type = types.keyAssetType(asset.type);
+		console.log(type)
 		let abi = utils.contractAbi(type);
 		asset.abi = abi;
 		return asset;
@@ -424,7 +573,9 @@ export default {
 		return await utils.contractAt(abi, asset.contractAddress);
 	},
 	async allowancePayToken(asset, owner, spender) {
+		console.log(asset, owner, spender)
 		asset = this.getFullAsset(asset);
+		console.log(asset)
 		let contract = await this.getAssetContract(asset);
 		if (contract.error) return contract;
 		try {
