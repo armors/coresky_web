@@ -87,6 +87,11 @@ const routes = [
         component: Collection
       },
       {
+        path: '/detail/:id',
+        name: "detail",
+        component: NFTDetail
+      },
+      {
         path: '/message',
         name: "message",
         component: Message,
@@ -98,17 +103,6 @@ const routes = [
         path: '/404',
         name: "404",
         component: NoFound
-      },
-    ]
-  },
-  {
-    path: "/detail",
-    component: NFooter,
-    children:[
-      {
-        path: '/detail/:ids',
-        name: "detail",
-        component: NFTDetail
       },
     ]
   },
