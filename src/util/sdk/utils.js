@@ -147,6 +147,9 @@ function contractAbi(type){
     case "IERC721":
       file = require('./abi/IERC721.json')
       break;
+    case "MARKET_WRAP":
+      file = require('./abi/MarketWrap.json')
+      break;
     case "WETH":
       file = require('./abi/WETH.json')
       break;

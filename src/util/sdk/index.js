@@ -10,6 +10,9 @@ const eth_util = require("ethereumjs-util");
 import web3 from "@/util/web3/index.js";
 import {ethers} from 'ethers'
 
+const encodeERC721ReplacementPatternSell = '0x000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000';
+const encodeERC721ReplacementPatternBuy = '0x00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
+
 const contract_ABI = [
 	"function transferFrom(address from, address to, uint256 tokenId)",
 	"function safeTransferFrom(address _from, address _to, uint256 _id, uint256 _value, bytes calldata _data)",
@@ -18,18 +21,27 @@ const contract_ABI = [
 ];
 const iface = new ethers.utils.Interface(contract_ABI)
 const ZERO_ADDRESS = ethers.constants.AddressZero;
+const ZERO_HASH = ethers.constants.HashZero;
 const ZERO = ethers.constants.Zero;
 const SALT = new Date().getTime();
 export default {
 	// self start
+	// 注册合约
 	async getMarketRegistryContract() {
 		let abi = utils.contractAbi("MARKET_REGISTRY");
 		return await utils.contractAt({abi}, process.env.VUE_APP_MARKET_REGISTRY);
 	},
+	// nft交易合约
 	async getMarketExchangeContract() {
 		let abi = utils.contractAbi("MARKET_EXCHANGE");
 		return await utils.contractAt({abi}, process.env.VUE_APP_MARKET_EXCHANGE);
 	},
+	// nft批量购买合约
+	async getMarketWrapContract() {
+		let abi = utils.contractAbi("MARKET_WRAP");
+		return await utils.contractAt({abi}, process.env.VUE_APP_NFT_MARKET_WRAP);
+	},
+	// 注册合约进行注册地址
 	async getOwnerProxy(address) {
 		let contract = await this.getMarketRegistryContract();
 		if (contract.error) return contract;
@@ -49,12 +61,13 @@ export default {
 			return {error: e.message};
 		}
 	},
-
+	//订单签名
 	async callhashOrder_(params) {
 		let contract = await this.getMarketExchangeContract();
 		let tx = await contract.hashOrder_(...params)
 		return tx
 	},
+	// 取消订单
 	async cancelOrder_(params, owner) {
 		let contract = await this.getMarketExchangeContract();
 		let tx = await contract.cancelOrder_(...params,
@@ -63,11 +76,13 @@ export default {
 			})
 		return tx
 	},
+	//hash签名
 	async callhashToSign_(params) {
 		let contract = await this.getMarketExchangeContract();
 		let tx = await contract.hashToSign_(...params)
 		return tx
 	},
+	//订单参数验证
 	async validateOrder_(...args) {
 		let contract = await this.getMarketExchangeContract();
 		console.log(...args)
@@ -136,7 +151,7 @@ export default {
 		}
 	},
 
-	/** sign
+	/** sign 签名订单信息
 	 * @returns
 	 * @param order
 	 * @param walletAccount
@@ -193,7 +208,16 @@ export default {
 		}
 		return iface.encodeFunctionData("transferFrom", [seller, to, id]);
 	},
-	makeOrder(exchangeAddress, sender, nftAddress) {
+	/**
+	 * 订单数据结构初始化
+	 * @param exchangeAddress
+	 * @param sender
+	 * @param nftAddress
+	 * @param side
+	 * @param tokenId
+	 * @returns {{howToCall: number, side: number, salt: number, staticExtradata: string, _sender: *, listingTime: number, maker: *, makerRelayerFee: number, takerProtocolFee: number, target: *, paymentToken: string, staticTarget: string, takerRelayerFee: number, calldata: *, expirationTime: number, extra: number, exchange: *, saleKind: number, taker: string, makerProtocolFee: number, feeRecipient: string, feeMethod: number, replacementPattern: (string), basePrice: BigNumber}}
+	 */
+	makeOrder(exchangeAddress, sender, nftAddress, side = 0, tokenId = null) {
 		return {
 			exchange: exchangeAddress,     // 当前 exhcnage 合约地址 default : exchangeAddress
 			maker: sender,         // 订单创建者 default sender
@@ -204,12 +228,15 @@ export default {
 			takerProtocolFee: 0,           // 协议费  default: 0
 			feeRecipient: ZERO_ADDRESS,    // 平台费 接收账户 default: 0x0 买方和买方必须有一个是零地址
 			feeMethod: 1,                  // enum FeeMethod { ProtocolFee, SplitFee }  费用收取方法：只用支付协议费，或者 是需要同时支付协议费 和 平台费
-			side: 0,                       // enum Side { Buy, Sell } 该订单是 卖方单 还是 买方单
+			side: side,                    // enum Side { Buy, Sell } 该订单是 卖方单 还是 买方单
 			saleKind: 0,                   // { FixedPrice, DutchAuction } 销售方式是 固定价格，还是采用 竞拍的方式
 			target: nftAddress,            // 交易的 nft 完成 NFT 转移
 			howToCall: 0,                  // 调用方式是 call 还是 delegatecall
-			calldata: '0x',                // target 执行时的 calldata
-			replacementPattern: '0x',      // target 执行时的 calldata 可替换的参数
+			calldata:
+				tokenId !== null ? (side === 1 ?
+					this.sellERC721ABI(sender, tokenId)
+					: this.buyERC721ABI(sender, tokenId)) : '0x',                // target 执行时的 calldata
+			replacementPattern: side === 1 ? encodeERC721ReplacementPatternSell : encodeERC721ReplacementPatternBuy,      // target 执行时的 calldata 可替换的参数
 			staticTarget: ZERO_ADDRESS,    // 静态调用（不修改状态）的 target 账户地址；为 0 表示没有这种调用
 			staticExtradata: '0x',         // 静态调用时设置的额外数据，最终交给 staticTarget 处理
 			paymentToken: ZERO_ADDRESS,    // 该地址为 0 ，表示使用 ether 支付，否则，表示使用一个 erc20 token 支付
@@ -221,6 +248,7 @@ export default {
 			_sender: sender        // for wrap【不计算 hash 】
 		}
 	},
+	//验证订单参数
 	async validateOrderParameters(order) {
 		let contract = await this.getMarketExchangeContract();
 		return await contract.validateOrderParameters_(
@@ -235,6 +263,7 @@ export default {
 			order.staticExtradata
 		);
 	},
+	// atomicMatch数据验证
 	async orderCanMatch(buy, sell) {
 		let contract = await this.getMarketExchangeContract();
 		console.log(
@@ -260,7 +289,8 @@ export default {
 			sell.staticExtradata
 		);
 	},
-	async calculateMatchPrice_ (seller, buyer) {
+	// 若为eth支付，计算当前订单需要支付的eth
+	async calculateMatchPrice_(seller, buyer) {
 		let contract = await this.getMarketExchangeContract();
 		const params = [
 			[
@@ -332,6 +362,7 @@ export default {
 		)
 		return tx
 	},
+	// 订单成交
 	async atomicMatch(seller, buyer, owner, sender) {
 		let contract = await this.getMarketExchangeContract();
 		console.log(ethers.utils.parseEther("2"))
@@ -421,6 +452,142 @@ export default {
 		)
 		return tx
 	},
+	//获取nft是否授权
+	async isApprovedForAll(asset, owner, operator) {
+		asset.type = 3;
+		asset = this.getFullAsset(asset);
+		let contract = await this.getAssetContract(asset);
+		if (contract.error) return contract;
+
+		try {
+			return await contract.isApprovedForAll(owner, operator);
+		} catch (e) {
+			return {error: e.message};
+		}
+	},
+	// nft授权
+	async setApprovalForAll(asset, coinbase, operator, approved) {
+		asset.type = 3;
+		asset = this.getFullAsset(asset);
+		let contract = await this.getAssetContract(asset);
+		if (contract.error) return contract;
+
+		try {
+			return await contract.setApprovalForAll(operator, approved, {
+				from: coinbase,
+			});
+		} catch (e) {
+			return {error: e.message};
+		}
+	},
+	// 获取erc20 token 的授权数量
+	async allowancePayToken(asset, owner, spender) {
+		console.log(asset, owner, spender)
+		asset = this.getFullAsset(asset);
+		console.log(asset)
+		let contract = await this.getAssetContract(asset);
+		if (contract.error) return contract;
+		try {
+			return await contract.allowance(owner, spender);
+		} catch (e) {
+			return {error: e.message};
+		}
+	},
+	// erc20 token授权
+	async approvePayToken(asset, owner, spender) {
+		asset = this.getFullAsset(asset);
+		let contract = await this.getAssetContract(asset);
+		if (contract.error) return contract;
+		try {
+			return await contract.approve(spender, constants.MAX_APPROVE_AMOUNT, {
+				from: owner,
+			});
+		} catch (e) {
+			return {error: e.message};
+		}
+	},
+
+	changeKey(obj, old_key, new_key) {
+		Object.keys(obj).forEach(key => {
+			console.log(key)
+			if (key === old_key) {
+				obj[new_key] = obj[key];
+				delete obj[key];
+			} else {
+				obj[`_${key}`] = obj[key];
+				delete obj[key];
+
+				obj[`${key}`] = obj[`_${key}`];
+				delete obj[`_${key}`];
+			}
+		});
+
+		return obj;
+	},
+	getAtomicMatchWrapOrder(order) {
+		return {
+			"exchange": order.exchange,
+			"maker": order.maker,
+			"taker": order.taker,
+			"makerRelayerFee": order.makerRelayerFee,
+			"takerRelayerFee": order.takerRelayerFee,
+			"makerProtocolFee": order.makerProtocolFee,
+			"takerProtocolFee": order.takerProtocolFee,
+			"feeRecipient": order.feeRecipient,
+			"feeMethod": order.feeMethod,
+			"side": order.side,
+			"saleKind": order.saleKind,
+			"target": order.target,
+			"howToCall": order.howToCall,
+			"calldataBeta": order.calldata,
+			"replacementPattern": order.replacementPattern,
+			"staticTarget": order.staticTarget,
+			"staticExtradata": order.staticExtradata,
+			"paymentToken": order.paymentToken,
+			"basePrice": order.basePrice,
+			"extra": order.extra,
+			"listingTime": order.listingTime,
+			"expirationTime": order.expirationTime,
+			"salt": order.salt,
+		}
+	},
+	async _atomicMatchWrap(buyers, sellers, owner) {
+		let buys = []
+		let sells = []
+		let buySigs = []
+		let sellSigs = []
+		for (let i = 0; i < buyers.length; i++) {
+			buys.push(this.getAtomicMatchWrapOrder(buyers[i]))
+			sells.push(this.getAtomicMatchWrapOrder(sellers[i]))
+			buySigs.push({
+					'v': buyers[i].v,
+					'r': buyers[i].r,
+					's': buyers[i].s
+			})
+			sellSigs.push({
+				'v': sellers[i].v,
+				'r': sellers[i].r,
+				's': sellers[i].s
+			})
+		}
+		console.log(buys)
+		console.log(sells)
+		console.log(buySigs)
+		console.log(sellSigs)
+		let contract = await this.getMarketWrapContract();
+		let tx = await contract.atomicMatchWrap(
+			buys,
+			buySigs,
+			sells,
+			sellSigs,
+			ZERO_HASH,
+			{
+				from: owner,
+				value: ethers.utils.parseEther("0.04")
+			}
+		)
+		return tx
+	},
 	// self start
 
 	async totalSupply(asset) {
@@ -445,32 +612,6 @@ export default {
 				asset.tokenURI,
 				{from: owner}
 			);
-		} catch (e) {
-			return {error: e.message};
-		}
-	},
-	async isApprovedForAll(asset, owner, operator) {
-		asset.type = 3;
-		asset = this.getFullAsset(asset);
-		let contract = await this.getAssetContract(asset);
-		if (contract.error) return contract;
-
-		try {
-			return await contract.isApprovedForAll(owner, operator);
-		} catch (e) {
-			return {error: e.message};
-		}
-	},
-	async setApprovalForAll(asset, coinbase, operator, approved) {
-		asset.type = 3;
-		asset = this.getFullAsset(asset);
-		let contract = await this.getAssetContract(asset);
-		if (contract.error) return contract;
-
-		try {
-			return await contract.setApprovalForAll(operator, approved, {
-				from: coinbase,
-			});
 		} catch (e) {
 			return {error: e.message};
 		}
@@ -572,30 +713,7 @@ export default {
 		asset.contractAddress = asset.exchangeAddress;
 		return await utils.contractAt(abi, asset.contractAddress);
 	},
-	async allowancePayToken(asset, owner, spender) {
-		console.log(asset, owner, spender)
-		asset = this.getFullAsset(asset);
-		console.log(asset)
-		let contract = await this.getAssetContract(asset);
-		if (contract.error) return contract;
-		try {
-			return await contract.allowance(owner, spender);
-		} catch (e) {
-			return {error: e.message};
-		}
-	},
-	async approvePayToken(asset, owner, spender) {
-		asset = this.getFullAsset(asset);
-		let contract = await this.getAssetContract(asset);
-		if (contract.error) return contract;
-		try {
-			return await contract.approve(spender, constants.MAX_APPROVE_AMOUNT, {
-				from: owner,
-			});
-		} catch (e) {
-			return {error: e.message};
-		}
-	},
+
 	parseSignatureHex(signature) {
 		if (!signature) {
 			return {
