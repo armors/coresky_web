@@ -20,6 +20,16 @@
 			<el-row class="mb-2">
 				<el-button type="primary" @click="buyerEvent">buyer</el-button>
 			</el-row>
+			<el-row class="mb-2">
+				<el-button type="primary" @click="makerBuyer">makerBuyer</el-button>
+			</el-row>
+			<el-row class="mb-2">
+				<el-button type="primary" @click="makerSeller">makerSeller</el-button>
+			</el-row>
+
+			<el-row class="mb-2">
+				<el-button type="primary" @click="manyBuy">manyBuy</el-button>
+			</el-row>
 		</div>
 	</div>
 </template>
@@ -67,6 +77,7 @@
 		},
 		methods: {
 			// 挂单开始
+			// 注册地址
 			async getRegistryOwner() {
 				console.log(this.user.coinbase)
 				let registryOwner = await this.$sdk.getOwnerProxy(this.user.coinbase);
@@ -76,6 +87,7 @@
 				this.registryOwner = registryOwner.proxiesAddress
 				console.log(registryOwner)
 			},
+			// 授权
 			async setApproveAll() {
 				let order = {
 					type: 'IERC721',
@@ -103,9 +115,11 @@
 				);
 				return result;
 			},
+			// 挂单
 			async getExchangeHashOrder() {
+				console.log(this.tokenId)
 				console.log(this.$sdk.getDecimalAmount(new BigNumber(this.sellPrice)).toString())
-				let params = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, token_contract)
+				let seller = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, token_contract, 1, this.tokenId)
 				// let params = {
 				// 	exchange: process.env.VUE_APP_MARKET_EXCHANGE,
 				// 	maker: this.user.coinbase,
@@ -134,46 +148,44 @@
 				// 	expirationTime: 0,
 				// 	salt: SALT,
 				// }
-				params.side = 1;
-				params.expirationTime = 0;
-				params.replacementPattern = encodeERC721ReplacementPatternSell;
-				params.calldata = this.$sdk.sellERC721ABI(this.user.coinbase, this.tokenId)
-				params.listingTime = Date.parse(new Date().toString()) / 1000 - 24 * 3600;
-				params.feeRecipient = this.$sdk.FEE_ADDRESS()
-				params.basePrice = this.$Web3.utils.toWei('0.02');
+				seller.expirationTime = 0;
+				seller.listingTime = Date.parse(new Date().toString()) / 1000 - 24 * 3600;
+				seller.feeRecipient = this.$sdk.FEE_ADDRESS()
+				seller.basePrice = this.$Web3.utils.toWei(this.sellPrice.toString());
 				const arrayParams = [
 					[
-						params.exchange,
-						params.maker,
-						params.taker,
-						params.feeRecipient,
-						params.target,
-						params.staticTarget,
-						params.paymentToken
+						seller.exchange,
+						seller.maker,
+						seller.taker,
+						seller.feeRecipient,
+						seller.target,
+						seller.staticTarget,
+						seller.paymentToken
 					],
 					[
-						params.makerRelayerFee,
-						params.takerRelayerFee,
-						params.makerProtocolFee,
-						params.takerProtocolFee,
-						params.basePrice,
-						params.extra,
-						params.listingTime,
-						params.expirationTime,
-						params.salt
+						seller.makerRelayerFee,
+						seller.takerRelayerFee,
+						seller.makerProtocolFee,
+						seller.takerProtocolFee,
+						seller.basePrice,
+						seller.extra,
+						seller.listingTime,
+						seller.expirationTime,
+						seller.salt
 					],
-					params.feeMethod,
-					params.side,
-					params.saleKind,
-					params.howToCall,
-					params.calldata,
-					params.replacementPattern,
-					params.staticExtradata
+					seller.feeMethod,
+					seller.side,
+					seller.saleKind,
+					seller.howToCall,
+					seller.calldata,
+					seller.replacementPattern,
+					seller.staticExtradata
 				]
 				const hash = await this.$sdk.callhashOrder_(arrayParams);
 				const hashToSign = await this.$sdk.callhashToSign_(arrayParams)
 				console.log(hashToSign)
-				const sig = await this.$sdk.signature(params, this.user.coinbase)
+				const sig = await this.$sdk.signature(seller, this.user.coinbase)
+				console.log(sig)
 				const validateOrderArrayParams = [
 					...arrayParams,
 					...[
@@ -183,34 +195,34 @@
 					]
 				]
 				console.log(validateOrderArrayParams)
-				const validateOrderArrayParams1 =[
+				const validateOrderArrayParams1 = [
 					[
-						params.exchange,
-						params.maker,
-						params.taker,
-						params.feeRecipient,
-						params.target,
-						params.staticTarget,
-						params.paymentToken
+						seller.exchange,
+						seller.maker,
+						seller.taker,
+						seller.feeRecipient,
+						seller.target,
+						seller.staticTarget,
+						seller.paymentToken
 					],
 					[
-						params.makerRelayerFee,
-						params.takerRelayerFee,
-						params.makerProtocolFee,
-						params.takerProtocolFee,
-						params.basePrice,
-						params.extra,
-						params.listingTime,
-						params.expirationTime,
-						params.salt
+						seller.makerRelayerFee,
+						seller.takerRelayerFee,
+						seller.makerProtocolFee,
+						seller.takerProtocolFee,
+						seller.basePrice,
+						seller.extra,
+						seller.listingTime,
+						seller.expirationTime,
+						seller.salt
 					],
-					params.feeMethod,
-					params.side,
-					params.saleKind,
-					params.howToCall,
-					params.calldata,
-					params.replacementPattern,
-					params.staticExtradata,
+					seller.feeMethod,
+					seller.side,
+					seller.saleKind,
+					seller.howToCall,
+					seller.calldata,
+					seller.replacementPattern,
+					seller.staticExtradata,
 					sig.v,
 					sig.r,
 					sig.s
@@ -219,19 +231,11 @@
 				// const resvalidateOrder_ = await this.$sdk.validateOrder_(validateOrderArrayParams)
 				// console.log(resvalidateOrder_)
 				const orderParams = {
-					...params,
-					...{
-						v: sig.v,
-						r: sig.r,
-						s: sig.s,
-						hashOriginal: hash,
-						hash: hashToSign,
-						sign: JSON.stringify(sig),
-						takerProtocolFee: 0,
-					}
+					...seller,
+					...sig
 				}
 				this.nftToBuy = {
-					...params,
+					...seller,
 					...{
 						tokenId: this.tokenId,
 						v: sig.v,
@@ -251,7 +255,8 @@
 					console.log(res)
 				})
 			},
-			async cancelOrderEvent () {
+			// 取消挂单
+			async cancelOrderEvent() {
 				console.log(this.nftToBuy)
 				const params = this.nftToBuy
 				const arrayParams = [
@@ -308,9 +313,41 @@
 			},
 			async buyerEvent() {
 				console.log(this.nftToBuy)
-				const nftToBuy = {"exchange":"0x3ef043cBA294460a12d5A2d6Bc0B4bC932e89028","maker":"0xfaee0343914b799276d73388a52b789a038758e3","taker":"0x0000000000000000000000000000000000000000","makerRelayerFee":250,"takerRelayerFee":0,"makerProtocolFee":0,"takerProtocolFee":0,"feeRecipient":"0xC35b21166eDC2B29d273223B3cD15d19617238F2","feeMethod":1,"side":1,"saleKind":0,"target":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","howToCall":0,"calldata":"0x23b872dd000000000000000000000000faee0343914b799276d73388a52b789a038758e30000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000d","replacementPattern":"0x000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000","staticTarget":"0x0000000000000000000000000000000000000000","staticExtradata":"0x","paymentToken":"0x0000000000000000000000000000000000000000","basePrice":"20000000000000000","extra":0,"listingTime":1669273342,"expirationTime":0,"salt":1669359660811,"_sender":"0xfaee0343914b799276d73388a52b789a038758e3","tokenId":13,"v":27,"r":"0xc9b6fe472e4127574541ca5e472112313ac80bf160b610b8db012641f507846d","s":"0x09df07fd9a3b77f0c851692d8a2cd8c31dc385e84eb7402830e87ab027e7f66c","hashOriginal":"0x27dc95258f190aad11481e17864dda13b98c1f86769db4b95488a51c763d0060","hash":"0xb385657a06dc46ff128d659ffe68474b696f89425f869465119f22581f1477be","sign":"{\"signature\":\"0xc9b6fe472e4127574541ca5e472112313ac80bf160b610b8db012641f507846d09df07fd9a3b77f0c851692d8a2cd8c31dc385e84eb7402830e87ab027e7f66c1b\",\"v\":27,\"s\":\"0x09df07fd9a3b77f0c851692d8a2cd8c31dc385e84eb7402830e87ab027e7f66c\",\"r\":\"0xc9b6fe472e4127574541ca5e472112313ac80bf160b610b8db012641f507846d\"}"}
+				const nftToBuy = {
+					"exchange": "0x3ef043cBA294460a12d5A2d6Bc0B4bC932e89028",
+					"maker": "0xfaee0343914b799276d73388a52b789a038758e3",
+					"taker": "0x0000000000000000000000000000000000000000",
+					"makerRelayerFee": 250,
+					"takerRelayerFee": 0,
+					"makerProtocolFee": 0,
+					"takerProtocolFee": 0,
+					"feeRecipient": "0xC35b21166eDC2B29d273223B3cD15d19617238F2",
+					"feeMethod": 1,
+					"side": 1,
+					"saleKind": 0,
+					"target": "0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2",
+					"howToCall": 0,
+					"calldata": "0x23b872dd000000000000000000000000faee0343914b799276d73388a52b789a038758e30000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000d",
+					"replacementPattern": "0x000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000",
+					"staticTarget": "0x0000000000000000000000000000000000000000",
+					"staticExtradata": "0x",
+					"paymentToken": "0x0000000000000000000000000000000000000000",
+					"basePrice": "20000000000000000",
+					"extra": 0,
+					"listingTime": 1669273342,
+					"expirationTime": 0,
+					"salt": 1669359660811,
+					"_sender": "0xfaee0343914b799276d73388a52b789a038758e3",
+					"tokenId": 13,
+					"v": 27,
+					"r": "0xc9b6fe472e4127574541ca5e472112313ac80bf160b610b8db012641f507846d",
+					"s": "0x09df07fd9a3b77f0c851692d8a2cd8c31dc385e84eb7402830e87ab027e7f66c",
+					"hashOriginal": "0x27dc95258f190aad11481e17864dda13b98c1f86769db4b95488a51c763d0060",
+					"hash": "0xb385657a06dc46ff128d659ffe68474b696f89425f869465119f22581f1477be",
+					"sign": "{\"signature\":\"0xc9b6fe472e4127574541ca5e472112313ac80bf160b610b8db012641f507846d09df07fd9a3b77f0c851692d8a2cd8c31dc385e84eb7402830e87ab027e7f66c1b\",\"v\":27,\"s\":\"0x09df07fd9a3b77f0c851692d8a2cd8c31dc385e84eb7402830e87ab027e7f66c\",\"r\":\"0xc9b6fe472e4127574541ca5e472112313ac80bf160b610b8db012641f507846d\"}"
+				}
 
-				let buyParams = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, token_contract)
+				let buyParams = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, token_contract, 0, this.tokenId)
 				// const buyParams = {
 				// 	//  配置
 				// 	makerRelayerFee: this.$sdk.RELAYER_FEE(),
@@ -344,15 +381,12 @@
 				let buyer = {
 					...buyParams,
 					...{
-						side: 0,
 						maker: this.user.coinbase,
 						taker: nftToBuy.maker,
-						calldata: this.$sdk.buyERC721ABI(this.user.coinbase, this.tokenId),
 						paymentToken: nftToBuy.paymentToken,
 						basePrice: nftToBuy.basePrice,
 						listingTime: nftToBuy.listingTime,
 						expirationTime: 0,
-						replacementPattern: encodeERC721ReplacementPatternBuy
 					}
 				}
 				console.log(buyer)
@@ -472,10 +506,387 @@
 				console.log(await this.$sdk.validateOrderParameters(buyer))
 				console.log(buyer, nftToBuy)
 				console.log(await this.$sdk.orderCanMatch(buyer, nftToBuy))
-				const hashAtomicMatch = await this.$sdk.atomicMatch(arrayParams, this.user.coinbase);
+				const hashAtomicMatch = await this.$sdk.atomicMatch(nftToBuy, buyer, this.user.coinbase, this.user.coinbase);
 				console.log(hashAtomicMatch)
 			},
 			// 购买结束
+
+			// 报价开始
+			async makerBuyer() {
+				let buyer = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, token_contract, 0, this.tokenId)
+				buyer = {
+					...buyer,
+					...{
+						expirationTime: 0,
+						paymentToken: process.env.VUE_APP_WETH,
+						listingTime: Date.parse(new Date().toString()) / 1000 - 24 * 3600,
+						feeRecipient: this.$sdk.FEE_ADDRESS(),
+						basePrice: this.$Web3.utils.toWei('0.02')
+					}
+				}
+				const sigBuyer = await this.$sdk.signature(buyer, this.user.coinbase)
+				console.log(sigBuyer)
+				buyer = {
+					...buyer,
+					...{
+						v: sigBuyer.v,
+						r: sigBuyer.r,
+						s: sigBuyer.s,
+						sign: JSON.stringify(sigBuyer),
+					}
+				}
+				console.log(buyer)
+				console.log(JSON.stringify(buyer))
+				const allowancePayToken = await this.$sdk.allowancePayToken({
+					type: 5,
+					address: process.env.VUE_APP_WETH
+				}, this.user.coinbase, process.env.VUE_APP_MARKET_TOKEN_TRANSFER_PROXY)
+				console.log(allowancePayToken)
+				if (parseFloat(allowancePayToken) === 0) {
+					const approve = await this.$sdk.approvePayToken({
+						type: 5,
+						address: process.env.VUE_APP_WETH
+					}, this.user.coinbase, process.env.VUE_APP_MARKET_TOKEN_TRANSFER_PROXY)
+					console.log(approve)
+					const allowancePayToken1 = await this.$sdk.allowancePayToken({
+						type: 5,
+						address: process.env.VUE_APP_WETH
+					}, this.user.coinbase, process.env.VUE_APP_MARKET_TOKEN_TRANSFER_PROXY)
+					console.log(parseFloat(allowancePayToken1))
+				}
+			},
+			async makerSeller() {
+				await this.getRegistryOwner()
+				await this.setApproveAll()
+				const buyer = {
+					"exchange": "0x3ef043cBA294460a12d5A2d6Bc0B4bC932e89028",
+					"maker": "0xb55add32e4608eb7965ec234e6c0b3f009c3d9d6",
+					"taker": "0x0000000000000000000000000000000000000000",
+					"makerRelayerFee": 250,
+					"takerRelayerFee": 0,
+					"makerProtocolFee": 0,
+					"takerProtocolFee": 0,
+					"feeRecipient": "0xC35b21166eDC2B29d273223B3cD15d19617238F2",
+					"feeMethod": 1,
+					"side": 0,
+					"saleKind": 0,
+					"target": "0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2",
+					"howToCall": 0,
+					"calldata": "0x23b872dd0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000b55add32e4608eb7965ec234e6c0b3f009c3d9d6000000000000000000000000000000000000000000000000000000000000000d",
+					"replacementPattern": "0x00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+					"staticTarget": "0x0000000000000000000000000000000000000000",
+					"staticExtradata": "0x",
+					"paymentToken": "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
+					"basePrice": "20000000000000000",
+					"extra": 0,
+					"listingTime": 1669621846,
+					"expirationTime": 0,
+					"salt": 1669708208045,
+					"_sender": "0xb55add32e4608eb7965ec234e6c0b3f009c3d9d6",
+					"v": 28,
+					"r": "0xb09fd62bf331dd6d8f3af7a98c4224b05c5134b87bdbcc37c7060e031f9453eb",
+					"s": "0x194e67d429cbf5af9338ffa940d96ed464624b448941da024c64c8fedb9e7d37",
+					"sign": "{\"signature\":\"0xb09fd62bf331dd6d8f3af7a98c4224b05c5134b87bdbcc37c7060e031f9453eb194e67d429cbf5af9338ffa940d96ed464624b448941da024c64c8fedb9e7d371c\",\"v\":28,\"s\":\"0x194e67d429cbf5af9338ffa940d96ed464624b448941da024c64c8fedb9e7d37\",\"r\":\"0xb09fd62bf331dd6d8f3af7a98c4224b05c5134b87bdbcc37c7060e031f9453eb\"}"
+				}
+				let seller = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, token_contract, 1, this.tokenId)
+				seller = {
+					...seller,
+					// taker: buyer.maker,
+					expirationTime: 0,
+					paymentToken: process.env.VUE_APP_WETH,
+					listingTime: buyer.listingTime,
+					// feeRecipient: this.$sdk.FEE_ADDRESS(),
+					basePrice: buyer.basePrice
+				}
+				const arrayParams = [
+					[
+						seller.exchange,
+						seller.maker,
+						seller.taker,
+						seller.feeRecipient,
+						seller.target,
+						seller.staticTarget,
+						seller.paymentToken
+					],
+					[
+						seller.makerRelayerFee,
+						seller.takerRelayerFee,
+						seller.makerProtocolFee,
+						seller.takerProtocolFee,
+						seller.basePrice,
+						seller.extra,
+						seller.listingTime,
+						seller.expirationTime,
+						seller.salt
+					],
+					seller.feeMethod,
+					seller.side,
+					seller.saleKind,
+					seller.howToCall,
+					seller.calldata,
+					seller.replacementPattern,
+					seller.staticExtradata
+				]
+				const hash = await this.$sdk.callhashOrder_(arrayParams);
+				console.log(hash)
+				const hashToSign = await this.$sdk.callhashToSign_(arrayParams)
+				console.log(hashToSign)
+				const sig = await this.$sdk.signature(seller, this.user.coinbase)
+				console.log(sig)
+				seller = {
+					...seller,
+					...{
+						v: sig.v,
+						r: sig.r,
+						s: sig.s,
+						hashOriginal: hash,
+						hash: hashToSign,
+						sign: JSON.stringify(sig),
+					}
+				}
+				const validateOrderArrayParams = [
+					...arrayParams,
+					...[
+						sig.v,
+						sig.r,
+						sig.s
+					]
+				]
+				console.log(validateOrderArrayParams)
+				const validateOrderArrayParams1 = [
+					[
+						seller.exchange,
+						seller.maker,
+						seller.taker,
+						seller.feeRecipient,
+						seller.target,
+						seller.staticTarget,
+						seller.paymentToken
+					],
+					[
+						seller.makerRelayerFee,
+						seller.takerRelayerFee,
+						seller.makerProtocolFee,
+						seller.takerProtocolFee,
+						seller.basePrice,
+						seller.extra,
+						seller.listingTime,
+						seller.expirationTime,
+						seller.salt
+					],
+					seller.feeMethod,
+					seller.side,
+					seller.saleKind,
+					seller.howToCall,
+					seller.calldata,
+					seller.replacementPattern,
+					seller.staticExtradata,
+					sig.v,
+					sig.r,
+					sig.s
+				]
+				console.log(validateOrderArrayParams1)
+				console.log(arrayParams)
+				console.log(JSON.stringify(buyer))
+				console.log(JSON.stringify(seller))
+				console.log(await this.$sdk.validateOrderParameters(seller))
+				console.log(await this.$sdk.validateOrderParameters(buyer))
+				console.log(buyer, seller)
+				console.log(await this.$sdk.orderCanMatch(buyer, seller))
+				const hashAtomicMatch = await this.$sdk.atomicMatch(seller, buyer, this.user.coinbase, buyer.maker);
+				console.log(hashAtomicMatch)
+			},
+			// 报价结束
+
+			removePropertyOf(obj){
+				Object.keys(obj).forEach(item=>{
+					if(!obj[item])  delete obj[item]
+				})
+				return obj;
+			},
+			// 多个购买start
+			async manyBuy() {
+				// const tokenIds = [13, 14]
+				let seller1 = {
+					"tokenId": 13,
+					"exchange": "0x3ef043cBA294460a12d5A2d6Bc0B4bC932e89028",
+					"maker": "0xb55add32e4608eb7965ec234e6c0b3f009c3d9d6",
+					"taker": "0x0000000000000000000000000000000000000000",
+					"makerRelayerFee": 250,
+					"takerRelayerFee": 0,
+					"makerProtocolFee": 0,
+					"takerProtocolFee": 0,
+					"feeRecipient": "0xC35b21166eDC2B29d273223B3cD15d19617238F2",
+					"feeMethod": 1,
+					"side": 1,
+					"saleKind": 0,
+					"target": "0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2",
+					"howToCall": 0,
+					"calldata": "0x23b872dd000000000000000000000000b55add32e4608eb7965ec234e6c0b3f009c3d9d60000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000d",
+					"replacementPattern": "0x000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000",
+					"staticTarget": "0x0000000000000000000000000000000000000000",
+					"staticExtradata": "0x",
+					"paymentToken": "0x0000000000000000000000000000000000000000",
+					"basePrice": "20000000000000000",
+					"extra": 0,
+					"listingTime": 1669714266,
+					"expirationTime": 0,
+					"salt": 1669800633720,
+					"_sender": "0xb55add32e4608eb7965ec234e6c0b3f009c3d9d6",
+					"signature": "0xf9eb146964813629c0277d70d29aa851f45e2e7da444550be63bc5203312c2355637040e4da071039674c7df2628488c78b0f4e2c960ba28e2bc7c3505f4d27f1b",
+					"v": 27,
+					"s": "0x5637040e4da071039674c7df2628488c78b0f4e2c960ba28e2bc7c3505f4d27f",
+					"r": "0xf9eb146964813629c0277d70d29aa851f45e2e7da444550be63bc5203312c235"
+				}
+				let seller2 = {
+					"tokenId": 14,
+					"exchange": "0x3ef043cBA294460a12d5A2d6Bc0B4bC932e89028",
+					"maker": "0xb55add32e4608eb7965ec234e6c0b3f009c3d9d6",
+					"taker": "0x0000000000000000000000000000000000000000",
+					"makerRelayerFee": 250,
+					"takerRelayerFee": 0,
+					"makerProtocolFee": 0,
+					"takerProtocolFee": 0,
+					"feeRecipient": "0xC35b21166eDC2B29d273223B3cD15d19617238F2",
+					"feeMethod": 1,
+					"side": 1,
+					"saleKind": 0,
+					"target": "0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2",
+					"howToCall": 0,
+					"calldata": "0x23b872dd000000000000000000000000b55add32e4608eb7965ec234e6c0b3f009c3d9d60000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000e",
+					"replacementPattern": "0x000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000",
+					"staticTarget": "0x0000000000000000000000000000000000000000",
+					"staticExtradata": "0x",
+					"paymentToken": "0x0000000000000000000000000000000000000000",
+					"basePrice": "20000000000000000",
+					"extra": 0,
+					"listingTime": 1669714335,
+					"expirationTime": 0,
+					"salt": 1669800633720,
+					"_sender": "0xb55add32e4608eb7965ec234e6c0b3f009c3d9d6",
+					"signature": "0xd090df550ce40af2a293f9df28222b046b2ac98276fa4fe61d471851f7bbc414173926951464958b300032c9866f956d258f6e76ebdacb096731a2e6347511271b",
+					"v": 27,
+					"s": "0x173926951464958b300032c9866f956d258f6e76ebdacb096731a2e634751127",
+					"r": "0xd090df550ce40af2a293f9df28222b046b2ac98276fa4fe61d471851f7bbc414"
+				}
+				let sellers = [
+					seller1,
+					seller2,
+				]
+				console.log(sellers)
+				let buyers = []
+				// let buyer1 = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, seller1.target, 0, seller1.tokenId)
+				// buyer1 = {
+				// 	...buyer1,
+				// 	...{
+				// 		maker: this.user.coinbase,
+				// 		taker: seller1.maker,
+				// 		paymentToken: seller1.paymentToken,
+				// 		basePrice: seller1.basePrice,
+				// 		listingTime: seller1.listingTime,
+				// 		expirationTime: 0,
+				// 	}
+				// }
+				// const sigBuyer1 = await this.$sdk.signature(buyer1, this.user.coinbase)
+				// let buyer2 = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, seller2.target, 0, seller2.tokenId)
+				// buyer2 = {
+				// 	...buyer2,
+				// 	...{
+				// 		maker: this.user.coinbase,
+				// 		taker: seller2.maker,
+				// 		paymentToken: seller2.paymentToken,
+				// 		basePrice: seller1.basePrice,
+				// 		listingTime: seller2.listingTime,
+				// 		expirationTime: 0,
+				// 	}
+				// }
+				// const sigBuyer2 = await this.$sdk.signature(buyer2, this.user.coinbase)
+
+
+				for (let i = 0; i < sellers.length; i++) {
+					console.log(i)
+					let buyer = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, sellers[i].target, 0, sellers[i].tokenId)
+					buyer = {
+						...buyer,
+						...{
+							maker: this.user.coinbase,
+							taker: sellers[i].maker,
+							paymentToken: sellers[i].paymentToken,
+							basePrice: sellers[i].basePrice,
+							listingTime: sellers[i].listingTime,
+							expirationTime: 0,
+						}
+					}
+					const sigBuyer = await this.$sdk.signature(buyer, this.user.coinbase)
+					buyer = {
+						...buyer,
+						...sigBuyer
+					}
+					buyers.push(buyer)
+					console.log(sigBuyer)
+					// buySigs.push({
+					// 	'v': sigBuyer.v,
+					// 	'r': sigBuyer.r,
+					// 	's': sigBuyer.s
+					// })
+					// sellSigs.push({
+					// 	'v': sellers[i].v,
+					// 	'r': sellers[i].r,
+					// 	's': sellers[i].s
+					// })
+					// sell.push(this.$sdk.getAtomicMatchWrapOrder(sellers[i]))
+					// buyers.push(this.$sdk.getAtomicMatchWrapOrder(buyer))
+				}
+
+				// buySigs = [
+				// 	{
+				// 		'v': sigBuyer1.v,
+				// 		'r': sigBuyer1.r,
+				// 		's': sigBuyer1.s
+				// 	},
+				// 	{
+				// 		'v': sigBuyer2.v,
+				// 		'r': sigBuyer2.r,
+				// 		's': sigBuyer2.s
+				// 	}
+				// ]
+				// sellSigs = [
+				// 	{
+				// 		'v': seller1.v,
+				// 		'r': seller1.r,
+				// 		's': seller1.s
+				// 	},
+				// 	{
+				// 		'v': seller2.v,
+				// 		'r': seller2.r,
+				// 		's': seller2.s
+				// 	},
+				// ]
+				// console.log(buySigs, sellSigs)
+				//
+				// console.log(
+				// 	this.$sdk.getAtomicMatchWrapOrder(seller1),
+				// 	this.$sdk.getAtomicMatchWrapOrder(seller2)
+				// )
+				// console.log(
+				// 	this.$sdk.getAtomicMatchWrapOrder(buyer1),
+				// 	this.$sdk.getAtomicMatchWrapOrder(buyer1)
+				// )
+				// const sell = [
+				// 	this.$sdk.getAtomicMatchWrapOrder(seller1),
+				// 	this.$sdk.getAtomicMatchWrapOrder(seller2)
+				// ]
+				// const buy = [
+				// 	this.$sdk.getAtomicMatchWrapOrder(buyer1),
+				// 	this.$sdk.getAtomicMatchWrapOrder(buyer1)
+				// ]
+
+
+				console.log(buyers, sellers)
+				const atomicMatchWrap = await this.$sdk._atomicMatchWrap(buyers, sellers, this.user.coinbase)
+				console.log(atomicMatchWrap)
+			},
+			// 多个购买end
 		}
 	}
 </script>

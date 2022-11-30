@@ -147,6 +147,12 @@ function contractAbi(type){
     case "IERC721":
       file = require('./abi/IERC721.json')
       break;
+    case "MARKET_WRAP":
+      file = require('./abi/MarketWrap.json')
+      break;
+    case "WETH":
+      file = require('./abi/WETH.json')
+      break;
 
   }
   return file || {};
@@ -207,7 +213,6 @@ class MyContract {
         return new Promise((resolve, reject) => {
           try {
             const web3 = utils_web3.getWeb3();
-            console.log(a.inputs.length === args.length)
             if (a.inputs.length === args.length) {
               this.contract.methods[key](...args).call(
                 (e, r) => {
