@@ -61,6 +61,28 @@
                   </div>
                 </dir>
               </div>
+              <div class="arrt-item">
+                <p class="attr-name">Background</p>
+                <p class="attr-value">New Punk Blue</p>
+                <dir class="attr-bottom">
+                  <span class="attr-num">1,232(12.32%)</span>
+                  <div class="attr-price">
+                    <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
+                    <span class="value">530.73</span>
+                  </div>
+                </dir>
+              </div>
+              <div class="arrt-item">
+                <p class="attr-name">Background</p>
+                <p class="attr-value">New Punk Blue</p>
+                <dir class="attr-bottom">
+                  <span class="attr-num">1,232(12.32%)</span>
+                  <div class="attr-price">
+                    <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
+                    <span class="value">530.73</span>
+                  </div>
+                </dir>
+              </div>
             </div>
           </div>
         </div>
@@ -154,7 +176,7 @@
             <div class="btn-box">
               <button class="btnBuy" @click="isShowBugDialog=!isShowBugDialog">Buy Now</button>
               <button class="btnBlack">Add to Cart</button>
-              <button class="btnWhite">Make Offer</button>
+              <button class="btnWhite" @click="isShowMakeOfferDialog=!isShowMakeOfferDialog">Make Offer</button>
             </div>
           </div>
         </div>
@@ -178,12 +200,71 @@
               <ArrowUp />
             </el-icon>
           </div>
-          <div class="card-body" style="height:200px">
+          <div class="card-body" style="height:480px;padding:0;overflow: auto;">
+            <div class="offer-list">
+              <div class="list-tr head">
+                <div class="list-th th1">Price</div>
+                <div class="list-th th2">USD Price</div>
+                <div class="list-th th3">Floor Difference</div>
+                <div class="list-th th4">Exporation</div>
+                <div class="list-th th5">From</div>
+              </div>
+
+              <div class="list-tr" v-for="i of 20" :key="i">
+                <div class="list-th th1">
+                  <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
+                  0.9311
+                </div>
+                <div class="list-th th2">$1,048,37</div>
+                <div class="list-th th3">12% below</div>
+                <div class="list-th th4">about 22 hours</div>
+                <div class="list-th th5 purple">0x24...7eth</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="page-activity"></div>
+
+    <div class="card-wrap mt30 activity-wrap">
+      <div class="card-head">
+        <img class="icon" src="@/assets/images/icons/icon_pricehistory.svg" alt="">
+        <span class="card-title">Item Activity</span>
+        <el-icon>
+          <ArrowUp />
+        </el-icon>
+      </div>
+      <div class="card-body" style="height:580px;padding:0;">
+        <div class="filter-box">
+          <el-checkbox-group v-model="checkList">
+            <el-checkbox label="Sales" />
+            <el-checkbox label="Listings" />
+            <el-checkbox label="Offers" />
+            <el-checkbox label="Collection offers" />
+            <el-checkbox label="Transfers" />
+          </el-checkbox-group>
+        </div>
+        <div class="offer-list">
+          <div class="list-tr head">
+            <div class="list-th" style="width:20%">Event</div>
+            <div class="list-th" style="width:20%">Price</div>
+            <div class="list-th" style="width:20%">From</div>
+            <div class="list-th" style="width:20%">To</div>
+            <div class="list-th" style="width:20%">Date</div>
+          </div>
+
+          <div class="list-tr" v-for="i of 20" :key="i">
+            <div class="list-th" style="width:20%">
+              Transfer
+            </div>
+            <div class="list-th" style="width:20%">0.065 ETH</div>
+            <div class="list-th " style="width:20%">Hayiyi</div>
+            <div class="list-th " style="width:20%">Hayiyi</div>
+            <div class="list-th " style="width:20%">21 days ago</div>
+          </div>
+        </div>
+      </div>
+    </div>
     <el-dialog :model-value="isShowBugDialog" :show-close="false" :close-on-click-modal="false" @closed="closed"
       custom-class="custom-dialog" destroy-on-close>
       <template #title>
@@ -219,6 +300,65 @@
       </div>
       <button class="btnBuy">Buy</button>
     </el-dialog>
+    <el-dialog :model-value="isShowMakeOfferDialog" :show-close="false" :close-on-click-modal="false" @closed="closed"
+      custom-class="custom-dialog" destroy-on-close>
+      <template #title>
+        <div class="left">
+          <span>Make an offer</span>
+        </div>
+        <el-icon @click="isShowMakeOfferDialog=false">
+          <Close />
+        </el-icon>
+      </template>
+      <div class="nft-box">
+        <img class="img-box"
+          src="https://storage.nfte.ai/nft/img/eth/0x1/6079100774021590496_845241255.webp?x-oss-process=image/resize,m_lfit,h_900"
+          alt="">
+        <div class="box-center">
+          <span class="tokenid">#5560</span>
+          <span class="collection-name">Name of this collection
+            <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
+          </span>
+        </div>
+      </div>
+      <el-form label-position="top" :model="form" style="margin-top:40px">
+        <el-form-item label="Price">
+          <div class="flex-content">
+            <el-input v-model="form.date" size="" style="width:100%;" />
+            <el-select v-model="value" class="ml20" placeholder="Select" style="width:180px;flex-shrink: 0;">
+              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+          </div>
+        </el-form-item>
+        <el-form-item label="Expiration date">
+          <div class="flex-content">
+            <el-date-picker v-model="form.time" type="datetime" placeholder="Pick a Date" style=""
+              format="YYYY-MM-DD HH:mm" />
+            <el-select v-model="value" class="ml20" placeholder="Select" style="width:180px;flex-shrink: 0;">
+              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+          </div>
+        </el-form-item>
+        <el-form-item label="Fee and coupons">
+          <div class="describe-box">
+            <div class="describe-item">
+              <span class="lable">Coeesky service fee: </span>
+              <span class="value">0.5%</span>
+            </div>
+            <div class="describe-item mt15">
+              <span class="lable">coupon rewards:</span>
+              <div class="value">
+                <p>
+                  1 coupon / 0.5 ETH
+                </p>
+                <p>1 coupon / listing / day</p>
+              </div>
+            </div>
+          </div>
+        </el-form-item>
+      </el-form>
+      <button class="btnBuy">Buy</button>
+    </el-dialog>
   </div>
 </template>
 
@@ -232,6 +372,28 @@ export default {
   data () {
     return {
       isShowBugDialog: false,
+      isShowMakeOfferDialog: false,
+      checkList: [],
+      form: {
+        price: '',
+        date: '',
+        time: ''
+      },
+      rules: {
+        price: [
+          { required: true, message: 'Please input price', trigger: 'blur' },
+        ],
+      },
+      options: [
+        {
+          value: 'Option1',
+          label: 'Option1',
+        },
+        {
+          value: 'Option2',
+          label: 'Option2',
+        }
+      ]
     };
   },
   created () {
@@ -246,6 +408,12 @@ export default {
 .mt30 {
   margin-top: 30px;
 }
+.ml20 {
+  margin-left: 20px;
+}
+.mt15 {
+  margin-top: 15px;
+}
 .main-wrapper {
   padding: 40px 0;
   margin-bottom: 20px;
@@ -256,12 +424,18 @@ export default {
   }
   .page-left {
     width: 468px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     .detail-img-box {
       border-radius: 20px;
     }
   }
   .page-right {
     width: 708px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     .collection-name {
       font-weight: 600;
       font-size: 14px;
@@ -526,6 +700,73 @@ export default {
       }
     }
   }
+  .offer-list {
+    position: relative;
+    .list-tr {
+      display: flex;
+      padding: 8px 15px 8px 20px;
+      line-height: 40px;
+      border-bottom: 1px solid $borderBg;
+      color: $color-black3;
+      font-size: 14px;
+      &.head {
+        position: sticky;
+        left: 0;
+        top: 0;
+        height: 56px;
+        width: 100%;
+        font-size: 12px;
+        background: $bg-white;
+      }
+      &.placeholder {
+        height: 56px;
+      }
+    }
+    .purple {
+      color: $bgPurple;
+    }
+    .th1 {
+      width: 138px;
+      color: $primaryColor;
+      font-weight: 500;
+      font-size: 14px;
+      .token-icon {
+        display: inline-block;
+        vertical-align: sub;
+        width: 10px;
+        height: 16px;
+        margin-right: 2px;
+      }
+    }
+    .th2 {
+      width: 125px;
+    }
+    .th3 {
+      width: 160px;
+    }
+    .th4 {
+      width: 160px;
+    }
+    .th5 {
+      width: 100px;
+    }
+  }
+  .activity-wrap {
+    .card-head {
+      border: 1px solid $borderBg;
+    }
+    .el-checkbox-group {
+      padding-top: 15px;
+      padding-left: 15px;
+      .el-checkbox {
+        font-weight: 600;
+      }
+    }
+    .filter-box {
+      background: $elButtonHoverBg;
+      height: 56px;
+    }
+  }
 }
 ::v-deep {
   .custom-dialog {
@@ -589,6 +830,7 @@ export default {
       padding: 16px;
       border: 1px solid $borderBg;
       border-radius: 20px;
+      align-items: center;
       justify-content: space-between;
       text-align: right;
       margin-top: 20px;
@@ -612,7 +854,7 @@ export default {
       }
     }
     .btnBuy {
-      margin-top: 40px;
+      margin-top: 20px;
       width: 100%;
       height: 48px;
       padding: 10px 0;
@@ -622,6 +864,59 @@ export default {
       cursor: pointer;
       color: $color-white;
       background: $mainLiner;
+    }
+    .el-form-item__label {
+      font-size: 16px;
+      color: $primaryColor;
+    }
+    .el-input__wrapper {
+      border-radius: 12px;
+      display: block;
+    }
+    .el-input__inner {
+      height: 40px;
+      padding: 0;
+    }
+    .el-select {
+      .el-input__wrapper {
+        padding: 1px 15px;
+      }
+      .el-input__suffix {
+        right: 19px;
+      }
+    }
+    .flex-content {
+      display: flex;
+      width: 100%;
+    }
+    .el-date-editor.el-input {
+      display: block;
+      width: 100%;
+      .el-input__prefix {
+        display: none;
+      }
+      .el-input__suffix {
+        top: 5px;
+      }
+    }
+    .describe-box {
+      width: 100%;
+      padding: 16px;
+      border: 1px solid $borderBg;
+      border-radius: 12px;
+      line-height: 21px;
+      .describe-item {
+        display: flex;
+        .lable {
+          font-weight: 400;
+          font-size: 14px;
+          color: $color-black2;
+          min-width: 130px;
+          margin-right: 20px;
+        }
+        .value {
+        }
+      }
     }
   }
 }
