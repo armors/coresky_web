@@ -5,7 +5,10 @@
 			<div class="arrow-prev arrow-icon" @click="arrowClick('prev')"></div>
 			<div class="arrow-next arrow-icon" @click="arrowClick('next')"></div>
 			<el-carousel class="drop-banner" arrow="never" ref="dropBanner" :interval="10000">
-				<el-carousel-item v-for="(v, i) in _dropList" :key="i">
+				<el-carousel-item v-for="(v, i) in _dropList" :key="i" @click="$router.push({
+				name: 'collection',
+				params: { contract: v.contract }
+				})">
 					<div class="drop-box display-flex">
 						<el-image class="cover-image" placeholder="loading" :src="v.bannerImage" fit="cover">
 							<template v-slot:placeholder>

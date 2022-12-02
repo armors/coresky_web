@@ -1,13 +1,16 @@
 <template>
-	<div class="popular-list">
+	<div class="recommend-list">
 		<div class="home-title">{{$t("home.exploreTitle")}}</div>
-		<div class="popular-banner-box">
+		<div class="recommend-banner-box">
 			<div class="arrow-prev arrow-icon" @click="arrowClick('prev')"></div>
 			<div class="arrow-next arrow-icon" @click="arrowClick('next')"></div>
-			<el-carousel class="popular-banner" arrow="never" :interval="6000" ref="popularBanner">
-				<el-carousel-item v-for="(popular, i) in _recommendCollection" :key="i">
-					<div class="popular-box display-flex box-center-Y">
-						<div class="popular-item" v-for="(v, i1) in popular" :key="`popular-${i1}`">
+			<el-carousel class="recommend-banner" arrow="never" :interval="6000" ref="recommendBanner">
+				<el-carousel-item v-for="(recommend, i) in _recommendCollection" :key="i">
+					<div class="recommend-box display-flex box-center-Y">
+						<div class="recommend-item" v-for="(v, i1) in recommend" :key="`recommend-${i1}`" @click="$router.push({
+				name: 'collection',
+				params: { contract: v.contract }
+				})">
 							<el-image class="cover-image" placeholder="loading" :src="v.image" fit="cover">
 <!--							<el-image class="cover-image" placeholder="loading" src="https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840" fit="cover">-->
 								<template v-slot:placeholder>
@@ -67,14 +70,14 @@
 		methods: {
 			arrowClick (val) {
 				if(val === 'next') {
-					this.$refs.popularBanner.next()
+					this.$refs.recommendBanner.next()
 				} else {
-					this.$refs.popularBanner.prev()
+					this.$refs.recommendBanner.prev()
 				}
 			},
 			handleResize () {
 				let header_height = 112;
-				let banner = document.getElementById("popular-banner");
+				let banner = document.getElementById("recommend-banner");
 				if (!banner) return;
 				banner.style.paddingTop = header_height + 10 + "px";
 				let width = banner.clientWidth;
@@ -90,13 +93,13 @@
 </script>
 
 <style lang="scss">
-	.popular-list{
+	.recommend-list{
 		padding-top: 14px;
-		.popular-banner-box{
+		.recommend-banner-box{
 			height: 286px;
 			position: relative;
 		}
-		.popular-banner{
+		.recommend-banner{
 			margin-top: 40px;
 			height: 100%;
 			.el-carousel__container{
@@ -130,12 +133,12 @@
 					}
 				}
 			}
-			.popular-box{
+			.recommend-box{
 				width: 100%;
 				height: 286px;
 				margin: 0 auto;
 
-				.popular-item{
+				.recommend-item{
 					position: relative;
 					cursor: pointer;
 					width: 286px;
@@ -157,7 +160,7 @@
 						font-size: 16px;
 						color: $color-white;
 					}
-					& + .popular-item{
+					& + .recommend-item{
 						margin-left: 18px;
 					}
 				}

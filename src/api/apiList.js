@@ -101,6 +101,16 @@ export default {
       method: "post",
     },
   },
+  collect: {
+    info: {
+      url: "/collections/info",
+      method: "post",
+    },
+    query: {
+      url: "/collections/query",
+      method: "post",
+    }
+  },
   contract: {
     getinfo: {
       url: "/contract/getinfo",

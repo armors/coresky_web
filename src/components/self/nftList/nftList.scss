@@ -1,4 +1,6 @@
 .nft-list{
+	display: block;
+	flex-flow: unset;
 	>.display-flex{
 		>.box-flex1{
 			text-align: right;

@@ -18,7 +18,10 @@
           </div>
           <div class="carousel-box">
             <el-carousel :autoplay="false" arrow="never" v-if="topCollection.length > 0">
-              <el-carousel-item v-for="(v, i) in topCollection" :key="`recommend-item-${i}`">
+              <el-carousel-item v-for="(v, i) in topCollection" :key="`recommend-item-${i}`" @click="$router.push({
+				name: 'collection',
+				params: { contract: v.contract }
+				})">
                 <el-image class="img-box" placeholder="loading" :src="v.image" fit="cover">
 <!--                <el-image class="img-box" placeholder="loading" src="https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840" fit="cover">-->
                   <template v-slot:placeholder>
@@ -58,7 +61,7 @@
 <!--          </filter-and-sort>-->
 <!--        </div>-->
 <!--      </div>-->
-      <nftPopular :recommendCollection="recommendCollection"></nftPopular>
+      <nftRecommend :recommendCollection="recommendCollection"></nftRecommend>
       <div class="home-title title-margin-top">{{$t('home.realTitle')}}</div>
       <div class="sort-box display-flex box-center-Y box-between">
         <div class="display-flex box-center-Y">
@@ -144,7 +147,7 @@
   import NftInfo from "@/mixins/NftInfo";
   import NftItem from "@/mixins/NftItem";
   import nftList from '@/components/self/nftList/index'
-  import nftPopular from '@/components/self/popular/index'
+  import nftRecommend from '@/components/self/recommend/index'
   import nftTrade from '@/components/self/trading/index'
   import nftDrop from '@/components/self/drop/index'
   import partners from '@/components/self/partners'
@@ -153,7 +156,7 @@
     components: {
       FilterAndSort,
       nftList,
-      nftPopular,
+      nftRecommend,
       nftTrade,
       nftDrop,
       partners
@@ -576,6 +579,7 @@
         .el-carousel__item{
           border-radius: 20px !important;
           .img-box{
+            cursor: pointer;
             width: 100%;
             height: 100%;
             overflow: hidden;

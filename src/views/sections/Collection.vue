@@ -1,18 +1,18 @@
 <template>
   <div class="collection-detail">
     <div class="bg-box"
-      :style=" dataInfo.imgUrl ? 'background: url('+$filters.fullImageUrl(dataInfo.imgUrl)+') no-repeat; background-size: cover;':'' ">
+      :style=" collectInfo.bannerImage ? 'background: url('+ collectInfo.bannerImage +') no-repeat; background-size: cover;':'' ">
     </div>
     <div class="collection-info">
       <div class="info-top">
         <div class="avatar-box">
           <img
-            src="https://storage.nfte.ai/asset/collection/featured/MFYROFVZKZSCSHUWXRGBZAAQPZWMOKFM.jpg?x-oss-process=image/resize,m_fill,w_108,h_108,limit_0"
+            :src="collectInfo.image"
             alt="">
         </div>
         <div class="info-title">
           <div class="title">
-            <span>Azuki</span>
+            <span>{{collectInfo.name}}</span>
             <img class="tag" src="../../assets/images/icons/icon_tag.svg" alt="">
           </div>
           <div class="creator">
@@ -22,7 +22,6 @@
           </div>
         </div>
         <div class="info-share">
-
         </div>
       </div>
       <div class="info-val">
@@ -50,9 +49,7 @@
           </el-icon>
         </div>
       </div>
-      <div class="info-rem">
-        Introduction of the project introduction of the project Introduction of the project
-      </div>
+      <div class="info-rem">{{collectInfo.info}}</div>
       <div class="info-card">
         <div class="item">
           <div class="lable">Floor Price</div>
@@ -353,15 +350,34 @@ export default {
         maxPrice: '',
         isNowBuy: true,
       },
+      contract: '',
+      collectInfo: {
+        bannerImage: '',
+        image: ''
+      }
     };
   },
   created () {
+    this.contract = this.$route.params.contract
+  },
+  mounted() {
+    console.log(this.contract)
+    if (this.contract) {
+      this.getCollectInfo()
+    }
   },
   computed: {
 
   },
 
   methods: {
+    getCollectInfo () {
+      this.$api("collect.info", {
+        contract: this.contract
+      }).then((res) => {
+        this.collectInfo = res.debug
+      })
+    },
   },
 };
 </script>

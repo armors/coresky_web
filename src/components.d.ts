@@ -35,7 +35,7 @@ declare module '@vue/runtime-core' {
     NoticeLoad: typeof import('./components/loading/NoticeLoad.vue')['default']
     Partners: typeof import('./components/self/partners/index.vue')['default']
     Placeholder: typeof import('./components/Placeholder.vue')['default']
-    Popular: typeof import('./components/self/popular/index.vue')['default']
+    Popular: typeof import('./components/self/recommend/index.vue')['default']
     ProfilePopover: typeof import('./components/ProfilePopover.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

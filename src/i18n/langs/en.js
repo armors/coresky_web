@@ -26,7 +26,7 @@ module.exports = {
   home: {
     tip1: "Open source decentralized NFT Market",
     tip2:
-      "Technology: Spring Boot Java framework + popular front-end framework Vue",
+      "Technology: Spring Boot Java framework + recommend front-end framework Vue",
     moreDetail: "More detailed",
     discord: "Discord",
     more: "More",

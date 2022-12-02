@@ -16,7 +16,11 @@
 			<div class="total box-flex1">{{ $t('home.nftListTitle6') }}</div>
 			<div class="order-volume box-flex1">{{ $t('home.nftListTitle7') }}</div>
 		</div>
-		<div class="nft-item display-flex box-center-Y" v-for="(v, i) in nftList" :key="`nft-item-${i}`" :class="{'bg-gray': i === 0}">
+		<div class="nft-item display-flex box-center-Y" v-for="(v, i) in nftList" :key="`nft-item-${i}`" :class="{'bg-gray': i === 0}"
+		     @click="$router.push({
+				name: 'collection',
+				params: { contract: v.contract }
+				})">
 			<div class="index-num">{{i + 1}}</div>
 			<div class="nft-info display-flex box-center-Y">
 				<el-image class="cover-image" placeholder="loading" :src="v.image" fit="cover">

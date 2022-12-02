@@ -7,7 +7,10 @@
 			<el-carousel class="trading-banner" arrow="never" ref="tradingBanner" :interval="6000">
 				<el-carousel-item v-for="(popular, i) in _popularList" :key="i">
 					<div class="trading-box display-flex">
-						<div class="trading-item" v-for="(v, i1) in popular" :key="`trading-${i}`">
+						<div class="trading-item" v-for="(v, i1) in popular" :key="`trading-${i}`" @click="$router.push({
+				name: 'collection',
+				params: { contract: v.contract }
+				})">
 							<el-image class="cover-image" placeholder="loading" :src="v.bannerImage" fit="cover">
 								<template v-slot:placeholder>
 									<el-skeleton class="placeholder-image" animated>

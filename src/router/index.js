@@ -82,12 +82,12 @@ const routes = [
         component: Markterplace
       },
       {
-        path: '/collection/:address',
+        path: '/collection/:contract',
         name: "collection",
         component: Collection
       },
       {
-        path: '/detail/:id',
+        path: '/detail/:contract/:id',
         name: "detail",
         component: NFTDetail
       },
