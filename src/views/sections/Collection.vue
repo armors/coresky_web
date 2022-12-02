@@ -63,7 +63,7 @@
           </div>
         </div>
         <div class="item">
-          <div class="lable">Floor Price</div>
+          <div class="lable">Best Offier</div>
           <div class="value">
             <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
             <span>530.73</span>
@@ -74,7 +74,7 @@
           </div>
         </div>
         <div class="item">
-          <div class="lable">Floor Price</div>
+          <div class="lable">24h Volume</div>
           <div class="value">
             <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
             <span>530.73</span>
@@ -85,7 +85,7 @@
           </div>
         </div>
         <div class="item">
-          <div class="lable">Floor Price</div>
+          <div class="lable">total volume</div>
           <div class="value">
             <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
             <span>530.73</span>
@@ -96,7 +96,7 @@
           </div>
         </div>
         <div class="item">
-          <div class="lable">Floor Price</div>
+          <div class="lable">Owers</div>
           <div class="value">
             <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
             <span>530.73</span>
@@ -107,7 +107,7 @@
           </div>
         </div>
         <div class="item">
-          <div class="lable">Floor Price</div>
+          <div class="lable">Items</div>
           <div class="value">
             <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
             <span>530.73</span>
@@ -233,7 +233,7 @@
             </div>
           </div>
           <div class="nft-list">
-            <div class="nft-card" v-for="i in 20" :key="i">
+            <div class="nft-card" v-for="(v, i) in tokenList" :key="`token-item-${i}`" @click="toTokenDetail(v)">
               <div class="nft-content">
                 <div class="card-top">
                   <div class="card-img">
@@ -282,6 +282,17 @@ export default {
         minPrice: '',
         maxPrice: '',
         isNowBuy: true,
+      },
+      tokenQueryParams: {
+        "keyword": "",
+        "contract": this.contract,
+        "buyNow": true,
+        "minPrice": 0,
+        "maxPrice": 0,
+        "order": 0,
+        "filter" : {},
+        page: 1,
+        limit: 10
       },
       attrList: [
         {
@@ -355,16 +366,19 @@ export default {
       collectInfo: {
         bannerImage: '',
         image: ''
-      }
+      },
+      tokenList: []
     };
   },
   created () {
     this.contract = this.$route.params.contract
+    this.tokenQueryParams.contract = this.contract
   },
   mounted() {
     console.log(this.contract)
     if (this.contract) {
       this.getCollectInfo()
+      this.getTokenQuery()
     }
   },
   computed: {
@@ -379,6 +393,20 @@ export default {
         this.collectInfo = res.debug
       })
     },
+    getTokenQuery () {
+      this.$api("collect.tokenQuery", this.tokenQueryParams).then((res) => {
+        this.tokenList = res.debug.listData
+      })
+    },
+    toTokenDetail (v) {
+      this.$router.push({
+        name: 'detail',
+        params: {
+          contract: v.contract,
+          tokenId: v.tokenId
+        }
+      })
+    }
   },
 };
 </script>
@@ -485,7 +513,7 @@ export default {
         align-items: center;
         padding: 8px;
         width: 186px;
-        height: 108px;
+        /*height: 108px;*/
         border-radius: 12px;
         border: 1px solid $borderBg;
         .lable {
@@ -508,7 +536,8 @@ export default {
           }
         }
         .rise {
-          display: flex;
+          display: none;
+          /*display: flex;*/
           margin-top: 12px;
           .time {
             font-weight: 500;

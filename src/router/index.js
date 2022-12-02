@@ -87,7 +87,7 @@ const routes = [
         component: Collection
       },
       {
-        path: '/detail/:contract/:id',
+        path: '/detail/:contract/:tokenId',
         name: "detail",
         component: NFTDetail
       },

@@ -25,7 +25,8 @@ export function fullImageUrl(url) {
 }
 
 export function ellipsisAddress(address) {
-  return address.slice(0, 11) + "..." + address.slice(-4);
+  if (!address) return '--'
+  return address.slice(0, 7) + "..." + address.slice(-4);
 }
 
 export function decimal(num, v) {

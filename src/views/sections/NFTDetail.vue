@@ -3,9 +3,20 @@
     <div class="flex-center">
       <div class="page-left">
         <div class="detail-img-box">
-          <img
-            src="https://storage.nfte.ai/nft/img/eth/0x1/6079100774021590496_845241255.webp?x-oss-process=image/resize,m_lfit,h_900"
-            alt="">
+          <el-image class="cover-image" placeholder="loading" :src="tokenInfo.ckCollectionsInfoEntity.image" fit="cover">
+            <template v-slot:placeholder>
+              <el-skeleton class="placeholder-image" animated>
+                <template #template>
+                  <el-skeleton-item class="nft-image-skeleton" variant="h3" />
+                </template>
+              </el-skeleton>
+            </template>
+            <template v-slot:error>
+              <div class="display-flex box-center error-image-box">
+                <el-image class="error-image" :src="require('@/assets/create-img/non-existent.png')" fit="contain"></el-image>
+              </div>
+            </template>
+          </el-image>
         </div>
         <div class="card-wrap mt30">
           <div class="card-head">
@@ -124,25 +135,25 @@
       </div>
       <div class="page-right">
         <div class="detail-info">
-          <div class="collection-name"><span>Name of this collection</span> <img class="tag"
+          <div class="collection-name"><span>{{tokenInfo.ckCollectionsInfoEntity.name}}</span> <img class="tag"
               src="@/assets/images/icons/icon_tag.svg" alt=""></div>
           <div class="globle-floor">
             <span>Globle floor : </span>
             <img class="token-icon" src="@/assets/images/icons/token/token_eth.svg" alt="" />
-            <span class="value">530.73</span>
+            <span class="value">{{tokenInfo.ckCollectionsInfoEntity.floorPrice}}</span>
           </div>
           <div class="nft-name">
-            <span>Name of this NFT #4450</span>
+            <span>{{tokenInfo.ckCollectionsInfoEntity.name}} #{{tokenInfo.tokenId}}</span>
             <div class="icon_shoucang" alt="" />
           </div>
           <div class="nft-address">
             <div class="add-item">
               <div class="creator">Creator</div>
-              <div class="creator-name">0xb908f...f0c6</div>
+              <div class="creator-name">{{$filters.ellipsisAddress(tokenInfo.contract)}}</div>
             </div>
             <div>
               <div class="creator">Current owner</div>
-              <div class="creator-name">0xb908f...f0c6</div>
+              <div class="creator-name">{{$filters.ellipsisAddress(tokenInfo.ckCollectionsInfoEntity.currencyAddress)}}</div>
             </div>
           </div>
           <div class="nft-bid-box">
@@ -393,14 +404,38 @@ export default {
           value: 'Option2',
           label: 'Option2',
         }
-      ]
+      ],
+      tokenInfo: {
+        contract: '',
+        tokenId: '',
+        ckCollectionsInfoEntity: {
+          bannerImage: '',
+          image: ''
+        }
+      },
+      tokenInfoParams: {
+        contract: '',
+        tokenId: ''
+      }
     };
   },
   created () {
+    this.tokenInfoParams =  {
+      contract: this.$route.params.contract,
+      tokenId: this.$route.params.tokenId
+    }
+  },
+  mounted() {
+    this.getTokenInfo()
   },
   computed: {
   },
   methods: {
+    getTokenInfo () {
+      this.$api("collect.tokenInfo", this.tokenInfoParams).then((res) => {
+        this.tokenInfo = res.debug
+      })
+    },
   },
 };
 </script>
@@ -429,6 +464,12 @@ export default {
     justify-content: space-between;
     .detail-img-box {
       border-radius: 20px;
+      height: 468px;
+      .cover-image{
+        width: 100%;
+        height: 100%;
+        border-radius: 20px;
+      }
     }
   }
   .page-right {

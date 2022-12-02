@@ -109,6 +109,14 @@ export default {
     query: {
       url: "/collections/query",
       method: "post",
+    },
+    tokenQuery: {
+      url: "/token/query",
+      method: "post",
+    },
+    tokenInfo: {
+      url: "/token/info",
+      method: "post",
     }
   },
   contract: {
