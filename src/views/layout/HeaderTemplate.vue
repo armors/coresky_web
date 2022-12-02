@@ -2,18 +2,12 @@
   <div class="home-header">
     <div class="header-container" :style="style">
       <router-link to="/" class="head-logo header-margin-r">
-        <img fit="contain" class="logo-image"
-          :src="require('../../assets/images/logo_black.svg')"
-        />
+        <img fit="contain" class="logo-image" :src="require('../../assets/images/logo_black.svg')" />
       </router-link>
 
       <div class="header-search header-margin-r">
-        <el-input
-          class="search-input"
-          v-model="keyword"
-          @keyup.enter="searchClick"
-          :placeholder="$t('navigation.searchTip')"
-        >
+        <el-input class="search-input" v-model="keyword" @keyup.enter="searchClick"
+          :placeholder="$t('navigation.searchTip')">
           <template #prefix>
             <div class="img-search"><img src="../../assets/images/icons/icon_search.svg" alt=""></div>
           </template>
@@ -36,46 +30,47 @@
         <router-link class="nav-link" to="/erc721">
           {{ $t("navigation.ETH") }}
         </router-link>
-<!--        <router-link class="nav-link header-margin-r"-->
-<!--          :class="$route.name == 'Items' ? 'active' : ''"-->
-<!--          :to="!connected ? '/connect' : '/items'"-->
-<!--        >-->
-<!--          {{ $t("navigation.myItems") }}-->
-<!--        </router-link>-->
+        <!--        <router-link class="nav-link header-margin-r"-->
+        <!--          :class="$route.name == 'Items' ? 'active' : ''"-->
+        <!--          :to="!connected ? '/connect' : '/items'"-->
+        <!--        >-->
+        <!--          {{ $t("navigation.myItems") }}-->
+        <!--        </router-link>-->
 
-<!--        <router-link v-if="connected"-->
-<!--          class="nav-link header-margin-r" to="/message?tab=unread"-->
-<!--          :class="$route.name == 'Message' ? 'active' : ''"-->
-<!--        >-->
-<!--          {{$t('navigation.news')}}-->
-<!--          <span v-if="message.unread" class="red-tip"></span>-->
-<!--        </router-link>-->
+        <!--        <router-link v-if="connected"-->
+        <!--          class="nav-link header-margin-r" to="/message?tab=unread"-->
+        <!--          :class="$route.name == 'Message' ? 'active' : ''"-->
+        <!--        >-->
+        <!--          {{$t('navigation.news')}}-->
+        <!--          <span v-if="message.unread" class="red-tip"></span>-->
+        <!--        </router-link>-->
         <el-popover v-model:visible="languagePopover" placement="bottom" trigger="hover" :show-arrow="false"
           popper-class="nav-popover" :offset="-8">
           <template #reference>
-            <el-button class="wallet-link" >
+            <el-button class="wallet-link">
               <img src="../../assets/images/icons/icon_lang.svg" alt="">
             </el-button>
-<!--            <div class="nav-link header-margin-r">-->
-<!--              &lt;!&ndash; {{$t('footer.language')}} &ndash;&gt;{{language}}-->
-<!--              <span class="iconfont icon-arrow-down bfont"></span>-->
-<!--            </div>-->
+            <!--            <div class="nav-link header-margin-r">-->
+            <!--              &lt;!&ndash; {{$t('footer.language')}} &ndash;&gt;{{language}}-->
+            <!--              <span class="iconfont icon-arrow-down bfont"></span>-->
+            <!--            </div>-->
           </template>
-          <div class="popover-menu-item" @click="languageSelect('English')" :class="language =='English' ? 'active':''">English</div>
+          <div class="popover-menu-item" @click="languageSelect('English')" :class="language =='English' ? 'active':''">
+            English</div>
           <div class="popover-menu-item" @click="languageSelect('中文')" :class="language =='中文' ? 'active':''">中文</div>
         </el-popover>
       </div>
       <div class="head-menus">
         <el-button class="wallet-link" @click="toggleDark">
           <img src="../../assets/images/icons/icon_sun.svg" alt="">
-<!--          <el-icon v-if="isDark"><Sunny /></el-icon>-->
-<!--          <el-icon v-else><Moon /></el-icon>-->
+          <!--          <el-icon v-if="isDark"><Sunny /></el-icon>-->
+          <!--          <el-icon v-else><Moon /></el-icon>-->
         </el-button>
-        <router-link to="/erc721" >
-          <el-button class="wallet-link" >
-            <img src="../../assets/images/icons/icon_cart.svg" alt="">
-          </el-button>
-        </router-link>
+        <!-- <router-link to="/erc721"> -->
+        <el-button class="wallet-link" @click="showShoppingCartDrawer=true" style="margin-left:0">
+          <img src="../../assets/images/icons/icon_cart.svg" alt="">
+        </el-button>
+        <!-- </router-link> -->
 
         <router-link to="/connect" class="head-connect display-flex box-center" v-if="!connected">
           {{ $t("navigation.connectWallet") }}
@@ -83,35 +78,43 @@
 
         <div class="user-link header-margin-l" v-else>
           <div class="user-popover">
-            <profile-popover></profile-popover>
+            <!-- <profile-popover></profile-popover> -->
+            <div class="user-avatar" @click="showUserDrawer=true">
+              <avatar class="avatar-img" :imageUrl="$filters.fullImageUrl(user.avatar)" :address="user.coinbase"
+                :imgWidth="40" :imgHeight="40" shape="circular">
+              </avatar>
+            </div>
           </div>
         </div>
 
       </div>
     </div>
 
-    <follow-popup
-      :show="showFollowing"
-      ftype="following"
-      @close="showFollowing = false"
-      v-if="connected"
-      :address="user.coinbase"
-    >
+    <follow-popup :show="showFollowing" ftype="following" @close="showFollowing = false" v-if="connected"
+      :address="user.coinbase">
     </follow-popup>
-
+    <userCenterDrawer v-model:show="showUserDrawer" />
+    <shoppingCartDrawer v-model:show="showShoppingCartDrawer" />
   </div>
 </template>
 <script>
 import FollowPopup from "@/components/FollowPopup";
+import userCenterDrawer from "@/components/self/drawer/userCenterDrawer";
+import shoppingCartDrawer from "@/components/self/drawer/shoppingCartDrawer";
+
 import { useDark, useToggle } from '@vueuse/core'
 
 export default {
   name: "HeaderTemplate",
   components: {
     FollowPopup,
+    userCenterDrawer,
+    shoppingCartDrawer,
   },
   data: function () {
     return {
+      showUserDrawer: false,
+      showShoppingCartDrawer: false,
       isDark: false,
       style: {
         backgroundColor: "",
@@ -125,24 +128,24 @@ export default {
     };
   },
   computed: {
-    notice() {
+    notice () {
       return this.$store.state.notice;
     },
-    connected() {
+    connected () {
       return this.$store.state.connected;
     },
     user: function () {
       var user = this.$store.state.user;
       return user;
     },
-    message(){
+    message () {
       return this.$store.state.message;
     },
-    language() {
+    language () {
       return this.$store.state.language;
     }
   },
-  created() {
+  created () {
     this.isDark = useDark()
     if (localStorage.getItem("locale") == "zh") {
       this.$store.state.language = "中文";
@@ -158,34 +161,34 @@ export default {
       useToggle(isDark)
       this.isDark = !this.isDark
     },
-    handleScroll(){
+    handleScroll () {
       let scrollTop = window.pageYOffset ||
         document.documentElement.scrollTop ||
         document.body.scrollTop;
       if (scrollTop) {
-        if(scrollTop < 112){
+        if (scrollTop < 112) {
           this.style.backgroundColor = `rgba(255, 255, 255,${scrollTop / (scrollTop + 112)})`;
-        }else{
+        } else {
           this.style.backgroundColor = "#fff";
         }
       } else if (scrollTop === 0) {
         this.style.backgroundColor = "transparent";
       }
     },
-    async searchClick() {
-      this.$router.push({ name: "Search", query: { keyword: this.keyword} });
+    async searchClick () {
+      this.$router.push({ name: "Search", query: { keyword: this.keyword } });
     },
-    goProfile(){
-      if(!this.$tools.needLogin()) return;
+    goProfile () {
+      if (!this.$tools.needLogin()) return;
       this.$router.push("/profile");
     },
-    goItems() {
+    goItems () {
       this.$router.push({ name: "Items" });
     },
-    logout() {
+    logout () {
       this.$web3.disconnect();
     },
-    languageSelect(parameter) {
+    languageSelect (parameter) {
       this.$store.state.language = parameter;
       if (parameter == "English") {
         localStorage.setItem("locale", "en");
@@ -201,7 +204,7 @@ export default {
 </script>
 
 <style lang="scss">
-.header-search{
+.header-search {
   .search-input {
     border-radius: 10px;
     overflow: hidden;
@@ -211,13 +214,13 @@ export default {
     align-items: center;
     font-size: 16px;
     border-radius: 12px;
-    .el-input__wrapper{
+    .el-input__wrapper {
       height: 100%;
       padding: 0;
       border-radius: 12px;
     }
     .el-input__inner {
-      font-size:13px;
+      font-size: 13px;
       padding-left: 38px !important;
       height: 100%;
       border: none;
@@ -229,7 +232,7 @@ export default {
       line-height: 40px;
       left: 20px;
     }
-    .img-search{
+    .img-search {
       width: 16px;
       height: 16px;
     }
@@ -245,15 +248,12 @@ export default {
       color: grey;
     }
   }
-
 }
-
-
 </style>
 
 <style lang="scss" scoped>
-@import "../../styles/variables";
-.home-header{
+@import '../../styles/variables';
+.home-header {
   position: fixed;
   right: 0;
   left: 0;
@@ -273,18 +273,18 @@ export default {
   }
 }
 
-.head-navs{
+.head-navs {
   display: flex;
   align-items: center;
   flex: 1;
   justify-content: flex-end;
 }
 
-.head-menus{
+.head-menus {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  .round-link{
+  .round-link {
     color: #333;
     font-size: 28px;
     cursor: pointer;
@@ -303,7 +303,7 @@ export default {
   display: flex;
   flex: 1;
   align-items: center;
-  color: #333;;
+  color: #333;
   font-size: 15px;
   font-weight: 900;
   width: 430px;
@@ -321,17 +321,17 @@ export default {
   }
 }
 
-.search-link{
+.search-link {
   display: none;
 }
-.menu-link{
+.menu-link {
   display: none;
 }
 
-.user-popover{
+.user-popover {
   display: flex;
 }
-.user-dialog{
+.user-dialog {
   display: none;
 }
 
@@ -340,7 +340,7 @@ export default {
   display: flex;
 }
 
-.head-logo{
+.head-logo {
   display: flex;
   align-items: center;
 }
@@ -357,12 +357,12 @@ export default {
   height: 48px;
   margin-left: 24px;
 }
-.wallet-link{
+.wallet-link {
   border: none;
   width: 50px;
   padding: 0;
   height: 48px;
-  .el-icon{
+  .el-icon {
     font-size: 30px;
     font-weight: 600;
   }
@@ -382,7 +382,7 @@ export default {
   padding: 1px 3px;
 }
 
-.popover-menu-item{
+.popover-menu-item {
   display: flex;
   flex: 1;
   cursor: pointer;

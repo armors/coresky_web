@@ -43,7 +43,7 @@ import * as filters from "@/filters";
 
 import ElementPlus from "element-plus";
 import "./permission";
-import "../theme/index.css";
+// import "../theme/index.css";
 
 import "@/styles/index.scss";
 
