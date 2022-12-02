@@ -379,7 +379,7 @@
         <div class="left">
           <span>Sell NFT</span>
         </div>
-        <el-icon @click="isShowMakeOfferDialog=false">
+        <el-icon @click="isShowSellDialog=false">
           <Close />
         </el-icon>
       </template>
