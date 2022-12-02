@@ -172,8 +172,8 @@
               </div>
             </div>
             <div class="btn-box">
-              <button class="btnBuy" v-if="isSelf" @click="isShowSellDialog=!isShowSellDialog">Sell Now</button>
-              <button class="btnBuy" v-else @click="isShowBugDialog=!isShowBugDialog">Buy Now</button>
+              <el-button type="primary" class="btnBuy" :loading="sellDialogBtnLoading" v-if="isSelf" @click="showSellNft">Sell Now</el-button>
+              <button class="btnBuy" v-else-if="tokenInfo.state" @click="isShowBugDialog=!isShowBugDialog">Buy Now</button>
               <button class="btnBlack">Add to Cart</button>
               <button class="btnWhite" @click="isShowMakeOfferDialog=!isShowMakeOfferDialog">Make Offer</button>
             </div>
@@ -297,7 +297,7 @@
           <div class="total">$ 45,332.02</div>
         </div>
       </div>
-      <el-button type="primary" class="btnBuy" :loading="butBtnLoading">Buy</el-button>
+      <el-button type="primary" class="btnBuy" :loading="buyBtnLoading">Buy</el-button>
     </el-dialog>
     <el-dialog :model-value="isShowMakeOfferDialog" :show-close="false" :close-on-click-modal="false" @closed="closed"
       custom-class="custom-dialog" destroy-on-close>
@@ -360,80 +360,22 @@
       </el-form>
       <button class="btnBuy">Buy</button>
     </el-dialog>
-    <el-dialog :model-value="isShowSellDialog" :show-close="false" :close-on-click-modal="false" @closed="closed"
-      custom-class="custom-dialog" destroy-on-close>
-      <template #title>
-        <div class="left">
-          <span>Sell NFT</span>
-        </div>
-        <el-icon @click="isShowSellDialog=false">
-          <Close />
-        </el-icon>
-      </template>
-      <div class="nft-box">
-        <img class="img-box"
-          src="https://storage.nfte.ai/nft/img/eth/0x1/6079100774021590496_845241255.webp?x-oss-process=image/resize,m_lfit,h_900"
-          alt="">
-        <div class="box-center">
-          <span class="tokenid">#5560</span>
-          <span class="collection-name">Name of this collection
-            <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
-          </span>
-        </div>
-      </div>
-      <el-form label-position="top" :model="form" style="margin-top:40px">
-        <el-form-item label="Price">
-          <div class="flex-content">
-            <el-input v-model="form.date" size="large" style="width:100%;" />
-            <el-select v-model="value" size="large" class="ml20" placeholder="Select"
-              style="width:180px;flex-shrink: 0;">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-            </el-select>
-          </div>
-        </el-form-item>
-        <el-form-item label="Expiration date">
-          <div class="flex-content">
-            <el-date-picker v-model="form.time" size="large" type="datetime" placeholder="Pick a Date" style=""
-              format="YYYY-MM-DD HH:mm" />
-            <el-select v-model="value" class="ml20" size="large" placeholder="Select"
-              style="width:180px;flex-shrink: 0;">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-            </el-select>
-          </div>
-        </el-form-item>
-        <el-form-item label="Fee and coupons">
-          <div class="describe-box">
-            <div class="describe-item">
-              <span class="lable">Coeesky service fee: </span>
-              <span class="value">0.5%</span>
-            </div>
-            <div class="describe-item mt15">
-              <span class="lable">coupon rewards:</span>
-              <div class="value">
-                <p>
-                  1 coupon / 0.5 ETH
-                </p>
-                <p>1 coupon / listing / day</p>
-              </div>
-            </div>
-          </div>
-        </el-form-item>
-      </el-form>
-      <button class="btnBuy">Sell NFT</button>
-    </el-dialog>
+    <SellNftDialog ref="SellNftDialog" @sellCreateSuccess="sellCreateSuccess"></SellNftDialog>
   </div>
 </template>
 
 <script>
-
+import SellNftDialog from '../../components/self/sellNDialog'
 export default {
   name: "NFTDetail",
   components: {
+    SellNftDialog
   },
   mixins: [],
   data () {
     return {
-      butBtnLoading: false,
+      buyBtnLoading: false,
+      sellDialogBtnLoading: false,
       isShowSellDialog: false,
       isShowBugDialog: false,
       isShowMakeOfferDialog: false,
@@ -494,21 +436,21 @@ export default {
     getTokenInfo () {
       this.$api("collect.tokenInfo", this.tokenInfoParams).then((res) => {
         this.tokenInfo = res.debug
+        this.tokenInfo.ckCollectionsInfoEntity.floorPrice = '0.02'
       })
     },
+    showSellNft () {
+      this.sellDialogBtnLoading = true
+      this.$refs.SellNftDialog.showSell(this.tokenInfo)
+    },
+    sellCreateSuccess (v) {
+      console.log(v)
+      this.getTokenInfo()
+    }
   },
 };
 </script>
 <style lang="scss" scoped>
-.mt30 {
-  margin-top: 30px;
-}
-.ml20 {
-  margin-left: 20px;
-}
-.mt15 {
-  margin-top: 15px;
-}
 .main-wrapper {
   padding: 40px 0;
   margin-bottom: 20px;

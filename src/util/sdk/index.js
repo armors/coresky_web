@@ -220,7 +220,7 @@ export default {
 	makeOrder(exchangeAddress, sender, nftAddress, side = 0, tokenId = null) {
 		return {
 			exchange: exchangeAddress,     // 当前 exhcnage 合约地址 default : exchangeAddress
-			maker: sender,         // 订单创建者 default sender
+			maker: sender,                 // 订单创建者 default sender
 			taker: ZERO_ADDRESS,           // 订单参与者 require
 			makerRelayerFee: 250,          // 手续费  default: 0
 			takerRelayerFee: 0,            // 手续费  default: 0
