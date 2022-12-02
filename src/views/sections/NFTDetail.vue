@@ -288,11 +288,11 @@
       </template>
       <div class="nft-box">
         <img class="img-box"
-          src="https://storage.nfte.ai/nft/img/eth/0x1/6079100774021590496_845241255.webp?x-oss-process=image/resize,m_lfit,h_900"
+          :src="tokenInfo.ckCollectionsInfoEntity.image"
           alt="">
         <div class="box-center">
-          <span class="tokenid">#5560</span>
-          <span class="collection-name">Name of this collection
+          <span class="tokenid">#{{tokenInfo.tokenId}}</span>
+          <span class="collection-name">{{tokenInfo.ckCollectionsInfoEntity.name}}
             <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
           </span>
         </div>
