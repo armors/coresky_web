@@ -14,7 +14,7 @@
       </el-icon>
     </div>
     <div class="drawer-nav">
-      <div class="nav-item">
+      <div class="nav-item" @click="goView('/account/aa')">
         <img class="icon" src="@/assets/images/icons/icon_nft.svg" alt="">
         <span>My NFTs</span>
       </div>
@@ -102,6 +102,7 @@ export default {
 
   },
   mounted () {
+
   },
   computed: {
     user () {
@@ -109,6 +110,10 @@ export default {
     },
   },
   methods: {
+    goView (path) {
+      this.$router.push(path)
+      this.handleClose()
+    },
     handleClose () {
       this.$emit('update:show', false)
     }

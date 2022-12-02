@@ -201,8 +201,8 @@
         color: #333;
       }
     }
-    .el-tabs__active-bar {
-      background-color: #333;
-    }
+    // .el-tabs__active-bar {
+    //   background-color: #333;
+    // }
   }
 </style>

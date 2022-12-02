@@ -1,31 +1,31 @@
 <template>
   <div class="flex-row-box">
-    <side :stat="stat" :userinfo="user" @refreshStat="getUserStat" />
+    <side :stat="stat" :userinfo="userinfo" @refreshStat="getUserStat" />
     <div class="flex-row-content">
-      <div class="item-page main-wrapper">
-        <div class="item-tab">
+      <div class="item-page">
+        <div class="item-tab main-wrapper">
           <el-tabs class="user-tab-menus" @tab-click="tabindexFunc" v-model="tab">
-            <el-tab-pane class="tab-content-info" v-for="(tab, i) in tabs" :key="i" :name="tab.name">
+            <el-tab-pane class="tab-content-info" v-for="(tab, i) in tabs" :key="i" :label="tab.title" :name="tab.name">
               <template #label>
                 <div class="tab-content-title">
                   <span>{{ tab.title }}</span>
                   <span>({{ tab.count }})</span>
                 </div>
               </template>
-
               <div class="nft-list" v-infinite-scroll="loadList">
-                <div class="tab-content-none" v-if="!userNftList[tab.name].length && loadStatus != 'loading'">
+                <div class="tab-content-none" v-if="
+                    !userNftList[tab.name].length && loadStatus != 'loading'
+                  ">
                   <div class="tab-info">
-                    <div class="tab-title">{{ $t("items.nif") }}</div>
-                    <div class="tab-intro">{{ $t("items.text1") }}</div>
-                    <el-button class="tab-btn" type="primary" @click="goHome">
-                      {{ $t("items.browse") }}
+                    <div class="tab-title">{{ $t("account.noFound") }}</div>
+                    <div class="tab-intro">{{ $t("account.noFoundText") }}</div>
+                    <el-button class="tab-btn" @click="goHome">{{ $t("account.browseMarketplace") }}
                     </el-button>
                   </div>
                 </div>
                 <template v-else>
                   <div class="flex-box">
-                    <nft-item v-for="(nft, i) in userNftList[tab.name]" :nft="nft" :index="i" @showDialog="showDialog" @onLike="onLike" :address="user.coinbase" :key="i">
+                    <nft-item v-for="(nft, i) in userNftList[tab.name]" :nft="nft" :index="i" @showDialog="showDialog" @onLike="onLike" :key="i" :address="address">
                     </nft-item>
                     <nft-item-load :loadStatus="loadStatus"></nft-item-load>
                   </div>
@@ -50,20 +50,17 @@
         </accept-dialog>
         <transfer-dialog :show="showTransferDialog" @close="closeDialog" @confirm="dialogConfirm" :asset="dialogOrder" :nft="dialogNft" :uri="dialogNftURI">
         </transfer-dialog>
-        <burn-dialog :show="showBurnDialog" @close="closeDialog" @confirm="dialogConfirm" :asset="dialogOrder" :nft="dialogNft" :uri="dialogNftURI">
+        <burn-dialog :show="showBurnDialog" @close="closeDialog" @confirm="dialogConfirm" :asset="dialogOrder" :nft="dialogNft">
         </burn-dialog>
 
       </div>
     </div>
   </div>
 </template>
-
 <script>
-
-  import Side from "./components/Side";
-
   import NftDialog from "@/mixins/NftDialog";
   import NftItem from "@/mixins/NftItem";
+  import Side from "./components/Side";
 
   export default {
     name: "Items",
@@ -73,6 +70,9 @@
     },
     data () {
       return {
+        imgUrl: "",
+        address: "",
+        isFollow: false,
         tab: "collectibles",
         tabs: [
           { name: "sale", title: this.$t("items.sale"), count: 0 },
@@ -82,6 +82,7 @@
         ],
         page: 1,
         limit: this.$store.state.pageLimit,
+        userinfo: {},
         userNftList: {
           sale: [],
           collectibles: [],
@@ -89,6 +90,8 @@
           liked: [],
         },
         stat: {},
+        showFollowing: false,
+        showFollow: false,
         loadStatus: "",
       };
     },
@@ -96,6 +99,9 @@
       this.init();
     },
     computed: {
+      connected () {
+        return this.$store.state.connected;
+      },
       user () {
         return this.$store.state.user;
       },
@@ -105,35 +111,68 @@
         if (val == old) return;
         this.page = 1;
         this.$router.push({
-          path: "/items",
+          path: "/account/" + this.address,
           query: { tab: this.tab },
         });
         this.loadStatus = "";
         this.getList();
       },
+      $route (newRoute, oldRoute) {
+        if (newRoute.path == oldRoute.path) return;
+        let address = this.$route.params.address;
+        if (!address) return;
+        this.init();
+      },
     },
     methods: {
       init () {
+        this.page = 1;
+        this.userNftList = { sale: [], collectibles: [], created: [], liked: [] };
+        this.stat = {};
+        this.isFollow = false;
+        this.address = this.$route.params.address;
         if (this.$route.query.tab) {
           this.tab = this.$route.query.tab;
+        } else {
+          this.tab = "collectibles";
+        }
+        this.getUserinfo();
+        if (this.connected) {
+          this.matchFollow();
         }
         this.getUserStat();
         this.getList();
       },
+      onSuccessCopy () {
+        this.$tools.message(this.$t("request.copySuccess"), "success");
+      },
+      onErrorCopy () {
+        this.$tools.message("Copy error");
+      },
+      goProfile () {
+        if (!this.$tools.needLogin()) return;
+        this.$router.push("/profile");
+      },
       goHome () {
         this.$router.push("/");
-      },
-      reloadList () {
-        this.loadStatus = "";
-        this.page = 1;
-        this.getList();
       },
       loadList () {
         if (this.loadStatus == "over") return;
         this.getList();
       },
+      reloadList () {
+        this.page = 1;
+        this.getList();
+      },
+      closeFollowPopup () {
+        this.showFollow = false;
+        this.showFollowing = false;
+      },
+      onShare (type) { },
       getUserStat () {
-        let params = { address: this.user.coinbase };
+        let params = {
+          address: this.address,
+        };
         this.$api("user.stat", params).then((res) => {
           if (this.$tools.checkResponse(res)) {
             this.stat = Object.assign({},
@@ -149,9 +188,14 @@
             this.tabs = [].concat(this.tabs);
           }
         });
+        this.matchFollow();
       },
       getOnSale: function () {
-        let params = { page: this.page, limit: this.limit, address: this.user.coinbase };
+        let params = {
+          page: this.page,
+          limit: this.limit,
+          address: this.address,
+        };
         if (this.loadStatus == "loading") return;
         this.loadStatus = "loading";
         var that = this;
@@ -161,19 +205,20 @@
             if (params.page == 1) this.userNftList.sale = [];
             that.userNftList.sale = that.userNftList.sale.concat(res.data.list);
             that._queryFunction(res.data.list, that.userNftList.sale);
-            // that.userQueryFunction(res.data.list, 'sale');
             that.page = params.page + 1;
             that.loadStatus =
-              res.data.list.length < res.data.limit
-                ? "over"
-                : this.loadStatus;
+              res.data.list.length < res.data.limit ? "over" : this.loadStatus;
           } else {
             that.$tools.message(res.errmsg);
           }
         });
       },
       getCollectiable: function () {
-        let params = { page: this.page, limit: this.limit, address: this.user.coinbase };
+        let params = {
+          page: this.page,
+          limit: this.limit,
+          address: this.address,
+        };
         if (this.loadStatus == "loading") return;
         this.loadStatus = "loading";
         var that = this;
@@ -184,7 +229,6 @@
             that.userNftList.collectibles = that.userNftList.collectibles.concat(
               res.data.list
             );
-            // that.userQueryFunction(res.data.list, 'collectibles');
             that._queryFunction(res.data.list, that.userNftList.collectibles);
             that.page = params.page + 1;
             that.loadStatus =
@@ -198,7 +242,7 @@
       },
       getCreated: function () {
         let params = {
-          address: this.user.coinbase,
+          address: this.address,
           page: this.page,
           limit: this.limit,
         };
@@ -210,7 +254,6 @@
           if (that.$tools.checkResponse(res)) {
             if (params.page == 1) this.userNftList.created = [];
             that.userNftList.created = that.userNftList.created.concat(res.data.list);
-            // that.userQueryFunction(res.data.list, 'created');
             that._queryFunction(res.data.list, that.userNftList.created);
             that.page = params.page + 1;
             that.loadStatus =
@@ -226,7 +269,7 @@
         let params = {
           page: this.page,
           limit: this.limit,
-          address: this.user.coinbase,
+          address: this.address,
         };
         if (this.loadStatus == "loading") return;
         this.loadStatus = "loading";
@@ -236,7 +279,6 @@
           if (that.$tools.checkResponse(res)) {
             if (params.page == 1) this.userNftList.liked = [];
             that.userNftList.liked = that.userNftList.liked.concat(res.data.list);
-            // that.userQueryFunction(res.data.list, 'liked');
             that._queryFunction(res.data.list, that.userNftList.liked);
             that.page = params.page + 1;
             that.loadStatus =
@@ -267,7 +309,68 @@
       onLike(data, like){
         this._onLike(data, like, this.userNftList[this.tab]);
       },
-      tabindexFunc: function (tab, event) { },
+      tabindexFunc: function () {
+        return;
+      },
+      getUserinfo () {
+        let params = {
+          address: this.address,
+        };
+        this.$api("user.info", params).then((res) => {
+          if (this.$tools.checkResponse(res)) {
+            let _data = Object.assign({}, res.debug, {
+              address: this.address,
+            });
+            this.userinfo = _data;
+            this.userinfo.coinbase = _data.address;
+            this.imgUrl = _data.bannerUrl;
+          } else {
+            this.$tools.message(res.errmsg);
+          }
+        });
+      },
+      addFollow () {
+        let data = {
+          address: this.address,
+        };
+        var that = this;
+        this.$api("follow.add", data).then((res) => {
+          if (that.$tools.checkResponse(res)) {
+            that.isFollow = true;
+            this.getUserStat();
+          }
+        });
+      },
+      deleteFollow () {
+        let data = {
+          address: this.address,
+        };
+        var that = this;
+        this.$api("follow.delete", data).then((res) => {
+          if (that.$tools.checkResponse(res)) {
+            that.isFollow = false;
+            this.getUserStat();
+          }
+        });
+      },
+      matchFollow () {
+        let address = {
+          address: this.user.coinbase,
+          userAddrs: this.address,
+        };
+        var that = this;
+        this.$api("follow.match", address).then((res) => {
+          if (that.$tools.checkResponse(res)) {
+            if (!res.data.length) {
+              that.userinfo.isFollow = false;
+              that.isFollow = false;
+            } else {
+              that.userinfo.isFollow = true;
+              that.isFollow = true;
+            }
+          }
+        });
+      },
     },
   };
 </script>
@@ -277,9 +380,6 @@
     flex-direction: column;
     margin: 3% auto;
     width: 100%;
-  }
-  .flex-box {
-    margin: 0;
   }
   .item-tab {
     position: relative;
@@ -364,7 +464,7 @@
       background-color: #333;
     }
   }
-  // .el-tabs__active-bar {
-  //   height: 0px !important;
-  // }
+  .el-tabs__active-bar {
+    height: 0px !important;
+  }
 </style>
