@@ -186,89 +186,22 @@
               </span>
             </div>
             <div class="gruop-wrap">
-              <div class="type-item">
+              <div class="type-item" v-for="(item,index) in attrList" :key="index">
                 <div class="type-head">
-                  <span class="type-name">Background</span>
+                  <span class="type-name">{{item.attrNm}}</span>
                   <div class="type-num">
-                    <span>100</span>
-                    <el-icon class="down" style="font-size:15px">
+                    <span>{{item.total}}</span>
+                    <el-icon :class="{'down':item.isShow}" @click="item.isShow=!item.isShow" style="font-size:15px">
                       <ArrowUp />
                     </el-icon>
                   </div>
                 </div>
-                <div class="attr-content">
-                </div>
-              </div>
-              <div class="type-item">
-                <div class="type-head">
-                  <span class="type-name">Background</span>
-                  <div class="type-num">
-                    <span>100</span>
-                    <el-icon class="down" style="font-size:15px">
-                      <ArrowUp />
-                    </el-icon>
-                  </div>
-                </div>
-                <div class="attr-content">
-                </div>
-              </div>
-              <div class="type-item">
-                <div class="type-head">
-                  <span class="type-name">Background</span>
-                  <div class="type-num">
-                    <span>100</span>
-                    <el-icon class="down" style="font-size:15px">
-                      <ArrowUp />
-                    </el-icon>
-                  </div>
-                </div>
-                <div class="attr-content">
-                </div>
-              </div>
-              <div class="type-item">
-                <div class="type-head">
-                  <span class="type-name">Background</span>
-                  <div class="type-num">
-                    <span>100</span>
-                    <el-icon>
-                      <ArrowUp />
-                    </el-icon>
-                  </div>
-                </div>
-                <div class="attr-content">
-                  <div class="attr-item">
-                    <span>Pearl</span>
+                <div class="attr-content" v-if="item.isShow">
+                  <div class="attr-item" v-for="(child,cindex) in item.dataList" :key="cindex">
+                    <span>{{child.name}}</span>
                     <div class="attr-num">
-                      <span>100</span>
-                      <el-checkbox v-model="checked1" label="" />
-                    </div>
-                  </div>
-                  <div class="attr-item">
-                    <span>Pearl</span>
-                    <div class="attr-num">
-                      <span>100</span>
-                      <el-checkbox v-model="checked1" label="" />
-                    </div>
-                  </div>
-                  <div class="attr-item">
-                    <span>Pearl</span>
-                    <div class="attr-num">
-                      <span>100</span>
-                      <el-checkbox v-model="checked1" label="" />
-                    </div>
-                  </div>
-                  <div class="attr-item">
-                    <span>Pearl</span>
-                    <div class="attr-num">
-                      <span>100</span>
-                      <el-checkbox v-model="checked1" label="" />
-                    </div>
-                  </div>
-                  <div class="attr-item">
-                    <span>Pearl</span>
-                    <div class="attr-num">
-                      <span>100</span>
-                      <el-checkbox v-model="checked1" label="" />
+                      <span>{{child.num}}</span>
+                      <el-checkbox v-model="child.isChecked" label="" />
                     </div>
                   </div>
                 </div>
@@ -353,6 +286,74 @@ export default {
         maxPrice: '',
         isNowBuy: true,
       },
+      attrList: [
+        {
+          attrNm: 'Background1',
+          total: 99,
+          isShow: false,
+          dataList: [
+            {
+              name: 'Pearl1',
+              num: 100,
+              isChecked: false,
+            },
+            {
+              name: 'Pearl2',
+              num: 100,
+              isChecked: false,
+            },
+            {
+              name: 'Pearl3',
+              num: 100,
+              isChecked: false,
+            }
+          ]
+        },
+        {
+          attrNm: 'Background2',
+          total: 99,
+          isShow: false,
+          dataList: [
+            {
+              name: 'Pearl1',
+              num: 100,
+              isChecked: false,
+            },
+            {
+              name: 'Pearl2',
+              num: 100,
+              isChecked: false,
+            },
+            {
+              name: 'Pearl3',
+              num: 100,
+              isChecked: false,
+            }
+          ]
+        },
+        {
+          attrNm: 'Background3',
+          total: 99,
+          isShow: false,
+          dataList: [
+            {
+              name: 'Pearl1',
+              num: 100,
+              isChecked: false,
+            },
+            {
+              name: 'Pearl2',
+              num: 100,
+              isChecked: false,
+            },
+            {
+              name: 'Pearl3',
+              num: 100,
+              isChecked: false,
+            }
+          ]
+        }
+      ]
     };
   },
   created () {
