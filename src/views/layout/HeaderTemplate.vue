@@ -6,7 +6,7 @@
       </router-link>
 
       <div class="header-search header-margin-r">
-        <el-input class="search-input" v-model="keyword" @keyup.enter="searchClick"
+        <el-input class="search-input-wrap" v-model="keyword" @keyup.enter="searchClick"
           :placeholder="$t('navigation.searchTip')">
           <template #prefix>
             <div class="img-search"><img src="../../assets/images/icons/icon_search.svg" alt=""></div>
@@ -18,10 +18,10 @@
         <router-link class="nav-link" to="/erc721">
           {{ $t("navigation.launchpad") }}
         </router-link>
-        <router-link class="nav-link" to="/erc721">
+        <router-link class="nav-link" to="/markterplace">
           {{ $t("navigation.marketplace") }}
         </router-link>
-        <router-link class="nav-link" to="/erc721">
+        <router-link class="nav-link" to="/allcollection">
           {{ $t("navigation.collection") }}
         </router-link>
         <router-link class="nav-link" to="/erc721">
