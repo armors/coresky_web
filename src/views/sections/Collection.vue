@@ -244,7 +244,7 @@
                 </div>
                 <div class="card-bottom">
                   <div class="nft-txt">
-                    Azuki #9251
+                    Azuki #{{v.tokenId}}
                   </div>
                   <div class="nft-price">
                     <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="">
@@ -292,7 +292,7 @@ export default {
         "order": 0,
         "filter" : {},
         page: 1,
-        limit: 10
+        limit: 20
       },
       attrList: [
         {
