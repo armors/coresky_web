@@ -56,7 +56,7 @@ export default {
           //   this.$router.push("/");
           // }
         }
-      });
+      });        
     },
     goBack() {
       this.$router.go(-1);
