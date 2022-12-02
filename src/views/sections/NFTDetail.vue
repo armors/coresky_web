@@ -324,17 +324,19 @@
       <el-form label-position="top" :model="form" style="margin-top:40px">
         <el-form-item label="Price">
           <div class="flex-content">
-            <el-input v-model="form.date" size="" style="width:100%;" />
-            <el-select v-model="value" class="ml20" placeholder="Select" style="width:180px;flex-shrink: 0;">
+            <el-input v-model="form.date" size="large" style="width:100%;" />
+            <el-select v-model="value" size="large" class="ml20" placeholder="Select"
+              style="width:180px;flex-shrink: 0;">
               <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </div>
         </el-form-item>
         <el-form-item label="Expiration date">
           <div class="flex-content">
-            <el-date-picker v-model="form.time" type="datetime" placeholder="Pick a Date" style=""
+            <el-date-picker v-model="form.time" size="large" type="datetime" placeholder="Pick a Date" style=""
               format="YYYY-MM-DD HH:mm" />
-            <el-select v-model="value" class="ml20" placeholder="Select" style="width:180px;flex-shrink: 0;">
+            <el-select v-model="value" class="ml20" size="large" placeholder="Select"
+              style="width:180px;flex-shrink: 0;">
               <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </div>
@@ -759,7 +761,7 @@ export default {
       padding-top: 15px;
       padding-left: 15px;
       .el-checkbox {
-        font-weight: 600;
+        // font-weight: 600;
       }
     }
     .filter-box {
@@ -871,33 +873,33 @@ export default {
     }
     .el-input__wrapper {
       border-radius: 12px;
-      display: block;
+      // display: block;
     }
     .el-input__inner {
-      height: 40px;
+      // height: 40px;
       padding: 0;
     }
     .el-select {
       .el-input__wrapper {
         padding: 1px 15px;
       }
-      .el-input__suffix {
-        right: 19px;
-      }
+      // .el-input__suffix {
+      //   right: 19px;
+      // }
     }
     .flex-content {
       display: flex;
       width: 100%;
     }
     .el-date-editor.el-input {
-      display: block;
+      // display: block;
       width: 100%;
       .el-input__prefix {
         display: none;
       }
-      .el-input__suffix {
-        top: 5px;
-      }
+      // .el-input__suffix {
+      //   top: 5px;
+      // }
     }
     .describe-box {
       width: 100%;
