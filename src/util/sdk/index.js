@@ -251,9 +251,18 @@ export default {
 	//验证订单参数
 	async validateOrderParameters(order) {
 		let contract = await this.getMarketExchangeContract();
-		return await contract.validateOrderParameters_(
+		console.log(contract)
+		const params = [
 			[order.exchange, order.maker, order.taker, order.feeRecipient, order.target, order.staticTarget, order.paymentToken],
-			[order.makerRelayerFee, order.takerRelayerFee, order.makerProtocolFee, order.takerProtocolFee, order.basePrice, order.extra, order.listingTime, order.expirationTime, order.salt],
+			[order.makerRelayerFee,
+				order.takerRelayerFee,
+				order.makerProtocolFee,
+				order.takerProtocolFee,
+				order.basePrice,
+				order.extra,
+				order.listingTime,
+				order.expirationTime,
+				order.salt],
 			order.feeMethod,
 			order.side,
 			order.saleKind,
@@ -261,7 +270,9 @@ export default {
 			order.calldata,
 			order.replacementPattern,
 			order.staticExtradata
-		);
+		]
+		console.log(params)
+		return await contract.validateOrderParameters_(...params);
 	},
 	// atomicMatch数据验证
 	async orderCanMatch(buy, sell) {
@@ -345,18 +356,8 @@ export default {
 			seller.replacementPattern,
 			buyer.staticExtradata,
 			seller.staticExtradata,
-			[
-				buyer.v,
-				parseInt(seller.v)
-			],
-			[
-				buyer.r,
-				buyer.s,
-				seller.r,
-				seller.s,
-				ethers.constants.HashZero
-			],
 		]
+		console.log('若为eth支付', params)
 		let tx = await contract.calculateMatchPrice_(
 			...params
 		)
@@ -365,7 +366,6 @@ export default {
 	// 订单成交
 	async atomicMatch(seller, buyer, owner, sender) {
 		let contract = await this.getMarketExchangeContract();
-		console.log(ethers.utils.parseEther("2"))
 		const params = [
 			[
 				buyer.exchange,
@@ -434,11 +434,12 @@ export default {
 		]
 		console.log(params)
 		let pa = {}
-		if (seller.feeRecipient === ZERO_ADDRESS && buyer.feeRecipient === ZERO_ADDRESS) {
+		if (seller.paymentToken === ZERO_ADDRESS && buyer.paymentToken === ZERO_ADDRESS) {
 			pa = {
-				value: this.calculateMatchPrice_(seller, buyer),
+				value: await this.calculateMatchPrice_(seller, buyer),
 			}
 		}
+		console.log(pa)
 		let tx = await contract.atomicMatch_(
 			...params,
 			{
@@ -524,31 +525,41 @@ export default {
 
 		return obj;
 	},
-	getAtomicMatchWrapOrder(order) {
-		return {
-			"exchange": order.exchange,
-			"maker": order.maker,
-			"taker": order.taker,
-			"makerRelayerFee": order.makerRelayerFee,
-			"takerRelayerFee": order.takerRelayerFee,
-			"makerProtocolFee": order.makerProtocolFee,
-			"takerProtocolFee": order.takerProtocolFee,
-			"feeRecipient": order.feeRecipient,
-			"feeMethod": order.feeMethod,
-			"side": order.side,
-			"saleKind": order.saleKind,
-			"target": order.target,
-			"howToCall": order.howToCall,
+	getAtomicMatchWrapOrder(order, isBeta=true) {
+		let calld = {
 			"calldataBeta": order.calldata,
-			"replacementPattern": order.replacementPattern,
-			"staticTarget": order.staticTarget,
-			"staticExtradata": order.staticExtradata,
-			"paymentToken": order.paymentToken,
-			"basePrice": order.basePrice,
-			"extra": order.extra,
-			"listingTime": order.listingTime,
-			"expirationTime": order.expirationTime,
-			"salt": order.salt,
+		}
+		if (!isBeta) {
+			calld = {
+				"calldata": order.calldata,
+			}
+		}
+		return {
+			...{
+				"exchange": order.exchange,
+				"maker": order.maker,
+				"taker": order.taker,
+				"makerRelayerFee": order.makerRelayerFee,
+				"takerRelayerFee": order.takerRelayerFee,
+				"makerProtocolFee": order.makerProtocolFee,
+				"takerProtocolFee": order.takerProtocolFee,
+				"feeRecipient": order.feeRecipient,
+				"feeMethod": order.feeMethod,
+				"side": order.side,
+				"saleKind": order.saleKind,
+				"target": order.target,
+				"howToCall": order.howToCall,
+				"replacementPattern": order.replacementPattern,
+				"staticTarget": order.staticTarget,
+				"staticExtradata": order.staticExtradata,
+				"paymentToken": order.paymentToken,
+				"basePrice": order.basePrice,
+				"extra": order.extra,
+				"listingTime": order.listingTime,
+				"expirationTime": order.expirationTime,
+				"salt": order.salt,
+			},
+			...calld
 		}
 	},
 	async _atomicMatchWrap(buyers, sellers, owner) {
@@ -622,6 +633,10 @@ export default {
 		let abi = utils.contractAbi(type);
 		asset.abi = abi;
 		return asset;
+	},
+	async fromWeiNum(value) {
+		var web3 = await utils_web3.getWeb3();
+		return web3.utils.fromWei(value.toString(), "ether");
 	},
 	async getBalance(asset, owner) {
 		var web3 = await utils_web3.getWeb3();

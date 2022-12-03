@@ -121,19 +121,25 @@
 			async showSell (tokenInfo) {
 				this.tokenInfo = tokenInfo
 				console.log(this.tokenInfo)
-				await this.getRegistryOwner()
-				let order = {
-					type: 'IERC721',
-					address: this.tokenInfo.contract,
-					tokenId: this.tokenInfo.tokenId,
-				};
-				this.isApproved = await this.$sdk.isApprovedForAll(
-					order,
-					this.user.coinbase,
-					this.registryOwner,
-				);
-				this.$parent.sellDialogBtnLoading = false
-				this.isShowSellDialog = true
+				try {
+					await this.getRegistryOwner()
+					let order = {
+						type: 'IERC721',
+						address: this.tokenInfo.contract,
+						tokenId: this.tokenInfo.tokenId,
+					};
+					this.isApproved = await this.$sdk.isApprovedForAll(
+						order,
+						this.user.coinbase,
+						this.registryOwner,
+					);
+					this.isShowSellDialog = true
+					this.$parent.sellDialogBtnLoading = false
+				}catch (e) {
+					console.log(e)
+					this.$parent.sellDialogBtnLoading = false
+				}
+
 			},
 			async sellNft () {
 				try {
@@ -228,8 +234,8 @@
 					seller.staticExtradata
 				]
 				// const hash = await this.$sdk.callhashOrder_(arrayParams);
-				const hashToSign = await this.$sdk.callhashToSign_(arrayParams)
 				try {
+					const hashToSign = await this.$sdk.callhashToSign_(arrayParams)
 					const sig = await this.$sdk.signature(seller, this.user.coinbase)
 					const validateOrderArrayParams = [
 						...arrayParams,

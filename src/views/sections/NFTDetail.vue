@@ -171,11 +171,14 @@
                 </div>
               </div>
             </div>
-            <div class="btn-box">
-              <el-button type="primary" class="btnBuy" :loading="sellDialogBtnLoading" v-if="isSelf" @click="showSellNft">Sell Now</el-button>
-              <button class="btnBuy" v-else-if="tokenInfo.state" @click="isShowBugDialog=!isShowBugDialog">Buy Now</button>
-              <button class="btnBlack">Add to Cart</button>
-              <button class="btnWhite" @click="isShowMakeOfferDialog=!isShowMakeOfferDialog">Make Offer</button>
+            <div class="btn-box display-flex box-center-Y">
+              <template v-if="isSelf" >
+                <el-button type="primary" class="btnBuy" v-if="!tokenInfo.state" :loading="sellDialogBtnLoading" @click="showSellNft">Sell Now</el-button>
+                <el-button type="primary" class="btnBuy" v-else :loading="sellDialogBtnLoading" @click="showSellNft">Cancel Sell</el-button>
+              </template>
+              <el-button type="primary" class="btnBuy" v-else-if="tokenInfo.state" @click="showBuyNft">Buy Now</el-button>
+              <el-button class="btnBlack" v-if="!isSelf">Add to Cart</el-button>
+              <el-button class="btnWhite" v-if="!isSelf" @click="isShowMakeOfferDialog=!isShowMakeOfferDialog">Make Offer</el-button>
             </div>
           </div>
         </div>
@@ -264,41 +267,6 @@
         </div>
       </div>
     </div>
-    <el-dialog :model-value="isShowBugDialog" :show-close="false" :close-on-click-modal="false" @closed="closed"
-      custom-class="custom-dialog" destroy-on-close>
-      <template #title>
-        <div class="left">
-          <span>Checkout</span>
-        </div>
-        <el-icon @click="isShowBugDialog=false">
-          <Close />
-        </el-icon>
-      </template>
-      <div class="nft-box">
-        <img class="img-box"
-          :src="tokenInfo.ckCollectionsInfoEntity.image"
-          alt="">
-        <div class="box-center">
-          <span class="tokenid">#{{tokenInfo.tokenId}}</span>
-          <span class="collection-name">{{tokenInfo.ckCollectionsInfoEntity.name}}
-            <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
-          </span>
-        </div>
-      </div>
-      <div class="price-box">
-        <div class="label">
-          Price
-        </div>
-        <div class="price-wrap">
-          <span class="buy-price">
-            <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-            23.22
-          </span>
-          <div class="total">$ 45,332.02</div>
-        </div>
-      </div>
-      <el-button type="primary" class="btnBuy" :loading="buyBtnLoading">Buy</el-button>
-    </el-dialog>
     <el-dialog :model-value="isShowMakeOfferDialog" :show-close="false" :close-on-click-modal="false" @closed="closed"
       custom-class="custom-dialog" destroy-on-close>
       <template #title>
@@ -360,24 +328,25 @@
       </el-form>
       <button class="btnBuy">Buy</button>
     </el-dialog>
+    <BuyNFTDialog ref="BuyNFTDialog" @buySuccess="buySuccess"></BuyNFTDialog>
     <SellNftDialog ref="SellNftDialog" @sellCreateSuccess="sellCreateSuccess"></SellNftDialog>
   </div>
 </template>
 
 <script>
-import SellNftDialog from '../../components/self/sellNDialog'
+import SellNftDialog from '../../components/self/sellNFTDialog'
+import BuyNFTDialog from '../../components/self/buyNFTDialog'
 export default {
   name: "NFTDetail",
   components: {
-    SellNftDialog
+    SellNftDialog,
+    BuyNFTDialog,
   },
   mixins: [],
   data () {
     return {
       buyBtnLoading: false,
       sellDialogBtnLoading: false,
-      isShowSellDialog: false,
-      isShowBugDialog: false,
       isShowMakeOfferDialog: false,
       checkList: [],
       form: {
@@ -443,10 +412,18 @@ export default {
       this.sellDialogBtnLoading = true
       this.$refs.SellNftDialog.showSell(this.tokenInfo)
     },
+    showBuyNft () {
+      this.$refs.BuyNFTDialog.showBuy(this.tokenInfo)
+    },
     sellCreateSuccess (v) {
       console.log(v)
       this.getTokenInfo()
-    }
+    },
+    buySuccess (v) {
+      console.log(v)
+      this.getTokenInfo()
+    },
+
   },
 };
 </script>
@@ -624,8 +601,6 @@ export default {
       }
       .btn-box {
         margin-top: 24px;
-        display: flex;
-        justify-content: space-between;
         button {
           width: 210px;
           height: 48px;
