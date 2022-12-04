@@ -26,6 +26,9 @@ const ZERO = ethers.constants.Zero;
 const SALT = new Date().getTime();
 export default {
 	// self start
+	ZERO_HASH () {
+		return ZERO_HASH
+	},
 	// 注册合约
 	async getMarketRegistryContract() {
 		let abi = utils.contractAbi("MARKET_REGISTRY");
@@ -670,7 +673,8 @@ export default {
 			}
 		}
 	},
-	async _atomicMatchWrap(buyers, sellers, owner) {
+	async _atomicMatchWrap(buyers, sellers, owner, value) {
+		console.log(value.toString())
 		let buys = []
 		let sells = []
 		let buySigs = []
@@ -702,7 +706,8 @@ export default {
 			ZERO_HASH,
 			{
 				from: owner,
-				value: ethers.utils.parseEther("0.04")
+				// value: ethers.utils.parseEther(value.toString())
+				value: ethers.utils.parseEther("0.08")
 			}
 		)
 		return tx

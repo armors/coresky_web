@@ -11,31 +11,29 @@
     </div>
     <div class="shopping-cart-content-head">
       <div class="left">
-        Items 12
+        Items {{coreskyCart.length}}
       </div>
-      <div class="right">
+      <div class="right" @click="clearCart">
         <img src="@/assets/images/icons/icon_clearcart.svg" class="icon-clear" alt="">
         <span>Clear all</span>
       </div>
     </div>
     <div class="hidden-scrol shopping-cart-content">
-      <div class="shopping-item" v-for="index in 3" :key="index">
+      <div class="shopping-item" v-for="(v, i) in coreskyCart" :key="`cart-item-${i}`">
         <div class="shopping-info">
-          <img class="info-img"
-            src="https://storage.nfte.ai/nft/img/eth/0x1/6079100774021590496_845241255.webp?x-oss-process=image/resize,m_lfit,h_900"
-            alt="">
+          <image-box :src="v.ckCollectionsInfoEntity.image"></image-box>
           <div class="info-txt">
-            <div class="txt1">01523.eth</div>
+            <div class="txt1">{{v.name || '--'}}</div>
             <div class="txt2">ENS :Ethereum Na…</div>
-            <div class="txt3">Creator Fee 10%</div>
+            <div class="txt3">Creator Fee {{getRate(v)}}</div>
           </div>
         </div>
         <div class="shopping-price">
           <span class="price-value">
             <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-            28.80
+            {{getNftPrice(v)}}
           </span>
-          <el-icon>
+          <el-icon @click="deleteCart(v)">
             <Delete />
           </el-icon>
         </div>
@@ -46,17 +44,20 @@
         <div class="title">Total</div>
         <div class="total">
           <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-          28.80
+          {{totalPrice}}
         </div>
       </div>
       <div>
-        <button class="btnOption">Buy</button>
+        <el-button type="primary" :disabled="coreskyCart.length < 1" class="btnOption" :loading="buyBtnLoading" @click="manyBuy">Buy</el-button>
       </div>
     </div>
   </el-drawer>
 </template>
 
 <script>
+import {getLocalStorage, removeLocalStorage, setLocalStorage} from "@/util/local-storage";
+import BigNumber from "bignumber.js";
+
 export default {
   name: "userCenterDrawer",
   props: {
@@ -68,16 +69,18 @@ export default {
   watch: {
     show () {
       this.visible = this.show;
+      this.getCartInfo()
     },
   },
   data () {
     return {
-      loading: true,
+      buyBtnLoading: false,
       visible: false,
+      totalPrice: 0,
+      coreskyCart: []
     };
   },
   created () {
-
   },
   mounted () {
   },
@@ -85,11 +88,90 @@ export default {
     user () {
       return this.$store.state.user;
     },
+    cartName () {
+      return `coresky_cart_${this.$store.state.user.coinbase}`
+    },
   },
   methods: {
+    clearCart () {
+      removeLocalStorage([this.cartName])
+      this.getCartInfo()
+    },
+    deleteCart (v) {
+      const cart = this.coreskyCart.filter((item => !(item.contract === v.contract && item.tokenId === v.tokenId)))
+      if (cart.length < 1) {
+        this.clearCart()
+      } else {
+        let obj = []
+        obj[this.cartName] = JSON.stringify(cart)
+        setLocalStorage(obj)
+      }
+      this.getCartInfo()
+    },
+    getRate (v) {
+      return (v.ckOrdersEntity.makerRelayerFee / 1000) +'%'
+    },
+    getCartInfo () {
+      this.totalPrice = 0
+      const local = getLocalStorage(this.cartName)
+      console.log(local[this.cartName])
+      let coresky_cart = local[this.cartName]
+      if (local[this.cartName] !== null) {
+        this.coreskyCart = JSON.parse(coresky_cart)
+        this.coreskyCart.forEach(item => {
+          this.totalPrice = new BigNumber(this.getNftPrice(item)).plus(new BigNumber(this.totalPrice))
+        })
+        this.totalPrice = this.totalPrice.toString()
+      } else {
+        this.coreskyCart = []
+      }
+      console.log(this.coreskyCart)
+    },
     handleClose () {
       this.$emit('update:show', false)
-    }
+    },
+    getNftPrice(v) {
+      return this.$Web3.utils.fromWei(v.ckOrdersEntity.basePrice.toString())
+    },
+    async manyBuy() {
+      let sellers = []
+      this.coreskyCart.forEach(item => {
+        item.ckOrdersEntity.basePrice = item.ckOrdersEntity.basePrice.toString()
+        sellers.push(item.ckOrdersEntity)
+      })
+      console.log(sellers)
+      let buyers = []
+      for (let i = 0; i < sellers.length; i++) {
+        console.log(i)
+        let buyer = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, sellers[i].target, 0, sellers[i].tokenId)
+        buyer = {
+          ...buyer,
+          ...{
+            maker: this.user.coinbase,
+            taker: sellers[i].maker,
+            paymentToken: sellers[i].paymentToken,
+            basePrice: sellers[i].basePrice,
+            listingTime: sellers[i].listingTime,
+            expirationTime: sellers[i].expirationTime,
+          }
+        }
+        const sigBuyer = {
+          'v': 0,
+          'r': this.$sdk.ZERO_HASH(),
+          's': this.$sdk.ZERO_HASH()
+        }
+        buyer = {
+          ...buyer,
+          ...sigBuyer
+        }
+        buyers.push(buyer)
+        console.log(sigBuyer)
+      }
+      console.log(buyers, sellers)
+      const atomicMatchWrap = await this.$sdk._atomicMatchWrap(buyers, sellers, this.user.coinbase, this.totalPrice)
+      console.log(atomicMatchWrap)
+    },
+
   },
 }
 </script>

@@ -177,8 +177,8 @@
                 <el-button type="primary" class="btnBuy" v-else :loading="cancelBtnLoading" @click="cancelSell">Cancel Sell</el-button>
               </template>
               <el-button type="primary" class="btnBuy" v-else-if="tokenInfo.state" @click="showBuyNft">Buy Now</el-button>
-              <el-button class="btnBlack" v-if="!isSelf" @click="addCart">Add to Cart</el-button>
-              <el-button class="btnWhite" v-if="!isSelf" @click="showMakeOfferNFT">Make Offer</el-button>
+              <el-button class="btnBlack" v-if="!isSelf && !isCart" :disabled="!tokenInfo.contract || !tokenInfo.state" @click="addCart">Add to Cart</el-button>
+              <el-button class="btnWhite" v-if="!isSelf" :disabled="!tokenInfo.contract" @click="showMakeOfferNFT">Make Offer</el-button>
             </div>
           </div>
         </div>
@@ -325,7 +325,8 @@
         contract: '',
         tokenId: ''
       },
-      ckOrdersEntityList: []
+      ckOrdersEntityList: [],
+      isCart: false,
     };
   },
   created () {
@@ -336,22 +337,41 @@
   },
   mounted() {
     this.getTokenInfo()
+    this.isInCart()
   },
   computed: {
     user() {
       console.log(this.$store.state.user)
       return this.$store.state.user;
     },
+    cartName () {
+      return `coresky_cart_${this.$store.state.user.coinbase}`
+    },
     isSelf () {
       return this.tokenInfo.address && this.user.coinbase && this.tokenInfo.address.toLowerCase() === this.user.coinbase.toLowerCase()
     },
   },
   methods: {
+    isInCart () {
+      const local = getLocalStorage(this.cartName)
+      console.log(local[this.cartName])
+      let coresky_cart = local[this.cartName]
+      if (local[this.cartName] !== null) {
+        coresky_cart = JSON.parse(coresky_cart)
+        const token = coresky_cart.find(item => item.contract === this.tokenInfo.contract && item.tokenId === this.tokenInfo.tokenId)
+        console.log(token)
+        this.isCart = token !== undefined
+      } else {
+        coresky_cart = []
+        this.isCart = false
+      }
+    },
     getTokenInfo () {
       this.$api("collect.tokenInfo", this.tokenInfoParams).then(async (res) => {
         this.tokenInfo = res.debug
         this.tokenInfo.ckCollectionsInfoEntity.floorPrice = '0.02'
         this.ckOrdersEntityList = this.tokenInfo.ckOrdersEntityList || []
+        this.isInCart()
       })
     },
     showSellNft () {
@@ -393,11 +413,20 @@
     },
     // 添加购物车
     addCart () {
-      const coresky_cart = getLocalStorage('coresky_cart') || []
-      console.log(coresky_cart.coresky_cart)
-      setLocalStorage({
-        coresky_cart: []
-      })
+      const local = getLocalStorage(this.cartName)
+      console.log(local[this.cartName])
+      let coresky_cart = local[this.cartName]
+      if (local[this.cartName] !== null) {
+        coresky_cart = JSON.parse(coresky_cart)
+      } else {
+        coresky_cart = []
+      }
+      console.log(coresky_cart)
+      coresky_cart.push(this.tokenInfo)
+      const obj = {}
+      obj[this.cartName] = JSON.stringify(coresky_cart)
+      setLocalStorage(obj)
+      this.isInCart()
     },
     showMakeOfferNFT () {
       this.$refs.NFTDialogMakeOffer.showMakeOffer(this.tokenInfo)
