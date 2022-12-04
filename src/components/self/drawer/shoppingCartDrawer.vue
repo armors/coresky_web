@@ -168,7 +168,7 @@ export default {
         console.log(sigBuyer)
       }
       console.log(buyers, sellers)
-      const atomicMatchWrap = await this.$sdk._atomicMatchWrap(buyers, sellers, this.user.coinbase, this.totalPrice)
+      const atomicMatchWrap = await this.$sdk._atomicMatchWrap(buyers, sellers, this.user.coinbase, new BigNumber(1.5).multipliedBy(new BigNumber(this.totalPrice)))
       console.log(atomicMatchWrap)
     },
 
