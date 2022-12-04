@@ -109,16 +109,64 @@ export default {
 		return tx
 	},
 	//hash签名
-	async callhashToSign_(params) {
+	async callhashToSign_(order) {
 		let contract = await this.getMarketExchangeContract();
+		const params = [
+			[
+				order.exchange,
+				order.maker,
+				order.taker,
+				order.feeRecipient,
+				order.target,
+				order.staticTarget,
+				order.paymentToken
+			],
+			[
+				order.makerRelayerFee,
+				order.takerRelayerFee,
+				order.makerProtocolFee,
+				order.takerProtocolFee,
+				order.basePrice,
+				order.extra,
+				order.listingTime,
+				order.expirationTime,
+				order.salt
+			],
+			order.feeMethod,
+			order.side,
+			order.saleKind,
+			order.howToCall,
+			order.calldata,
+			order.replacementPattern,
+			order.staticExtradata
+		]
 		let tx = await contract.hashToSign_(...params)
 		return tx
 	},
 	//订单参数验证
-	async validateOrder_(...args) {
+	async validateOrder_(order) {
 		let contract = await this.getMarketExchangeContract();
-		console.log(...args)
-		let tx = await contract.validateOrder_(...args)
+		const params = [
+			[order.exchange, order.maker, order.taker, order.feeRecipient, order.target, order.staticTarget, order.paymentToken],
+			[order.makerRelayerFee,
+				order.takerRelayerFee,
+				order.makerProtocolFee,
+				order.takerProtocolFee,
+				order.basePrice,
+				order.extra,
+				order.listingTime,
+				order.expirationTime,
+				order.salt],
+			order.feeMethod,
+			order.side,
+			order.saleKind,
+			order.howToCall,
+			order.calldata,
+			order.replacementPattern,
+			order.staticExtradata,
+			order.v, order.r, order.s
+		]
+		let tx = await contract.validateOrder_(...params)
 		return tx
 	},
 	getEIP712TypedData(orderStr, eip712Domain, nonce) {
@@ -568,16 +616,8 @@ export default {
 		return obj;
 	},
 	getAtomicMatchWrapOrder(order, isBeta=true) {
-		let calld = {
-			"calldataBeta": order.calldata,
-		}
 		if (!isBeta) {
-			calld = {
-				"calldata": order.calldata,
-			}
-		}
-		return {
-			...{
+			return {
 				"exchange": order.exchange,
 				"maker": order.maker,
 				"taker": order.taker,
@@ -591,6 +631,7 @@ export default {
 				"saleKind": order.saleKind,
 				"target": order.target,
 				"howToCall": order.howToCall,
+				"calldata": order.calldata,
 				"replacementPattern": order.replacementPattern,
 				"staticTarget": order.staticTarget,
 				"staticExtradata": order.staticExtradata,
@@ -600,8 +641,33 @@ export default {
 				"listingTime": order.listingTime,
 				"expirationTime": order.expirationTime,
 				"salt": order.salt,
-			},
-			...calld
+			}
+		} else {
+			return {
+				"exchange": order.exchange,
+				"maker": order.maker,
+				"taker": order.taker,
+				"makerRelayerFee": order.makerRelayerFee,
+				"takerRelayerFee": order.takerRelayerFee,
+				"makerProtocolFee": order.makerProtocolFee,
+				"takerProtocolFee": order.takerProtocolFee,
+				"feeRecipient": order.feeRecipient,
+				"feeMethod": order.feeMethod,
+				"side": order.side,
+				"saleKind": order.saleKind,
+				"target": order.target,
+				"howToCall": order.howToCall,
+				"calldataBeta": order.calldata,
+				"replacementPattern": order.replacementPattern,
+				"staticTarget": order.staticTarget,
+				"staticExtradata": order.staticExtradata,
+				"paymentToken": order.paymentToken,
+				"basePrice": order.basePrice,
+				"extra": order.extra,
+				"listingTime": order.listingTime,
+				"expirationTime": order.expirationTime,
+				"salt": order.salt,
+			}
 		}
 	},
 	async _atomicMatchWrap(buyers, sellers, owner) {

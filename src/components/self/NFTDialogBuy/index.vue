@@ -35,6 +35,8 @@
 </template>
 
 <script>
+	import {ethers} from 'ethers'
+
 	export default {
 		name: "index",
 		data () {
@@ -101,6 +103,7 @@
 					...{
 						_sender: this.tokenInfo.ckOrdersEntity.maker,
 						basePrice: seller.basePrice.toString(),
+						// basePrice: ethers.BigNumber.from(seller.basePrice.toString()),
 						v: this.tokenInfo.ckOrdersEntity.v,
 						s: this.tokenInfo.ckOrdersEntity.s,
 						r: this.tokenInfo.ckOrdersEntity.r
@@ -134,12 +137,14 @@
 					}
 					console.log(buyer)
 					console.log(seller)
-					console.log(await this.$sdk.validateOrderParameters(seller))
-					console.log(await this.$sdk.validateOrderParameters(buyer))
-					console.log(buyer, seller)
-					console.log(await this.$sdk.orderCanMatch(buyer, seller))
-					console.log(await this.$sdk.orderCalldataCanMatch(buyer, seller))
-					const hashAtomicMatch = await this.$sdk.atomicMatch(seller, buyer, this.user.coinbase, buyer.maker);
+					console.log('sell validateOrderParameters', await this.$sdk.validateOrderParameters(seller))
+					console.log('buy validateOrderParameters', await this.$sdk.validateOrderParameters(buyer))
+					console.log(JSON.stringify(buyer), JSON.stringify(seller))
+					console.log('orderCanMatch', await this.$sdk.orderCanMatch(buyer, seller))
+					console.log('orderCalldataCanMatch', await this.$sdk.orderCalldataCanMatch(buyer, seller))
+					console.log('buy validateOrder_',await this.$sdk.validateOrder_(buyer))
+					console.log('sell validateOrder_',await this.$sdk.validateOrder_(seller))
+					const hashAtomicMatch = await this.$sdk.atomicMatch(seller, buyer, this.user.coinbase, this.user.coinbase);
 					console.log(hashAtomicMatch)
 					this.buyBtnLoading = false
 					this.isShowBuyDialog = false

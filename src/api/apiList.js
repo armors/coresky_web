@@ -275,6 +275,10 @@ export default {
       url: "/order/create",
       method: "post",
     },
+    finish: {
+      url: "/order/finish",
+      method: "post",
+    },
     cancel: {
       url: "/order/cancel",
       method: "post",

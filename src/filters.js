@@ -24,9 +24,9 @@ export function fullImageUrl(url) {
   return cdnUrl ? cdnUrl + url : url;
 }
 
-export function ellipsisAddress(address) {
+export function ellipsisAddress(address, start=7, end=-4) {
   if (!address) return '--'
-  return address.slice(0, 7) + "..." + address.slice(-4);
+  return address.slice(0, start) + "..." + address.slice(end);
 }
 
 export function decimal(num, v) {

@@ -65,7 +65,7 @@
 	import BigNumber from "bignumber.js";
 	import tools from "@/util/tools";
 	import i18n from "@/i18n/i18n";
-
+	import {ethers} from 'ethers'
 	export default {
 		name: "index",
 		data () {
@@ -142,15 +142,6 @@
 				}
 
 			},
-			async sellNft () {
-				try {
-					this.sellBtnLoading = true
-					await this.getExchangeHashOrder()
-				} catch (e) {
-					this.sellBtnLoading = false
-				}
-
-			},
 			// 挂单开始
 			// 注册地址
 			async getRegistryOwner() {
@@ -209,9 +200,12 @@
 				let seller = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, this.tokenInfo.contract, 1, this.tokenInfo.tokenId)
 				// seller.expirationTime = new Date(this.form.time).getTime()/1000;
 				seller.expirationTime = 0;
-				seller.listingTime = Date.parse(new Date().toString()) / 1000 - 600;
+				seller.listingTime = Date.parse(new Date().toString()) / 1000 - 24 * 3600;
 				seller.feeRecipient = this.$sdk.FEE_ADDRESS()
 				seller.basePrice = this.$Web3.utils.toWei(this.form.price);
+				// console.log(this.$Web3.utils.toWei(this.form.price))
+				// console.log(ethers)
+				// seller.basePrice = ethers.BigNumber.from(this.$Web3.utils.toWei(this.form.price));
 				const arrayParams = [
 					[
 						seller.exchange,
@@ -243,7 +237,9 @@
 				]
 				// const hash = await this.$sdk.callhashOrder_(arrayParams);
 				try {
-					const hashToSign = await this.$sdk.callhashToSign_(arrayParams)
+					const hashToSign = await this.$sdk.callhashToSign_(seller)
+					console.log(seller)
+					console.log()
 					const sig = await this.$sdk.signature(seller, this.user.coinbase)
 					const validateOrderArrayParams = [
 						...arrayParams,
@@ -293,13 +289,14 @@
 						...seller,
 						...{
 							tokenId: this.tokenInfo.tokenId,
+							contract: this.tokenInfo.contract,
+							type: this.$sdk.valueOrderType("SALE"),
 							v: sig.v,
 							r: sig.r,
 							s: sig.s,
 							hash: hashToSign,
 							sign: JSON.stringify(sig),
-							contract: this.tokenInfo.contract,
-							type: this.$sdk.valueOrderType("SALE"),
+							basePrice: this.$Web3.utils.toWei(this.form.price)
 						}
 					}
 					console.log(orderParams)
