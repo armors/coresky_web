@@ -706,8 +706,8 @@ export default {
 			ZERO_HASH,
 			{
 				from: owner,
-				// value: ethers.utils.parseEther(value.toString())
-				value: ethers.utils.parseEther("0.08")
+				value: ethers.utils.parseEther(value.toString())
+				// value: ethers.utils.parseEther("0.08")
 			}
 		)
 		return tx
