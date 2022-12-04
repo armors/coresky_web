@@ -707,7 +707,7 @@ export default {
 			{
 				from: owner,
 				value: ethers.utils.parseEther(value.toString())
-				// value: ethers.utils.parseEther("0.5")
+				// value: ethers.utils.parseEther("0.1")
 			}
 		)
 		return tx
