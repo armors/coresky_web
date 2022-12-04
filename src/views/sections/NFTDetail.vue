@@ -174,7 +174,7 @@
             <div class="btn-box display-flex box-center-Y">
               <template v-if="isSelf" >
                 <el-button type="primary" class="btnBuy" v-if="!tokenInfo.state" :loading="sellDialogBtnLoading" @click="showSellNft">Sell Now</el-button>
-                <el-button type="primary" class="btnBuy" v-else :loading="sellDialogBtnLoading" @click="showSellNft">Cancel Sell</el-button>
+                <el-button type="primary" class="btnBuy" v-else :loading="cancelBtnLoading" @click="cancelSell">Cancel Sell</el-button>
               </template>
               <el-button type="primary" class="btnBuy" v-else-if="tokenInfo.state" @click="showBuyNft">Buy Now</el-button>
               <el-button class="btnBlack" v-if="!isSelf">Add to Cart</el-button>
@@ -346,6 +346,7 @@ export default {
   data () {
     return {
       buyBtnLoading: false,
+      cancelBtnLoading: false,
       sellDialogBtnLoading: false,
       isShowMakeOfferDialog: false,
       checkList: [],
@@ -411,6 +412,33 @@ export default {
     showSellNft () {
       this.sellDialogBtnLoading = true
       this.$refs.SellNftDialog.showSell(this.tokenInfo)
+    },
+    async cancelSell () {
+      this.cancelBtnLoading = true
+      let seller = this.$sdk.getAtomicMatchWrapOrder(this.tokenInfo.ckOrdersEntity, false)
+      seller = {
+        ...seller,
+        ...{
+          basePrice: seller.basePrice.toString(),
+          v: this.tokenInfo.ckOrdersEntity.v,
+          s: this.tokenInfo.ckOrdersEntity.s,
+          r: this.tokenInfo.ckOrdersEntity.r
+        }
+      }
+      try {
+        const hash = await this.$sdk.cancelOrder_(seller, this.user.coinbase);
+        console.log(hash)
+        this.$api("order.cancel", {
+          id: this.tokenInfo.ckOrdersEntity.id
+        }).then((res) => {
+          this.cancelBtnLoading = false
+          this.$tools.message('已取消挂售', 'success');
+          this.getTokenInfo()
+        })
+      }catch (e) {
+        console.log(e)
+        this.cancelBtnLoading = false
+      }
     },
     showBuyNft () {
       this.$refs.BuyNFTDialog.showBuy(this.tokenInfo)

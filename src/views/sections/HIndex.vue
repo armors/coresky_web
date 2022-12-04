@@ -251,7 +251,7 @@
         }
       },
       async init () {
-        this.getCategoryList();
+        // this.getCategoryList();
         this.getNftList();
       },
       toRouter (url) {

@@ -88,6 +88,7 @@
 		methods: {
 			async showBuy (tokenInfo) {
 				this.tokenInfo = tokenInfo
+				this.tokenInfo.tokenId = parseInt(this.tokenInfo.tokenId)
 				this.isShowBuyDialog = true
 				this.nftPrice = await this.$sdk.fromWeiNum(this.tokenInfo.ckOrdersEntity.basePrice)
 				console.log(this.tokenInfo)
@@ -98,6 +99,7 @@
 				seller = {
 					...seller,
 					...{
+						_sender: this.tokenInfo.ckOrdersEntity.maker,
 						basePrice: seller.basePrice.toString(),
 						v: this.tokenInfo.ckOrdersEntity.v,
 						s: this.tokenInfo.ckOrdersEntity.s,
@@ -136,10 +138,12 @@
 					console.log(await this.$sdk.validateOrderParameters(buyer))
 					console.log(buyer, seller)
 					console.log(await this.$sdk.orderCanMatch(buyer, seller))
-					const hashAtomicMatch = await this.$sdk.atomicMatch(seller, buyer, this.user.coinbase, this.user.coinbase);
+					console.log(await this.$sdk.orderCalldataCanMatch(buyer, seller))
+					const hashAtomicMatch = await this.$sdk.atomicMatch(seller, buyer, this.user.coinbase, buyer.maker);
 					console.log(hashAtomicMatch)
 					this.buyBtnLoading = false
 					this.isShowBuyDialog = false
+					this.$tools.message('购买成功', 'success');
 					this.$emit('buySuccess', hashAtomicMatch)
 				} catch (e) {
 					console.log(e)

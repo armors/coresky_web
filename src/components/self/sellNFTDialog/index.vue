@@ -18,8 +18,8 @@
           </span>
 			</div>
 		</div>
-		<el-form label-position="top" :model="form" style="margin-top:40px">
-			<el-form-item label="Price">
+		<el-form label-position="top" :rules="rules" :model="form" style="margin-top:40px">
+			<el-form-item label="Price" prop="price">
 				<div class="flex-content">
 					<el-input v-model="form.price" size="large" style="width:100%;" />
 					<el-select v-model="form.symbol" size="large" class="ml20" placeholder="Select"
@@ -120,6 +120,7 @@
 		methods: {
 			async showSell (tokenInfo) {
 				this.tokenInfo = tokenInfo
+				this.tokenInfo.tokenId = parseInt(this.tokenInfo.tokenId)
 				console.log(this.tokenInfo)
 				try {
 					await this.getRegistryOwner()
@@ -194,14 +195,21 @@
 			// 挂单
 			async getExchangeHashOrder() {
 				console.log(this.form.price)
+				console.log()
 				if (!this.form.price || new BigNumber(this.form.price).isLessThan(0)) {
 					this.$tools.message('请输入正确的价格');
 					return
 				}
+				if (!this.form.time) {
+					this.$tools.message('请选择过期时间');
+					return
+				}
+				console.log(typeof this.tokenInfo.tokenId)
 				this.sellBtnLoading = true
 				let seller = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, this.tokenInfo.contract, 1, this.tokenInfo.tokenId)
+				// seller.expirationTime = new Date(this.form.time).getTime()/1000;
 				seller.expirationTime = 0;
-				seller.listingTime = Date.parse(new Date().toString()) / 1000 - 10;
+				seller.listingTime = Date.parse(new Date().toString()) / 1000 - 600;
 				seller.feeRecipient = this.$sdk.FEE_ADDRESS()
 				seller.basePrice = this.$Web3.utils.toWei(this.form.price);
 				const arrayParams = [
@@ -290,7 +298,8 @@
 							s: sig.s,
 							hash: hashToSign,
 							sign: JSON.stringify(sig),
-							contract: this.tokenInfo.contract
+							contract: this.tokenInfo.contract,
+							type: this.$sdk.valueOrderType("SALE"),
 						}
 					}
 					console.log(orderParams)
@@ -298,6 +307,7 @@
 					this.$api("order.create", orderParams).then((res) => {
 						this.sellBtnLoading = false
 						this.isShowSellDialog = false
+						this.$tools.message('挂售成功', 'success');
 						this.$emit('sellCreateSuccess', res)
 					})
 				} catch (e) {

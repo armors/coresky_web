@@ -70,7 +70,39 @@ export default {
 	// 取消订单
 	async cancelOrder_(params, owner) {
 		let contract = await this.getMarketExchangeContract();
-		let tx = await contract.cancelOrder_(...params,
+		const arrayParams = [
+			[
+				params.exchange,
+				params.maker,
+				params.taker,
+				params.feeRecipient,
+				params.target,
+				params.staticTarget,
+				params.paymentToken
+			],
+			[
+				params.makerRelayerFee,
+				params.takerRelayerFee,
+				params.makerProtocolFee,
+				params.takerProtocolFee,
+				params.basePrice,
+				params.extra,
+				params.listingTime,
+				params.expirationTime,
+				params.salt
+			],
+			params.feeMethod,
+			params.side,
+			params.saleKind,
+			params.howToCall,
+			params.calldata,
+			params.replacementPattern,
+			params.staticExtradata,
+			params.v,
+			params.r,
+			params.s
+		]
+		let tx = await contract.cancelOrder_(...arrayParams,
 			{
 				from: owner
 			})
@@ -196,6 +228,15 @@ export default {
 	getDecimalAmount(amount, decimals = 18) {
 		return new BigNumber(amount).times(BIG_TEN.pow(decimals))
 	},
+	async orderCalldataCanMatch(buy, sell) {
+		let contract = await this.getMarketExchangeContract();
+		return await contract.orderCalldataCanMatch(
+			buy.calldata,
+			buy.replacementPattern,
+			sell.calldata,
+			sell.replacementPattern
+		);
+	},
 	buyERC721ABI(buyer, id, from) {
 		if (!from) {
 			from = ZERO_ADDRESS;
@@ -248,7 +289,7 @@ export default {
 			_sender: sender        // for wrap【不计算 hash 】
 		}
 	},
-	//验证订单参数
+	// 验证订单参数
 	async validateOrderParameters(order) {
 		let contract = await this.getMarketExchangeContract();
 		console.log(contract)
@@ -436,7 +477,8 @@ export default {
 		let pa = {}
 		if (seller.paymentToken === ZERO_ADDRESS && buyer.paymentToken === ZERO_ADDRESS) {
 			pa = {
-				value: await this.calculateMatchPrice_(seller, buyer),
+				// value: await this.calculateMatchPrice_(seller, buyer),
+				value: seller.basePrice,
 			}
 		}
 		console.log(pa)
