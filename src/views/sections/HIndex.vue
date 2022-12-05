@@ -22,21 +22,7 @@
 				name: 'collection',
 				params: { contract: v.contract }
 				})">
-                <el-image class="img-box" placeholder="loading" :src="v.image" fit="cover">
-<!--                <el-image class="img-box" placeholder="loading" src="https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840" fit="cover">-->
-                  <template v-slot:placeholder>
-                    <el-skeleton class="placeholder-image" animated>
-                      <template #template>
-                        <el-skeleton-item class="nft-image-skeleton" variant="h3" />
-                      </template>
-                    </el-skeleton>
-                  </template>
-                  <template v-slot:error>
-                    <div class="display-flex box-center error-image-box">
-                      <el-image class="error-image" :src="require('@/assets/create-img/non-existent.png')" fit="contain"></el-image>
-                    </div>
-                  </template>
-                </el-image>
+                <image-box class="img-box" :src="v.image"></image-box>
               </el-carousel-item>
             </el-carousel>
           </div>
@@ -265,7 +251,7 @@
         }
       },
       async init () {
-        this.getCategoryList();
+        // this.getCategoryList();
         this.getNftList();
       },
       toRouter (url) {

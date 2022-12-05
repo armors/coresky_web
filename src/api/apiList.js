@@ -109,6 +109,14 @@ export default {
     query: {
       url: "/collections/query",
       method: "post",
+    },
+    tokenQuery: {
+      url: "/token/query",
+      method: "post",
+    },
+    tokenInfo: {
+      url: "/token/info",
+      method: "post",
     }
   },
   contract: {
@@ -265,6 +273,14 @@ export default {
     // self start
     create: {
       url: "/order/create",
+      method: "post",
+    },
+    finish: {
+      url: "/order/finish",
+      method: "post",
+    },
+    cancel: {
+      url: "/order/cancel",
       method: "post",
     },
     orderInfo: {

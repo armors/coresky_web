@@ -176,19 +176,19 @@ export default {
     });
   },
   heartbeat({ state, commit, dispatch }) {
-    if (state.heartbeatTimer) {
-      clearTimeout(state.heartbeatTimer);
-      commit("HEARTBEAT", null);
-    }
-    if (!state.connected) return;
-    return new Promise((resolve, reject) => {
-      dispatch("allBalance");
-      dispatch("gasTracker");
-      var timer = setTimeout(() => {
-        dispatch("heartbeat");
-      }, 20000);
-      commit("HEARTBEAT", timer);
-    });
+    // if (state.heartbeatTimer) {
+    //   clearTimeout(state.heartbeatTimer);
+    //   commit("HEARTBEAT", null);
+    // }
+    // if (!state.connected) return;
+    // return new Promise((resolve, reject) => {
+    //   dispatch("allBalance");
+    //   dispatch("gasTracker");
+    //   var timer = setTimeout(() => {
+    //     dispatch("heartbeat");
+    //   }, 20000);
+    //   commit("HEARTBEAT", timer);
+    // });
   },
   monitorWeb3({ state, commit, dispatch }) {
     return new Promise(async function(resolve, reject) {
@@ -208,6 +208,11 @@ export default {
 
       commit("CONNECT", result);
       await dispatch("authinfo");
+      var items = getLocalStorage("CoreskyAuthorization");
+      console.log(items)
+      if (!items.CoreskyAuthorization) {
+        await dispatch("signLogin");
+      }
       resolve(true);
     });
   },

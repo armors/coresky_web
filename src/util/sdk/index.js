@@ -26,6 +26,9 @@ const ZERO = ethers.constants.Zero;
 const SALT = new Date().getTime();
 export default {
 	// self start
+	ZERO_HASH () {
+		return ZERO_HASH
+	},
 	// 注册合约
 	async getMarketRegistryContract() {
 		let abi = utils.contractAbi("MARKET_REGISTRY");
@@ -70,23 +73,103 @@ export default {
 	// 取消订单
 	async cancelOrder_(params, owner) {
 		let contract = await this.getMarketExchangeContract();
-		let tx = await contract.cancelOrder_(...params,
+		const arrayParams = [
+			[
+				params.exchange,
+				params.maker,
+				params.taker,
+				params.feeRecipient,
+				params.target,
+				params.staticTarget,
+				params.paymentToken
+			],
+			[
+				params.makerRelayerFee,
+				params.takerRelayerFee,
+				params.makerProtocolFee,
+				params.takerProtocolFee,
+				params.basePrice,
+				params.extra,
+				params.listingTime,
+				params.expirationTime,
+				params.salt
+			],
+			params.feeMethod,
+			params.side,
+			params.saleKind,
+			params.howToCall,
+			params.calldata,
+			params.replacementPattern,
+			params.staticExtradata,
+			params.v,
+			params.r,
+			params.s
+		]
+		let tx = await contract.cancelOrder_(...arrayParams,
 			{
 				from: owner
 			})
 		return tx
 	},
 	//hash签名
-	async callhashToSign_(params) {
+	async callhashToSign_(order) {
 		let contract = await this.getMarketExchangeContract();
+		const params = [
+			[
+				order.exchange,
+				order.maker,
+				order.taker,
+				order.feeRecipient,
+				order.target,
+				order.staticTarget,
+				order.paymentToken
+			],
+			[
+				order.makerRelayerFee,
+				order.takerRelayerFee,
+				order.makerProtocolFee,
+				order.takerProtocolFee,
+				order.basePrice,
+				order.extra,
+				order.listingTime,
+				order.expirationTime,
+				order.salt
+			],
+			order.feeMethod,
+			order.side,
+			order.saleKind,
+			order.howToCall,
+			order.calldata,
+			order.replacementPattern,
+			order.staticExtradata
+		]
 		let tx = await contract.hashToSign_(...params)
 		return tx
 	},
 	//订单参数验证
-	async validateOrder_(...args) {
+	async validateOrder_(order) {
 		let contract = await this.getMarketExchangeContract();
-		console.log(...args)
-		let tx = await contract.validateOrder_(...args)
+		const params = [
+			[order.exchange, order.maker, order.taker, order.feeRecipient, order.target, order.staticTarget, order.paymentToken],
+			[order.makerRelayerFee,
+				order.takerRelayerFee,
+				order.makerProtocolFee,
+				order.takerProtocolFee,
+				order.basePrice,
+				order.extra,
+				order.listingTime,
+				order.expirationTime,
+				order.salt],
+			order.feeMethod,
+			order.side,
+			order.saleKind,
+			order.howToCall,
+			order.calldata,
+			order.replacementPattern,
+			order.staticExtradata,
+			order.v, order.r, order.s
+		]
+		let tx = await contract.validateOrder_(...params)
 		return tx
 	},
 	getEIP712TypedData(orderStr, eip712Domain, nonce) {
@@ -196,6 +279,15 @@ export default {
 	getDecimalAmount(amount, decimals = 18) {
 		return new BigNumber(amount).times(BIG_TEN.pow(decimals))
 	},
+	async orderCalldataCanMatch(buy, sell) {
+		let contract = await this.getMarketExchangeContract();
+		return await contract.orderCalldataCanMatch(
+			buy.calldata,
+			buy.replacementPattern,
+			sell.calldata,
+			sell.replacementPattern
+		);
+	},
 	buyERC721ABI(buyer, id, from) {
 		if (!from) {
 			from = ZERO_ADDRESS;
@@ -220,7 +312,7 @@ export default {
 	makeOrder(exchangeAddress, sender, nftAddress, side = 0, tokenId = null) {
 		return {
 			exchange: exchangeAddress,     // 当前 exhcnage 合约地址 default : exchangeAddress
-			maker: sender,         // 订单创建者 default sender
+			maker: sender,                 // 订单创建者 default sender
 			taker: ZERO_ADDRESS,           // 订单参与者 require
 			makerRelayerFee: 250,          // 手续费  default: 0
 			takerRelayerFee: 0,            // 手续费  default: 0
@@ -248,12 +340,21 @@ export default {
 			_sender: sender        // for wrap【不计算 hash 】
 		}
 	},
-	//验证订单参数
+	// 验证订单参数
 	async validateOrderParameters(order) {
 		let contract = await this.getMarketExchangeContract();
-		return await contract.validateOrderParameters_(
+		console.log(contract)
+		const params = [
 			[order.exchange, order.maker, order.taker, order.feeRecipient, order.target, order.staticTarget, order.paymentToken],
-			[order.makerRelayerFee, order.takerRelayerFee, order.makerProtocolFee, order.takerProtocolFee, order.basePrice, order.extra, order.listingTime, order.expirationTime, order.salt],
+			[order.makerRelayerFee,
+				order.takerRelayerFee,
+				order.makerProtocolFee,
+				order.takerProtocolFee,
+				order.basePrice,
+				order.extra,
+				order.listingTime,
+				order.expirationTime,
+				order.salt],
 			order.feeMethod,
 			order.side,
 			order.saleKind,
@@ -261,7 +362,9 @@ export default {
 			order.calldata,
 			order.replacementPattern,
 			order.staticExtradata
-		);
+		]
+		console.log(params)
+		return await contract.validateOrderParameters_(...params);
 	},
 	// atomicMatch数据验证
 	async orderCanMatch(buy, sell) {
@@ -345,18 +448,8 @@ export default {
 			seller.replacementPattern,
 			buyer.staticExtradata,
 			seller.staticExtradata,
-			[
-				buyer.v,
-				parseInt(seller.v)
-			],
-			[
-				buyer.r,
-				buyer.s,
-				seller.r,
-				seller.s,
-				ethers.constants.HashZero
-			],
 		]
+		console.log('若为eth支付', params)
 		let tx = await contract.calculateMatchPrice_(
 			...params
 		)
@@ -365,7 +458,6 @@ export default {
 	// 订单成交
 	async atomicMatch(seller, buyer, owner, sender) {
 		let contract = await this.getMarketExchangeContract();
-		console.log(ethers.utils.parseEther("2"))
 		const params = [
 			[
 				buyer.exchange,
@@ -434,11 +526,13 @@ export default {
 		]
 		console.log(params)
 		let pa = {}
-		if (seller.feeRecipient === ZERO_ADDRESS && buyer.feeRecipient === ZERO_ADDRESS) {
+		if (seller.paymentToken === ZERO_ADDRESS && buyer.paymentToken === ZERO_ADDRESS) {
 			pa = {
-				value: this.calculateMatchPrice_(seller, buyer),
+				// value: await this.calculateMatchPrice_(seller, buyer),
+				value: seller.basePrice,
 			}
 		}
+		console.log(pa)
 		let tx = await contract.atomicMatch_(
 			...params,
 			{
@@ -524,34 +618,63 @@ export default {
 
 		return obj;
 	},
-	getAtomicMatchWrapOrder(order) {
-		return {
-			"exchange": order.exchange,
-			"maker": order.maker,
-			"taker": order.taker,
-			"makerRelayerFee": order.makerRelayerFee,
-			"takerRelayerFee": order.takerRelayerFee,
-			"makerProtocolFee": order.makerProtocolFee,
-			"takerProtocolFee": order.takerProtocolFee,
-			"feeRecipient": order.feeRecipient,
-			"feeMethod": order.feeMethod,
-			"side": order.side,
-			"saleKind": order.saleKind,
-			"target": order.target,
-			"howToCall": order.howToCall,
-			"calldataBeta": order.calldata,
-			"replacementPattern": order.replacementPattern,
-			"staticTarget": order.staticTarget,
-			"staticExtradata": order.staticExtradata,
-			"paymentToken": order.paymentToken,
-			"basePrice": order.basePrice,
-			"extra": order.extra,
-			"listingTime": order.listingTime,
-			"expirationTime": order.expirationTime,
-			"salt": order.salt,
+	getAtomicMatchWrapOrder(order, isBeta=true) {
+		if (!isBeta) {
+			return {
+				"exchange": order.exchange,
+				"maker": order.maker,
+				"taker": order.taker,
+				"makerRelayerFee": order.makerRelayerFee,
+				"takerRelayerFee": order.takerRelayerFee,
+				"makerProtocolFee": order.makerProtocolFee,
+				"takerProtocolFee": order.takerProtocolFee,
+				"feeRecipient": order.feeRecipient,
+				"feeMethod": order.feeMethod,
+				"side": order.side,
+				"saleKind": order.saleKind,
+				"target": order.target,
+				"howToCall": order.howToCall,
+				"calldata": order.calldata,
+				"replacementPattern": order.replacementPattern,
+				"staticTarget": order.staticTarget,
+				"staticExtradata": order.staticExtradata,
+				"paymentToken": order.paymentToken,
+				"basePrice": order.basePrice,
+				"extra": order.extra,
+				"listingTime": order.listingTime,
+				"expirationTime": order.expirationTime,
+				"salt": order.salt,
+			}
+		} else {
+			return {
+				"exchange": order.exchange,
+				"maker": order.maker,
+				"taker": order.taker,
+				"makerRelayerFee": order.makerRelayerFee,
+				"takerRelayerFee": order.takerRelayerFee,
+				"makerProtocolFee": order.makerProtocolFee,
+				"takerProtocolFee": order.takerProtocolFee,
+				"feeRecipient": order.feeRecipient,
+				"feeMethod": order.feeMethod,
+				"side": order.side,
+				"saleKind": order.saleKind,
+				"target": order.target,
+				"howToCall": order.howToCall,
+				"calldataBeta": order.calldata,
+				"replacementPattern": order.replacementPattern,
+				"staticTarget": order.staticTarget,
+				"staticExtradata": order.staticExtradata,
+				"paymentToken": order.paymentToken,
+				"basePrice": order.basePrice,
+				"extra": order.extra,
+				"listingTime": order.listingTime,
+				"expirationTime": order.expirationTime,
+				"salt": order.salt,
+			}
 		}
 	},
-	async _atomicMatchWrap(buyers, sellers, owner) {
+	async _atomicMatchWrap(buyers, sellers, owner, value) {
+		console.log(value.toString())
 		let buys = []
 		let sells = []
 		let buySigs = []
@@ -583,7 +706,8 @@ export default {
 			ZERO_HASH,
 			{
 				from: owner,
-				value: ethers.utils.parseEther("0.04")
+				value: ethers.utils.parseEther(value.toString())
+				// value: ethers.utils.parseEther("0.1")
 			}
 		)
 		return tx
@@ -622,6 +746,10 @@ export default {
 		let abi = utils.contractAbi(type);
 		asset.abi = abi;
 		return asset;
+	},
+	async fromWeiNum(value) {
+		var web3 = await utils_web3.getWeb3();
+		return web3.utils.fromWei(value.toString(), "ether");
 	},
 	async getBalance(asset, owner) {
 		var web3 = await utils_web3.getWeb3();

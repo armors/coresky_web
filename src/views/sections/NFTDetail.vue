@@ -3,9 +3,7 @@
     <div class="flex-center">
       <div class="page-left">
         <div class="detail-img-box">
-          <img
-            src="https://storage.nfte.ai/nft/img/eth/0x1/6079100774021590496_845241255.webp?x-oss-process=image/resize,m_lfit,h_900"
-            alt="">
+          <image-box :src="tokenInfo.ckCollectionsInfoEntity.image"></image-box>
         </div>
         <div class="card-wrap mt30">
           <div class="card-head">
@@ -124,25 +122,25 @@
       </div>
       <div class="page-right">
         <div class="detail-info">
-          <div class="collection-name"><span>Name of this collection</span> <img class="tag"
+          <div class="collection-name"><span>{{tokenInfo.ckCollectionsInfoEntity.name}}</span> <img class="tag"
               src="@/assets/images/icons/icon_tag.svg" alt=""></div>
           <div class="globle-floor">
             <span>Globle floor : </span>
             <img class="token-icon" src="@/assets/images/icons/token/token_eth.svg" alt="" />
-            <span class="value">530.73</span>
+            <span class="value">{{tokenInfo.ckCollectionsInfoEntity.floorPrice}}</span>
           </div>
           <div class="nft-name">
-            <span>Name of this NFT #4450</span>
+            <span>{{tokenInfo.ckCollectionsInfoEntity.name}} #{{tokenInfo.tokenId}}</span>
             <div class="icon_shoucang" alt="" />
           </div>
           <div class="nft-address">
             <div class="add-item">
               <div class="creator">Creator</div>
-              <div class="creator-name">0xb908f...f0c6</div>
+              <div class="creator-name">{{$filters.ellipsisAddress(tokenInfo.contract)}}</div>
             </div>
             <div>
               <div class="creator">Current owner</div>
-              <div class="creator-name">0xb908f...f0c6</div>
+              <div class="creator-name">{{$filters.ellipsisAddress(tokenInfo.address)}}</div>
             </div>
           </div>
           <div class="nft-bid-box">
@@ -173,10 +171,14 @@
                 </div>
               </div>
             </div>
-            <div class="btn-box">
-              <button class="btnBuy" @click="isShowBugDialog=!isShowBugDialog">Buy Now</button>
-              <button class="btnBlack">Add to Cart</button>
-              <button class="btnWhite" @click="isShowMakeOfferDialog=!isShowMakeOfferDialog">Make Offer</button>
+            <div class="btn-box display-flex box-center-Y">
+              <template v-if="isSelf" >
+                <el-button type="primary" class="btnBuy" v-if="!tokenInfo.state" :loading="sellDialogBtnLoading" @click="showSellNft">Sell Now</el-button>
+                <el-button type="primary" class="btnBuy" v-else :loading="cancelBtnLoading" @click="cancelSell">Cancel Sell</el-button>
+              </template>
+              <el-button type="primary" class="btnBuy" v-else-if="tokenInfo.state" @click="showBuyNft">Buy Now</el-button>
+              <el-button class="btnBlack" v-if="!isSelf && !isCart" :disabled="!tokenInfo.contract || !tokenInfo.state" @click="addCart">Add to Cart</el-button>
+              <el-button class="btnWhite" v-if="!isSelf" :disabled="!tokenInfo.contract" @click="showMakeOfferNFT">Make Offer</el-button>
             </div>
           </div>
         </div>
@@ -210,15 +212,15 @@
                 <div class="list-th th5">From</div>
               </div>
 
-              <div class="list-tr" v-for="i of 20" :key="i">
+              <div class="list-tr" v-for="(v, i) of ckOrdersEntityList" :key="`make-offer-${i}`">
                 <div class="list-th th1">
                   <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-                  0.9311
+                  {{nftPrice(v.basePrice)}}
                 </div>
                 <div class="list-th th2">$1,048,37</div>
                 <div class="list-th th3">12% below</div>
                 <div class="list-th th4">about 22 hours</div>
-                <div class="list-th th5 purple">0x24...7eth</div>
+                <div class="list-th th5 purple">{{$filters.ellipsisAddress(v.maker, 4)}}</div>
               </div>
             </div>
           </div>
@@ -265,116 +267,31 @@
         </div>
       </div>
     </div>
-    <el-dialog :model-value="isShowBugDialog" :show-close="false" :close-on-click-modal="false" @closed="closed"
-      custom-class="custom-dialog" destroy-on-close>
-      <template #title>
-        <div class="left">
-          <span>Checkout</span>
-        </div>
-        <el-icon @click="isShowBugDialog=false">
-          <Close />
-        </el-icon>
-      </template>
-      <div class="nft-box">
-        <img class="img-box"
-          src="https://storage.nfte.ai/nft/img/eth/0x1/6079100774021590496_845241255.webp?x-oss-process=image/resize,m_lfit,h_900"
-          alt="">
-        <div class="box-center">
-          <span class="tokenid">#5560</span>
-          <span class="collection-name">Name of this collection
-            <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
-          </span>
-        </div>
-      </div>
-      <div class="price-box">
-        <div class="label">
-          Price
-        </div>
-        <div class="price-wrap">
-          <span class="buy-price">
-            <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-            23.22
-          </span>
-          <div class="total">$ 45,332.02</div>
-        </div>
-      </div>
-      <button class="btnBuy">Buy</button>
-    </el-dialog>
-    <el-dialog :model-value="isShowMakeOfferDialog" :show-close="false" :close-on-click-modal="false" @closed="closed"
-      custom-class="custom-dialog" destroy-on-close>
-      <template #title>
-        <div class="left">
-          <span>Make an offer</span>
-        </div>
-        <el-icon @click="isShowMakeOfferDialog=false">
-          <Close />
-        </el-icon>
-      </template>
-      <div class="nft-box">
-        <img class="img-box"
-          src="https://storage.nfte.ai/nft/img/eth/0x1/6079100774021590496_845241255.webp?x-oss-process=image/resize,m_lfit,h_900"
-          alt="">
-        <div class="box-center">
-          <span class="tokenid">#5560</span>
-          <span class="collection-name">Name of this collection
-            <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
-          </span>
-        </div>
-      </div>
-      <el-form label-position="top" :model="form" style="margin-top:40px">
-        <el-form-item label="Price">
-          <div class="flex-content">
-            <el-input v-model="form.date" size="large" style="width:100%;" />
-            <el-select v-model="value" size="large" class="ml20" placeholder="Select"
-              style="width:180px;flex-shrink: 0;">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-            </el-select>
-          </div>
-        </el-form-item>
-        <el-form-item label="Expiration date">
-          <div class="flex-content">
-            <el-date-picker v-model="form.time" size="large" type="datetime" placeholder="Pick a Date" style=""
-              format="YYYY-MM-DD HH:mm" />
-            <el-select v-model="value" class="ml20" size="large" placeholder="Select"
-              style="width:180px;flex-shrink: 0;">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-            </el-select>
-          </div>
-        </el-form-item>
-        <el-form-item label="Fee and coupons">
-          <div class="describe-box">
-            <div class="describe-item">
-              <span class="lable">Coeesky service fee: </span>
-              <span class="value">0.5%</span>
-            </div>
-            <div class="describe-item mt15">
-              <span class="lable">coupon rewards:</span>
-              <div class="value">
-                <p>
-                  1 coupon / 0.5 ETH
-                </p>
-                <p>1 coupon / listing / day</p>
-              </div>
-            </div>
-          </div>
-        </el-form-item>
-      </el-form>
-      <button class="btnBuy">Buy</button>
-    </el-dialog>
+    <NFTDialogBuy ref="NFTDialogBuy" @buySuccess="buySuccess"></NFTDialogBuy>
+    <NFTDialogSell ref="NFTDialogSell" @sellCreateSuccess="sellCreateSuccess"></NFTDialogSell>
+    <NFTDialogMakeOffer ref="NFTDialogMakeOffer" @makeOfferSuccess="makeOfferSuccess"></NFTDialogMakeOffer>
   </div>
 </template>
 
 <script>
+  import NFTDialogSell from '../../components/self/NFTDialogSell'
+  import NFTDialogMakeOffer from '../../components/self/NFTDialogMakeOffer'
+  import NFTDialogBuy from '../../components/self/NFTDialogBuy'
+  import {setLocalStorage, getLocalStorage, removeLocalStorage} from "@/util/local-storage";
 
-export default {
+  export default {
   name: "NFTDetail",
   components: {
+    NFTDialogSell,
+    NFTDialogBuy,
+    NFTDialogMakeOffer,
   },
   mixins: [],
   data () {
     return {
-      isShowBugDialog: false,
-      isShowMakeOfferDialog: false,
+      buyBtnLoading: false,
+      cancelBtnLoading: false,
+      sellDialogBtnLoading: false,
       checkList: [],
       form: {
         price: '',
@@ -395,27 +312,141 @@ export default {
           value: 'Option2',
           label: 'Option2',
         }
-      ]
+      ],
+      tokenInfo: {
+        contract: '',
+        tokenId: '',
+        ckCollectionsInfoEntity: {
+          bannerImage: '',
+          image: ''
+        }
+      },
+      tokenInfoParams: {
+        contract: '',
+        tokenId: ''
+      },
+      ckOrdersEntityList: [],
+      isCart: false,
     };
   },
   created () {
+    this.tokenInfoParams =  {
+      contract: this.$route.params.contract,
+      tokenId: this.$route.params.tokenId
+    }
+  },
+  mounted() {
+    this.getTokenInfo()
+    this.isInCart()
   },
   computed: {
+    user() {
+      console.log(this.$store.state.user)
+      return this.$store.state.user;
+    },
+    cartName () {
+      return `coresky_cart_${this.$store.state.user.coinbase}`
+    },
+    isSelf () {
+      return this.tokenInfo.address && this.user.coinbase && this.tokenInfo.address.toLowerCase() === this.user.coinbase.toLowerCase()
+    },
   },
   methods: {
+    isInCart () {
+      const local = getLocalStorage(this.cartName)
+      console.log(local[this.cartName])
+      let coresky_cart = local[this.cartName]
+      if (local[this.cartName] !== null) {
+        coresky_cart = JSON.parse(coresky_cart)
+        const token = coresky_cart.find(item => item.contract === this.tokenInfo.contract && item.tokenId === this.tokenInfo.tokenId)
+        console.log(token)
+        this.isCart = token !== undefined
+      } else {
+        coresky_cart = []
+        this.isCart = false
+      }
+    },
+    getTokenInfo () {
+      this.$api("collect.tokenInfo", this.tokenInfoParams).then(async (res) => {
+        this.tokenInfo = res.debug
+        this.tokenInfo.ckCollectionsInfoEntity.floorPrice = '0.02'
+        this.ckOrdersEntityList = this.tokenInfo.ckOrdersEntityList || []
+        this.isInCart()
+      })
+    },
+    showSellNft () {
+      this.sellDialogBtnLoading = true
+      this.$refs.NFTDialogSell.showSell(this.tokenInfo)
+    },
+    async cancelSell () {
+      this.cancelBtnLoading = true
+      let seller = this.$sdk.getAtomicMatchWrapOrder(this.tokenInfo.ckOrdersEntity, false)
+      seller = {
+        ...seller,
+        ...{
+          basePrice: seller.basePrice.toString(),
+          v: this.tokenInfo.ckOrdersEntity.v,
+          s: this.tokenInfo.ckOrdersEntity.s,
+          r: this.tokenInfo.ckOrdersEntity.r
+        }
+      }
+      try {
+        const hash = await this.$sdk.cancelOrder_(seller, this.user.coinbase);
+        console.log(hash)
+        this.$api("order.cancel", {
+          id: this.tokenInfo.ckOrdersEntity.id
+        }).then((res) => {
+          this.cancelBtnLoading = false
+          this.$tools.message('已取消挂售', 'success');
+          this.getTokenInfo()
+        })
+      }catch (e) {
+        console.log(e)
+        this.cancelBtnLoading = false
+      }
+    },
+    showBuyNft () {
+      this.$refs.NFTDialogBuy.showBuy(this.tokenInfo)
+    },
+    nftPrice (basePrice) {
+      return this.$Web3.utils.fromWei(basePrice.toString())
+    },
+    // 添加购物车
+    addCart () {
+      const local = getLocalStorage(this.cartName)
+      console.log(local[this.cartName])
+      let coresky_cart = local[this.cartName]
+      if (local[this.cartName] !== null) {
+        coresky_cart = JSON.parse(coresky_cart)
+      } else {
+        coresky_cart = []
+      }
+      console.log(coresky_cart)
+      coresky_cart.push(this.tokenInfo)
+      const obj = {}
+      obj[this.cartName] = JSON.stringify(coresky_cart)
+      setLocalStorage(obj)
+      this.isInCart()
+    },
+    showMakeOfferNFT () {
+      this.$refs.NFTDialogMakeOffer.showMakeOffer(this.tokenInfo)
+    },
+    sellCreateSuccess (v) {
+      console.log(v)
+      this.getTokenInfo()
+    },
+    buySuccess (v) {
+      console.log(v)
+      this.getTokenInfo()
+    },
+    makeOfferSuccess(v) {
+      console.log(v)
+      this.getTokenInfo()
+    },
   },
 };
 </script>
 <style lang="scss" scoped>
-.mt30 {
-  margin-top: 30px;
-}
-.ml20 {
-  margin-left: 20px;
-}
-.mt15 {
-  margin-top: 15px;
-}
 .main-wrapper {
   padding: 40px 0;
   margin-bottom: 20px;
@@ -431,6 +462,12 @@ export default {
     justify-content: space-between;
     .detail-img-box {
       border-radius: 20px;
+      height: 468px;
+      .cover-image{
+        width: 100%;
+        height: 100%;
+        border-radius: 20px;
+      }
     }
   }
   .page-right {
@@ -583,8 +620,6 @@ export default {
       }
       .btn-box {
         margin-top: 24px;
-        display: flex;
-        justify-content: space-between;
         button {
           width: 210px;
           height: 48px;

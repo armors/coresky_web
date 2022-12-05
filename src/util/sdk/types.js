@@ -1,6 +1,7 @@
 
 const OrderType = {
   "SALE": 1,
+  "MAKE_OFFER": 2,
   "BID": 2
 }
 

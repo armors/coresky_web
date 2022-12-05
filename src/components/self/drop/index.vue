@@ -10,20 +10,7 @@
 				params: { contract: v.contract }
 				})">
 					<div class="drop-box display-flex">
-						<el-image class="cover-image" placeholder="loading" :src="v.bannerImage" fit="cover">
-							<template v-slot:placeholder>
-								<el-skeleton class="placeholder-image" animated>
-									<template #template>
-										<el-skeleton-item class="nft-image-skeleton" variant="h3" />
-									</template>
-								</el-skeleton>
-							</template>
-							<template v-slot:error>
-								<div class="display-flex box-center error-image-box">
-									<el-image class="error-image" :src="require('@/assets/create-img/non-existent.png')" fit="contain"></el-image>
-								</div>
-							</template>
-						</el-image>
+						<image-box :src="v.bannerImage"></image-box>
 						<div class="box-flex1">
 							<div class="nft-name">
 								{{ v.name }}

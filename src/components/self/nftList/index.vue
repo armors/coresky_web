@@ -23,18 +23,7 @@
 				})">
 			<div class="index-num">{{i + 1}}</div>
 			<div class="nft-info display-flex box-center-Y">
-				<el-image class="cover-image" placeholder="loading" :src="v.image" fit="cover">
-					<template v-slot:placeholder>
-						<el-skeleton class="placeholder-image" animated>
-							<template #template>
-								<el-skeleton-item class="nft-image-skeleton" variant="h3" />
-							</template>
-						</el-skeleton>
-					</template>
-					<template v-slot:error>
-						<el-image class="error-image" :src="require('@/assets/create-img/non-existent.png')" fit="contain"></el-image>
-					</template>
-				</el-image>
+				<image-box :src="v.image"></image-box>
 				<div class="nft-name">{{ v.name }}</div>
 				<div class="icon-tag"><img src="../../../assets/images/icons/icon_tag.svg" alt=""></div>
 			</div>
