@@ -14,7 +14,7 @@
       </el-icon>
     </div>
     <div class="drawer-nav">
-      <div class="nav-item" @click="goView('/account/aa')">
+      <div class="nav-item" @click="goView('/account/'+ user.coinbase)">
         <img class="icon" src="@/assets/images/icons/icon_nft.svg" alt="">
         <span>My NFTs</span>
       </div>

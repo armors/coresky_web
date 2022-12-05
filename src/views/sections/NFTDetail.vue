@@ -131,7 +131,7 @@
           </div>
           <div class="nft-name">
             <span>{{tokenInfo.ckCollectionsInfoEntity.name}} #{{tokenInfo.tokenId}}</span>
-            <div class="icon_shoucang" alt="" />
+            <div class="icon_shoucang" :class="{active: tokenInfo.followStatus}" alt="" @click="followNft" />
           </div>
           <div class="nft-address">
             <div class="add-item">
@@ -184,7 +184,6 @@
                 @click="addCart">Add to Cart</el-button>
               <el-button class="btnWhite" v-if="!isSelf" :disabled="!tokenInfo.contract" @click="showMakeOfferNFT">Make
                 Offer</el-button>
-              <el-button class="btnWhite" @click="showAcceptOfferNFT">Accept</el-button>
               <el-button class="btnWhite" @click="showAcceptOfferNFT">Accept</el-button>
 
             </div>
@@ -380,9 +379,9 @@ export default {
       }
     },
     getTokenInfo () {
-      this.$api("collect.tokenInfo", this.tokenInfoParams).then(async (res) => {
+      this.$api("collect.tokenInfo", this.tokenInfoParams).then((res) => {
         this.tokenInfo = res.debug
-        this.tokenInfo.ckCollectionsInfoEntity.floorPrice = '0.02'
+        // this.tokenInfo.ckCollectionsInfoEntity.floorPrice = '0.02'
         this.ckOrdersEntityList = this.tokenInfo.ckOrdersEntityList || []
         this.isInCart()
       })
@@ -458,7 +457,17 @@ export default {
     },
     showAcceptOfferNFT () {
       this.$refs.NFTDialogAcceptOffer.show()
-    }
+    },
+    followNft () {
+      if (!this.tokenInfo.contract || !this.tokenInfo.tokenId) return
+      const tokenColloctUrl = this.tokenInfo.followStatus ? "collect.tokenCancel" : "collect.tokenFollow"
+      this.$api(tokenColloctUrl, {
+        "contract": this.tokenInfo.contract,
+        "tokenId": this.tokenInfo.tokenId
+      }).then((res) => {
+        this.tokenInfo.followStatus = !this.tokenInfo.followStatus
+      })
+    },
   },
 };
 </script>

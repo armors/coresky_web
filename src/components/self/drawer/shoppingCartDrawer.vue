@@ -48,7 +48,7 @@
         </div>
       </div>
       <div>
-        <el-button type="primary" :disabled="coreskyCart.length < 1" class="btnOption" :loading="buyBtnLoading" @click="manyBuy">Buy</el-button>
+        <el-button type="primary" :disabled="coreskyCart.length < 1" class="btnOption" :loading="buyBtnLoading" @click="cartBuy">Buy</el-button>
       </div>
     </div>
   </el-drawer>
@@ -133,7 +133,15 @@ export default {
     getNftPrice(v) {
       return this.$Web3.utils.fromWei(v.ckOrdersEntity.basePrice.toString())
     },
+    cartBuy () {
+      if (this.coreskyCart.length > 1) {
+        this.manyBuy()
+      } else {
+        this.buyNft()
+      }
+    },
     async manyBuy() {
+      this.buyBtnLoading = true
       let sellers = []
       this.coreskyCart.forEach(item => {
         item.ckOrdersEntity.basePrice = item.ckOrdersEntity.basePrice.toString()
@@ -169,11 +177,77 @@ export default {
         console.log(sigBuyer)
       }
       console.log(buyers, sellers)
-      const atomicMatchWrap = await this.$sdk._atomicMatchWrap(buyers, sellers, this.user.coinbase, new BigNumber(1.5).multipliedBy(new BigNumber(this.totalPrice)))
-      console.log(atomicMatchWrap)
-      this.clearCart()
-    },
+      try {
+        const atomicMatchWrap = await this.$sdk._atomicMatchWrap(buyers, sellers, this.user.coinbase, new BigNumber(1.5).multipliedBy(new BigNumber(this.totalPrice)))
+        // const atomicMatchWrap = await this.$sdk._atomicMatchWrap(buyers, sellers, this.user.coinbase, this.totalPrice)
+        console.log(atomicMatchWrap)
+        this.clearCart()
+        this.buyBtnLoading = false
+        this.$tools.message('购买成功', 'success');
+      } catch (e) {
+        this.buyBtnLoading = false
+      }
 
+    },
+    async buyNft () {
+      this.buyBtnLoading = true
+      const sellerToken = this.coreskyCart[0]
+      let seller = this.$sdk.getAtomicMatchWrapOrder(sellerToken.ckOrdersEntity, false)
+      seller = {
+        ...seller,
+        ...{
+          _sender: sellerToken.ckOrdersEntity.maker,
+          basePrice: seller.basePrice.toString(),
+          // basePrice: ethers.BigNumber.from(seller.basePrice.toString()),
+          v: sellerToken.ckOrdersEntity.v,
+          s: sellerToken.ckOrdersEntity.s,
+          r: sellerToken.ckOrdersEntity.r
+        }
+      }
+      let buyParams = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, sellerToken.contract, 0, sellerToken.tokenId)
+      console.log(seller)
+      let buyer = {
+        ...buyParams,
+        ...{
+          maker: this.user.coinbase,
+          taker: seller.maker,
+          paymentToken: seller.paymentToken,
+          basePrice: seller.basePrice,
+          listingTime: seller.listingTime,
+          expirationTime: 0,
+        }
+      }
+      console.log(buyer)
+      try {
+        const sigBuyer = await this.$sdk.signature(buyer, this.user.coinbase)
+        console.log(sigBuyer)
+        buyer = {
+          ...buyer,
+          ...{
+            v: sigBuyer.v,
+            r: sigBuyer.r,
+            s: sigBuyer.s,
+            sign: JSON.stringify(sigBuyer),
+          }
+        }
+        console.log(buyer)
+        console.log(seller)
+        console.log('sell validateOrderParameters', await this.$sdk.validateOrderParameters(seller))
+        console.log('buy validateOrderParameters', await this.$sdk.validateOrderParameters(buyer))
+        console.log(JSON.stringify(buyer), JSON.stringify(seller))
+        console.log('orderCanMatch', await this.$sdk.orderCanMatch(buyer, seller))
+        console.log('orderCalldataCanMatch', await this.$sdk.orderCalldataCanMatch(buyer, seller))
+        console.log('buy validateOrder_',await this.$sdk.validateOrder_(buyer))
+        console.log('sell validateOrder_',await this.$sdk.validateOrder_(seller))
+        const hashAtomicMatch = await this.$sdk.atomicMatch(seller, buyer, this.user.coinbase, this.user.coinbase);
+        console.log(hashAtomicMatch)
+        this.$tools.message('购买成功', 'success');
+        this.clearCart()
+      } catch (e) {
+        console.log(e)
+        this.buyBtnLoading = false
+      }
+    }
   },
 }
 </script>
