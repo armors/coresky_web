@@ -131,7 +131,7 @@
           </div>
           <div class="nft-name">
             <span>{{tokenInfo.ckCollectionsInfoEntity.name}} #{{tokenInfo.tokenId}}</span>
-            <div class="icon_shoucang" :class="{active: tokenInfo.followStatus}" alt=""  @click="followNft"/>
+            <div class="icon_shoucang" :class="{active: tokenInfo.followStatus}" alt="" @click="followNft" />
           </div>
           <div class="nft-address">
             <div class="add-item">
@@ -172,13 +172,20 @@
               </div>
             </div>
             <div class="btn-box display-flex box-center-Y">
-              <template v-if="isSelf" >
-                <el-button type="primary" class="btnBuy" v-if="!tokenInfo.state" :loading="sellDialogBtnLoading" @click="showSellNft">Sell Now</el-button>
-                <el-button type="primary" class="btnBuy" v-else :loading="cancelBtnLoading" @click="cancelSell">Cancel Sell</el-button>
+              <template v-if="isSelf">
+                <el-button type="primary" class="btnBuy" v-if="!tokenInfo.state" :loading="sellDialogBtnLoading"
+                  @click="showSellNft">Sell Now</el-button>
+                <el-button type="primary" class="btnBuy" v-else :loading="cancelBtnLoading" @click="cancelSell">Cancel
+                  Sell</el-button>
               </template>
-              <el-button type="primary" class="btnBuy" v-else-if="tokenInfo.state" @click="showBuyNft">Buy Now</el-button>
-              <el-button class="btnBlack" v-if="!isSelf && !isCart" :disabled="!tokenInfo.contract || !tokenInfo.state" @click="addCart">Add to Cart</el-button>
-              <el-button class="btnWhite" v-if="!isSelf" :disabled="!tokenInfo.contract" @click="showMakeOfferNFT">Make Offer</el-button>
+              <el-button type="primary" class="btnBuy" v-else-if="tokenInfo.state" @click="showBuyNft">Buy Now
+              </el-button>
+              <el-button class="btnBlack" v-if="!isSelf && !isCart" :disabled="!tokenInfo.contract || !tokenInfo.state"
+                @click="addCart">Add to Cart</el-button>
+              <el-button class="btnWhite" v-if="!isSelf" :disabled="!tokenInfo.contract" @click="showMakeOfferNFT">Make
+                Offer</el-button>
+              <el-button class="btnWhite" @click="showAcceptOfferNFT">Accept</el-button>
+
             </div>
           </div>
         </div>
@@ -270,21 +277,26 @@
     <NFTDialogBuy ref="NFTDialogBuy" @buySuccess="buySuccess"></NFTDialogBuy>
     <NFTDialogSell ref="NFTDialogSell" @sellCreateSuccess="sellCreateSuccess"></NFTDialogSell>
     <NFTDialogMakeOffer ref="NFTDialogMakeOffer" @makeOfferSuccess="makeOfferSuccess"></NFTDialogMakeOffer>
+    <NFTDialogAcceptOffer ref="NFTDialogAcceptOffer" />
+
   </div>
 </template>
 
 <script>
-  import NFTDialogSell from '../../components/self/NFTDialogSell'
-  import NFTDialogMakeOffer from '../../components/self/NFTDialogMakeOffer'
-  import NFTDialogBuy from '../../components/self/NFTDialogBuy'
-  import {setLocalStorage, getLocalStorage, removeLocalStorage} from "@/util/local-storage";
+import NFTDialogSell from '../../components/self/NFTDialogSell'
+import NFTDialogMakeOffer from '../../components/self/NFTDialogMakeOffer'
+import NFTDialogAcceptOffer from '../../components/self/NFTDialogAcceptOffer'
 
-  export default {
+import NFTDialogBuy from '../../components/self/NFTDialogBuy'
+import { setLocalStorage, getLocalStorage, removeLocalStorage } from "@/util/local-storage";
+
+export default {
   name: "NFTDetail",
   components: {
     NFTDialogSell,
     NFTDialogBuy,
     NFTDialogMakeOffer,
+    NFTDialogAcceptOffer
   },
   mixins: [],
   data () {
@@ -330,17 +342,17 @@
     };
   },
   created () {
-    this.tokenInfoParams =  {
+    this.tokenInfoParams = {
       contract: this.$route.params.contract,
       tokenId: this.$route.params.tokenId
     }
   },
-  mounted() {
+  mounted () {
     this.getTokenInfo()
     this.isInCart()
   },
   computed: {
-    user() {
+    user () {
       console.log(this.$store.state.user)
       return this.$store.state.user;
     },
@@ -400,7 +412,7 @@
           this.$tools.message('已取消挂售', 'success');
           this.getTokenInfo()
         })
-      }catch (e) {
+      } catch (e) {
         console.log(e)
         this.cancelBtnLoading = false
       }
@@ -439,9 +451,12 @@
       console.log(v)
       this.getTokenInfo()
     },
-    makeOfferSuccess(v) {
+    makeOfferSuccess (v) {
       console.log(v)
       this.getTokenInfo()
+    },
+    showAcceptOfferNFT () {
+      this.$refs.NFTDialogAcceptOffer.show()
     },
     followNft () {
       if (!this.tokenInfo.contract || !this.tokenInfo.tokenId) return
@@ -473,7 +488,7 @@
     .detail-img-box {
       border-radius: 20px;
       height: 468px;
-      .cover-image{
+      .cover-image {
         width: 100%;
         height: 100%;
         border-radius: 20px;
@@ -812,158 +827,6 @@
     .filter-box {
       background: $elButtonHoverBg;
       height: 56px;
-    }
-  }
-}
-::v-deep {
-  .custom-dialog {
-    padding: 40px;
-    height: auto;
-    .el-dialog__header {
-      padding: 0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-right: 0;
-      .left {
-        color: $color-black;
-        font-weight: 700;
-        font-size: 22px;
-        line-height: 28px;
-      }
-      .el-icon {
-        cursor: pointer;
-        font-size: 20px;
-      }
-    }
-    .el-dialog__body {
-      padding: 40px 0 0;
-    }
-    .nft-box {
-      display: flex;
-      padding: 16px;
-      border: 1px solid $borderBg;
-      border-radius: 20px;
-      .img-box {
-        width: 100px;
-        height: 100px;
-        border-radius: 10px;
-        margin-right: 10px;
-      }
-      .box-center {
-        display: flex;
-        flex-grow: 1;
-        flex-direction: column;
-        justify-content: center;
-        align-items: self-start;
-        .tokenid {
-          font-weight: 500;
-          font-size: 20px;
-          line-height: 30px;
-          color: $primaryColor;
-          margin-bottom: 5px;
-        }
-        .tag {
-          width: 16px;
-          height: 16px;
-          display: inline-block;
-          vertical-align: bottom;
-          margin-left: 5px;
-        }
-      }
-    }
-    .price-box {
-      display: flex;
-      padding: 16px;
-      border: 1px solid $borderBg;
-      border-radius: 20px;
-      align-items: center;
-      justify-content: space-between;
-      text-align: right;
-      margin-top: 20px;
-      .label {
-        font-weight: 500;
-        font-size: 20px;
-        line-height: 30px;
-        color: $primaryColor;
-      }
-      .buy-price {
-        margin-bottom: 4px;
-        height: 30px;
-        line-height: 30px;
-        font-weight: 500;
-        font-size: 20px;
-        .token-icon {
-          width: 10px;
-          height: 16px;
-          display: inline-block;
-        }
-      }
-    }
-    .btnBuy {
-      margin-top: 20px;
-      width: 100%;
-      height: 48px;
-      padding: 10px 0;
-      border-radius: 12px;
-      font-weight: 700;
-      border: none;
-      cursor: pointer;
-      color: $color-white;
-      background: $mainLiner;
-    }
-    .el-form-item__label {
-      font-size: 16px;
-      color: $primaryColor;
-    }
-    .el-input__wrapper {
-      border-radius: 12px;
-      // display: block;
-    }
-    .el-input__inner {
-      // height: 40px;
-      padding: 0;
-    }
-    .el-select {
-      .el-input__wrapper {
-        padding: 1px 15px;
-      }
-      // .el-input__suffix {
-      //   right: 19px;
-      // }
-    }
-    .flex-content {
-      display: flex;
-      width: 100%;
-    }
-    .el-date-editor.el-input {
-      // display: block;
-      width: 100%;
-      .el-input__prefix {
-        display: none;
-      }
-      // .el-input__suffix {
-      //   top: 5px;
-      // }
-    }
-    .describe-box {
-      width: 100%;
-      padding: 16px;
-      border: 1px solid $borderBg;
-      border-radius: 12px;
-      line-height: 21px;
-      .describe-item {
-        display: flex;
-        .lable {
-          font-weight: 400;
-          font-size: 14px;
-          color: $color-black2;
-          min-width: 130px;
-          margin-right: 20px;
-        }
-        .value {
-        }
-      }
     }
   }
 }

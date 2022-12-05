@@ -528,3 +528,28 @@
     }
   }
 }
+.el-dialog.custom-dialog {
+  padding: 40px;
+  height: auto;
+  width: 700px;
+  .el-dialog__header {
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-right: 0;
+    .left {
+      color: $color-black;
+      font-weight: 700;
+      font-size: 22px;
+      line-height: 28px;
+    }
+    .el-icon {
+      cursor: pointer;
+      font-size: 20px;
+    }
+  }
+  .el-dialog__body {
+    padding: 40px 0 0;
+  }
+}
