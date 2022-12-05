@@ -671,12 +671,16 @@ export default {
 			}
 		}
 	},
+	ethersUtilsParseEther (value) {
+		return ethers.utils.parseEther(value.toString())
+	},
 	async _atomicMatchWrap(buyers, sellers, owner, value) {
 		console.log(value.toString())
 		let buys = []
 		let sells = []
 		let buySigs = []
 		let sellSigs = []
+		let values = []
 		for (let i = 0; i < buyers.length; i++) {
 			buys.push(this.getAtomicMatchWrapOrder(buyers[i]))
 			sells.push(this.getAtomicMatchWrapOrder(sellers[i]))
@@ -690,37 +694,25 @@ export default {
 				'r': sellers[i].r,
 				's': sellers[i].s
 			})
+			values.push(this.ethersUtilsParseEther(new BigNumber(Web3.utils.fromWei(sellers[i].basePrice.toString()))))
 		}
 		console.log(buys)
 		console.log(sells)
 		console.log(buySigs)
 		console.log(sellSigs)
-		console.log([
-			buys,
-			buySigs,
-			sells,
-			sellSigs,
-			ZERO_HASH,
-			ethers.utils.parseEther(value.toString()),
-			{
-				from: owner,
-				value: ethers.utils.parseEther(value.toString())
-				// value: ethers.utils.parseEther("0.1")
-			}
-			])
+		let contract = await this.getMarketWrapContract();
+		console.log(contract)
 		try {
-			let contract = await this.getMarketWrapContract();
 			let tx = await contract.atomicMatchWrap(
 				buys,
 				buySigs,
 				sells,
 				sellSigs,
 				ZERO_HASH,
-				ethers.utils.parseEther(value.toString()),
+				values,
 				{
 					from: owner,
 					value: ethers.utils.parseEther(value.toString())
-					// value: ethers.utils.parseEther("0.1")
 				}
 			)
 			return tx
