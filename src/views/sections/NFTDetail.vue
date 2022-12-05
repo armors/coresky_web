@@ -172,13 +172,21 @@
               </div>
             </div>
             <div class="btn-box display-flex box-center-Y">
-              <template v-if="isSelf" >
-                <el-button type="primary" class="btnBuy" v-if="!tokenInfo.state" :loading="sellDialogBtnLoading" @click="showSellNft">Sell Now</el-button>
-                <el-button type="primary" class="btnBuy" v-else :loading="cancelBtnLoading" @click="cancelSell">Cancel Sell</el-button>
+              <template v-if="isSelf">
+                <el-button type="primary" class="btnBuy" v-if="!tokenInfo.state" :loading="sellDialogBtnLoading"
+                  @click="showSellNft">Sell Now</el-button>
+                <el-button type="primary" class="btnBuy" v-else :loading="cancelBtnLoading" @click="cancelSell">Cancel
+                  Sell</el-button>
               </template>
-              <el-button type="primary" class="btnBuy" v-else-if="tokenInfo.state" @click="showBuyNft">Buy Now</el-button>
-              <el-button class="btnBlack" v-if="!isSelf && !isCart" :disabled="!tokenInfo.contract || !tokenInfo.state" @click="addCart">Add to Cart</el-button>
-              <el-button class="btnWhite" v-if="!isSelf" :disabled="!tokenInfo.contract" @click="showMakeOfferNFT">Make Offer</el-button>
+              <el-button type="primary" class="btnBuy" v-else-if="tokenInfo.state" @click="showBuyNft">Buy Now
+              </el-button>
+              <el-button class="btnBlack" v-if="!isSelf && !isCart" :disabled="!tokenInfo.contract || !tokenInfo.state"
+                @click="addCart">Add to Cart</el-button>
+              <el-button class="btnWhite" v-if="!isSelf" :disabled="!tokenInfo.contract" @click="showMakeOfferNFT">Make
+                Offer</el-button>
+              <el-button class="btnWhite" @click="showAcceptOfferNFT">Accept</el-button>
+              <el-button class="btnWhite" @click="showAcceptOfferNFT">Accept</el-button>
+
             </div>
           </div>
         </div>
@@ -270,21 +278,26 @@
     <NFTDialogBuy ref="NFTDialogBuy" @buySuccess="buySuccess"></NFTDialogBuy>
     <NFTDialogSell ref="NFTDialogSell" @sellCreateSuccess="sellCreateSuccess"></NFTDialogSell>
     <NFTDialogMakeOffer ref="NFTDialogMakeOffer" @makeOfferSuccess="makeOfferSuccess"></NFTDialogMakeOffer>
+    <NFTDialogAcceptOffer ref="NFTDialogAcceptOffer" />
+
   </div>
 </template>
 
 <script>
-  import NFTDialogSell from '../../components/self/NFTDialogSell'
-  import NFTDialogMakeOffer from '../../components/self/NFTDialogMakeOffer'
-  import NFTDialogBuy from '../../components/self/NFTDialogBuy'
-  import {setLocalStorage, getLocalStorage, removeLocalStorage} from "@/util/local-storage";
+import NFTDialogSell from '../../components/self/NFTDialogSell'
+import NFTDialogMakeOffer from '../../components/self/NFTDialogMakeOffer'
+import NFTDialogAcceptOffer from '../../components/self/NFTDialogAcceptOffer'
 
-  export default {
+import NFTDialogBuy from '../../components/self/NFTDialogBuy'
+import { setLocalStorage, getLocalStorage, removeLocalStorage } from "@/util/local-storage";
+
+export default {
   name: "NFTDetail",
   components: {
     NFTDialogSell,
     NFTDialogBuy,
     NFTDialogMakeOffer,
+    NFTDialogAcceptOffer
   },
   mixins: [],
   data () {
@@ -330,17 +343,17 @@
     };
   },
   created () {
-    this.tokenInfoParams =  {
+    this.tokenInfoParams = {
       contract: this.$route.params.contract,
       tokenId: this.$route.params.tokenId
     }
   },
-  mounted() {
+  mounted () {
     this.getTokenInfo()
     this.isInCart()
   },
   computed: {
-    user() {
+    user () {
       console.log(this.$store.state.user)
       return this.$store.state.user;
     },
@@ -400,7 +413,7 @@
           this.$tools.message('已取消挂售', 'success');
           this.getTokenInfo()
         })
-      }catch (e) {
+      } catch (e) {
         console.log(e)
         this.cancelBtnLoading = false
       }
@@ -439,10 +452,13 @@
       console.log(v)
       this.getTokenInfo()
     },
-    makeOfferSuccess(v) {
+    makeOfferSuccess (v) {
       console.log(v)
       this.getTokenInfo()
     },
+    showAcceptOfferNFT () {
+      this.$refs.NFTDialogAcceptOffer.show()
+    }
   },
 };
 </script>
@@ -463,7 +479,7 @@
     .detail-img-box {
       border-radius: 20px;
       height: 468px;
-      .cover-image{
+      .cover-image {
         width: 100%;
         height: 100%;
         border-radius: 20px;
