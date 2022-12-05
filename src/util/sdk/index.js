@@ -29,6 +29,9 @@ export default {
 	ZERO_HASH () {
 		return ZERO_HASH
 	},
+	ZERO () {
+		return ZERO
+	},
 	// 注册合约
 	async getMarketRegistryContract() {
 		let abi = utils.contractAbi("MARKET_REGISTRY");
@@ -525,24 +528,19 @@ export default {
 			],
 		]
 		console.log(params)
-		let pa = {}
+		let pa = {
+			from: owner,
+		}
 		if (seller.paymentToken === ZERO_ADDRESS && buyer.paymentToken === ZERO_ADDRESS) {
 			pa = {
-				// value: await this.calculateMatchPrice_(seller, buyer),
-				value: seller.basePrice,
+				from: owner,
+				value: await this.calculateMatchPrice_(seller, buyer),
+				// value: new BigNumber(1.5).multipliedBy(new BigNumber(seller.basePrice)),
 			}
 		}
-		console.log(pa)
 		let tx = await contract.atomicMatch_(
 			...params,
-			{
-				...{
-					from: owner,
-				},
-				...{
-					pa
-				}
-			}
+			pa
 		)
 		return tx
 	},

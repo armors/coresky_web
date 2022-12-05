@@ -134,6 +134,7 @@ export default {
       return this.$Web3.utils.fromWei(v.ckOrdersEntity.basePrice.toString())
     },
     async manyBuy() {
+      this.buyBtnLoading = true
       let sellers = []
       this.coreskyCart.forEach(item => {
         item.ckOrdersEntity.basePrice = item.ckOrdersEntity.basePrice.toString()
@@ -169,9 +170,16 @@ export default {
         console.log(sigBuyer)
       }
       console.log(buyers, sellers)
-      const atomicMatchWrap = await this.$sdk._atomicMatchWrap(buyers, sellers, this.user.coinbase, new BigNumber(1.5).multipliedBy(new BigNumber(this.totalPrice)))
-      console.log(atomicMatchWrap)
-      this.clearCart()
+      try {
+        // const atomicMatchWrap = await this.$sdk._atomicMatchWrap(buyers, sellers, this.user.coinbase, new BigNumber(1.5).multipliedBy(new BigNumber(this.totalPrice)))
+        const atomicMatchWrap = await this.$sdk._atomicMatchWrap(buyers, sellers, this.user.coinbase, this.totalPrice)
+        console.log(atomicMatchWrap)
+        this.clearCart()
+        this.buyBtnLoading = false
+      } catch (e) {
+        this.buyBtnLoading = true
+      }
+
     },
 
   },
