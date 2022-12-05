@@ -102,16 +102,36 @@ export default {
     },
   },
   collect: {
+    tokenQuery: {
+      url: '/collection/token/query',
+      method: "post",
+    },
+    tokenCancel: {
+      url: '/collection/token/cancel',
+      method: "post",
+    },
+    tokenFollow: {
+      url: '/collection/token/follow',
+      method: "post",
+    },
+    contractQuery: {
+      url: '/collection/contract/query',
+      method: "post",
+    },
+    contractCancel: {
+      url: '/collection/contract/cancel',
+      method: "post",
+    },
+    contractFollow: {
+      url: '/collection/contract/follow',
+      method: "post",
+    },
     info: {
       url: "/collections/info",
       method: "post",
     },
     query: {
       url: "/collections/query",
-      method: "post",
-    },
-    tokenQuery: {
-      url: "/token/query",
       method: "post",
     },
     tokenInfo: {

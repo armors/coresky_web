@@ -131,7 +131,7 @@
           </div>
           <div class="nft-name">
             <span>{{tokenInfo.ckCollectionsInfoEntity.name}} #{{tokenInfo.tokenId}}</span>
-            <div class="icon_shoucang" alt="" />
+            <div class="icon_shoucang" :class="{active: tokenInfo.followStatus}" alt=""  @click="followNft"/>
           </div>
           <div class="nft-address">
             <div class="add-item">
@@ -367,9 +367,9 @@
       }
     },
     getTokenInfo () {
-      this.$api("collect.tokenInfo", this.tokenInfoParams).then(async (res) => {
+      this.$api("collect.tokenInfo", this.tokenInfoParams).then((res) => {
         this.tokenInfo = res.debug
-        this.tokenInfo.ckCollectionsInfoEntity.floorPrice = '0.02'
+        // this.tokenInfo.ckCollectionsInfoEntity.floorPrice = '0.02'
         this.ckOrdersEntityList = this.tokenInfo.ckOrdersEntityList || []
         this.isInCart()
       })
@@ -442,6 +442,16 @@
     makeOfferSuccess(v) {
       console.log(v)
       this.getTokenInfo()
+    },
+    followNft () {
+      if (!this.tokenInfo.contract || !this.tokenInfo.tokenId) return
+      const tokenColloctUrl = this.tokenInfo.followStatus ? "collect.tokenCancel" : "collect.tokenFollow"
+      this.$api(tokenColloctUrl, {
+        "contract": this.tokenInfo.contract,
+        "tokenId": this.tokenInfo.tokenId
+      }).then((res) => {
+        this.tokenInfo.followStatus = !this.tokenInfo.followStatus
+      })
     },
   },
 };
