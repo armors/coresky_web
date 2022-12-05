@@ -528,9 +528,10 @@
     }
   }
 }
-.custom-dialog {
+.el-dialog.custom-dialog {
   padding: 40px;
   height: auto;
+  width: 700px;
   .el-dialog__header {
     padding: 0;
     display: flex;
