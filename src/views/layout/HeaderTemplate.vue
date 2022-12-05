@@ -72,9 +72,9 @@
         </el-button>
         <!-- </router-link> -->
 
-        <router-link to="/connect" class="head-connect display-flex box-center" v-if="!connected">
+        <div class="head-connect display-flex box-center" v-if="!connected" @click="login">
           {{ $t("navigation.connectWallet") }}
-        </router-link>
+        </div>
 
         <div class="user-link header-margin-l" v-else>
           <div class="user-popover">
@@ -154,7 +154,24 @@ export default {
     }
     window.addEventListener("scroll", this.handleScroll);
   },
+  mounted() {
+    // this.login()
+  },
   methods: {
+    async login(value='metamask') {
+      console.log('header connectSign')
+      this.$store.dispatch("connectAndSign", value).then(res=>{
+        if(res && this.$tools.checkResponse(res)){
+          console.log(res)
+          // var query = this.$route.query;
+          // if (query && query.redirect) {
+          //   this.$router.push(query.redirect);
+          // } else {
+          //   this.$router.push("/");
+          // }
+        }
+      });
+    },
     toggleDark () {
       console.log('toggleDark')
       const isDark = useDark()
@@ -346,6 +363,7 @@ export default {
 }
 
 .head-connect {
+  cursor: pointer;
   display: flex;
   padding: 0 15px;
   color: $color-white;

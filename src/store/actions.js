@@ -164,7 +164,7 @@ export default {
         address: state.user.coinbase,
       };
       api("user.info", data).then((res) => {
-        if (tools.checkResponse(res)) {
+        if (res.code === 200) {
           let _data = Object.assign({}, res.debug, {
             address: state.user.coinbase,
           });
@@ -205,11 +205,10 @@ export default {
         }
         return resolve();
       }
-
       commit("CONNECT", result);
       await dispatch("authinfo");
       var items = getLocalStorage("CoreskyAuthorization");
-      console.log(items)
+      console.log('items.CoreskyAuthorization', items.CoreskyAuthorization)
       if (!items.CoreskyAuthorization) {
         await dispatch("signLogin");
       }
@@ -263,14 +262,21 @@ export default {
         tools.message(result.error);
         return resolve();
       }
-
       commit("WEB3", result);
+      commit("CONNECT", result);
       let data = {
         coinbase: result.coinbase,
         networkId: result.networkId,
       };
-      result = await dispatch("signLogin", data);
-      resolve(result);
+      var items = getLocalStorage("CoreskyAuthorization");
+      console.log('items.CoreskyAuthorization', items.CoreskyAuthorization)
+      if (!items.CoreskyAuthorization) {
+        result = await dispatch("signLogin", data);
+        resolve(result);
+      }else {
+        await dispatch("authinfo");
+      }
+
     });
   },
   countNotices({ state, commit }) {

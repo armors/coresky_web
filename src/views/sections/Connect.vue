@@ -17,10 +17,10 @@
           <div>{{$t('connect.text3')}}</div>
         </div>
 
-        <div class="wallet-item display-flex box-center-Y" @click="login('metamask')">
-          <div class="wallet-icon"><img src="@/assets/img/metamask.png"/></div>
-          <div class="text">{{$t('connect.text4')}}</div>
-        </div>
+<!--        <div class="wallet-item display-flex box-center-Y" @click="login('metamask')">-->
+<!--          <div class="wallet-icon"><img src="@/assets/img/metamask.png"/></div>-->
+<!--          <div class="text">{{$t('connect.text4')}}</div>-->
+<!--        </div>-->
 
         <div class="c9">
           {{$t('connect.text5')}}
@@ -36,6 +36,7 @@ export default {
   },
   mounted(){
     if(this.connected){
+      console.log(this.connected)
       this.$router.push("/");
     }
   },
@@ -45,19 +46,19 @@ export default {
     }
   },
   methods: {
-    async login(value) {
-      this.$store.dispatch("connectAndSign", value).then(res=>{
-        if(res && this.$tools.checkResponse(res)){
-          console.log(res)
-          // var query = this.$route.query;
-          // if (query && query.redirect) {
-          //   this.$router.push(query.redirect);
-          // } else {
-          //   this.$router.push("/");
-          // }
-        }
-      });        
-    },
+    // async login(value='metamask') {
+    //   this.$store.dispatch("connectAndSign", value).then(res=>{
+    //     if(res && this.$tools.checkResponse(res)){
+    //       console.log(res)
+    //       // var query = this.$route.query;
+    //       // if (query && query.redirect) {
+    //       //   this.$router.push(query.redirect);
+    //       // } else {
+    //       //   this.$router.push("/");
+    //       // }
+    //     }
+    //   });
+    // },
     goBack() {
       this.$router.go(-1);
     },

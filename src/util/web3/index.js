@@ -55,6 +55,7 @@ export default {
     return await this.connectWeb3();
   },
   accountsChanged(accounts) {
+    console.log('accountsChanged', accounts)
     if (!store.state.connected) return;
     store.dispatch("logout");
     if (accounts.length) {

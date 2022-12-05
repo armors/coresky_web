@@ -65,15 +65,18 @@
         });
       },
       async initWeb3 () {
-        var connected = this.$web3.checkWeb3();
-        if (connected) {
-          let result = await this.$store.dispatch("connect", true);
-          if (result) {
-            // 连接成功，则重新加载用户信息
-            // this.$store.dispatch("reload");
-            this.$store.dispatch("authinfo");
-          }
-        }
+        console.log('initWeb3')
+        let result = await this.$store.dispatch("connectAndSign", true);
+        console.log(result)
+        // var connected = this.$web3.checkWeb3();
+        // if (connected) {
+        //   if (result) {
+        //     let result = await this.$store.dispatch("connectAndSign", true);
+        //     // 连接成功，则重新加载用户信息
+        //     // this.$store.dispatch("reload");
+        //     this.$store.dispatch("authinfo");
+        //   }
+        // }
       },
       ...mapActions(["changeCurrentRouteTo", "setCurrentView"]),
     },
