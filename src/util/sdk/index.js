@@ -695,20 +695,39 @@ export default {
 		console.log(sells)
 		console.log(buySigs)
 		console.log(sellSigs)
-		let contract = await this.getMarketWrapContract();
-		let tx = await contract.atomicMatchWrap(
+		console.log([
 			buys,
 			buySigs,
 			sells,
 			sellSigs,
 			ZERO_HASH,
+			ethers.utils.parseEther(value.toString()),
 			{
 				from: owner,
 				value: ethers.utils.parseEther(value.toString())
 				// value: ethers.utils.parseEther("0.1")
 			}
-		)
-		return tx
+			])
+		try {
+			let contract = await this.getMarketWrapContract();
+			let tx = await contract.atomicMatchWrap(
+				buys,
+				buySigs,
+				sells,
+				sellSigs,
+				ZERO_HASH,
+				ethers.utils.parseEther(value.toString()),
+				{
+					from: owner,
+					value: ethers.utils.parseEther(value.toString())
+					// value: ethers.utils.parseEther("0.1")
+				}
+			)
+			return tx
+		} catch (e) {
+			return {error: e.message};
+		}
+
 	},
 	// self start
 

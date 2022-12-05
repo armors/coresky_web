@@ -64,19 +64,43 @@
           this.isRouterAlive = true;
         });
       },
-      async initWeb3 () {
-        console.log('initWeb3')
-        let result = await this.$store.dispatch("connectAndSign", true);
-        console.log(result)
+      async connectWalletE () {
+        let connected = this.$web3.checkWeb3();
+        if (!connected) {
+          setTimeout(() => {
+            this.connectWalletE()
+          }, 1000)
+        } else {
+          if (connected) {
+            let result = await this.$store.dispatch("connectAndSign");
+            console.log(result)
+            // 连接成功，则重新加载用户信息
+            // this.$store.dispatch("reload");
+            // this.$store.dispatch("authinfo");
+          }
+        }
+      },
+      initWeb3 () {
+        // console.log('initWeb3')
         // var connected = this.$web3.checkWeb3();
-        // if (connected) {
-        //   if (result) {
-        //     let result = await this.$store.dispatch("connectAndSign", true);
+        // let result = await this.$store.dispatch("connectAndSign");
+        // console.log(result)
+
+        this.connectWalletE()
+        // let connected = this.$web3.checkWeb3();
+        // if (!connected) {
+        //   setTimeout(() => {
+        //     let connected = this.$web3.checkWeb3();
+        //   })
+        // } else {
+        //   if (connected) {
+        //     let result = await this.$store.dispatch("connectAndSign");
         //     // 连接成功，则重新加载用户信息
         //     // this.$store.dispatch("reload");
-        //     this.$store.dispatch("authinfo");
+        //     // this.$store.dispatch("authinfo");
         //   }
         // }
+
       },
       ...mapActions(["changeCurrentRouteTo", "setCurrentView"]),
     },

@@ -178,12 +178,19 @@ export default {
       }
       console.log(buyers, sellers)
       try {
-        const atomicMatchWrap = await this.$sdk._atomicMatchWrap(buyers, sellers, this.user.coinbase, new BigNumber(1.5).multipliedBy(new BigNumber(this.totalPrice)))
-        // const atomicMatchWrap = await this.$sdk._atomicMatchWrap(buyers, sellers, this.user.coinbase, this.totalPrice)
+        const atomicMatchWrap = await this.$sdk._atomicMatchWrap(buyers, sellers, this.user.coinbase, this.totalPrice)
         console.log(atomicMatchWrap)
-        this.clearCart()
-        this.buyBtnLoading = false
-        this.$tools.message('购买成功', 'success');
+        // const atomicMatchWrap = await this.$sdk._atomicMatchWrap(buyers, sellers, this.user.coinbase, this.totalPrice)
+        if (typeof atomicMatchWrap === 'object')  {
+          this.buyBtnLoading = false
+          this.$tools.message(atomicMatchWrap.error, 'error');
+        } else {
+          console.log(atomicMatchWrap)
+          this.clearCart()
+          this.buyBtnLoading = false
+          this.$tools.message('购买成功', 'success');
+        }
+
       } catch (e) {
         this.buyBtnLoading = false
       }

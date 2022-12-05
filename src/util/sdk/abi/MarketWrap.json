@@ -304,6 +304,11 @@
         "internalType": "bytes32",
         "name": "rssMetadata",
         "type": "bytes32"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "values",
+        "type": "uint256[]"
       }
     ],
     "name": "atomicMatchWrap",
