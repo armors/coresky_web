@@ -13,7 +13,7 @@
       <image-box class="img-box" :src="tokenInfo.ckCollectionsInfoEntity.image"></image-box>
       <div class="box-center">
         <span class="tokenid">#{{tokenInfo.tokenId}}</span>
-        <span class="collection-name">{{tokenInfo.ckCollectionsInfoEntity.name}}
+        <span class="collection-name">{{tokenInfo.ckCollectionsInfoEntity.name || '--'}}
           <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
         </span>
       </div>

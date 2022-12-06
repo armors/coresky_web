@@ -184,7 +184,7 @@
                 @click="addCart">Add to Cart</el-button>
               <el-button class="btnWhite" v-if="!isSelf" :disabled="!tokenInfo.contract" @click="showMakeOfferNFT">Make
                 Offer</el-button>
-              <el-button class="btnWhite" @click="showAcceptOfferNFT">Accept</el-button>
+              <el-button v-if="isSelf && ckAuctionEntityList.length > 0" class="btnWhite" :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT">Accept</el-button>
 
             </div>
           </div>
@@ -219,7 +219,7 @@
                 <div class="list-th th5">From</div>
               </div>
 
-              <div class="list-tr" v-for="(v, i) of ckOrdersEntityList" :key="`make-offer-${i}`">
+              <div class="list-tr" v-for="(v, i) of ckAuctionEntityList" :key="`make-offer-${i}`">
                 <div class="list-th th1">
                   <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
                   {{nftPrice(v.basePrice)}}
@@ -277,7 +277,7 @@
     <NFTDialogBuy ref="NFTDialogBuy" @buySuccess="buySuccess"></NFTDialogBuy>
     <NFTDialogSell ref="NFTDialogSell" @sellCreateSuccess="sellCreateSuccess"></NFTDialogSell>
     <NFTDialogMakeOffer ref="NFTDialogMakeOffer" @makeOfferSuccess="makeOfferSuccess"></NFTDialogMakeOffer>
-    <NFTDialogAcceptOffer ref="NFTDialogAcceptOffer" />
+    <NFTDialogAcceptOffer ref="NFTDialogAcceptOffer" @acceptOfferSuccess="acceptOfferSuccess"/>
 
   </div>
 </template>
@@ -304,6 +304,7 @@ export default {
       buyBtnLoading: false,
       cancelBtnLoading: false,
       sellDialogBtnLoading: false,
+      acceptDialogBtnLoading: false,
       checkList: [],
       form: {
         price: '',
@@ -337,7 +338,7 @@ export default {
         contract: '',
         tokenId: ''
       },
-      ckOrdersEntityList: [],
+      ckAuctionEntityList: [],
       isCart: false,
     };
   },
@@ -382,7 +383,7 @@ export default {
       this.$api("collect.tokenInfo", this.tokenInfoParams).then((res) => {
         this.tokenInfo = res.debug
         // this.tokenInfo.ckCollectionsInfoEntity.floorPrice = '0.02'
-        this.ckOrdersEntityList = this.tokenInfo.ckOrdersEntityList || []
+        this.ckAuctionEntityList = this.tokenInfo.ckAuctionEntityList || []
         this.isInCart()
       })
     },
@@ -455,8 +456,13 @@ export default {
       console.log(v)
       this.getTokenInfo()
     },
+    acceptOfferSuccess (v) {
+      console.log(v)
+      this.getTokenInfo()
+    },
     showAcceptOfferNFT () {
-      this.$refs.NFTDialogAcceptOffer.show()
+      this.acceptDialogBtnLoading = true
+      this.$refs.NFTDialogAcceptOffer.show(this.tokenInfo, this.ckAuctionEntityList[0])
     },
     followNft () {
       if (!this.tokenInfo.contract || !this.tokenInfo.tokenId) return

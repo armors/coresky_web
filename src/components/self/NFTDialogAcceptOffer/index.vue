@@ -1,27 +1,27 @@
 <template>
-  <el-dialog :model-value="isShowDialog" :show-close="false" :close-on-click-modal="false" @closed="closed"
+  <el-dialog :model-value="isShowAcceptDialog" :show-close="false" :close-on-click-modal="false" @closed="closed"
     custom-class="custom-dialog acceptOffer" destroy-on-close>
     <template #title>
       <div class="left">
         <span>Accept the offer</span>
       </div>
-      <el-icon @click="isShowDialog=false">
+      <el-icon @click="isShowAcceptDialog=false">
         <Close />
       </el-icon>
     </template>
     <div class="nft-box">
       <image-box class="img-box"
-        src="https://storage.nfte.ai/nft/img/eth/0x1/8144772932469079235_604207782.webp?x-oss-process=image/resize,m_lfit,h_900">
+        :src="tokenInfo.ckCollectionsInfoEntity.image">
       </image-box>
       <div class="box-center">
-        <span class="tokenid">#5576</span>
+        <span class="tokenid">#{{tokenInfo.tokenId}}</span>
         <span class="collection-name">
-          Name of this collection
+          {{tokenInfo.ckCollectionsInfoEntity.name || '--'}}
           <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
         </span>
       </div>
       <div class="box-right">
-        <div class="price">0.0045 WETH</div>
+        <div class="price">{{nftPrice}} WETH</div>
         <div class="price2">$4.79</div>
       </div>
     </div>
@@ -58,8 +58,8 @@
         <span>$4.79</span>
       </div>
     </div>
-
-    <el-button type="primary" class="btnBuy" :loading="buyBtnLoading" @click="buyNft">Buy</el-button>
+    <el-button type="primary" class="btnBuy" v-if="isApproved" :loading="acceptBtnLoading" @click="acceptOffer">Accept Offer</el-button>
+    <el-button type="primary" class="btnBuy" :loading="acceptBtnLoading" v-else @click="setApproveAll">Approve NFT</el-button>
   </el-dialog>
 </template>
 
@@ -70,8 +70,13 @@ export default {
   name: "NFTDialogAcceptOffer",
   data () {
     return {
-      isShowDialog: false,
-      buyBtnLoading: false,
+      isShowAcceptDialog: false,
+      acceptBtnLoading: false,
+      tokenInfo: {},
+      acceptInfo: {},
+      isApproved: true,
+      registryOwner: '',
+      nftPrice: '--',
       form: {
         price: '',
         date: '',
@@ -86,10 +91,194 @@ export default {
     }
   },
   methods: {
-    show () {
-      this.isShowDialog = true
+    async show (tokenInfo, acceptInfo) {
+      this.isShowAcceptDialog = true
+      this.tokenInfo = tokenInfo
+      this.acceptInfo = acceptInfo
+      this.tokenInfo.tokenId = parseInt(this.tokenInfo.tokenId)
+      console.log(this.tokenInfo)
+      this.nftPrice = await this.$sdk.fromWeiNum(this.acceptInfo.basePrice)
+      try {
+        await this.getRegistryOwner()
+        let order = {
+          type: 'IERC721',
+          address: this.tokenInfo.contract,
+          tokenId: this.tokenInfo.tokenId,
+        };
+        this.isApproved = await this.$sdk.isApprovedForAll(
+          order,
+          this.user.coinbase,
+          this.registryOwner,
+        );
+        this.isShowAcceptDialog = true
+        this.$parent.acceptDialogBtnLoading = false
+      } catch (e) {
+        console.log(e)
+        this.$parent.acceptDialogBtnLoading = false
+      }
+    },
+    // 挂单开始
+    // 注册地址
+    async getRegistryOwner () {
+      console.log(this.user.coinbase)
+      let registryOwner = await this.$sdk.getOwnerProxy(this.user.coinbase);
+      if (typeof registryOwner == 'object' && registryOwner.error) {
+        return registryOwner;
+      }
+      this.registryOwner = registryOwner.proxiesAddress
+      console.log(registryOwner)
     },
 
+    // 授权
+    async setApproveAll () {
+      let order = {
+        type: 'IERC721',
+        address: this.tokenInfo.contract,
+        tokenId: this.tokenInfo.tokenId,
+      };
+      let isApproved = await this.$sdk.isApprovedForAll(
+        order,
+        this.user.coinbase,
+        this.registryOwner,
+      );
+      console.log(isApproved)
+      if (typeof isApproved == "object" && isApproved.error) {
+        return isApproved;
+      }
+      if (!isApproved) {
+        let result = await this.$sdk.setApprovalForAll(
+          order,
+          this.user.coinbase,
+          this.registryOwner,
+          true
+        );
+        console.log(result)
+      } else {
+        console.log('true')
+      }
+      // return result;
+    },
+    async acceptOffer () {
+      this.acceptBtnLoading = true
+      let buyer = this.acceptInfo
+      buyer.basePrice = buyer.basePrice.toString()
+      buyer.tokenId = parseInt(buyer.tokenId)
+      let seller = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, buyer.contract, 1, buyer.tokenId)
+      seller = {
+        ...seller,
+        // taker: buyer.maker,
+        expirationTime: buyer.expirationTime,
+        paymentToken: process.env.VUE_APP_WETH,
+        listingTime: buyer.listingTime,
+        // feeRecipient: this.$sdk.FEE_ADDRESS(),
+        basePrice: buyer.basePrice
+      }
+      const arrayParams = [
+        [
+          seller.exchange,
+          seller.maker,
+          seller.taker,
+          seller.feeRecipient,
+          seller.target,
+          seller.staticTarget,
+          seller.paymentToken
+        ],
+        [
+          seller.makerRelayerFee,
+          seller.takerRelayerFee,
+          seller.makerProtocolFee,
+          seller.takerProtocolFee,
+          seller.basePrice,
+          seller.extra,
+          seller.listingTime,
+          seller.expirationTime,
+          seller.salt
+        ],
+        seller.feeMethod,
+        seller.side,
+        seller.saleKind,
+        seller.howToCall,
+        seller.calldata,
+        seller.replacementPattern,
+        seller.staticExtradata
+      ]
+      console.log(buyer, seller)
+      try {
+        const hashToSign = await this.$sdk.callhashToSign_(seller)
+        console.log(hashToSign)
+        const sig = await this.$sdk.signature(seller, this.user.coinbase)
+        console.log(sig)
+        seller = {
+          ...seller,
+          ...{
+            v: sig.v,
+            r: sig.r,
+            s: sig.s,
+            hash: hashToSign,
+            sign: JSON.stringify(sig),
+          }
+        }
+        const validateOrderArrayParams = [
+          ...arrayParams,
+          ...[
+            sig.v,
+            sig.r,
+            sig.s
+          ]
+        ]
+        console.log(validateOrderArrayParams)
+        const validateOrderArrayParams1 = [
+          [
+            seller.exchange,
+            seller.maker,
+            seller.taker,
+            seller.feeRecipient,
+            seller.target,
+            seller.staticTarget,
+            seller.paymentToken
+          ],
+          [
+            seller.makerRelayerFee,
+            seller.takerRelayerFee,
+            seller.makerProtocolFee,
+            seller.takerProtocolFee,
+            seller.basePrice,
+            seller.extra,
+            seller.listingTime,
+            seller.expirationTime,
+            seller.salt
+          ],
+          seller.feeMethod,
+          seller.side,
+          seller.saleKind,
+          seller.howToCall,
+          seller.calldata,
+          seller.replacementPattern,
+          seller.staticExtradata,
+          sig.v,
+          sig.r,
+          sig.s
+        ]
+        console.log(validateOrderArrayParams1)
+        console.log(arrayParams)
+        console.log(JSON.stringify(buyer))
+        console.log(JSON.stringify(seller))
+        console.log(await this.$sdk.validateOrderParameters(seller))
+        console.log(await this.$sdk.validateOrderParameters(buyer))
+        console.log(buyer, seller)
+        console.log(await this.$sdk.orderCanMatch(buyer, seller))
+        const hashAtomicMatch = await this.$sdk.atomicMatch(seller, buyer, this.user.coinbase, buyer.maker);
+        console.log(hashAtomicMatch)
+        this.acceptBtnLoading = false
+        this.isShowAcceptDialog = false
+        this.$tools.message('接受报价完成', 'success');
+        this.$emit('acceptOfferSuccess', hashAtomicMatch)
+      } catch (e) {
+        console.log(e)
+        this.acceptBtnLoading = false
+      }
+
+    },
   }
 }
 </script>

@@ -307,6 +307,10 @@ export default {
       url: "/order/info",
       method: "post",
     },
+    orderAuction: {
+      url: "/order/auction",
+      method: "post",
+    },
     // self end
     submit: {
       url: "/order/submit",

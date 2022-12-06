@@ -28,7 +28,7 @@
           </el-select>
         </div>
       </el-form-item>
-      <el-form-item label="Expiration date">
+      <el-form-item label="Expiration date" prop="time">
         <div class="flex-content">
           <el-date-picker v-model="form.time" size="large" type="datetime" placeholder="Pick a Date" style=""
             format="YYYY-MM-DD HH:mm" />
@@ -73,11 +73,14 @@ export default {
         price: '',
         date: '',
         time: '',
-        symbol: ''
+        symbol: 'WETH'
       },
       rules: {
         price: [
           { required: true, message: 'Please input price', trigger: 'blur' },
+        ],
+        time: [
+          { required: true, message: 'Please Pick a Date', trigger: 'blur' },
         ],
       },
       options: [
@@ -138,7 +141,7 @@ export default {
           paymentToken: process.env.VUE_APP_WETH,
           listingTime: Date.parse(new Date().toString()) / 1000 - 600,
           feeRecipient: this.$sdk.FEE_ADDRESS(),
-          basePrice: this.$Web3.utils.toWei('0.02')
+          basePrice: this.$Web3.utils.toWei(this.form.price)
         }
       }
       const sigBuyer = await this.$sdk.signature(buyer, this.user.coinbase)
@@ -150,7 +153,6 @@ export default {
           hash: hashToSign,
           tokenId: this.tokenInfo.tokenId,
           contract: this.tokenInfo.contract,
-          type: this.$sdk.valueOrderType("MAKE_OFFER"),
           v: sigBuyer.v,
           r: sigBuyer.r,
           s: sigBuyer.s,
@@ -176,7 +178,7 @@ export default {
         }, this.user.coinbase, process.env.VUE_APP_MARKET_TOKEN_TRANSFER_PROXY)
         console.log(parseFloat(allowancePayToken1))
       }
-      this.$api("order.create", buyer).then((res) => {
+      this.$api("order.orderAuction", buyer).then((res) => {
         this.btnMakeOfferLoading = false
         this.isShowMakeOfferDialog = false
         this.$tools.message('报价成功', 'success');
