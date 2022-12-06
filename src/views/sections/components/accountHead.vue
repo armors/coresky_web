@@ -1,21 +1,22 @@
 <template>
   <div class="account-wrap">
     <div class="bg-box"
-      :style=" account.bannerImage ? 'background: url('+ account.bannerImage +') no-repeat; background-size: cover;':'' ">
+      :style=" account.background ? 'background: url('+ account.background +') no-repeat; background-size: cover;':'' ">
     </div>
     <div class="account-info">
       <div class="info-top">
         <div class="avatar-box">
-          <img :src="account.image" alt="">
+          <img :src="account.photo" alt="">
         </div>
         <div class="info-title">
           <div class="title">
-            <span>{{account.name}}</span>
+            <span>{{account.nickname}}</span>
             <!-- <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt=""> -->
           </div>
           <div class="creator">
-            <span class="txt">0x595…da687</span>
-            <el-icon>
+            <span class="txt">{{$filters.ellipsisAddress(account.address)}}</span>
+            <el-icon v-clipboard:copy="account.address" v-clipboard:success="onSuccessCopy"
+              v-clipboard:error="onErrorCopy">
               <CopyDocument />
             </el-icon>
           </div>
@@ -23,7 +24,7 @@
         <div class="info-share">
         </div>
       </div>
-      <div class="info-rem">{{account.info}}</div>
+      <div class="info-rem">{{ account.intro || 'The brief introduction has not been filled in yet'}}</div>
     </div>
   </div>
 
@@ -37,23 +38,62 @@ export default {
 
   },
   props: {
-
+    address: {
+      type: String,
+      default: ''
+    },
   },
-  computed: {
-
+  watch: {
+    address () {
+      if (this.address) {
+        this.init()
+      }
+    }
   },
   data () {
     return {
+      // account: {
+      //   bannerImage: "https://storage.nfte.ai/asset/collection/featured/BEEWQLPGNIJCWCXJUDSRUWRWOWSOYCCT.jpg?x-oss-process=image/resize,m_fill,w_4096,h_320",
+      //   image: 'https://storage.nfte.ai/asset/collection/featured/MFYROFVZKZSCSHUWXRGBZAAQPZWMOKFM.jpg?x-oss-process=image/resize,m_fill,w_256,h_256',
+      //   name: 'Azuki123',
+      //   info: 'Here is a self introduction Here is a self introduction Here is a self introduction'
+      // },
       account: {
-        bannerImage: "https://storage.nfte.ai/asset/collection/featured/BEEWQLPGNIJCWCXJUDSRUWRWOWSOYCCT.jpg?x-oss-process=image/resize,m_fill,w_4096,h_320",
-        image: 'https://storage.nfte.ai/asset/collection/featured/MFYROFVZKZSCSHUWXRGBZAAQPZWMOKFM.jpg?x-oss-process=image/resize,m_fill,w_256,h_256',
-        name: 'Azuki123',
-        info: 'Here is a self introduction Here is a self introduction Here is a self introduction'
+        address: '',
+        background: '',
+        createDate: '',
+        email: '',
+        nickname: '',
+        photo: '',
+        telegram: '',
+        twitter: '',
+        intro: 'Here is a self introduction Here is a self introduction Here is a self introduction'
       }
     }
   },
   methods: {
+    onSuccessCopy () {
+      this.$tools.message(this.$t("request.copySuccess"), "success");
+    },
+    onErrorCopy () {
+      this.$tools.message(this.$t("request.copyError"));
+    },
+    init () {
+      if (this.address) {
+        this.$api("user.info", { address: this.address }).then((res) => {
+          if (this.$tools.checkResponse(res)) {
+            this.account = res.data
+            // this.account.info = 'Here is a self introduction Here is a self introduction Here is a self introduction'
+          } else {
+            this.$tools.message(res.errmsg);
+          }
+        });
+      }
+    }
   },
+  mounted () {
+    this.init()
+  }
 }
 
 </script>
@@ -99,7 +139,7 @@ export default {
             line-height: 30px;
             color: $color-black2;
           }
-          .el-icon{
+          .el-icon {
             cursor: pointer;
             font-size: 16px;
             height: 16px;

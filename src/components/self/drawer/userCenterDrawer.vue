@@ -18,36 +18,56 @@
         <img class="icon" src="@/assets/images/icons/icon_nft.svg" alt="">
         <span>My NFTs</span>
       </div>
-      <div class="nav-item">
+      <div class="nav-item" @click="goView('/account/'+ user.coinbase+'?tag=Collections')">
         <img class="icon" src="@/assets/images/icons/icon_collection.svg" alt="">
         <span>My Collections</span>
       </div>
-      <div class="nav-item">
+      <div class="nav-item" @click="goView('/account/'+ user.coinbase+'?tag=Favorites')">
         <img class="icon" src="@/assets/images/icons/icon_watchlist2.svg" alt="">
-        <span>My Watchlist</span>
+        <span>My Favorites</span>
       </div>
-      <div class="nav-item">
+      <!-- <div class="nav-item">
         <img class="icon" src="@/assets/images/icons/icon_quotation.svg" alt="">
         <span>My Quotation</span>
-      </div>
-      <div class="nav-item">
+      </div> -->
+      <!-- <div class="nav-item">
         <img class="icon" src="@/assets/images/icons/icon_collect2.svg" alt="">
         <span>My Collect</span>
+      </div> -->
+      <div class="nav-item">
+        <img class="icon" src="@/assets/images/icons/icon_quotation.svg" alt="">
+        <span>My Listing</span>
       </div>
       <div class="nav-item">
         <img class="icon" src="@/assets/images/icons/icon_transaction.svg" alt="">
-        <span>Transaction Record</span>
+        <span>My Activites</span>
       </div>
+      <!-- <div class="nav-item">
+        <img class="icon" src="@/assets/images/icons/icon_transaction.svg" alt="">
+        <span>My Coupon</span>
+      </div>
+      <div class="nav-item">
+        <img class="icon" src="@/assets/images/icons/icon_transaction.svg" alt="">
+        <span>My Launchpad</span>
+      </div> -->
       <div class="nav-item line">
       </div>
       <div class="nav-item">
+        <img class="icon" src="@/assets/images/icons/icon_collect2.svg" alt="">
+        <span>My Coupons</span>
+      </div>
+      <div class="nav-item">
+        <img class="icon" src="@/assets/images/icons/icon_nft.svg" alt="">
+        <span>My Launchpad</span>
+      </div>
+      <!-- <div class="nav-item">
         <img class="icon" src="@/assets/images/icons/icon_nft.svg" alt="">
         <span>My Collect</span>
       </div>
       <div class="nav-item">
         <img class="icon" src="@/assets/images/icons/icon_nft.svg" alt="">
         <span>Transaction Record</span>
-      </div>
+      </div> -->
     </div>
     <div class="drawer-wallet">
       <div class="wallet-item">

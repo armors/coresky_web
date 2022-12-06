@@ -1,21 +1,24 @@
 <template>
   <div class="account-wrap">
-    <accountHead />
+    <accountHead :address="address" />
     <div class="account-page">
       <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick" :lazy="true">
-        <el-tab-pane label="Collected" name="first">
-          <accountCollected />
+        <el-tab-pane label="My NFTs" name="first">
+          <accountNFTs :address="address" />
         </el-tab-pane>
-        <el-tab-pane label="MyCollection" name="second">
+        <el-tab-pane label="My Collections" name="second">
+          <accountCollection />
+        </el-tab-pane>
+        <el-tab-pane label="My Favorites" name="third">
           <accountCollection />
         </el-tab-pane>
         <el-tab-pane label="My Listing" name="third">
           <accountCollection />
         </el-tab-pane>
-        <el-tab-pane label="My offer" name="fourth">My offer</el-tab-pane>
-        <el-tab-pane label="Favorited" name="Favorited">Favorited</el-tab-pane>
-        <el-tab-pane label="Trading History" name="Trading">Trading History</el-tab-pane>
-        <el-tab-pane label="My Coupon" name="Coupon">My Coupon</el-tab-pane>
+        <el-tab-pane label="My Activites" name="fourth">My Activites</el-tab-pane>
+        <!-- <el-tab-pane label="Favorited" name="Favorited">Favorited</el-tab-pane>
+        <el-tab-pane label="Trading History" name="Trading">Trading History</el-tab-pane> -->
+        <el-tab-pane label="My Coupons" name="Coupon">My Coupon</el-tab-pane>
         <el-tab-pane label="My Launchpad" name="Launchpad">My Launchpad</el-tab-pane>
       </el-tabs>
     </div>
@@ -25,6 +28,7 @@
 <script>
 
 import accountHead from './components/accountHead'
+import accountNFTs from './components/accountNFTs'
 import accountCollected from './components/accountCollected'
 import accountCollection from './components/accountCollection'
 export default {
@@ -33,7 +37,8 @@ export default {
   components: {
     accountHead,
     accountCollected,
-    accountCollection
+    accountCollection,
+    accountNFTs
   },
   data () {
     return {
@@ -46,6 +51,9 @@ export default {
     user () {
       return this.$store.state.user;
     },
+    address () {
+      return this.$route.params.address
+    }
   },
   watch: {
 
