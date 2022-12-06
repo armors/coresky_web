@@ -169,7 +169,7 @@ export default {
       if (this.makeOfferType === 1) {
         seller = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, buyer.contract, 1, buyer.tokenId)
       } else {
-        seller = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, buyer.contract, 1, buyer.tokenId, true, buy.maker)
+        seller = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, buyer.contract, 1, buyer.tokenId, true, buyer.maker)
       }
       seller = {
         ...seller,
