@@ -22,7 +22,7 @@ export default {
       url: "/user/config",
       method: "post",
     },
-    gasTracker:{
+    gasTracker: {
       url: "/config/gasTracker",
       method: "post",
     },
@@ -98,6 +98,10 @@ export default {
     },
     bid: {
       url: "/user/bid",
+      method: "post",
+    },
+    token: {
+      url: "/user/token",
       method: "post",
     },
   },

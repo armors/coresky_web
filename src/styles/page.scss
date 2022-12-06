@@ -281,7 +281,9 @@
           top: 0;
           transition: all 0.23s;
           height: 225.6px;
-          img {
+          width: 100%;
+          img,
+          .cover-image {
             height: 100%;
             width: 100%;
           }
