@@ -13,7 +13,9 @@ export default {
     total: 0,
     unread: 0,
   },
-  config: {},
+  config: {
+    loginMessage: "o8UtoUHbQu1wlNCIbkPDvPA7EiInFIKd75zT9gprPIrdqBh"
+  },
   gasTracker: null,
   web3: {
     address: null,

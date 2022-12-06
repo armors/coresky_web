@@ -83,6 +83,7 @@ export default {
         time: '',
         symbol: ''
       },
+      makeOfferType: 1 // 1单个nft报价 2 对集合报价
     }
   },
   computed: {
@@ -91,10 +92,11 @@ export default {
     }
   },
   methods: {
-    async show (tokenInfo, acceptInfo) {
+    async show (tokenInfo, acceptInfo, makeOfferType = 1) {
       this.isShowAcceptDialog = true
       this.tokenInfo = tokenInfo
       this.acceptInfo = acceptInfo
+      this.makeOfferType = makeOfferType
       this.tokenInfo.tokenId = parseInt(this.tokenInfo.tokenId)
       console.log(this.tokenInfo)
       this.nftPrice = await this.$sdk.fromWeiNum(this.acceptInfo.basePrice)
@@ -162,8 +164,13 @@ export default {
       this.acceptBtnLoading = true
       let buyer = this.acceptInfo
       buyer.basePrice = buyer.basePrice.toString()
-      buyer.tokenId = parseInt(buyer.tokenId)
-      let seller = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, buyer.contract, 1, buyer.tokenId)
+      buyer.tokenId = this.tokenInfo.tokenId
+      let seller = null
+      if (this.makeOfferType === 1) {
+        seller = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, buyer.contract, 1, buyer.tokenId)
+      } else {
+        seller = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, buyer.contract, 1, buyer.tokenId, true, buy.maker)
+      }
       seller = {
         ...seller,
         // taker: buyer.maker,

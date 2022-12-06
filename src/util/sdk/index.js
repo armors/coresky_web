@@ -10,9 +10,12 @@ const eth_util = require("ethereumjs-util");
 import web3 from "@/util/web3/index.js";
 import {ethers} from 'ethers'
 
-const encodeERC721ReplacementPatternSell = '0x000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000';
-const encodeERC721ReplacementPatternBuy = '0x00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
-
+const encodeERC721ReplacementPatternSell      = '0x000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000';
+const encodeERC721ReplacementPatternBuy       = '0x00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
+const encodeERC1155ReplacementPatternSell     = '0x000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
+const encodeERC1155ReplacementPatternBuy      = '0x00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
+const encodeERC721OfferReplacementPatternBuy  = '0x00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+const encodeERC721OfferReplacementPatternSell = '0x'
 const contract_ABI = [
 	"function transferFrom(address from, address to, uint256 tokenId)",
 	"function safeTransferFrom(address _from, address _to, uint256 _id, uint256 _value, bytes calldata _data)",
@@ -303,6 +306,9 @@ export default {
 		}
 		return iface.encodeFunctionData("transferFrom", [seller, to, id]);
 	},
+	 ERC721ABI(from, to, id) {
+		return iface.encodeFunctionData("transferFrom", [from, to, id]);
+	},
 	/**
 	 * 订单数据结构初始化
 	 * @param exchangeAddress
@@ -310,37 +316,49 @@ export default {
 	 * @param nftAddress
 	 * @param side
 	 * @param tokenId
+	 * @param isMaker 是否是集合报价
+	 * @param buyerAddress 集合挂单的时候buyer地址
 	 * @returns {{howToCall: number, side: number, salt: number, staticExtradata: string, _sender: *, listingTime: number, maker: *, makerRelayerFee: number, takerProtocolFee: number, target: *, paymentToken: string, staticTarget: string, takerRelayerFee: number, calldata: *, expirationTime: number, extra: number, exchange: *, saleKind: number, taker: string, makerProtocolFee: number, feeRecipient: string, feeMethod: number, replacementPattern: (string), basePrice: BigNumber}}
 	 */
-	makeOrder(exchangeAddress, sender, nftAddress, side = 0, tokenId = null) {
+	makeOrder(exchangeAddress, sender, nftAddress, side = 0, tokenId = null, isMaker=false, buyerAddress = '') {
+		let calldata = null
+		let replacementPattern = null
+		if (isMaker) {
+			calldata = (side === 1 ?
+				this.ERC721ABI(sender, buyerAddress, tokenId)
+				: this.ERC721ABI(ZERO_ADDRESS, sender, 0))
+			replacementPattern = side === 1 ? encodeERC721OfferReplacementPatternSell : encodeERC721OfferReplacementPatternBuy
+		} else {
+			calldata = tokenId !== null ? (side === 1 ?
+				this.sellERC721ABI(sender, tokenId)
+				: this.buyERC721ABI(sender, tokenId)) : '0x'
+			replacementPattern = side === 1 ? encodeERC721ReplacementPatternSell : encodeERC721ReplacementPatternBuy
+		}
 		return {
-			exchange: exchangeAddress,     // 当前 exhcnage 合约地址 default : exchangeAddress
-			maker: sender,                 // 订单创建者 default sender
-			taker: ZERO_ADDRESS,           // 订单参与者 require
-			makerRelayerFee: 250,          // 手续费  default: 0
-			takerRelayerFee: 0,            // 手续费  default: 0
-			makerProtocolFee: 0,           // 协议费  default: 0
-			takerProtocolFee: 0,           // 协议费  default: 0
-			feeRecipient: ZERO_ADDRESS,    // 平台费 接收账户 default: 0x0 买方和买方必须有一个是零地址
-			feeMethod: 1,                  // enum FeeMethod { ProtocolFee, SplitFee }  费用收取方法：只用支付协议费，或者 是需要同时支付协议费 和 平台费
-			side: side,                    // enum Side { Buy, Sell } 该订单是 卖方单 还是 买方单
-			saleKind: 0,                   // { FixedPrice, DutchAuction } 销售方式是 固定价格，还是采用 竞拍的方式
-			target: nftAddress,            // 交易的 nft 完成 NFT 转移
-			howToCall: 0,                  // 调用方式是 call 还是 delegatecall
-			calldata:
-				tokenId !== null ? (side === 1 ?
-					this.sellERC721ABI(sender, tokenId)
-					: this.buyERC721ABI(sender, tokenId)) : '0x',                // target 执行时的 calldata
-			replacementPattern: side === 1 ? encodeERC721ReplacementPatternSell : encodeERC721ReplacementPatternBuy,      // target 执行时的 calldata 可替换的参数
-			staticTarget: ZERO_ADDRESS,    // 静态调用（不修改状态）的 target 账户地址；为 0 表示没有这种调用
-			staticExtradata: '0x',         // 静态调用时设置的额外数据，最终交给 staticTarget 处理
-			paymentToken: ZERO_ADDRESS,    // 该地址为 0 ，表示使用 ether 支付，否则，表示使用一个 erc20 token 支付
-			basePrice: ZERO,               // 如果是 saleKind 固定价格，则该值就表示固定价格；否则，真正的价格，还包括 extra 部分. 价格单位为 Wei
-			extra: 0,                      // 竞拍方式下，extra 表示需要额外的最大值. 价格单位为 Wei
-			listingTime: 0,                // 挂单时间
-			expirationTime: 0,             // 订单过期失效时间
-			salt: SALT,                    // for collision
-			_sender: sender        // for wrap【不计算 hash 】
+			exchange: exchangeAddress,                     // 当前 exhcnage 合约地址 default : exchangeAddress
+			maker: sender,                                 // 订单创建者 default sender
+			taker: ZERO_ADDRESS,                           // 订单参与者 require
+			makerRelayerFee: 250,                          // 手续费  default: 0
+			takerRelayerFee: 0,                            // 手续费  default: 0
+			makerProtocolFee: 0,                           // 协议费  default: 0
+			takerProtocolFee: 0,                           // 协议费  default: 0
+			feeRecipient: ZERO_ADDRESS,                    // 平台费 接收账户 default: 0x0 买方和买方必须有一个是零地址
+			feeMethod: 1,                                  // enum FeeMethod { ProtocolFee, SplitFee }  费用收取方法：只用支付协议费，或者 是需要同时支付协议费 和 平台费
+			side: side,                                    // enum Side { Buy, Sell } 该订单是 卖方单 还是 买方单
+			saleKind: 0,                                   // { FixedPrice, DutchAuction } 销售方式是 固定价格，还是采用 竞拍的方式
+			target: nftAddress,                            // 交易的 nft 完成 NFT 转移
+			howToCall: 0,                                  // 调用方式是 call 还是 delegatecall
+			calldata: calldata,                            // target 执行时的 calldata
+			replacementPattern: replacementPattern,        // target 执行时的 calldata 可替换的参数
+			staticTarget: ZERO_ADDRESS,                    // 静态调用（不修改状态）的 target 账户地址；为 0 表示没有这种调用
+			staticExtradata: '0x',                         // 静态调用时设置的额外数据，最终交给 staticTarget 处理
+			paymentToken: ZERO_ADDRESS,                    // 该地址为 0 ，表示使用 ether 支付，否则，表示使用一个 erc20 token 支付
+			basePrice: ZERO,                               // 如果是 saleKind 固定价格，则该值就表示固定价格；否则，真正的价格，还包括 extra 部分. 价格单位为 Wei
+			extra: 0,                                      // 竞拍方式下，extra 表示需要额外的最大值. 价格单位为 Wei
+			listingTime: 0,                                // 挂单时间
+			expirationTime: 0,                             // 订单过期失效时间
+			salt: SALT,                                    // for collision
+			_sender: sender                                // for wrap【不计算 hash 】
 		}
 	},
 	// 验证订单参数

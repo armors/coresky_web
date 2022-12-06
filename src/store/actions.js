@@ -42,7 +42,7 @@ export default {
   reload({ state, commit, dispatch }) {
     return new Promise(function(resolve, reject) {
       var items = getLocalStorage("CoreskyAuthorization");
-      if (items.CoreskyAuthorization) {
+      if (items.CoreskyAuthorization && items.CoreskyAuthorization !== 'undefined') {
         api("user.reload")
           .then(async function(response) {
             if (tools.checkResponse(response)) {
@@ -209,7 +209,7 @@ export default {
       await dispatch("authinfo");
       var items = getLocalStorage("CoreskyAuthorization");
       console.log('items.CoreskyAuthorization', items.CoreskyAuthorization)
-      if (!items.CoreskyAuthorization) {
+      if (!items.CoreskyAuthorization || items.CoreskyAuthorization === 'undefined') {
         await dispatch("signLogin");
       }
       resolve(true);
@@ -270,7 +270,7 @@ export default {
       };
       var items = getLocalStorage("CoreskyAuthorization");
       console.log('items.CoreskyAuthorization', items.CoreskyAuthorization)
-      if (!items.CoreskyAuthorization) {
+      if (!items.CoreskyAuthorization || items.CoreskyAuthorization === 'undefined') {
         result = await dispatch("signLogin", data);
         resolve(result);
       }else {

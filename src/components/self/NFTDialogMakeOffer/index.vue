@@ -107,7 +107,8 @@ export default {
           label: '7days',
         }
       ],
-      tokenInfo: {}
+      tokenInfo: {},
+      makeOfferType: 1 // 1单个nft报价 2 对集合报价
     }
   },
   computed: {
@@ -116,8 +117,9 @@ export default {
     }
   },
   methods: {
-    async showMakeOffer (tokenInfo) {
+    async showMakeOffer (tokenInfo, makeOfferType = 1) {
       this.tokenInfo = tokenInfo
+      this.makeOfferType = makeOfferType
       this.tokenInfo.tokenId = parseInt(this.tokenInfo.tokenId)
       this.isShowMakeOfferDialog = true
       console.log(this.tokenInfo)
@@ -132,7 +134,12 @@ export default {
         return
       }
       this.btnMakeOfferLoading = true
-      let buyer = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, this.tokenInfo.contract, 0, this.tokenInfo.tokenId)
+      let buyer = null
+      if (this.makeOfferType === 1) { // 单个nft报价
+        buyer = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, this.tokenInfo.contract, 0, this.tokenInfo.tokenId)
+      } else { // 集合报价
+        buyer = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, this.tokenInfo.contract, 0, 0, true)
+      }
       buyer = {
         ...buyer,
         ...{
@@ -151,7 +158,7 @@ export default {
         ...buyer,
         ...{
           hash: hashToSign,
-          tokenId: this.tokenInfo.tokenId,
+          tokenId: this.makeOfferType === 1 ? this.tokenInfo.tokenId : 0,
           contract: this.tokenInfo.contract,
           v: sigBuyer.v,
           r: sigBuyer.r,
@@ -181,7 +188,7 @@ export default {
       this.$api("order.orderAuction", buyer).then((res) => {
         this.btnMakeOfferLoading = false
         this.isShowMakeOfferDialog = false
-        this.$tools.message('报价成功', 'success');
+        this.$tools.message(this.makeOfferType === 1 ? '报价成功' : '集合报价成功', 'success');
         this.$emit('makeOfferSuccess', res)
       })
     },

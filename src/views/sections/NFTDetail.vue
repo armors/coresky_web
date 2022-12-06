@@ -182,10 +182,10 @@
               </el-button>
               <el-button class="btnBlack" v-if="!isSelf && !isCart" :disabled="!tokenInfo.contract || !tokenInfo.state"
                 @click="addCart">Add to Cart</el-button>
-              <el-button class="btnWhite" v-if="!isSelf" :disabled="!tokenInfo.contract" @click="showMakeOfferNFT">Make
-                Offer</el-button>
+              <el-button class="btnWhite" v-if="!isSelf" :disabled="!tokenInfo.contract" @click="showMakeOfferNFT">Make Offer</el-button>
+              <el-button class="btnWhite" v-if="!isSelf" :disabled="!tokenInfo.contract" @click="showMakeOfferCollect">Make Offer Collect</el-button>
               <el-button v-if="isSelf && ckAuctionEntityList.length > 0" class="btnWhite" :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT">Accept</el-button>
-
+              <el-button v-if="isSelf && ckAuctionEntityList.length > 0" class="btnWhite" :loading="acceptDialogBtnLoading" @click="showAcceptOfferCoolect">Accept Collect</el-button>
             </div>
           </div>
         </div>
@@ -444,6 +444,9 @@ export default {
     showMakeOfferNFT () {
       this.$refs.NFTDialogMakeOffer.showMakeOffer(this.tokenInfo)
     },
+    showMakeOfferCollect () {
+      this.$refs.NFTDialogMakeOffer.showMakeOffer(this.tokenInfo, 2)
+    },
     sellCreateSuccess (v) {
       console.log(v)
       this.getTokenInfo()
@@ -463,6 +466,10 @@ export default {
     showAcceptOfferNFT () {
       this.acceptDialogBtnLoading = true
       this.$refs.NFTDialogAcceptOffer.show(this.tokenInfo, this.ckAuctionEntityList[0])
+    },
+    showAcceptOfferCoolect () {
+      this.acceptDialogBtnLoading = true
+      this.$refs.NFTDialogAcceptOffer.show(this.tokenInfo, this.ckAuctionEntityList[0], 2)
     },
     followNft () {
       if (!this.tokenInfo.contract || !this.tokenInfo.tokenId) return
