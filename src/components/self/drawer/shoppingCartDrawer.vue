@@ -161,7 +161,7 @@ export default {
             paymentToken: sellers[i].paymentToken,
             basePrice: sellers[i].basePrice,
             listingTime: sellers[i].listingTime,
-            expirationTime: sellers[i].expirationTime,
+            expirationTime: Date.parse(new Date().toString()) / 1000 + 60 * 60,
           }
         }
         const sigBuyer = {
@@ -177,6 +177,7 @@ export default {
         console.log(sigBuyer)
       }
       console.log(buyers, sellers)
+
       try {
         const atomicMatchWrap = await this.$sdk._atomicMatchWrap(buyers, sellers, this.user.coinbase, this.totalPrice)
         console.log(atomicMatchWrap)
@@ -185,12 +186,20 @@ export default {
           this.buyBtnLoading = false
           this.$tools.message(atomicMatchWrap.error, 'error');
         } else {
-          console.log(atomicMatchWrap)
           this.clearCart()
           this.buyBtnLoading = false
           this.$tools.message('购买成功', 'success');
+          let batchFinish = []
+          sellers.forEach((item => {
+            batchFinish.push({
+              "orderId": item.id,
+              "txHash": atomicMatchWrap.transactionHash,
+              "taker": item.maker,
+            })
+          }))
+          const res = await this.$api("order.batchFinish", batchFinish)
+          console.log(res)
         }
-
       } catch (e) {
         this.buyBtnLoading = false
       }
@@ -221,7 +230,7 @@ export default {
           paymentToken: seller.paymentToken,
           basePrice: seller.basePrice,
           listingTime: seller.listingTime,
-          expirationTime: 0,
+          expirationTime: seller.expirationTime,
         }
       }
       console.log(buyer)
@@ -250,6 +259,14 @@ export default {
         console.log(hashAtomicMatch)
         this.$tools.message('购买成功', 'success');
         this.clearCart()
+        const res = await this.$api("order.finish", {
+          "orderId": this.tokenInfo.ckOrdersEntity.id,
+          "txHash": hashAtomicMatch.transactionHash,
+          "taker": buyer.taker,
+        })
+        console.log(res)
+
+
       } catch (e) {
         console.log(e)
         this.buyBtnLoading = false

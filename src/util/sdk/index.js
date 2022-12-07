@@ -73,12 +73,20 @@ export default {
 	//订单签名
 	async callhashOrder_(params) {
 		let contract = await this.getMarketExchangeContract();
-		let tx = await contract.hashOrder_(...params)
-		return tx
+		if (contract.error) return contract;
+		try {
+			let tx = await contract.hashOrder_(...params)
+			console.log(tx)
+			return tx
+		}catch (e) {
+			console.log(e)
+			return {error: e.message};
+		}
 	},
 	// 取消订单
 	async cancelOrder_(params, owner) {
 		let contract = await this.getMarketExchangeContract();
+		if (contract.error) return contract;
 		const arrayParams = [
 			[
 				params.exchange,
@@ -111,15 +119,23 @@ export default {
 			params.r,
 			params.s
 		]
-		let tx = await contract.cancelOrder_(...arrayParams,
-			{
-				from: owner
-			})
-		return tx
+		try {
+			let tx = await contract.cancelOrder_(...arrayParams,
+				{
+					from: owner
+				})
+			console.log(tx)
+			return tx
+		}catch (e) {
+			console.log(e)
+			return {error: e.message};
+		}
+
 	},
 	//hash签名
 	async callhashToSign_(order) {
 		let contract = await this.getMarketExchangeContract();
+		if (contract.error) return contract;
 		const params = [
 			[
 				order.exchange,
@@ -149,12 +165,19 @@ export default {
 			order.replacementPattern,
 			order.staticExtradata
 		]
-		let tx = await contract.hashToSign_(...params)
-		return tx
+		try {
+			let tx = await contract.hashToSign_(...params)
+			return tx
+		}catch (e) {
+			console.log(e)
+			return {error: e.message};
+		}
+
 	},
 	//订单参数验证
 	async validateOrder_(order) {
 		let contract = await this.getMarketExchangeContract();
+		if (contract.error) return contract;
 		const params = [
 			[order.exchange, order.maker, order.taker, order.feeRecipient, order.target, order.staticTarget, order.paymentToken],
 			[order.makerRelayerFee,
@@ -175,8 +198,14 @@ export default {
 			order.staticExtradata,
 			order.v, order.r, order.s
 		]
-		let tx = await contract.validateOrder_(...params)
-		return tx
+		try {
+			let tx = await contract.validateOrder_(...params)
+			return tx
+		} catch (e) {
+			console.log(e)
+			return {error: e.message};
+		}
+
 	},
 	getEIP712TypedData(orderStr, eip712Domain, nonce) {
 		const order = JSON.parse(orderStr);
@@ -255,44 +284,54 @@ export default {
 			verifyingContract: process.env.VUE_APP_MARKET_EXCHANGE,
 		};
 		let contract = await this.getMarketExchangeContract();
-		const nonces = await contract.nonces(walletAccount);
-		const nonce = nonces.toString();
-
-		const typedData = this.getEIP712TypedData(JSON.stringify(order), eip712Domain, Number(nonce))
-		const signature = await sender._signTypedData(
-			typedData.domain,
-			typedData.types,
-			typedData.message
-		);
-		console.log(signature)
-		const vrs = await ethers.utils.splitSignature(signature);
-		const sig = {
-			signature: signature,
-			v: vrs.v,
-			s: vrs.s,
-			r: vrs.r
+		if (contract.error) return contract;
+		try {
+			const nonces = await contract.nonces(walletAccount);
+			const nonce = nonces.toString();
+			const typedData = this.getEIP712TypedData(JSON.stringify(order), eip712Domain, Number(nonce))
+			const signature = await sender._signTypedData(
+				typedData.domain,
+				typedData.types,
+				typedData.message
+			);
+			console.log(signature)
+			const vrs = await ethers.utils.splitSignature(signature);
+			const sig = {
+				signature: signature,
+				v: vrs.v,
+				s: vrs.s,
+				r: vrs.r
+			}
+			// // testing
+			let verifiedAddress = ethers.utils.verifyTypedData(typedData.domain, typedData.types, typedData.message, signature)
+			console.log({
+				"sender": walletAccount,
+				verifiedAddress
+			});
+			return sig;
+		} catch (e) {
+			console.log(e)
+			return {error: e.message};
 		}
-		// // testing
-		let verifiedAddress = ethers.utils.verifyTypedData(typedData.domain, typedData.types, typedData.message, signature)
-
-		console.log({
-			"sender": walletAccount,
-			verifiedAddress
-		});
-
-		return sig;
 	},
 	getDecimalAmount(amount, decimals = 18) {
 		return new BigNumber(amount).times(BIG_TEN.pow(decimals))
 	},
 	async orderCalldataCanMatch(buy, sell) {
 		let contract = await this.getMarketExchangeContract();
-		return await contract.orderCalldataCanMatch(
-			buy.calldata,
-			buy.replacementPattern,
-			sell.calldata,
-			sell.replacementPattern
-		);
+		if (contract.error) return contract;
+		try {
+			return await contract.orderCalldataCanMatch(
+				buy.calldata,
+				buy.replacementPattern,
+				sell.calldata,
+				sell.replacementPattern
+			);
+		} catch (e) {
+			console.log(e)
+			return {error: e.message};
+		}
+
 	},
 	buyERC721ABI(buyer, id, from) {
 		if (!from) {
@@ -365,6 +404,7 @@ export default {
 	async validateOrderParameters(order) {
 		let contract = await this.getMarketExchangeContract();
 		console.log(contract)
+		if (contract.error) return contract;
 		const params = [
 			[order.exchange, order.maker, order.taker, order.feeRecipient, order.target, order.staticTarget, order.paymentToken],
 			[order.makerRelayerFee,
@@ -385,37 +425,40 @@ export default {
 			order.staticExtradata
 		]
 		console.log(params)
-		return await contract.validateOrderParameters_(...params);
+		try {
+			return await contract.validateOrderParameters_(...params);
+		} catch (e) {
+			console.log(e)
+			return {error: e.message};
+		}
 	},
 	// atomicMatch数据验证
 	async orderCanMatch(buy, sell) {
 		let contract = await this.getMarketExchangeContract();
-		console.log(
-			[buy.exchange, buy.maker, buy.taker, buy.feeRecipient, buy.target, buy.staticTarget, buy.paymentToken, sell.exchange, sell.maker, sell.taker, sell.feeRecipient, sell.target, sell.staticTarget, sell.paymentToken],
-			[buy.makerRelayerFee, buy.takerRelayerFee, buy.makerProtocolFee, buy.takerProtocolFee, buy.basePrice, buy.extra, buy.listingTime, buy.expirationTime, buy.salt, sell.makerRelayerFee, sell.takerRelayerFee, sell.makerProtocolFee, sell.takerProtocolFee, sell.basePrice, sell.extra, sell.listingTime, sell.expirationTime, sell.salt],
-			[buy.feeMethod, buy.side, buy.saleKind, buy.howToCall, sell.feeMethod, sell.side, sell.saleKind, sell.howToCall],
-			buy.calldata,
-			sell.calldata,
-			buy.replacementPattern,
-			sell.replacementPattern,
-			buy.staticExtradata,
-			sell.staticExtradata
-		)
-		return contract.ordersCanMatch_(
-			[buy.exchange, buy.maker, buy.taker, buy.feeRecipient, buy.target, buy.staticTarget, buy.paymentToken, sell.exchange, sell.maker, sell.taker, sell.feeRecipient, sell.target, sell.staticTarget, sell.paymentToken],
-			[buy.makerRelayerFee, buy.takerRelayerFee, buy.makerProtocolFee, buy.takerProtocolFee, buy.basePrice, buy.extra, buy.listingTime, buy.expirationTime, buy.salt, sell.makerRelayerFee, sell.takerRelayerFee, sell.makerProtocolFee, sell.takerProtocolFee, sell.basePrice, sell.extra, sell.listingTime, sell.expirationTime, sell.salt],
-			[buy.feeMethod, buy.side, buy.saleKind, buy.howToCall, sell.feeMethod, sell.side, sell.saleKind, sell.howToCall],
-			buy.calldata,
-			sell.calldata,
-			buy.replacementPattern,
-			sell.replacementPattern,
-			buy.staticExtradata,
-			sell.staticExtradata
-		);
+		console.log(contract)
+		if (contract.error) return contract;
+		try {
+			return await contract.ordersCanMatch_(
+				[buy.exchange, buy.maker, buy.taker, buy.feeRecipient, buy.target, buy.staticTarget, buy.paymentToken, sell.exchange, sell.maker, sell.taker, sell.feeRecipient, sell.target, sell.staticTarget, sell.paymentToken],
+				[buy.makerRelayerFee, buy.takerRelayerFee, buy.makerProtocolFee, buy.takerProtocolFee, buy.basePrice, buy.extra, buy.listingTime, buy.expirationTime, buy.salt, sell.makerRelayerFee, sell.takerRelayerFee, sell.makerProtocolFee, sell.takerProtocolFee, sell.basePrice, sell.extra, sell.listingTime, sell.expirationTime, sell.salt],
+				[buy.feeMethod, buy.side, buy.saleKind, buy.howToCall, sell.feeMethod, sell.side, sell.saleKind, sell.howToCall],
+				buy.calldata,
+				sell.calldata,
+				buy.replacementPattern,
+				sell.replacementPattern,
+				buy.staticExtradata,
+				sell.staticExtradata
+			);
+		} catch (e) {
+			console.log(e)
+			return {error: e.message};
+		}
+
 	},
 	// 若为eth支付，计算当前订单需要支付的eth
 	async calculateMatchPrice_(seller, buyer) {
 		let contract = await this.getMarketExchangeContract();
+		if (contract.error) return contract;
 		const params = [
 			[
 				buyer.exchange,
@@ -471,14 +514,21 @@ export default {
 			seller.staticExtradata,
 		]
 		console.log('若为eth支付', params)
-		let tx = await contract.calculateMatchPrice_(
-			...params
-		)
-		return tx
+		try {
+			let tx = await contract.calculateMatchPrice_(
+				...params
+			)
+			return tx
+		} catch (e) {
+			console.log(e)
+			return {error: e.message};
+		}
+
 	},
 	// 订单成交
 	async atomicMatch(seller, buyer, owner, sender) {
 		let contract = await this.getMarketExchangeContract();
+		if (contract.error) return contract;
 		const params = [
 			[
 				buyer.exchange,
@@ -550,17 +600,27 @@ export default {
 			from: owner,
 		}
 		if (seller.paymentToken === ZERO_ADDRESS && buyer.paymentToken === ZERO_ADDRESS) {
+			const value = await this.calculateMatchPrice_(seller, buyer)
+			if (typeof value === 'object' && value.error) {
+				return value
+			}
 			pa = {
 				from: owner,
-				value: await this.calculateMatchPrice_(seller, buyer),
+				value: value,
 				// value: new BigNumber(1.5).multipliedBy(new BigNumber(seller.basePrice)),
 			}
 		}
-		let tx = await contract.atomicMatch_(
-			...params,
-			pa
-		)
-		return tx
+		try {
+			let tx = await contract.atomicMatch_(
+				...params,
+				pa
+			)
+			return tx
+		} catch (e) {
+			console.log(e)
+			return {error: e.message};
+		}
+
 	},
 	//获取nft是否授权
 	async isApprovedForAll(asset, owner, operator) {
@@ -568,7 +628,6 @@ export default {
 		asset = this.getFullAsset(asset);
 		let contract = await this.getAssetContract(asset);
 		if (contract.error) return contract;
-
 		try {
 			return await contract.isApprovedForAll(owner, operator);
 		} catch (e) {
@@ -581,7 +640,6 @@ export default {
 		asset = this.getFullAsset(asset);
 		let contract = await this.getAssetContract(asset);
 		if (contract.error) return contract;
-
 		try {
 			return await contract.setApprovalForAll(operator, approved, {
 				from: coinbase,
@@ -617,23 +675,6 @@ export default {
 		}
 	},
 
-	changeKey(obj, old_key, new_key) {
-		Object.keys(obj).forEach(key => {
-			console.log(key)
-			if (key === old_key) {
-				obj[new_key] = obj[key];
-				delete obj[key];
-			} else {
-				obj[`_${key}`] = obj[key];
-				delete obj[key];
-
-				obj[`${key}`] = obj[`_${key}`];
-				delete obj[`_${key}`];
-			}
-		});
-
-		return obj;
-	},
 	getAtomicMatchWrapOrder(order, isBeta=true) {
 		if (!isBeta) {
 			return {
@@ -689,9 +730,11 @@ export default {
 			}
 		}
 	},
+
 	ethersUtilsParseEther (value) {
 		return ethers.utils.parseEther(value.toString())
 	},
+
 	async _atomicMatchWrap(buyers, sellers, owner, value) {
 		console.log(value.toString())
 		let buys = []
@@ -720,6 +763,7 @@ export default {
 		console.log(sellSigs)
 		let contract = await this.getMarketWrapContract();
 		console.log(contract)
+		if (contract.error) return contract;
 		try {
 			let tx = await contract.atomicMatchWrap(
 				buys,
@@ -737,7 +781,6 @@ export default {
 		} catch (e) {
 			return {error: e.message};
 		}
-
 	},
 	// self start
 

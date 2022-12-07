@@ -469,7 +469,7 @@ export default {
     },
     showAcceptOfferCollect () {
       this.acceptDialogBtnLoading = true
-      this.$refs.NFTDialogAcceptOffer.show(this.tokenInfo, this.ckAuctionEntityList[1], 2)
+      this.$refs.NFTDialogAcceptOffer.show(this.tokenInfo, this.ckAuctionEntityList[0], 2)
     },
     followNft () {
       if (!this.tokenInfo.contract || !this.tokenInfo.tokenId) return

@@ -203,7 +203,7 @@ export default {
       let seller = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, this.tokenInfo.contract, 1, this.tokenInfo.tokenId)
       seller.expirationTime = new Date(this.form.time).getTime() / 1000;
       // seller.expirationTime = 0;
-      seller.listingTime = Date.parse(new Date().toString()) / 1000 - 24 * 3600;
+      seller.listingTime = Date.parse(new Date().toString()) / 1000 - 600;
       seller.feeRecipient = this.$sdk.FEE_ADDRESS()
       seller.basePrice = this.$Web3.utils.toWei(this.form.price);
       // console.log(this.$Web3.utils.toWei(this.form.price))
@@ -306,9 +306,16 @@ export default {
         // this.nftToBuy = orderParams
         this.$api("order.create", orderParams).then((res) => {
           this.sellBtnLoading = false
-          this.isShowSellDialog = false
-          this.$tools.message('挂售成功', 'success');
-          this.$emit('sellCreateSuccess', res)
+          if (res.code === 200) {
+            this.isShowSellDialog = false
+            this.$tools.message('挂售成功', 'success');
+            this.$emit('sellCreateSuccess', res)
+          } else {
+            this.$tools.message(res.message);
+          }
+        }).catch(e => {
+          this.$tools.message(e.message || e);
+          this.sellBtnLoading = false
         })
       } catch (e) {
         console.log(e)

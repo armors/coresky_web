@@ -187,9 +187,16 @@ export default {
       }
       this.$api("order.orderAuction", buyer).then((res) => {
         this.btnMakeOfferLoading = false
-        this.isShowMakeOfferDialog = false
-        this.$tools.message(this.makeOfferType === 1 ? '报价成功' : '集合报价成功', 'success');
-        this.$emit('makeOfferSuccess', res)
+        if (res.code === 200) {
+          this.isShowMakeOfferDialog = false
+          this.$tools.message(this.makeOfferType === 1 ? '报价成功' : '集合报价成功', 'success');
+          this.$emit('makeOfferSuccess', res)
+        } else {
+          this.$tools.message(res.message);
+        }
+      }).catch(e => {
+        this.$tools.message(e.message || e);
+        this.btnMakeOfferLoading = false
       })
     },
   }
