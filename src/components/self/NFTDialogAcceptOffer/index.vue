@@ -225,6 +225,20 @@ export default {
             sign: JSON.stringify(sig),
           }
         }
+        const orderCreate = await this.$api("order.create", {
+          ...seller,
+          ...{
+            tokenId: buyer.tokenId ,
+            contract: buyer.contract,
+            type: this.$sdk.valueOrderType("MAKE_OFFER"),
+            v: sig.v,
+            r: sig.r,
+            s: sig.s,
+            hash: hashToSign,
+            sign: JSON.stringify(sig),
+          }
+        })
+        console.log(orderCreate)
         const validateOrderArrayParams = [
           ...arrayParams,
           ...[
@@ -276,10 +290,16 @@ export default {
         console.log(await this.$sdk.orderCanMatch(buyer, seller))
         const hashAtomicMatch = await this.$sdk.atomicMatch(seller, buyer, this.user.coinbase, buyer.maker);
         console.log(hashAtomicMatch)
-        this.acceptBtnLoading = false
-        this.isShowAcceptDialog = false
-        this.$tools.message('接受报价完成', 'success');
-        this.$emit('acceptOfferSuccess', hashAtomicMatch)
+        this.$api("order.auctionFinish", {
+          "orderId": orderCreate.id,
+          "txHash": hashAtomicMatch.transactionHash,
+          "auctionId": this.acceptInfo.id,
+        }).then((res) => {
+          this.acceptBtnLoading = false
+          this.isShowAcceptDialog = false
+          this.$tools.message('接受报价完成', 'success');
+          this.$emit('acceptOfferSuccess', hashAtomicMatch)
+        })
       } catch (e) {
         console.log(e)
         this.acceptBtnLoading = false

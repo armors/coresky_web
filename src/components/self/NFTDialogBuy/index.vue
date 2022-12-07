@@ -119,7 +119,7 @@ export default {
           paymentToken: seller.paymentToken,
           basePrice: seller.basePrice,
           listingTime: seller.listingTime,
-          expirationTime: 0,
+          expirationTime: Date.parse(new Date().toString()) / 1000 + 60 * 60,
         }
       }
       console.log(buyer)
@@ -137,19 +137,25 @@ export default {
         }
         console.log(buyer)
         console.log(seller)
-        console.log('sell validateOrderParameters', await this.$sdk.validateOrderParameters(seller))
-        console.log('buy validateOrderParameters', await this.$sdk.validateOrderParameters(buyer))
-        console.log(JSON.stringify(buyer), JSON.stringify(seller))
-        console.log('orderCanMatch', await this.$sdk.orderCanMatch(buyer, seller))
-        console.log('orderCalldataCanMatch', await this.$sdk.orderCalldataCanMatch(buyer, seller))
-        console.log('buy validateOrder_', await this.$sdk.validateOrder_(buyer))
-        console.log('sell validateOrder_', await this.$sdk.validateOrder_(seller))
+        // console.log('sell validateOrderParameters', await this.$sdk.validateOrderParameters(seller))
+        // console.log('buy validateOrderParameters', await this.$sdk.validateOrderParameters(buyer))
+        // console.log(JSON.stringify(buyer), JSON.stringify(seller))
+        // console.log('orderCanMatch', await this.$sdk.orderCanMatch(buyer, seller))
+        // console.log('orderCalldataCanMatch', await this.$sdk.orderCalldataCanMatch(buyer, seller))
+        // console.log('buy validateOrder_', await this.$sdk.validateOrder_(buyer))
+        // console.log('sell validateOrder_', await this.$sdk.validateOrder_(seller))
         const hashAtomicMatch = await this.$sdk.atomicMatch(seller, buyer, this.user.coinbase, this.user.coinbase);
         console.log(hashAtomicMatch)
-        this.buyBtnLoading = false
-        this.isShowBuyDialog = false
-        this.$tools.message('购买成功', 'success');
-        this.$emit('buySuccess', hashAtomicMatch)
+        this.$api("order.finish", {
+          "orderId": this.tokenInfo.ckOrdersEntity.id,
+          "txHash": hashAtomicMatch.transactionHash,
+          "taker": buyer.taker,
+        }).then((res) => {
+          this.buyBtnLoading = false
+          this.isShowBuyDialog = false
+          this.$tools.message('购买成功', 'success');
+          this.$emit('buySuccess', hashAtomicMatch)
+        })
       } catch (e) {
         console.log(e)
         this.buyBtnLoading = false

@@ -161,7 +161,7 @@ export default {
             paymentToken: sellers[i].paymentToken,
             basePrice: sellers[i].basePrice,
             listingTime: sellers[i].listingTime,
-            expirationTime: sellers[i].expirationTime,
+            expirationTime: Date.parse(new Date().toString()) / 1000 + 60 * 60,
           }
         }
         const sigBuyer = {
@@ -177,6 +177,7 @@ export default {
         console.log(sigBuyer)
       }
       console.log(buyers, sellers)
+
       try {
         const atomicMatchWrap = await this.$sdk._atomicMatchWrap(buyers, sellers, this.user.coinbase, this.totalPrice)
         console.log(atomicMatchWrap)
@@ -186,11 +187,20 @@ export default {
           this.$tools.message(atomicMatchWrap.error, 'error');
         } else {
           console.log(atomicMatchWrap)
-          this.clearCart()
-          this.buyBtnLoading = false
-          this.$tools.message('购买成功', 'success');
+          let batchFinish = []
+          sellers.forEach((item => {
+            batchFinish.push({
+              "orderId": item.id,
+              "txHash": atomicMatchWrap.transactionHash,
+              "taker": item.maker,
+            })
+          }))
+          this.$api("order.batchFinish", batchFinish).then((res) => {
+            this.clearCart()
+            this.buyBtnLoading = false
+            this.$tools.message('购买成功', 'success');
+          })
         }
-
       } catch (e) {
         this.buyBtnLoading = false
       }
@@ -221,7 +231,7 @@ export default {
           paymentToken: seller.paymentToken,
           basePrice: seller.basePrice,
           listingTime: seller.listingTime,
-          expirationTime: 0,
+          expirationTime: seller.expirationTime,
         }
       }
       console.log(buyer)
@@ -248,8 +258,15 @@ export default {
         console.log('sell validateOrder_',await this.$sdk.validateOrder_(seller))
         const hashAtomicMatch = await this.$sdk.atomicMatch(seller, buyer, this.user.coinbase, this.user.coinbase);
         console.log(hashAtomicMatch)
-        this.$tools.message('购买成功', 'success');
-        this.clearCart()
+        this.$api("order.finish", {
+          "orderId": this.tokenInfo.ckOrdersEntity.id,
+          "txHash": hashAtomicMatch.transactionHash,
+          "taker": buyer.taker,
+        }).then((res) => {
+          this.$tools.message('购买成功', 'success');
+          this.clearCart()
+        })
+
       } catch (e) {
         console.log(e)
         this.buyBtnLoading = false

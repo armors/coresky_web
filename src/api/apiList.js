@@ -303,6 +303,18 @@ export default {
       url: "/order/finish",
       method: "post",
     },
+    batchFinish: {
+      url: "/order/batchFinish",
+      method: "post",
+    },
+    check: {
+      url: "/order/check",
+      method: "post",
+    },
+    auctionFinish: {
+      url: "/order/auctionFinish",
+      method: "post",
+    },
     cancel: {
       url: "/order/cancel",
       method: "post",
