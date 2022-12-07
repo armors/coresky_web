@@ -18,68 +18,68 @@
               <div class="arrt-item">
                 <p class="attr-name">Background</p>
                 <p class="attr-value">New Punk Blue</p>
-                <dir class="attr-bottom">
+                <div class="attr-bottom">
                   <span class="attr-num">1,232(12.32%)</span>
                   <div class="attr-price">
                     <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
                     <span class="value">530.73</span>
                   </div>
-                </dir>
+                </div>
               </div>
               <div class="arrt-item">
                 <p class="attr-name">Background</p>
                 <p class="attr-value">New Punk Blue</p>
-                <dir class="attr-bottom">
+                <div class="attr-bottom">
                   <span class="attr-num">1,232(12.32%)</span>
                   <div class="attr-price">
                     <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
                     <span class="value">530.73</span>
                   </div>
-                </dir>
+                </div>
               </div>
               <div class="arrt-item">
                 <p class="attr-name">Background</p>
                 <p class="attr-value">New Punk Blue</p>
-                <dir class="attr-bottom">
+                <div class="attr-bottom">
                   <span class="attr-num">1,232(12.32%)</span>
                   <div class="attr-price">
                     <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
                     <span class="value">530.73</span>
                   </div>
-                </dir>
+                </div>
               </div>
               <div class="arrt-item">
                 <p class="attr-name">Background</p>
                 <p class="attr-value">New Punk Blue</p>
-                <dir class="attr-bottom">
+                <div class="attr-bottom">
                   <span class="attr-num">1,232(12.32%)</span>
                   <div class="attr-price">
                     <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
                     <span class="value">530.73</span>
                   </div>
-                </dir>
+                </div>
               </div>
               <div class="arrt-item">
                 <p class="attr-name">Background</p>
                 <p class="attr-value">New Punk Blue</p>
-                <dir class="attr-bottom">
+                <div class="attr-bottom">
                   <span class="attr-num">1,232(12.32%)</span>
                   <div class="attr-price">
                     <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
                     <span class="value">530.73</span>
                   </div>
-                </dir>
+                </div>
               </div>
               <div class="arrt-item">
                 <p class="attr-name">Background</p>
                 <p class="attr-value">New Punk Blue</p>
-                <dir class="attr-bottom">
+                <div class="attr-bottom">
                   <span class="attr-num">1,232(12.32%)</span>
                   <div class="attr-price">
                     <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
                     <span class="value">530.73</span>
                   </div>
-                </dir>
+                </div>
               </div>
             </div>
           </div>
@@ -182,10 +182,14 @@
               </el-button>
               <el-button class="btnBlack" v-if="!isSelf && !isCart" :disabled="!tokenInfo.contract || !tokenInfo.state"
                 @click="addCart">Add to Cart</el-button>
-              <el-button class="btnWhite" v-if="!isSelf" :disabled="!tokenInfo.contract" @click="showMakeOfferNFT">Make Offer</el-button>
-              <el-button class="btnWhite" v-if="!isSelf" :disabled="!tokenInfo.contract" @click="showMakeOfferCollect">Make Offer Collect</el-button>
-              <el-button v-if="isSelf && ckAuctionEntityList.length > 0" class="btnWhite" :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT">Accept</el-button>
-              <el-button v-if="isSelf && ckAuctionEntityList.length > 0" class="btnWhite" :loading="acceptDialogBtnLoading" @click="showAcceptOfferCollect">Accept Collect</el-button>
+              <el-button class="btnWhite" v-if="!isSelf" :disabled="!tokenInfo.contract" @click="showMakeOfferNFT">Make
+                Offer</el-button>
+              <el-button class="btnWhite" v-if="!isSelf" :disabled="!tokenInfo.contract" @click="showMakeOfferCollect">
+                Make Offer Collect</el-button>
+              <el-button v-if="isSelf && ckAuctionEntityList.length > 0" class="btnWhite"
+                :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT">Accept</el-button>
+              <el-button v-if="isSelf && ckAuctionEntityList.length > 0" class="btnWhite"
+                :loading="acceptDialogBtnLoading" @click="showAcceptOfferCollect">Accept Collect</el-button>
             </div>
           </div>
         </div>
@@ -212,22 +216,23 @@
           <div class="card-body" style="height:480px;padding:0;overflow: auto;">
             <div class="offer-list">
               <div class="list-tr head">
-                <div class="list-th th1">Price</div>
-                <div class="list-th th2">USD Price</div>
-                <div class="list-th th3">Floor Difference</div>
-                <div class="list-th th4">Exporation</div>
-                <div class="list-th th5">From</div>
+                <div class="list-th th25">Price</div>
+                <div class="list-th th25">Exporation</div>
+                <div class="list-th th25">From</div>
+                <div class="list-th th25 center">Status</div>
               </div>
 
               <div class="list-tr" v-for="(v, i) of ckAuctionEntityList" :key="`make-offer-${i}`">
-                <div class="list-th th1">
+                <div class="list-th th25">
                   <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
                   {{nftPrice(v.basePrice)}}
                 </div>
-                <div class="list-th th2">$1,048,37</div>
-                <div class="list-th th3">12% below</div>
-                <div class="list-th th4">about 22 hours</div>
-                <div class="list-th th5 purple">{{$filters.ellipsisAddress(v.maker, 4)}}</div>
+                <div class="list-th th25">about 22 hours</div>
+                <div class="list-th th25 purple">{{$filters.ellipsisAddress(v.maker, 4)}}</div>
+                <div class="list-th th25 center">
+                  <el-button type="primary" class="btnAccept" @click="showAcceptOfferNFT">Accept
+                  </el-button>
+                </div>
               </div>
             </div>
           </div>
@@ -277,7 +282,7 @@
     <NFTDialogBuy ref="NFTDialogBuy" @buySuccess="buySuccess"></NFTDialogBuy>
     <NFTDialogSell ref="NFTDialogSell" @sellCreateSuccess="sellCreateSuccess"></NFTDialogSell>
     <NFTDialogMakeOffer ref="NFTDialogMakeOffer" @makeOfferSuccess="makeOfferSuccess"></NFTDialogMakeOffer>
-    <NFTDialogAcceptOffer ref="NFTDialogAcceptOffer" @acceptOfferSuccess="acceptOfferSuccess"/>
+    <NFTDialogAcceptOffer ref="NFTDialogAcceptOffer" @acceptOfferSuccess="acceptOfferSuccess" />
 
   </div>
 </template>
@@ -792,6 +797,7 @@ export default {
         width: 100%;
         font-size: 12px;
         background: $bg-white;
+        font-weight: 600;
       }
       &.placeholder {
         height: 56px;
@@ -801,7 +807,7 @@ export default {
       color: $bgPurple;
     }
     .th1 {
-      width: 138px;
+      width: 25%;
       color: $primaryColor;
       font-weight: 500;
       font-size: 14px;
@@ -813,17 +819,22 @@ export default {
         margin-right: 2px;
       }
     }
-    .th2 {
-      width: 125px;
+    .th25 {
+      width: 25%;
+      &.center{
+        text-align: center;
+      }
     }
-    .th3 {
-      width: 160px;
-    }
-    .th4 {
-      width: 160px;
-    }
-    .th5 {
-      width: 100px;
+    .btnAccept {
+      width: 80px;
+      height: 30px;
+      padding: 10px 0;
+      border-radius: 12px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      color: $color-white;
+      background: $mainLiner;
     }
   }
   .activity-wrap {

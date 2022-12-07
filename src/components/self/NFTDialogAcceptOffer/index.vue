@@ -9,57 +9,73 @@
         <Close />
       </el-icon>
     </template>
-    <div class="nft-box">
-      <image-box class="img-box"
-        :src="tokenInfo.ckCollectionsInfoEntity.image">
-      </image-box>
-      <div class="box-center">
-        <span class="tokenid">#{{tokenInfo.tokenId}}</span>
-        <span class="collection-name">
-          {{tokenInfo.ckCollectionsInfoEntity.name || '--'}}
-          <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
-        </span>
+    <div v-if="isFinished===false">
+
+      <div class="nft-box">
+        <image-box class="img-box" :src="tokenInfo.ckCollectionsInfoEntity.image">
+        </image-box>
+        <div class="box-center">
+          <span class="tokenid">#{{tokenInfo.tokenId}}</span>
+          <span class="collection-name">
+            {{tokenInfo.ckCollectionsInfoEntity.name || '--'}}
+            <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
+          </span>
+        </div>
+        <div class="box-right">
+          <div class="price">{{nftPrice}} WETH</div>
+          <div class="price2">$4.79</div>
+        </div>
       </div>
-      <div class="box-right">
-        <div class="price">{{nftPrice}} WETH</div>
-        <div class="price2">$4.79</div>
+      <div class="info-box">
+        <div class="title">Price</div>
+        <div class="box-item">
+          <div class="left">floor price difference</div>
+          <div class="right">1,025% above</div>
+        </div>
+        <div class="box-item">
+          <div class="left">seller</div>
+          <div class="right">814596</div>
+        </div>
+        <div class="box-item">
+          <div class="left">maturity</div>
+          <div class="right">3days</div>
+        </div>
       </div>
+      <div class="info-box">
+        <div class="title">Cost</div>
+        <div class="box-item">
+          <div class="left">service charge</div>
+          <div class="right">2.5%</div>
+        </div>
+        <div class="box-item">
+          <div class="left">creator fee</div>
+          <div class="right">10%</div>
+        </div>
+      </div>
+      <div class="total-box">
+        <div class="title">Total revenue</div>
+        <div class="number">
+          <span>0.0039 WETH</span>
+          <span>$4.79</span>
+        </div>
+      </div>
+      <el-button type="primary" class="btnBuy" v-if="isApproved" :loading="acceptBtnLoading" @click="acceptOffer">Accept
+        Offer</el-button>
+      <el-button type="primary" class="btnBuy" :loading="acceptBtnLoading" v-else @click="setApproveAll">Approve NFT
+      </el-button>
     </div>
-    <div class="info-box">
-      <div class="title">Price</div>
-      <div class="box-item">
-        <div class="left">floor price difference</div>
-        <div class="right">1,025% above</div>
+    <div v-else>
+      <div class="nft-box">
+        <image-box class="img-box" :src="tokenInfo.ckCollectionsInfoEntity.image"></image-box>
+        <div class="box-center">
+          <span class="tokenid">Transaction hash</span>
+          <a class="hash-txt" target="_blank"
+            href="https://etherscan.io/tx/0xf68937328056209c137e9ded6b3de343c6ff0e8e8b12fb93918bc7b59e8deb22">0x1234......5678
+          </a>
+        </div>
       </div>
-      <div class="box-item">
-        <div class="left">seller</div>
-        <div class="right">814596</div>
-      </div>
-      <div class="box-item">
-        <div class="left">maturity</div>
-        <div class="right">3days</div>
-      </div>
+      <el-button type="primary" class="btnBuy" @click="isShowAcceptDialog=false">View project</el-button>
     </div>
-    <div class="info-box">
-      <div class="title">Cost</div>
-      <div class="box-item">
-        <div class="left">service charge</div>
-        <div class="right">2.5%</div>
-      </div>
-      <div class="box-item">
-        <div class="left">creator fee</div>
-        <div class="right">10%</div>
-      </div>
-    </div>
-    <div class="total-box">
-      <div class="title">Total revenue</div>
-      <div class="number">
-        <span>0.0039 WETH</span>
-        <span>$4.79</span>
-      </div>
-    </div>
-    <el-button type="primary" class="btnBuy" v-if="isApproved" :loading="acceptBtnLoading" @click="acceptOffer">Accept Offer</el-button>
-    <el-button type="primary" class="btnBuy" :loading="acceptBtnLoading" v-else @click="setApproveAll">Approve NFT</el-button>
   </el-dialog>
 </template>
 
@@ -70,6 +86,7 @@ export default {
   name: "NFTDialogAcceptOffer",
   data () {
     return {
+      isFinished: false,
       isShowAcceptDialog: false,
       acceptBtnLoading: false,
       tokenInfo: {},
@@ -93,6 +110,7 @@ export default {
   },
   methods: {
     async show (tokenInfo, acceptInfo, makeOfferType = 1) {
+      this.isFinished = false
       this.isShowAcceptDialog = true
       this.tokenInfo = tokenInfo
       this.acceptInfo = acceptInfo
@@ -297,7 +315,8 @@ export default {
         })
         console.log(res)
         this.acceptBtnLoading = false
-        this.isShowAcceptDialog = false
+        // this.isShowAcceptDialog = false
+        this.isFinished = true
         this.$tools.message('接受报价完成', 'success');
         this.$emit('acceptOfferSuccess', hashAtomicMatch)
       } catch (e) {
@@ -417,6 +436,12 @@ export default {
   cursor: pointer;
   color: $color-white;
   background: $mainLiner;
+  &:hover {
+    background: $mainLiner;
+  }
+}
+.hash-txt {
+  color: #038ddb;
 }
 </style>
 <style lang="scss">
