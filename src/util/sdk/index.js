@@ -734,6 +734,7 @@ export default {
 	ethersUtilsParseEther (value) {
 		return ethers.utils.parseEther(value.toString())
 	},
+
 	async _atomicMatchWrap(buyers, sellers, owner, value) {
 		console.log(value.toString())
 		let buys = []
