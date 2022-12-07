@@ -25,6 +25,9 @@ export default {
   },
   methods: {
   },
+  created () {
+    console.log(555555)
+  },
 }
 
 </script>

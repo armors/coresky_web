@@ -2,24 +2,24 @@
   <div class="account-wrap">
     <accountHead :address="address" />
     <div class="account-page">
-      <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick" :lazy="true">
-        <el-tab-pane label="My NFTs" name="NFTs">
+      <el-tabs v-model="activeName" class="demo-tabs" @tab-change="handleClick">
+        <el-tab-pane label="My NFTs" name="NFTs" :lazy="true">
           <accountNFTs :address="address" />
         </el-tab-pane>
-        <el-tab-pane label="My Collections" name="Collections">
-          <accountCollection />
+        <el-tab-pane label="My Collections" name="Collections" :lazy="true">
+          Collections
         </el-tab-pane>
-        <el-tab-pane label="My Favorites" name="Favorites">
-          <accountCollection />
+        <el-tab-pane label="My Favorites" name="Favorites" :lazy="true">
+          Favorites
         </el-tab-pane>
-        <el-tab-pane label="My Listing" name="Listing">
-          <accountCollection />
+        <el-tab-pane label="My Listing" name="Listing" :lazy="true">
+          Listing
         </el-tab-pane>
-        <el-tab-pane label="My Activites" name="Activites">My Activites</el-tab-pane>
+        <el-tab-pane label="My Activites" name="Activites" :lazy="true">My Activites</el-tab-pane>
         <!-- <el-tab-pane label="Favorited" name="Favorited">Favorited</el-tab-pane>
         <el-tab-pane label="Trading History" name="Trading">Trading History</el-tab-pane> -->
-        <el-tab-pane label="My Coupons" name="Coupons">My Coupon</el-tab-pane>
-        <el-tab-pane label="My Launchpad" name="Launchpad">My Launchpad</el-tab-pane>
+        <el-tab-pane label="My Coupons" name="Coupons" :lazy="true">My Coupon</el-tab-pane>
+        <el-tab-pane label="My Launchpad" name="Launchpad" :lazy="true">My Launchpad</el-tab-pane>
       </el-tabs>
     </div>
 
@@ -45,22 +45,35 @@ export default {
       activeName: 'NFTs'
     };
   },
+  watch: {
+    tag (val) {
+      this.init()
+    },
+  },
   created () {
+    this.init()
   },
   computed: {
-    user () {
-      return this.$store.state.user;
+    tag () {
+      return this.$route.query.tag
     },
     address () {
       return this.$route.params.address
     }
   },
-  watch: {
-
-  },
   methods: {
-
+    init () {
+      if (this.tag) {
+        this.activeName = this.tag
+      }
+    },
+    handleClick (val) {
+      this.$router.push(`/account/${this.address}?tag=${this.activeName}`)
+    }
   },
+  mounted () {
+    // this.init()
+  }
 };
 </script>
 <style lang="scss" scoped>

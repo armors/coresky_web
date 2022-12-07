@@ -79,7 +79,8 @@
     </div>
     <div class="right-content">
       <div class="nft-list">
-        <router-link :to="`/detail/${item.contract}/${item.tokenId}`" class="nft-card" v-for="(item,index) in nftList" :key="index">
+        <router-link :to="`/detail/${item.contract}/${item.tokenId}`" class="nft-card" v-for="(item,index) in nftList"
+          :key="index">
           <div class="nft-content">
             <div class="card-top">
               <div class="card-img">
@@ -89,11 +90,11 @@
             </div>
             <div class="card-bottom">
               <div class="nft-txt">
-                {{item.name}} #{{item.tokenId}}
+                {{item.ckCollectionsInfoEntity.name}} #{{item.tokenId}}
               </div>
-              <div class="nft-price">
+              <div class="nft-price" v-if="item.ckOrdersEntity!==null">
                 <img class="token-icon" src="@/assets/images/icons/token/token_eth.svg" alt="">
-                <span class="nft-price">0.073 ETH</span>
+                <span class="nft-price">{{item.ckOrdersEntity.basePrice.toString()}} ETH</span>
               </div>
             </div>
           </div>
