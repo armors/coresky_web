@@ -3,22 +3,22 @@
     <accountHead :address="address" />
     <div class="account-page">
       <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick" :lazy="true">
-        <el-tab-pane label="My NFTs" name="first">
+        <el-tab-pane label="My NFTs" name="NFTs">
           <accountNFTs :address="address" />
         </el-tab-pane>
-        <el-tab-pane label="My Collections" name="second">
+        <el-tab-pane label="My Collections" name="Collections">
           <accountCollection />
         </el-tab-pane>
-        <el-tab-pane label="My Favorites" name="third">
+        <el-tab-pane label="My Favorites" name="Favorites">
           <accountCollection />
         </el-tab-pane>
-        <el-tab-pane label="My Listing" name="third">
+        <el-tab-pane label="My Listing" name="Listing">
           <accountCollection />
         </el-tab-pane>
-        <el-tab-pane label="My Activites" name="fourth">My Activites</el-tab-pane>
+        <el-tab-pane label="My Activites" name="Activites">My Activites</el-tab-pane>
         <!-- <el-tab-pane label="Favorited" name="Favorited">Favorited</el-tab-pane>
         <el-tab-pane label="Trading History" name="Trading">Trading History</el-tab-pane> -->
-        <el-tab-pane label="My Coupons" name="Coupon">My Coupon</el-tab-pane>
+        <el-tab-pane label="My Coupons" name="Coupons">My Coupon</el-tab-pane>
         <el-tab-pane label="My Launchpad" name="Launchpad">My Launchpad</el-tab-pane>
       </el-tabs>
     </div>
@@ -42,7 +42,7 @@ export default {
   },
   data () {
     return {
-      activeName: 'first'
+      activeName: 'NFTs'
     };
   },
   created () {

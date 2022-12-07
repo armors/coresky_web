@@ -9,28 +9,43 @@
         <Close />
       </el-icon>
     </template>
-    <div class="nft-box">
-      <image-box class="img-box" :src="tokenInfo.ckCollectionsInfoEntity.image"></image-box>
-      <div class="box-center">
-        <span class="tokenid">#{{tokenInfo.tokenId}}</span>
-        <span class="collection-name">{{tokenInfo.ckCollectionsInfoEntity.name || '--'}}
-          <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
-        </span>
+    <div v-if="isBuyOver===false">
+      <div class="nft-box">
+        <image-box class="img-box" :src="tokenInfo.ckCollectionsInfoEntity.image"></image-box>
+        <div class="box-center">
+          <span class="tokenid">#{{tokenInfo.tokenId}}</span>
+          <span class="collection-name">{{tokenInfo.ckCollectionsInfoEntity.name || '--'}}
+            <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
+          </span>
+        </div>
       </div>
+      <div class="price-box">
+        <div class="label">
+          Price
+        </div>
+        <div class="price-wrap">
+          <span class="buy-price">
+            <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
+            {{nftPrice}}
+          </span>
+          <div class="total">$ 45,332.02</div>
+        </div>
+      </div>
+      <el-button type="primary" class="btnBuy" :loading="buyBtnLoading" @click="buyNft">Buy</el-button>
     </div>
-    <div class="price-box">
-      <div class="label">
-        Price
+    <div v-else>
+      <div class="nft-box">
+        <image-box class="img-box" :src="tokenInfo.ckCollectionsInfoEntity.image"></image-box>
+        <div class="box-center">
+          <span class="tokenid">Transaction hash</span>
+          <a class="hash-txt" target="_blank"
+            href="https://etherscan.io/tx/0xf68937328056209c137e9ded6b3de343c6ff0e8e8b12fb93918bc7b59e8deb22">0x1234......5678
+          </a>
+        </div>
       </div>
-      <div class="price-wrap">
-        <span class="buy-price">
-          <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-          {{nftPrice}}
-        </span>
-        <div class="total">$ 45,332.02</div>
-      </div>
+      <el-button type="primary" class="btnBuy" @click="isShowBuyDialog=false">View project</el-button>
     </div>
-    <el-button type="primary" class="btnBuy" :loading="buyBtnLoading" @click="buyNft">Buy</el-button>
+
   </el-dialog>
 </template>
 
@@ -41,6 +56,7 @@ export default {
   name: "index",
   data () {
     return {
+      isBuyOver: true,
       isShowBuyDialog: false,
       buyBtnLoading: false,
       form: {
@@ -89,6 +105,7 @@ export default {
   },
   methods: {
     async showBuy (tokenInfo) {
+      this.isBuyOver = false
       this.tokenInfo = tokenInfo
       this.tokenInfo.tokenId = parseInt(this.tokenInfo.tokenId)
       this.isShowBuyDialog = true
@@ -147,8 +164,9 @@ export default {
         const hashAtomicMatch = await this.$sdk.atomicMatch(seller, buyer, this.user.coinbase, this.user.coinbase);
         console.log(hashAtomicMatch)
         this.buyBtnLoading = false
-        this.isShowBuyDialog = false
+        // this.isShowBuyDialog = false
         this.$tools.message('购买成功', 'success');
+        this.isBuyOver = true // 展示交易hash值
         this.$emit('buySuccess', hashAtomicMatch)
       } catch (e) {
         console.log(e)
@@ -232,5 +250,11 @@ export default {
   cursor: pointer;
   color: $color-white;
   background: $mainLiner;
+  &:hover {
+    background: $mainLiner;
+  }
+}
+.hash-txt {
+  color: #038ddb;
 }
 </style>
