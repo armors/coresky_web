@@ -180,16 +180,17 @@
               </template>
               <el-button type="primary" class="btnBuy" v-else-if="tokenInfo.state" @click="showBuyNft">Buy Now
               </el-button>
-              <el-button class="btnBlack" v-if="!isSelf && !isCart" :disabled="!tokenInfo.contract || !tokenInfo.state"
+<!--              <el-button class="btnBlack" v-if="!isSelf && !isCart" :disabled="!(!isSelf && !isCart) || !tokenInfo.contract || !tokenInfo.state"-->
+              <el-button class="btnBlack" :disabled="!(!isSelf && !isCart) || !tokenInfo.contract || !tokenInfo.state"
                 @click="addCart">Add to Cart</el-button>
               <el-button class="btnWhite" v-if="!isSelf" :disabled="!tokenInfo.contract" @click="showMakeOfferNFT">Make
                 Offer</el-button>
               <el-button class="btnWhite" v-if="!isSelf" :disabled="!tokenInfo.contract" @click="showMakeOfferCollect">
                 Make Offer Collect</el-button>
-              <el-button v-if="isSelf && ckAuctionEntityList.length > 0" class="btnWhite"
-                :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT">Accept</el-button>
-              <el-button v-if="isSelf && ckAuctionEntityList.length > 0" class="btnWhite"
-                :loading="acceptDialogBtnLoading" @click="showAcceptOfferCollect">Accept Collect</el-button>
+<!--              <el-button v-if="isSelf && ckAuctionEntityList.length > 0" class="btnWhite"-->
+<!--                :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT">Accept</el-button>-->
+<!--              <el-button v-if="isSelf && ckAuctionEntityList.length > 0" class="btnWhite"-->
+<!--                :loading="acceptDialogBtnLoading" @click="showAcceptOfferCollect">Accept Collect</el-button>-->
             </div>
           </div>
         </div>
@@ -230,8 +231,7 @@
                 <div class="list-th th25">about 22 hours</div>
                 <div class="list-th th25 purple">{{$filters.ellipsisAddress(v.maker, 4)}}</div>
                 <div class="list-th th25 center">
-                  <el-button type="primary" class="btnAccept" @click="showAcceptOfferNFT">Accept
-                  </el-button>
+                  <el-button type="primary" class="btnAccept" :disabled="!isSelf" :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT(v)">Accept</el-button>
                 </div>
               </div>
             </div>
@@ -468,13 +468,9 @@ export default {
       console.log(v)
       this.getTokenInfo()
     },
-    showAcceptOfferNFT () {
+    showAcceptOfferNFT (v) {
       this.acceptDialogBtnLoading = true
-      this.$refs.NFTDialogAcceptOffer.show(this.tokenInfo, this.ckAuctionEntityList[0])
-    },
-    showAcceptOfferCollect () {
-      this.acceptDialogBtnLoading = true
-      this.$refs.NFTDialogAcceptOffer.show(this.tokenInfo, this.ckAuctionEntityList[0], 2)
+      this.$refs.NFTDialogAcceptOffer.show(this.tokenInfo, v, v.tokenId === '0' ? 2 : 1)
     },
     followNft () {
       if (!this.tokenInfo.contract || !this.tokenInfo.tokenId) return
@@ -541,7 +537,7 @@ export default {
       display: flex;
       align-items: center;
       .token-icon {
-        margin-left: 5pxs;
+        margin-left: 5px;
         width: 14px;
         height: 18px;
       }
@@ -823,6 +819,13 @@ export default {
       width: 25%;
       &.center{
         text-align: center;
+      }
+      .token-icon {
+        display: inline-block;
+        vertical-align: sub;
+        width: 10px;
+        height: 16px;
+        margin-right: 2px;
       }
     }
     .btnAccept {

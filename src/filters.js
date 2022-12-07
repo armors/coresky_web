@@ -28,6 +28,18 @@ export function ellipsisAddress(address, start=7, end=-4) {
   if (!address) return '--'
   return address.slice(0, start) + "..." + address.slice(end);
 }
+export function hashExplore(hash) {
+  if (!hash) {
+    return {
+      hashShort: '--',
+      href: `${process.env.VUE_APP_EXPLORE}`
+    }
+  }
+  return {
+    hashShort: ellipsisAddress(hash),
+    href: `${process.env.VUE_APP_EXPLORE}/tx/${hash}`
+  }
+}
 
 export function decimal(num, v) {
   var vv = Math.pow(10, v);

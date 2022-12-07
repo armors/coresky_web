@@ -28,7 +28,7 @@
           </el-select>
         </div>
       </el-form-item>
-      <el-form-item label="Expiration date">
+      <el-form-item label="Expiration date" prop="time">
         <div class="flex-content">
           <el-date-picker v-model="form.time" size="large" type="datetime" placeholder="Pick a Date" style=""
             format="YYYY-MM-DD HH:mm" />
@@ -78,11 +78,14 @@ export default {
         price: '',
         date: '',
         time: '',
-        symbol: ''
+        symbol: 'ETH'
       },
       rules: {
         price: [
           { required: true, message: 'Please input price', trigger: 'blur' },
+        ],
+        time: [
+          { required: true, message: 'Please Pick a Date', trigger: 'blur' },
         ],
       },
       options: [
@@ -241,9 +244,17 @@ export default {
       // const hash = await this.$sdk.callhashOrder_(arrayParams);
       try {
         const hashToSign = await this.$sdk.callhashToSign_(seller)
+        if (typeof hashToSign == "object" && hashToSign.error) {
+          this.sellBtnLoading = false
+          return
+        }
         console.log(seller)
         console.log()
         const sig = await this.$sdk.signature(seller, this.user.coinbase)
+        if (typeof sig == "object" && sig.error) {
+          this.sellBtnLoading = false
+          return
+        }
         const validateOrderArrayParams = [
           ...arrayParams,
           ...[

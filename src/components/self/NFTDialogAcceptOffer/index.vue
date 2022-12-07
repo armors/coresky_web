@@ -70,7 +70,7 @@
         <div class="box-center">
           <span class="tokenid">Transaction hash</span>
           <a class="hash-txt" target="_blank"
-            href="https://etherscan.io/tx/0xf68937328056209c137e9ded6b3de343c6ff0e8e8b12fb93918bc7b59e8deb22">0x1234......5678
+             :href="$filters.hashExplore(hash).href">{{$filters.hashExplore(hash).hashShort}}
           </a>
         </div>
       </div>
@@ -100,6 +100,7 @@ export default {
         time: '',
         symbol: ''
       },
+      hash: '',
       makeOfferType: 1 // 1单个nft报价 2 对集合报价
     }
   },
@@ -117,7 +118,7 @@ export default {
       this.makeOfferType = makeOfferType
       this.tokenInfo.tokenId = parseInt(this.tokenInfo.tokenId)
       console.log(this.tokenInfo)
-      this.nftPrice = await this.$sdk.fromWeiNum(this.acceptInfo.basePrice)
+      this.nftPrice = this.$sdk.fromWeiNum(this.acceptInfo.basePrice)
       try {
         await this.getRegistryOwner()
         let order = {
@@ -231,8 +232,16 @@ export default {
       try {
         const hashToSign = await this.$sdk.callhashToSign_(seller)
         console.log(hashToSign)
+        if (typeof hashToSign == "object" && approve.error) {
+          this.acceptBtnLoading = false
+          return
+        }
         const sig = await this.$sdk.signature(seller, this.user.coinbase)
         console.log(sig)
+        if (typeof sig == "object" && sig.error) {
+          this.acceptBtnLoading = false
+          return
+        }
         seller = {
           ...seller,
           ...{
@@ -258,6 +267,11 @@ export default {
           }
         })
         console.log(orderCreate)
+        if (orderCreate.code !== 200) {
+          this.acceptBtnLoading = false
+          this.$tools.message(orderCreate.message);
+          return
+        }
         const validateOrderArrayParams = [
           ...arrayParams,
           ...[
@@ -309,6 +323,10 @@ export default {
         console.log(await this.$sdk.orderCanMatch(buyer, seller))
         const hashAtomicMatch = await this.$sdk.atomicMatch(seller, buyer, this.user.coinbase, buyer.maker);
         console.log(hashAtomicMatch)
+        if (typeof hashAtomicMatch == "object" && hashAtomicMatch.error) {
+          this.acceptBtnLoading = false
+          return
+        }
         const res = await this.$api("order.auctionFinish", {
           "orderId": orderCreate.debug.id,
           "txHash": hashAtomicMatch.transactionHash,
@@ -316,8 +334,8 @@ export default {
         console.log(res)
         this.acceptBtnLoading = false
         // this.isShowAcceptDialog = false
+        this.hash = hashAtomicMatch.transactionHash
         this.isFinished = true
-        this.$tools.message('接受报价完成', 'success');
         this.$emit('acceptOfferSuccess', hashAtomicMatch)
       } catch (e) {
         console.log(e)

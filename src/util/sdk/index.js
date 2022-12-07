@@ -817,9 +817,8 @@ export default {
 		asset.abi = abi;
 		return asset;
 	},
-	async fromWeiNum(value) {
-		var web3 = await utils_web3.getWeb3();
-		return web3.utils.fromWei(value.toString(), "ether");
+	fromWeiNum(value) {
+		return Web3.utils.fromWei(value.toString(), "ether");
 	},
 	async getBalance(asset, owner) {
 		var web3 = await utils_web3.getWeb3();

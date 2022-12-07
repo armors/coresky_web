@@ -152,8 +152,15 @@ export default {
         }
       }
       const sigBuyer = await this.$sdk.signature(buyer, this.user.coinbase)
-      console.log(sigBuyer)
+      if (typeof sigBuyer == "object" && sigBuyer.error) {
+        this.btnMakeOfferLoading = false
+        return
+      }
       const hashToSign = await this.$sdk.callhashToSign_(buyer)
+      if (typeof hashToSign == "object" && hashToSign.error) {
+        this.btnMakeOfferLoading = false
+        return
+      }
       buyer = {
         ...buyer,
         ...{
@@ -179,6 +186,10 @@ export default {
           address: process.env.VUE_APP_WETH
         }, this.user.coinbase, process.env.VUE_APP_MARKET_TOKEN_TRANSFER_PROXY)
         console.log(approve)
+        if (typeof approve == "object" && approve.error) {
+          this.btnMakeOfferLoading = false
+          return
+        }
         const allowancePayToken1 = await this.$sdk.allowancePayToken({
           type: 5,
           address: process.env.VUE_APP_WETH

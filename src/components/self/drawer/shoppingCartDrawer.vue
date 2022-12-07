@@ -182,7 +182,7 @@ export default {
         const atomicMatchWrap = await this.$sdk._atomicMatchWrap(buyers, sellers, this.user.coinbase, this.totalPrice)
         console.log(atomicMatchWrap)
         // const atomicMatchWrap = await this.$sdk._atomicMatchWrap(buyers, sellers, this.user.coinbase, this.totalPrice)
-        if (typeof atomicMatchWrap === 'object')  {
+        if (typeof atomicMatchWrap === 'object' && atomicMatchWrap.error)  {
           this.buyBtnLoading = false
           this.$tools.message(atomicMatchWrap.error, 'error');
         } else {
@@ -237,6 +237,10 @@ export default {
       try {
         const sigBuyer = await this.$sdk.signature(buyer, this.user.coinbase)
         console.log(sigBuyer)
+        if (typeof sigBuyer === 'object' && sigBuyer.error) {
+          this.buyBtnLoading = false
+          return
+        }
         buyer = {
           ...buyer,
           ...{
@@ -257,7 +261,12 @@ export default {
         console.log('sell validateOrder_',await this.$sdk.validateOrder_(seller))
         const hashAtomicMatch = await this.$sdk.atomicMatch(seller, buyer, this.user.coinbase, this.user.coinbase);
         console.log(hashAtomicMatch)
+        if (typeof hashAtomicMatch === 'object' && hashAtomicMatch.error) {
+          this.buyBtnLoading = false
+          return
+        }
         this.$tools.message('购买成功', 'success');
+        this.buyBtnLoading = false
         this.clearCart()
         const res = await this.$api("order.finish", {
           "orderId": this.tokenInfo.ckOrdersEntity.id,
@@ -265,8 +274,6 @@ export default {
           "taker": buyer.taker,
         })
         console.log(res)
-
-
       } catch (e) {
         console.log(e)
         this.buyBtnLoading = false

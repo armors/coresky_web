@@ -37,3 +37,9 @@
 .is-disabled{
   opacity: 0.5;
 }
+
+.el-button--primary:hover, .el-button--primary:focus, .el-button--primary:active{
+  color: $color-white;
+  background: $mainLiner !important;
+  border-color: $bgPurple !important;
+}

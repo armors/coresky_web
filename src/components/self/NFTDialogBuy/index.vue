@@ -39,24 +39,21 @@
         <div class="box-center">
           <span class="tokenid">Transaction hash</span>
           <a class="hash-txt" target="_blank"
-            href="https://etherscan.io/tx/0xf68937328056209c137e9ded6b3de343c6ff0e8e8b12fb93918bc7b59e8deb22">0x1234......5678
+            :href="$filters.hashExplore(hash).href">{{$filters.hashExplore(hash).hashShort}}
           </a>
         </div>
       </div>
       <el-button type="primary" class="btnBuy" @click="isShowBuyDialog=false">View project</el-button>
     </div>
-
   </el-dialog>
 </template>
 
 <script>
-import { ethers } from 'ethers'
-
 export default {
   name: "index",
   data () {
     return {
-      isBuyOver: true,
+      isBuyOver: false,
       isShowBuyDialog: false,
       buyBtnLoading: false,
       form: {
@@ -95,7 +92,8 @@ export default {
         }
       ],
       tokenInfo: {},
-      nftPrice: '--'
+      nftPrice: '--',
+      hash: ''
     }
   },
   computed: {
@@ -109,7 +107,7 @@ export default {
       this.tokenInfo = tokenInfo
       this.tokenInfo.tokenId = parseInt(this.tokenInfo.tokenId)
       this.isShowBuyDialog = true
-      this.nftPrice = await this.$sdk.fromWeiNum(this.tokenInfo.ckOrdersEntity.basePrice)
+      this.nftPrice = this.$sdk.fromWeiNum(this.tokenInfo.ckOrdersEntity.basePrice)
       console.log(this.tokenInfo)
     },
     async buyNft () {
@@ -142,6 +140,10 @@ export default {
       console.log(buyer)
       try {
         const sigBuyer = await this.$sdk.signature(buyer, this.user.coinbase)
+        if (typeof sigBuyer == "object" && sigBuyer.error) {
+          this.buyBtnLoading = false
+          return
+        }
         console.log(sigBuyer)
         buyer = {
           ...buyer,
@@ -162,6 +164,11 @@ export default {
         // console.log('buy validateOrder_', await this.$sdk.validateOrder_(buyer))
         // console.log('sell validateOrder_', await this.$sdk.validateOrder_(seller))
         const hashAtomicMatch = await this.$sdk.atomicMatch(seller, buyer, this.user.coinbase, this.user.coinbase);
+        if (typeof hashAtomicMatch == "object" && hashAtomicMatch.error) {
+          this.buyBtnLoading = false
+          return
+        }
+        this.hash = hashAtomicMatch.transactionHash
         console.log(hashAtomicMatch)
         const res = await this.$api("order.finish", {
           "orderId": this.tokenInfo.ckOrdersEntity.id,
@@ -170,8 +177,6 @@ export default {
         })
         console.log(res)
         this.buyBtnLoading = false
-        // this.isShowBuyDialog = false
-        this.$tools.message('购买成功', 'success');
         this.isBuyOver = true // 展示交易hash值
         this.$emit('buySuccess', hashAtomicMatch)
       } catch (e) {
