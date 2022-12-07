@@ -306,9 +306,16 @@ export default {
         // this.nftToBuy = orderParams
         this.$api("order.create", orderParams).then((res) => {
           this.sellBtnLoading = false
-          this.isShowSellDialog = false
-          this.$tools.message('挂售成功', 'success');
-          this.$emit('sellCreateSuccess', res)
+          if (res.code === 200) {
+            this.isShowSellDialog = false
+            this.$tools.message('挂售成功', 'success');
+            this.$emit('sellCreateSuccess', res)
+          } else {
+            this.$tools.message(res.message);
+          }
+        }).catch(e => {
+          this.$tools.message(e.message || e);
+          this.sellBtnLoading = false
         })
       } catch (e) {
         console.log(e)

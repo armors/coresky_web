@@ -146,16 +146,16 @@ export default {
         // console.log('sell validateOrder_', await this.$sdk.validateOrder_(seller))
         const hashAtomicMatch = await this.$sdk.atomicMatch(seller, buyer, this.user.coinbase, this.user.coinbase);
         console.log(hashAtomicMatch)
-        this.$api("order.finish", {
+        const res = await this.$api("order.finish", {
           "orderId": this.tokenInfo.ckOrdersEntity.id,
           "txHash": hashAtomicMatch.transactionHash,
           "taker": buyer.taker,
-        }).then((res) => {
-          this.buyBtnLoading = false
-          this.isShowBuyDialog = false
-          this.$tools.message('购买成功', 'success');
-          this.$emit('buySuccess', hashAtomicMatch)
         })
+        console.log(res)
+        this.buyBtnLoading = false
+        this.isShowBuyDialog = false
+        this.$tools.message('购买成功', 'success');
+        this.$emit('buySuccess', hashAtomicMatch)
       } catch (e) {
         console.log(e)
         this.buyBtnLoading = false

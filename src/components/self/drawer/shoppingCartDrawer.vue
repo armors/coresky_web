@@ -186,7 +186,9 @@ export default {
           this.buyBtnLoading = false
           this.$tools.message(atomicMatchWrap.error, 'error');
         } else {
-          console.log(atomicMatchWrap)
+          this.clearCart()
+          this.buyBtnLoading = false
+          this.$tools.message('购买成功', 'success');
           let batchFinish = []
           sellers.forEach((item => {
             batchFinish.push({
@@ -195,11 +197,8 @@ export default {
               "taker": item.maker,
             })
           }))
-          this.$api("order.batchFinish", batchFinish).then((res) => {
-            this.clearCart()
-            this.buyBtnLoading = false
-            this.$tools.message('购买成功', 'success');
-          })
+          const res = await this.$api("order.batchFinish", batchFinish)
+          console.log(res)
         }
       } catch (e) {
         this.buyBtnLoading = false
@@ -258,14 +257,15 @@ export default {
         console.log('sell validateOrder_',await this.$sdk.validateOrder_(seller))
         const hashAtomicMatch = await this.$sdk.atomicMatch(seller, buyer, this.user.coinbase, this.user.coinbase);
         console.log(hashAtomicMatch)
-        this.$api("order.finish", {
+        this.$tools.message('购买成功', 'success');
+        this.clearCart()
+        const res = await this.$api("order.finish", {
           "orderId": this.tokenInfo.ckOrdersEntity.id,
           "txHash": hashAtomicMatch.transactionHash,
           "taker": buyer.taker,
-        }).then((res) => {
-          this.$tools.message('购买成功', 'success');
-          this.clearCart()
         })
+        console.log(res)
+
 
       } catch (e) {
         console.log(e)
