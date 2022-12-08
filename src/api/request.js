@@ -43,12 +43,10 @@ service.interceptors.response.use(
       console.log(decryptedData)
       res.data = decryptedData
     }
-    if (res.errno === 501) {
+    if (res.errno === 100) {
       if(!store.state.connected){
         tools.message(i18n.global.t('global.needLogin'), "error");
-        setTimeout(() => {
-          router.push("/connect");
-        }, 1500)
+        store.dispatch("signLogin");
       }else{
         store.dispatch("signLogin");
       }
