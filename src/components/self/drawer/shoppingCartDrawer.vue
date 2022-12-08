@@ -77,7 +77,9 @@ export default {
       buyBtnLoading: false,
       visible: false,
       totalPrice: 0,
-      coreskyCart: []
+      coreskyCart: [],
+      ids: [],
+      checkOrderData: []
     };
   },
   created () {
@@ -116,10 +118,12 @@ export default {
       const local = getLocalStorage(this.cartName)
       console.log(local[this.cartName])
       let coresky_cart = local[this.cartName]
+      this.ids = []
       if (local[this.cartName] !== null) {
         this.coreskyCart = JSON.parse(coresky_cart)
         this.coreskyCart.forEach(item => {
           this.totalPrice = new BigNumber(this.getNftPrice(item)).plus(new BigNumber(this.totalPrice))
+          this.ids.push(item.ckOrdersEntity.id)
         })
         this.totalPrice = this.totalPrice.toString()
       } else {
@@ -133,19 +137,59 @@ export default {
     getNftPrice(v) {
       return this.$Web3.utils.fromWei(v.ckOrdersEntity.basePrice.toString())
     },
-    cartBuy () {
+    async checkOrder () {
+      try {
+        const res = await this.$api('order.check', {
+          ids: this.ids
+        })
+        console.log(res)
+        this.checkOrderData = res.debug
+        if (this.coreskyCart.length !== this.checkOrderData.length){
+          this.$tools.message('已过滤掉无效订单，请重新确认购买');
+          if (this.checkOrderData.length < 1) {
+            this.clearCart()
+          } else {
+            const ids = []
+            this.checkOrderData.forEach(item => {
+              ids.push(item.id)
+            })
+            const coreskyCart = []
+            this.coreskyCart.forEach(item => {
+              if (ids.includes(item.ckOrdersEntity.id)) {
+                coreskyCart.push(item)
+              }
+            })
+            let obj = []
+            obj[this.cartName] = JSON.stringify(coreskyCart)
+            setLocalStorage(obj)
+            this.getCartInfo()
+          }
+          return {error: e.error}
+        } else {
+          return res
+        }
+      } catch (e) {
+        return {error: e.error}
+      }
+    },
+    async cartBuy () {
+      this.buyBtnLoading = true
+      const res = await this.checkOrder()
+      if (typeof res === 'object' && res.error) {
+        this.buyBtnLoading = false
+        return
+      }
       if (this.coreskyCart.length > 1) {
-        this.manyBuy()
+        await this.manyBuy()
       } else {
-        this.buyNft()
+        await this.buyNft()
       }
     },
     async manyBuy() {
-      this.buyBtnLoading = true
       let sellers = []
-      this.coreskyCart.forEach(item => {
-        item.ckOrdersEntity.basePrice = item.ckOrdersEntity.basePrice.toString()
-        sellers.push(item.ckOrdersEntity)
+      this.checkOrderData.forEach(item => {
+        item.basePrice = item.basePrice.toString()
+        sellers.push(item)
       })
       console.log(sellers)
       let buyers = []
@@ -206,18 +250,17 @@ export default {
 
     },
     async buyNft () {
-      this.buyBtnLoading = true
-      const sellerToken = this.coreskyCart[0]
-      let seller = this.$sdk.getAtomicMatchWrapOrder(sellerToken.ckOrdersEntity, false)
+      const sellerToken = this.checkOrderData[0]
+      let seller = this.$sdk.getAtomicMatchWrapOrder(sellerToken, false)
       seller = {
         ...seller,
         ...{
-          _sender: sellerToken.ckOrdersEntity.maker,
+          _sender: sellerToken.maker,
           basePrice: seller.basePrice.toString(),
           // basePrice: ethers.BigNumber.from(seller.basePrice.toString()),
-          v: sellerToken.ckOrdersEntity.v,
-          s: sellerToken.ckOrdersEntity.s,
-          r: sellerToken.ckOrdersEntity.r
+          v: sellerToken.v,
+          s: sellerToken.s,
+          r: sellerToken.r
         }
       }
       let buyParams = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, sellerToken.contract, 0, sellerToken.tokenId)

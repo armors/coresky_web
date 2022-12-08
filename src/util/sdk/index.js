@@ -610,11 +610,13 @@ export default {
 				// value: new BigNumber(1.5).multipliedBy(new BigNumber(seller.basePrice)),
 			}
 		}
+		console.log('atomicMatch')
 		try {
 			let tx = await contract.atomicMatch_(
 				...params,
 				pa
 			)
+			console.log(tx)
 			return tx
 		} catch (e) {
 			console.log(e)
