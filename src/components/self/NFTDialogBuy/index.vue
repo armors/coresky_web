@@ -164,6 +164,7 @@ export default {
         // console.log('buy validateOrder_', await this.$sdk.validateOrder_(buyer))
         // console.log('sell validateOrder_', await this.$sdk.validateOrder_(seller))
         const hashAtomicMatch = await this.$sdk.atomicMatch(seller, buyer, this.user.coinbase, this.user.coinbase);
+        console.log(hashAtomicMatch)
         if (typeof hashAtomicMatch == "object" && hashAtomicMatch.error) {
           this.buyBtnLoading = false
           return

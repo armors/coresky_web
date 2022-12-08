@@ -148,21 +148,22 @@ export default {
           this.$tools.message('已过滤掉无效订单，请重新确认购买');
           if (this.checkOrderData.length < 1) {
             this.clearCart()
+          } else {
+            const ids = []
+            this.checkOrderData.forEach(item => {
+              ids.push(item.id)
+            })
+            const coreskyCart = []
+            this.coreskyCart.forEach(item => {
+              if (ids.includes(item.ckOrdersEntity.id)) {
+                coreskyCart.push(item)
+              }
+            })
+            let obj = []
+            obj[this.cartName] = JSON.stringify(coreskyCart)
+            setLocalStorage(obj)
+            this.getCartInfo()
           }
-          const ids = []
-          this.checkOrderData.forEach(item => {
-            ids.push(item.id)
-          })
-          const coreskyCart = []
-          this.coreskyCart.forEach(item => {
-            if (ids.includes(item.ckOrdersEntity.id)) {
-              coreskyCart.push(item)
-            }
-          })
-          let obj = []
-          obj[this.cartName] = JSON.stringify(coreskyCart)
-          setLocalStorage(obj)
-          this.getCartInfo()
           return {error: e.error}
         } else {
           return res
@@ -172,8 +173,10 @@ export default {
       }
     },
     async cartBuy () {
+      this.buyBtnLoading = true
       const res = await this.checkOrder()
       if (typeof res === 'object' && res.error) {
+        this.buyBtnLoading = false
         return
       }
       if (this.coreskyCart.length > 1) {
@@ -183,7 +186,6 @@ export default {
       }
     },
     async manyBuy() {
-      this.buyBtnLoading = true
       let sellers = []
       this.checkOrderData.forEach(item => {
         item.basePrice = item.basePrice.toString()
@@ -248,7 +250,6 @@ export default {
 
     },
     async buyNft () {
-      this.buyBtnLoading = true
       const sellerToken = this.checkOrderData[0]
       let seller = this.$sdk.getAtomicMatchWrapOrder(sellerToken, false)
       seller = {
