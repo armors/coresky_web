@@ -18,13 +18,7 @@ module.exports = defineConfig({
     proxy: {
       "/api": {
         target: process.env.VUE_APP_API_URL,
-      },
-      "/static": {
-        target: process.env.VUE_APP_STATIC_URL,
-      },
-      "/oauth": {
-        target: process.env.VUE_APP_OAUTH_URL,
-      },
+      }
     },
   },
   chainWebpack: config => {

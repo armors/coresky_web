@@ -394,7 +394,7 @@ export default {
       })
     },
     getTokenQuery () {
-      this.$api("collect.tokenQuery", this.tokenQueryParams).then((res) => {
+      this.$api("token.query", this.tokenQueryParams).then((res) => {
         this.tokenList = res.debug.listData
       })
     },
