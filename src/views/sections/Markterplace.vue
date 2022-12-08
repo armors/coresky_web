@@ -16,7 +16,7 @@
       <div class="filter-item flex border">
         <span class="left">Buy Now</span>
         <span class="right">
-          <el-switch v-model="queryParams.isNowBuy" class="ml-2" />
+          <el-switch v-model="queryParams.buyNow" class="ml-2" />
         </span>
       </div>
       <div class="filter-item border">
@@ -33,13 +33,13 @@
           <el-option value="ETH">ETH</el-option>
         </el-select>
         <div class="price-range" style="margin-top:15px">
-          <el-input-number class="input-number" :controls="false" v-model="queryParams.minPrice"
+          <el-input type="number" class="input-number" :controls="false" v-model="queryParams.minPrice"
             :placeholder="$t('home.minPlaceholder')" />
           <div class="line"></div>
-          <el-input-number class="input-number" :controls="false" v-model="queryParams.maxPrice"
+          <el-input type="number" class="input-number" :controls="false" v-model="queryParams.maxPrice"
             :placeholder="$t('home.maxPlaceholder')" />
         </div>
-        <div class="btn-apply">Application</div>
+        <div class="btn-apply" @click="searchClick">Application</div>
       </div>
       <div class="filter-item">
         <div class="flex">
@@ -78,18 +78,18 @@
           Filter
         </div>
         <el-input class="search-input-wrap" style="width:400px" placeholder="Search by name or attribute"
-          v-model="keyword" @keyup.enter="searchClick">
+          v-model="queryParams.keyword" @keyup.enter="searchClick">
           <template #prefix>
             <div class="img-search"><img src="../../assets/images/icons/icon_search.svg" alt=""></div>
           </template>
         </el-input>
-        <el-select v-model="queryParams.sort" placeholder="Recently listed" :teleported="false"
+        <el-select v-model="queryParams.order" placeholder="Recently listed" :teleported="false"
           popper-class="select-popper" class="select-sort">
-          <el-option value="Recently listed1">Recently listed</el-option>
-          <el-option value="Recently listed2">Recently listed</el-option>
-          <el-option value="Recently listed3">Recently listed</el-option>
-          <el-option value="Recently listed4">Recently listed</el-option>
-          <el-option value="Recently listed5">Recently listed</el-option>
+          <el-option :value="1" label="Price low to high" />
+          <el-option :value="2" label="Price high to low" />
+          <el-option :value="3" label="Recently listed" />
+          <el-option :value="4" label="Recently sold" />
+          <el-option :value="5" label="Ending soon" />
         </el-select>
         <div class="sort-wrap">
           <span class="icon-wrap icon_filter01 active">
@@ -98,30 +98,30 @@
         </div>
       </div>
       <div class="nft-list">
-        <div class="nft-card" v-for="i in 20" :key="i">
+        <router-link :to="`/detail/${item.contract}/${item.tokenId}`"  class="nft-card" v-for="(item,index) in dataList" :key="index">
           <div class="nft-content">
             <div class="card-top">
               <div class="card-img">
-                <img class="img-lazy"
-                  src="https://storage.nfte.ai/asset/collection/featured/BEEWQLPGNIJCWCXJUDSRUWRWOWSOYCCT.jpg?x-oss-process=image/resize,m_fill,w_504,h_288,limit_0"
-                  alt="Image" _nk="p/rO21">
+                <image-box :src="item.image"></image-box>
               </div>
             </div>
             <div class="card-bottom">
               <div class="nft-txt">
-                Azuki #9251
+                {{item.ckCollectionsInfoEntity.name}} #{{item.tokenId}}
               </div>
               <div class="nft-price">
                 <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="">
-                <span class="nft-price">0.073 ETH</span>
+                <span class="nft-price">{{nftPrice(item.basePrice)}} ETH</span>
               </div>
             </div>
           </div>
-        </div>
+        </router-link>
       </div>
-      <div class="custom-pagination">
+      <div class="custom-pagination" v-if="listCount>queryParams.limit">
         <div class="content">
-          <el-pagination background layout="prev, pager, next" align="center" :total="1000" />
+          <el-pagination background v-model:current-page="queryParams.page" :page-size="queryParams.limit"
+            :page-="queryParams.limit" @current-change="queryData" layout="prev, pager, next" align="center"
+            :total="listCount" />
         </div>
       </div>
     </div>
@@ -136,24 +136,41 @@ export default {
   data: function () {
     return {
       queryParams: {
-        pageNum: 1,
-        pageSize: 10,
-        sort: '',
+        page: 1,
+        limit: 20,
+        keyword: "",
+        buyNow: false,
         minPrice: '',
         maxPrice: '',
-        isNowBuy: true,
+        order: 1,
       },
-    };
+      listCount: 0,
+      dataList: [],
+    }
   },
-  watch: {
 
-  },
   created () {
   },
-  mounted () { },
-  computed: {
+  mounted () {
+    this.searchClick()
   },
   methods: {
+    nftPrice (basePrice) {
+      return this.$Web3.utils.fromWei(basePrice.toString())
+    },
+    searchClick () {
+      this.queryParams.page = 1
+      this.queryData()
+    },
+    queryData () {
+      this.$api("token.query", this.queryParams).then((res) => {
+        if (this.$tools.checkResponse(res)) {
+          this.dataList = res.debug.listData
+          this.listCount = res.debug.listCount
+          this.queryParams.page = res.debug.curPage
+        }
+      })
+    }
   },
 };
 </script>
@@ -164,6 +181,9 @@ export default {
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-start;
+  .right-content {
+    width: 100%;
+  }
 }
 </style>
 

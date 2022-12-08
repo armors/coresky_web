@@ -12,33 +12,30 @@
       <div class="item-nav">Music</div>
     </div>
     <div class="collection-list">
-      <div class="collection-card" v-for="i in 12" :key="i">
+      <router-link :to="`/collection/${item.contract}`"  class="collection-card" v-for="(item,index) in dataList" :key="index">
         <div class="collection-content">
           <div class="card-top">
             <div class="card-img">
-              <img class="img-lazy"
-                src="https://storage.nfte.ai/asset/collection/featured/BEEWQLPGNIJCWCXJUDSRUWRWOWSOYCCT.jpg?x-oss-process=image/resize,m_fill,w_504,h_288,limit_0"
-                alt="Image" _nk="p/rO21">
+              <image-box :src="item.bannerImage"></image-box>
             </div>
           </div>
           <div class="card-bottom">
             <div class="head-img">
-              <img
-                src="https://storage.nfte.ai/asset/collection/featured/MFYROFVZKZSCSHUWXRGBZAAQPZWMOKFM.jpg?x-oss-process=image/resize,m_fill,w_108,h_108,limit_0"
-                alt="">
+              <image-box :src="item.image"></image-box>
               <img class="tag" src="../../assets/images/icons/icon_tag.svg" alt="">
             </div>
             <div class="head-txt">
-              HUGO x Imaginary Ones: Embrace Your Emotionss
+              {{item.name}}
             </div>
           </div>
         </div>
-      </div>
+      </router-link>
     </div>
 
-    <div class="custom-pagination">
+    <div class="custom-pagination" v-if="listCount>query.limit">
       <div class="content">
-        <el-pagination background layout="prev, pager, next" align="center" :total="1000" />
+        <el-pagination background v-model:current-page="query.page" :page-size="query.limit" :page-="query.limit"
+          @current-change="search" layout="prev, pager, next" align="center" :total="listCount" />
       </div>
     </div>
 
@@ -55,12 +52,16 @@ export default {
       query: {
         search: this.$route.query.keyword || "",
         page: 1,
+        cid: 1,
         limit: this.$store.state.pageLimit,
       },
       keyword: '',
       loadStatus: "",
       sortIndex: "first",
       accountList: [],
+      categoryList: [],
+      dataList: [],
+      listCount: 0,
     };
   },
   watch: {
@@ -91,70 +92,25 @@ export default {
     },
   },
   methods: {
-    handleClick (tab) {
-      this.loadStatus = "";
-      this.sortIndex = tab;
-      this.query.page = 1;
-      this.search();
-    },
     init () {
+      this.getCategoryList()
       this.search();
     },
-    reloadList () {
-      this.query.page = 1;
-      this.search();
-    },
-    loadsearchList () {
-      if (this.loadStatus == "over") return;
-      this.search();
+    getCategoryList () {
+      this.$api("category.list").then((res) => {
+        if (this.$tools.checkResponse(res)) {
+          this.categoryList = res.data;
+        }
+      });
     },
     search () {
-      if (this.loadStatus == "loading") return;
-      this.loadStatus = "loading";
-      let data = {
-        ...this.query,
-      };
-      if (this.sortIndex == "second") {
-        this.getAccounts(data);
-      } else {
-        this.getNFTs(data);
-      }
-    },
-    getNFTs (parameter) {
-      var data = {
-        ...this.query,
-      };
-      this.$api("home.search", data).then((res) => {
-        this.loadStatus = "loaded";
+      this.$api("collect.query", this.query).then((res) => {
         if (this.$tools.checkResponse(res)) {
-          if (data.page == 1) this.nftList = [];
-          this.nftList = this.nftList.concat(res.data.list);
-          this.queryFunction(res.data.list);
-          if (res.data.list.length < data.limit) {
-            this.loadStatus = "over";
-          } else {
-            this.query.page += 1;
-          }
-        } else {
-          this.$tools.message(res.errmsg);
+          this.dataList = res.debug.listData
+          this.listCount = res.debug.listCount
+          this.query.page = res.debug.curPage
         }
-      });
-    },
-    getAccounts (data) {
-      this.$api("home.searchuser", data).then((res) => {
-        this.loadStatus = "loaded";
-        if (this.$tools.checkResponse(res)) {
-          if (data.page == 1) this.accountList = [];
-          this.accountList = this.accountList.concat(res.data.list);
-          if (res.data.list.length < data.limit) {
-            this.loadStatus = "over";
-          } else {
-            this.query.page += 1;
-          }
-        } else {
-          this.$tools.message(res.errmsg);
-        }
-      });
+      })
     },
   },
 };

@@ -385,4 +385,10 @@ export default {
       method: "post",
     },
   },
+  token:{
+    query: {
+      url: "/token/query",
+      method: "post",
+    },
+  }
 };
