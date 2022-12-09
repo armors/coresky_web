@@ -27,8 +27,8 @@
                 </div>
               </div>
               <div class="arrt-item">
-                <p class="attr-name">Background</p>
-                <p class="attr-value">New Punk Blue</p>
+                <p class="attr-name">Clothes</p>
+                <p class="attr-value">Lumberjack Shirt</p>
                 <div class="attr-bottom">
                   <span class="attr-num">1,232(12.32%)</span>
                   <div class="attr-price">
@@ -38,8 +38,8 @@
                 </div>
               </div>
               <div class="arrt-item">
-                <p class="attr-name">Background</p>
-                <p class="attr-value">New Punk Blue</p>
+                <p class="attr-name">Eyes</p>
+                <p class="attr-value">X Eyes</p>
                 <div class="attr-bottom">
                   <span class="attr-num">1,232(12.32%)</span>
                   <div class="attr-price">
@@ -49,8 +49,8 @@
                 </div>
               </div>
               <div class="arrt-item">
-                <p class="attr-name">Background</p>
-                <p class="attr-value">New Punk Blue</p>
+                <p class="attr-name">Fur</p>
+                <p class="attr-value">Pink</p>
                 <div class="attr-bottom">
                   <span class="attr-num">1,232(12.32%)</span>
                   <div class="attr-price">
@@ -60,8 +60,8 @@
                 </div>
               </div>
               <div class="arrt-item">
-                <p class="attr-name">Background</p>
-                <p class="attr-value">New Punk Blue</p>
+                <p class="attr-name">Hat</p>
+                <p class="attr-value">Girl's Hair Short</p>
                 <div class="attr-bottom">
                   <span class="attr-num">1,232(12.32%)</span>
                   <div class="attr-price">
@@ -71,8 +71,8 @@
                 </div>
               </div>
               <div class="arrt-item">
-                <p class="attr-name">Background</p>
-                <p class="attr-value">New Punk Blue</p>
+                <p class="attr-name">Mouth</p>
+                <p class="attr-value">Bored</p>
                 <div class="attr-bottom">
                   <span class="attr-num">1,232(12.32%)</span>
                   <div class="attr-price">
@@ -96,7 +96,7 @@
             <div class="flex-detial-list">
               <div class="flex-detial">
                 <span class="name">Token ID</span>
-                <span class="value">2974</span>
+                <span class="value primaryColor">{{tokenInfo.tokenId}}</span>
               </div>
               <div class="flex-detial">
                 <span class="name">Blockchain</span>
@@ -110,11 +110,18 @@
               </div>
               <div class="flex-detial">
                 <span class="name">Contract</span>
-                <span class="value">0x..f13D</span>
+                <div class="value display-flex box-center-Y color-purple" @click="$filters.openWindow($filters.contractExplore(tokenInfo.contract).href)">
+                  <div>{{$filters.contractExplore(tokenInfo.contract).hashShort}}</div>
+                  <div class="share-icon"><img src="../../assets/images/icons/icon_share_purple.svg" alt=""></div>
+                </div>
+
               </div>
               <div class="flex-detial">
                 <span class="name">Creator Rebate</span>
-                <span class="value">0.5%</span>
+                <div class="value primaryColor display-flex box-center-Y">
+                  <div>0.5%</div>
+                  <div class="tip-icon"><img src="../../assets/images/icons/icon_tip_black.svg" alt=""></div>
+                </div>
               </div>
             </div>
           </div>
@@ -140,7 +147,7 @@
             </div>
             <div>
               <div class="creator">Current owner</div>
-              <div class="creator-name">{{$filters.ellipsisAddress(tokenInfo.address)}}</div>
+              <div class="creator-name">{{$filters.ellipsisAddress(tokenInfo.ckCollectionsInfoEntity.owner)}}</div>
             </div>
           </div>
           <div class="nft-bid-box">
@@ -149,7 +156,7 @@
                 <div>Current Price</div>
                 <div class="row">
                   <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-                  <span class="value">530.73</span>
+                  <span class="value">{{nftPrice}}</span>
                 </div>
                 <div class="row">
                   $45,332,02
@@ -345,6 +352,7 @@ export default {
       },
       ckAuctionEntityList: [],
       isCart: false,
+      nftPrice: '--',
     };
   },
   created () {
@@ -389,6 +397,7 @@ export default {
         this.tokenInfo = res.debug
         // this.tokenInfo.ckCollectionsInfoEntity.floorPrice = '0.02'
         this.ckAuctionEntityList = this.tokenInfo.ckAuctionEntityList || []
+        this.nftPrice = this.$sdk.fromWeiNum(this.tokenInfo.ckOrdersEntity.basePrice)
         this.isInCart()
       })
     },
@@ -734,6 +743,7 @@ export default {
       background: $elButtonHoverBg;
       border-radius: 16px;
       .attr-value {
+        color: $primaryColor;
         font-weight: 700;
         font-size: 14px;
         line-height: 21px;
@@ -770,6 +780,7 @@ export default {
       font-weight: 500;
       font-size: 14px;
       color: $color-black3;
+      cursor: pointer;
       &.line {
         height: 1px;
         background: $borderBg;

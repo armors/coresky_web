@@ -40,6 +40,23 @@ export function hashExplore(hash) {
     href: `${process.env.VUE_APP_EXPLORE}/tx/${hash}`
   }
 }
+export function contractExplore(hash) {
+  if (!hash) {
+    return {
+      hashShort: '--',
+      href: `${process.env.VUE_APP_EXPLORE}`
+    }
+  }
+  return {
+    hashShort: ellipsisAddress(hash),
+    href: `${process.env.VUE_APP_EXPLORE}/address/${hash}`
+  }
+}
+
+export function openWindow(url) {
+  window.open(url, '_blank'); //注意第二个参数
+
+}
 
 export function decimal(num, v) {
   var vv = Math.pow(10, v);
