@@ -1,6 +1,7 @@
 import store from "@/store";
 import i18n from "@/i18n/i18n";
 import tools from "@/util/tools";
+import moment from 'moment'
 const isAbsoluteURL = (str) => /^[a-z][a-z0-9+.-]*:/.test(str);
 
 export function fullImageUrl(url) {
@@ -53,7 +54,7 @@ export function contractExplore(hash) {
   }
 }
 export function milliFormat(num) {
-  if (num === '') return '--'
+  if (!num) return '--'
   return num && num.toString()
     .replace(/\d+/, (s) => s.replace(/(\d)(?=(\d{3})+$)/g, '$1,'))
   // return (
@@ -96,6 +97,26 @@ export function timeFormat(time) {
   } else {
     return Math.round(elapsed / msPerYear) + i18n.global.t("time.yearsAgo");
   }
+}
+
+export function timeFormatMoment (time, formatType = 'YYYY.MM.DD') {
+  return moment(time * 1000).format(formatType);    // 2022/12/10;               // 12月 10日 22
+}
+
+export function timeToUTC(time) {
+  if (!time) return '--'
+  let date = new Date(time * 1000); //Wed Jan 02 2019 00:00:00 GMT+0800 (China Standard Time)
+
+  let chinaDate = date.toDateString(); //"Tue, 01 Jan 2019 16:00:00 GMT"
+  //注意：此处时间为中国时区，如果是全球项目，需要转成【协调世界时】（UTC）
+  let globalDate = date.toUTCString(); //"Wed Jan 02 2019"
+
+  //之后的处理是一样的
+  let chinaDateArray = chinaDate.split(' '); //["Wed", "Jan", "02", "2019"]
+
+  // let displayDate = `${chinaDateArray[1]} ${chinaDateArray[2]}, ${chinaDateArray[3]}`; //"Jan 02, 2019"
+   //"Jan, 2019"
+  return `${chinaDateArray[1]}   ${chinaDateArray[3]}`
 }
 export function nftURI (v) {
   if (v.metadataContent) {

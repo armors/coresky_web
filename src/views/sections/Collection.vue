@@ -27,11 +27,11 @@
       <div class="info-val">
         <div class="item">
           <span class="lable">Items:</span>
-          <span class="value">10,000</span>
+          <span class="value">{{$filters.milliFormat(collectInfo.total)}}</span>
         </div>
         <div class="item">
           <span class="lable">Created:</span>
-          <span class="value">Jul 2022</span>
+          <span class="value">{{$filters.timeToUTC(collectInfo.createTime)}}</span>
         </div>
         <div class="item">
           <span class="lable">Creator fee:</span>
@@ -43,7 +43,7 @@
         </div>
         <div class="item">
           <span class="lable">Contract ADD:</span>
-          <span class="value">:0x595…da687</span>
+          <span class="value">:{{$filters.ellipsisAddress(collectInfo.contract)}}</span>
           <el-icon>
             <CopyDocument />
           </el-icon>
@@ -55,7 +55,7 @@
           <div class="lable">Floor Price</div>
           <div class="value">
             <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
-            <span>530.73</span>
+            <span>{{collectInfo.foolPrice}}</span>
           </div>
           <div class="rise">
             <span class="time">24h</span>
@@ -66,7 +66,7 @@
           <div class="lable">Best Offier</div>
           <div class="value">
             <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
-            <span>530.73</span>
+            <span>--</span>
           </div>
           <div class="rise">
             <span class="time">24h</span>
@@ -77,7 +77,7 @@
           <div class="lable">24h Volume</div>
           <div class="value">
             <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
-            <span>530.73</span>
+            <span>{{collectInfo.dayVol}}</span>
           </div>
           <div class="rise">
             <span class="time">24h</span>
@@ -88,7 +88,7 @@
           <div class="lable">total volume</div>
           <div class="value">
             <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
-            <span>530.73</span>
+            <span>{{collectInfo.volume}}</span>
           </div>
           <div class="rise">
             <span class="time">24h</span>
@@ -98,8 +98,7 @@
         <div class="item">
           <div class="lable">Owers</div>
           <div class="value">
-            <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
-            <span>530.73</span>
+            <span>{{$filters.milliFormat(collectInfo.holder)}}</span>
           </div>
           <div class="rise">
             <span class="time">24h</span>
@@ -109,8 +108,7 @@
         <div class="item">
           <div class="lable">Items</div>
           <div class="value">
-            <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
-            <span>530.73</span>
+            <span>{{$filters.milliFormat(collectInfo.total)}}</span>
           </div>
           <div class="rise">
             <span class="time">24h</span>
@@ -237,18 +235,16 @@
               <div class="nft-content">
                 <div class="card-top">
                   <div class="card-img">
-                    <img class="img-lazy"
-                      src="https://storage.nfte.ai/asset/collection/featured/BEEWQLPGNIJCWCXJUDSRUWRWOWSOYCCT.jpg?x-oss-process=image/resize,m_fill,w_504,h_288,limit_0"
-                      alt="Image" _nk="p/rO21">
+                    <image-box :src="v.oriImage"></image-box>
                   </div>
                 </div>
                 <div class="card-bottom">
                   <div class="nft-txt">
-                    Azuki #{{v.tokenId}}
+                    {{v.name || '--'}} #{{v.tokenId}}
                   </div>
                   <div class="nft-price">
                     <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="">
-                    <span class="nft-price">0.073 ETH</span>
+                    <span class="nft-price">{{$Web3.utils.fromWei(v.basePrice.toString())}} ETH</span>
                   </div>
                 </div>
               </div>
