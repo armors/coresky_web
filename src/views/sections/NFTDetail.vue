@@ -15,72 +15,72 @@
           </div>
           <div class="card-body">
             <div class="arrt-list">
-              <div class="arrt-item">
-                <p class="attr-name">Background</p>
-                <p class="attr-value">New Punk Blue</p>
+              <div class="arrt-item" v-for="(v, i) in tokenInfo.attributeResList" :key="`attr-item-${i}`">
+                <p class="attr-name">{{v.type}}</p>
+                <p class="attr-value">{{v.value}}</p>
                 <div class="attr-bottom">
-                  <span class="attr-num">1,232(12.32%)</span>
+                  <span class="attr-num">{{$filters.milliFormat(v.count)}}({{v.percent}}%)</span>
                   <div class="attr-price">
                     <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-                    <span class="value">530.73</span>
+                    <span class="value">{{v.price}}</span>
                   </div>
                 </div>
               </div>
-              <div class="arrt-item">
-                <p class="attr-name">Clothes</p>
-                <p class="attr-value">Lumberjack Shirt</p>
-                <div class="attr-bottom">
-                  <span class="attr-num">1,232(12.32%)</span>
-                  <div class="attr-price">
-                    <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-                    <span class="value">530.73</span>
-                  </div>
-                </div>
-              </div>
-              <div class="arrt-item">
-                <p class="attr-name">Eyes</p>
-                <p class="attr-value">X Eyes</p>
-                <div class="attr-bottom">
-                  <span class="attr-num">1,232(12.32%)</span>
-                  <div class="attr-price">
-                    <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-                    <span class="value">530.73</span>
-                  </div>
-                </div>
-              </div>
-              <div class="arrt-item">
-                <p class="attr-name">Fur</p>
-                <p class="attr-value">Pink</p>
-                <div class="attr-bottom">
-                  <span class="attr-num">1,232(12.32%)</span>
-                  <div class="attr-price">
-                    <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-                    <span class="value">530.73</span>
-                  </div>
-                </div>
-              </div>
-              <div class="arrt-item">
-                <p class="attr-name">Hat</p>
-                <p class="attr-value">Girl's Hair Short</p>
-                <div class="attr-bottom">
-                  <span class="attr-num">1,232(12.32%)</span>
-                  <div class="attr-price">
-                    <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-                    <span class="value">530.73</span>
-                  </div>
-                </div>
-              </div>
-              <div class="arrt-item">
-                <p class="attr-name">Mouth</p>
-                <p class="attr-value">Bored</p>
-                <div class="attr-bottom">
-                  <span class="attr-num">1,232(12.32%)</span>
-                  <div class="attr-price">
-                    <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-                    <span class="value">530.73</span>
-                  </div>
-                </div>
-              </div>
+<!--              <div class="arrt-item">-->
+<!--                <p class="attr-name">Clothes</p>-->
+<!--                <p class="attr-value">Lumberjack Shirt</p>-->
+<!--                <div class="attr-bottom">-->
+<!--                  <span class="attr-num">1,232(12.32%)</span>-->
+<!--                  <div class="attr-price">-->
+<!--                    <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />-->
+<!--                    <span class="value">530.73</span>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="arrt-item">-->
+<!--                <p class="attr-name">Eyes</p>-->
+<!--                <p class="attr-value">X Eyes</p>-->
+<!--                <div class="attr-bottom">-->
+<!--                  <span class="attr-num">1,232(12.32%)</span>-->
+<!--                  <div class="attr-price">-->
+<!--                    <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />-->
+<!--                    <span class="value">530.73</span>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="arrt-item">-->
+<!--                <p class="attr-name">Fur</p>-->
+<!--                <p class="attr-value">Pink</p>-->
+<!--                <div class="attr-bottom">-->
+<!--                  <span class="attr-num">1,232(12.32%)</span>-->
+<!--                  <div class="attr-price">-->
+<!--                    <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />-->
+<!--                    <span class="value">530.73</span>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="arrt-item">-->
+<!--                <p class="attr-name">Hat</p>-->
+<!--                <p class="attr-value">Girl's Hair Short</p>-->
+<!--                <div class="attr-bottom">-->
+<!--                  <span class="attr-num">1,232(12.32%)</span>-->
+<!--                  <div class="attr-price">-->
+<!--                    <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />-->
+<!--                    <span class="value">530.73</span>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="arrt-item">-->
+<!--                    <p class="attr-name">Mouth</p>-->
+<!--                    <p class="attr-value">Bored</p>-->
+<!--                    <div class="attr-bottom">-->
+<!--                      <span class="attr-num">1,232(12.32%)</span>-->
+<!--                      <div class="attr-price">-->
+<!--                        <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />-->
+<!--                    <span class="value">530.73</span>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
             </div>
           </div>
         </div>
@@ -166,7 +166,7 @@
                 <div class="row-item">
                   <img class="icon" src="@/assets/images/icons/icon_time.svg" alt="">
                   <span>Time left</span>
-                  <span class="item-value">28d 12h 32m</span>
+                  <span class="item-value">{{countDownTime}}</span>
                 </div>
                 <div class="row-item">
                   <img class="icon" src="@/assets/images/icons/icon_frame.svg" alt="">
@@ -353,6 +353,8 @@ export default {
       ckAuctionEntityList: [],
       isCart: false,
       nftPrice: '--',
+      countDownTime: '--',
+      countDownFn: ''
     };
   },
   created () {
@@ -377,7 +379,69 @@ export default {
       return this.tokenInfo.address && this.user.coinbase && this.tokenInfo.address.toLowerCase() === this.user.coinbase.toLowerCase()
     },
   },
+  destroyed() {
+    if (that.countDownFn) {
+      clearInterval(that.countDownFn); //清除定时器
+    }
+  },
   methods: {
+    //倒计时
+    countDownFun(time) {
+      // console.log(time)
+      let startTime = new Date(); //当前时间
+      let end = new Date(time * 1000); //结束时间
+      // console.log(end)
+      let result = parseInt((end - startTime) / 1000); //计算出豪秒
+      let M = parseInt(result / (24 * 60 * 60 * 30)); //用总共的秒数除以月30天的秒数
+      let d = parseInt(result / (24 * 60 * 60)); //用总共的秒数除以1天的秒数
+      let h = parseInt((result / (60 * 60)) % 24); //精确小时，用去余
+      let m = parseInt((result / 60) % 60); //剩余分钟就是用1小时等于60分钟进行趣余
+      let s = parseInt(result % 60);
+      //当倒计时结束时，改变内容
+      if (result <= 0) {
+        return "已过期";
+      }
+      if (M < 10) {
+        M = "0" + M;
+      }
+      if (d < 10) {
+        d = "0" + d;
+      }
+      if (h < 10) {
+        h = "0" + h;
+      }
+      if (s < 10) {
+        s = "0" + s;
+      }
+      if (parseInt(h) === 0 && parseInt(m) === 0) {
+        return  s + "S";
+      } else if (parseInt(h) === 0) {
+        return  m + "M " + s + "S";
+      } else if(parseInt(d) === 0) {
+        return  h + "H " + m + "M " + s + "S";
+      } else {
+        return  d + "D " + h + "H " + m + "M " + s + "S";
+      }
+      // else if (parseInt(M) === 0){
+      //   return  d + "d" + h + " H" + m + "M " + s + "S";
+      // }
+      // else {
+      //   return  M + '月' + d + "d" + h + "d" + m + "M " + s + "S";
+      // }
+    },
+    // 定时器
+    // 页面多个倒计时 归零时清除
+    countDown() {
+      let that = this;
+      that.countDownFn = setInterval(() => {
+        //  console.log(that.countDownFun(item.endTime))
+        if (that.countDownFun(that.countDownTime) === "倒计时结束") {
+          clearInterval(that.countDownFn); //清除定时器
+        } else {
+          that.countDownTime = that.countDownFun(that.tokenInfo.ckOrdersEntity.expirationTime);
+        }
+      }, 1000);
+    },
     isInCart () {
       const local = getLocalStorage(this.cartName)
       console.log(local[this.cartName])
@@ -398,6 +462,9 @@ export default {
         // this.tokenInfo.ckCollectionsInfoEntity.floorPrice = '0.02'
         this.ckAuctionEntityList = this.tokenInfo.ckAuctionEntityList || []
         this.nftPrice = this.$sdk.fromWeiNum(this.tokenInfo.ckOrdersEntity.basePrice)
+        if (this.tokenInfo.ckOrdersEntity !== null) {
+          this.countDown()
+        }
         this.isInCart()
       })
     },
@@ -500,7 +567,7 @@ export default {
   margin-bottom: 20px;
   .flex-center {
     display: flex;
-    flex-flow: row wrap;
+    /*flex-flow: row wrap;*/
     justify-content: space-between;
   }
   .page-left {

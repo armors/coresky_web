@@ -52,7 +52,17 @@ export function contractExplore(hash) {
     href: `${process.env.VUE_APP_EXPLORE}/address/${hash}`
   }
 }
-
+export function milliFormat(num) {
+  if (num === '') return '--'
+  return num && num.toString()
+    .replace(/\d+/, (s) => s.replace(/(\d)(?=(\d{3})+$)/g, '$1,'))
+  // return (
+  //   num &&
+  //   num.toString().replace(/\d+/, function(s) {
+  //     return s.replace(/(\d)(?=(\d{3})+$)/g, "$1,");
+  //   })
+  // );
+}
 export function openWindow(url) {
   window.open(url, '_blank'); //注意第二个参数
 
