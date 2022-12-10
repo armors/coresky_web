@@ -154,14 +154,14 @@ export default {
     }
     window.addEventListener("scroll", this.handleScroll);
   },
-  mounted() {
+  mounted () {
     // this.login()
   },
   methods: {
-    async login(value='metamask') {
+    async login (value = 'metamask') {
       console.log('header connectSign')
-      this.$store.dispatch("connectAndSign", value).then(res=>{
-        if(res && this.$tools.checkResponse(res)){
+      this.$store.dispatch("connectAndSign", value).then(res => {
+        if (res && this.$tools.checkResponse(res)) {
           console.log(res)
           // var query = this.$route.query;
           // if (query && query.redirect) {
@@ -328,10 +328,14 @@ export default {
 .nav-link {
   position: relative;
   white-space: nowrap;
-  color: #000;
-  font-size: 15px;
+  color: $color-black4;
+  font-weight: 600;
+  font-size: 16px;
   cursor: pointer;
   margin-right: 20px;
+  &:hover{
+    color: $bgPurple;
+  }
   &.active {
     border-bottom: 2px solid #333;
     line-height: 23px;

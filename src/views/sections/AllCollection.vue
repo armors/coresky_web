@@ -5,14 +5,13 @@
       <div class="page-title-sub">Kaufen und gehen，Zögern Sie nicht！Bitte wählen Sie die gewünschte Kategorie aus!</div>
     </div>
     <div class="top-nav">
-      <div class="item-nav active">PFP</div>
-      <div class="item-nav">Art</div>
-      <div class="item-nav">Passcard</div>
-      <div class="item-nav">Game</div>
-      <div class="item-nav">Music</div>
+      <div class="item-nav" :class="{'active':item.id===query.cid}" @click="changeCategory(item)"
+        v-for="(item,index) in categoryList" :key="index">
+        {{item.name}}</div>
     </div>
     <div class="collection-list">
-      <router-link :to="`/collection/${item.contract}`"  class="collection-card" v-for="(item,index) in dataList" :key="index">
+      <router-link :to="`/collection/${item.contract}`" class="collection-card" v-for="(item,index) in dataList"
+        :key="index">
         <div class="collection-content">
           <div class="card-top">
             <div class="card-img">
@@ -62,6 +61,7 @@ export default {
       categoryList: [],
       dataList: [],
       listCount: 0,
+      categoryId: 1,
     };
   },
   watch: {
@@ -97,11 +97,15 @@ export default {
       this.search();
     },
     getCategoryList () {
-      this.$api("category.list").then((res) => {
+      this.$api("collections.type").then((res) => {
         if (this.$tools.checkResponse(res)) {
           this.categoryList = res.data;
         }
       });
+    },
+    changeCategory (item) {
+      this.query.cid = item.id
+      this.search()
     },
     search () {
       this.$api("collect.query", this.query).then((res) => {
@@ -147,7 +151,10 @@ export default {
       &:hover {
         cursor: pointer;
       }
-      &:hover,
+      &:hover {
+        color: $color-black3;
+        border: 1px solid $color-black3;
+      }
       &.active {
         font-weight: 500;
         background: $mainLiner;
