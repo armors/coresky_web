@@ -1,24 +1,29 @@
-import { ElMessageBox, ElMessage } from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 import i18n from "@/i18n/i18n";
 import store from "@/store";
 import router from "@/router";
-import web3 from "@/util/web3";
 import BigNumber from "bignumber.js";
 
 const NETWORKS = {
   "1": "Main",
-  "2": "Morden",
-  "3": "Ropsten",
-  "4": "Rinkeby",
-  "42": "Kovan",
-  "5777": "Ganache",
-  "56": "Bnb",
-  "97": "Bnb Testnet",
-  "137": "Polygon",
-  "80001": "Polygon Mumbai",
-  "43113": "avalanche FUJI",
-  "43114": "avalanche",
+  "5": "Goerli",
 };
+const NETWORKLIST = [
+  {
+    chainId: 5,
+    name: 'Goerli',
+    symbol: "ETH",
+    rpc: "https://goerli.infura.io/v3/",
+    explore: "https://goerli.etherscan.io"
+  },
+  {
+    chainId: 1,
+    name: 'Main',
+    symbol: "ETH",
+    rpc: "https://mainnet.infura.io/v3/",
+    explore: "https://etherscan.io"
+  }
+]
 const NOTIFY_TYPE = {
   "1": "FOLLOW",
   "2": "LIKE",
@@ -202,6 +207,12 @@ export default {
       return "unknown network";
     }
     return name;
+  },
+  network() {
+    return NETWORKLIST.find((item => item.chainId === parseInt(process.env.VUE_APP_CHAINID)))
+  },
+  networkIds () {
+    return NETWORKS
   },
   delHashFormat(hash) {
     if (hash.startsWith("0x")) return hash.slice(2, hash.length);

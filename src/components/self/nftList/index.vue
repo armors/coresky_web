@@ -35,16 +35,16 @@
 			<div class="exchange-volume box-flex1 display-flex box-center-Y">
 				<div class="box-flex1"></div>
 				<div class="icon-token"><img src="../../../assets/images/icons/token/token_eth.svg" alt=""></div>
-				<div>{{v.dayAmount}}</div>
+				<div>{{v.dayVol}}</div>
 			</div>
 			<div class="total-exchange-volume box-flex1 display-flex box-center-Y">
 				<div class="box-flex1"></div>
 				<div class="icon-token"><img src="../../../assets/images/icons/token/token_eth.svg" alt=""></div>
-				<div>{{v.totalAmount}}</div>
+				<div>{{v.volume}}</div>
 			</div>
-			<div class="holder box-flex1">{{v.ownerCount}}</div>
-			<div class="total box-flex1">{{v.totalCount}}</div>
-			<div class="order-volume box-flex1">{{v.orderCount}}</div>
+			<div class="holder box-flex1">{{$filters.milliFormat(v.holder)}}</div>
+			<div class="total box-flex1">{{$filters.milliFormat(v.total)}}</div>
+			<div class="order-volume box-flex1">{{$filters.milliFormat(v.listed)}}</div>
 		</div>
 	</div>
 </template>

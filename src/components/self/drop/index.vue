@@ -17,7 +17,7 @@
 							</div>
 							<div class="display-flex box-center-Y info-item launch-time">
 								<div class="label">{{$t("home.launchingTime")}}</div>
-								<div>{{v.createDate}}</div>
+								<div>{{$filters.timeFormatMoment(v.createTime)}}</div>
 <!--								<div>2022-09-11</div>-->
 							</div>
 							<div class="display-flex box-center-Y info-item">

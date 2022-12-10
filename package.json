@@ -5,12 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "dev": "vite --mode development",
-    "dev:release": "vite --mode devrelease",
-    "build:beta": "vite build --mode beta",
-    "build:release": "vite build --mode release",
-    "preview": "vite preview"
+    "buildDev": "vue-cli-service build --mode development",
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.10",

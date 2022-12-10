@@ -103,7 +103,7 @@
           <div class="nft-content">
             <div class="card-top">
               <div class="card-img">
-                <image-box :src="item.image"></image-box>
+                <image-box :src="item.oriImage"></image-box>
               </div>
             </div>
             <div class="card-bottom">
