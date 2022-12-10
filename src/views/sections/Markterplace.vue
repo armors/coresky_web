@@ -16,7 +16,7 @@
       <div class="filter-item flex border">
         <span class="left">Buy Now</span>
         <span class="right">
-          <el-switch v-model="queryParams.buyNow" class="ml-2" />
+          <el-switch v-model="queryParams.buyNow" @change="searchClick" class="ml-2" />
         </span>
       </div>
       <div class="filter-item border">
@@ -83,7 +83,7 @@
             <div class="img-search"><img src="../../assets/images/icons/icon_search.svg" alt=""></div>
           </template>
         </el-input>
-        <el-select v-model="queryParams.order" placeholder="Recently listed" :teleported="false"
+        <el-select v-model="queryParams.order" placeholder="Recently listed" @change="searchClick" :teleported="false"
           popper-class="select-popper" class="select-sort">
           <el-option :value="1" label="Price low to high" />
           <el-option :value="2" label="Price high to low" />
@@ -98,7 +98,8 @@
         </div>
       </div>
       <div class="nft-list">
-        <router-link :to="`/detail/${item.contract}/${item.tokenId}`"  class="nft-card" v-for="(item,index) in dataList" :key="index">
+        <router-link :to="`/detail/${item.contract}/${item.tokenId}`" class="nft-card" v-for="(item,index) in dataList"
+          :key="index">
           <div class="nft-content">
             <div class="card-top">
               <div class="card-img">
@@ -110,8 +111,8 @@
                 {{item.ckCollectionsInfoEntity.name}} #{{item.tokenId}}
               </div>
               <div class="nft-price">
-                <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="">
-                <span class="nft-price">{{nftPrice(item.basePrice)}} ETH</span>
+                <img class="token-icon" src="../../assets/images/icons/token/token_eth2.svg" alt="">
+                <span class="price">{{item.basePrice===0?'-- ':nftPrice(item.basePrice)}} ETH</span>
               </div>
             </div>
           </div>

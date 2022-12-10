@@ -385,9 +385,15 @@ export default {
       method: "post",
     },
   },
-  token:{
+  token: {
     query: {
       url: "/token/query",
+      method: "post",
+    },
+  },
+  collections: {
+    type: {
+      url: "/collections/type",
       method: "post",
     },
   }

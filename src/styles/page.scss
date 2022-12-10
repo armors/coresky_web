@@ -307,12 +307,13 @@
         .nft-price {
           display: flex;
           height: 22px;
+          align-items: center;
           .token-icon {
-            width: 15px;
-            height: 20px;
+            width: 10px;
+            height: 15px;
             margin-right: 5px;
           }
-          .nft-price {
+          .price {
             font-weight: 700;
             font-size: 14px;
             line-height: 22px;
