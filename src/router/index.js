@@ -24,21 +24,21 @@ const routes = [
   {
     path: "/",
     name: "Root",
-    component: Common,
+    component: () => Common,
     children: [
       {
         path: "/",
         name: "home",
-        component: HIndex,
+        component: () => HIndex,
       },
       {
         path: "/orderMock",
         name: "orderMock",
-        component: orderMock,
+        component: () => orderMock,
       },
       {
         path: "/items",
-        component: Items,
+        component: () => Items,
         name: "items",
         meta: {
           auth: true,
@@ -47,7 +47,7 @@ const routes = [
       {
         path: "/erc721",
         name: "erc721",
-        component: ERC721,
+        component: () => ERC721,
         meta: {
           auth: true,
         },
@@ -55,7 +55,7 @@ const routes = [
       {
         path: "/profile",
         name: "profile",
-        component: Profile,
+        component: () => Profile,
         meta: {
           auth: true,
         },
@@ -63,42 +63,42 @@ const routes = [
       {
         path: "/account/:address",
         name: "account",
-        component: Account,
+        component: () => Account,
       },
       {
         path: "/search",
         name: "Search",
-        component: Search,
+        component: () => Search,
       },
       {
         path: "/allcollection",
         name: "allcollection",
-        component: AllCollection,
+        component: () => AllCollection,
       },
       {
         path: "/markterplace",
         name: "markterplace",
-        component: Markterplace,
+        component: () => Markterplace,
       },
       {
         path: "/collection/:contract",
         name: "collection",
-        component: Collection,
+        component: () => Collection,
       },
       {
         path: "/detail/:contract/:tokenId",
         name: "detail",
-        component: NFTDetail,
+        component: () => NFTDetail,
       },
       // {
       //   path: "/account",
       //   name: "account",
-      //   component: AllCollection,
+      //   component: () => AllCollection,
       // },
       {
         path: "/message",
         name: "message",
-        component: Message,
+        component: () => Message,
         meta: {
           auth: true,
         },
@@ -106,14 +106,14 @@ const routes = [
       {
         path: "/404",
         name: "404",
-        component: NoFound,
+        component: () => NoFound,
       },
     ],
   },
   {
     path: "/connect",
     name: "connect",
-    component: Connect,
+    component: () => Connect,
   },
   {
     path: "/:pathMatch(.*)",
