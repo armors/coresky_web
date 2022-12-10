@@ -1,15 +1,21 @@
 <template>
   <div class="app-wrapper no-scroller">
-    <div class="web-loading" v-if="!webLoading" v-loading.fullscreen.lock="!webLoading">
-    </div>
-    <div v-else>
-      <router-view v-if="isRouterAlive" :current-view="currentView" />
+    <div class="web-loading" v-if="!webLoading" v-loading.fullscreen.lock="!webLoading"></div>
+    <div class="common-wraper no-scroller" v-else>
+      <HeaderTemplate />
+        <div class="widClass">
+          <router-view v-if="isRouterAlive" :current-view="currentView" />
+        </div>
+      <FooterTemplate />
     </div>
   </div>
 </template>
 
 <script>
   import { mapState, mapActions } from "vuex";
+  import HeaderTemplate from "./views/layout/HeaderTemplate";
+  import BodyTemplate from "./views/layout/BodyTemplate";
+  import FooterTemplate from "./views/layout/FooterTemplate";
 
   export default {
     name: "App",
@@ -35,6 +41,11 @@
       webLoading () {
         return this.$store.state.webLoading;
       },
+    },
+    components: {
+      HeaderTemplate,
+      BodyTemplate,
+      FooterTemplate,
     },
     watch: {
       $route (newRoute) {
@@ -132,6 +143,24 @@
   }
   .app-wrapper {
     height: 100%;
+  }
+</style>
+
+<style lang="scss">
+  @import "./styles/variables";
+  #home {
+    width: 100%;
+  }
+  .common-wraper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .widClass {
+    width: 100%;
+    padding-top: $headerHeight;
+    min-height: 100vh;
   }
 </style>
 
