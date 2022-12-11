@@ -190,9 +190,9 @@
 <!--              <el-button class="btnBlack" v-if="!isSelf && !isCart" :disabled="!(!isSelf && !isCart) || !tokenInfo.contract || !tokenInfo.state"-->
               <el-button class="btnBlack" :disabled="!(!isSelf && !isCart) || !tokenInfo.contract || !tokenInfo.state"
                 @click="addCart">Add to Cart</el-button>
-              <el-button class="btnWhite" v-if="!isSelf" :disabled="!tokenInfo.contract" @click="showMakeOfferNFT">Make
+              <el-button class="btnWhite" v-if="!isSelf && !this.isMakeOffer" :disabled="!tokenInfo.contract" @click="showMakeOfferNFT">Make
                 Offer</el-button>
-              <el-button class="btnWhite" v-if="!isSelf" :disabled="!tokenInfo.contract" @click="showMakeOfferCollect">
+              <el-button class="btnWhite" v-if="!isSelf && !this.isMakeOffer" :disabled="!tokenInfo.contract" @click="showMakeOfferCollect">
                 Make Offer Collect</el-button>
 <!--              <el-button v-if="isSelf && ckAuctionEntityList.length > 0" class="btnWhite"-->
 <!--                :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT">Accept</el-button>-->
@@ -238,7 +238,8 @@
                 <div class="list-th th25">about 22 hours</div>
                 <div class="list-th th25 purple">{{$filters.ellipsisAddress(v.maker, 4)}}</div>
                 <div class="list-th th25 center">
-                  <el-button type="primary" class="btnAccept" :disabled="!isSelf" :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT(v)">Accept</el-button>
+                  <el-button type="primary" class="btnAccept" v-if="isSelfMakeOffer(v)" :loading="cancelMakeOfferBtnLoading" @click="cancelMakeOffer(v)">Cancel</el-button>
+                  <el-button type="primary" class="btnAccept" v-else :disabled="!isSelf" :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT(v)">Accept</el-button>
                 </div>
               </div>
             </div>
@@ -313,6 +314,7 @@ export default {
   mixins: [],
   data () {
     return {
+      cancelMakeOfferBtnLoading: false,
       buyBtnLoading: false,
       cancelBtnLoading: false,
       sellDialogBtnLoading: false,
@@ -354,7 +356,8 @@ export default {
       isCart: false,
       nftPrice: '--',
       countDownTime: '--',
-      countDownFn: ''
+      countDownFn: '',
+      isMakeOffer: false,
     };
   },
   created () {
@@ -385,6 +388,13 @@ export default {
     }
   },
   methods: {
+    isSelfMakeOffer (v) {
+      const isMakeOffer = v.maker.toLocaleLowerCase() === this.user.coinbase.toLocaleLowerCase()
+      if (isMakeOffer) {
+        this.isMakeOffer = true
+      }
+      return isMakeOffer
+    },
     //倒计时
     countDownFun(time) {
       // console.log(time)
@@ -471,6 +481,19 @@ export default {
     showSellNft () {
       this.sellDialogBtnLoading = true
       this.$refs.NFTDialogSell.showSell(this.tokenInfo)
+    },
+    cancelMakeOffer (v) {
+      this.cancelMakeOfferBtnLoading = true
+      this.$api("order.cancel", {
+        id: v.id
+      }).then((res) => {
+        this.cancelMakeOfferBtnLoading = false
+        this.$tools.message('已取消报价', 'success');
+        this.getTokenInfo()
+      }).catch((e) => {
+        this.cancelMakeOfferBtnLoading = false
+        this.$tools.message(e.message);
+      })
     },
     async cancelSell () {
       this.cancelBtnLoading = true

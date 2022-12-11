@@ -173,6 +173,15 @@ export default {
           this.registryOwner,
           true
         );
+        if (typeof result == "object" && result.error) {
+          return result;
+        }
+        this.isApproved = await this.$sdk.isApprovedForAll(
+          order,
+          this.user.coinbase,
+          this.registryOwner,
+        );
+        this.acceptBtnLoading = false
         console.log(result)
       } else {
         console.log('true')
