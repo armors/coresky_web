@@ -9,7 +9,8 @@ router.beforeEach(async(to, from, next) => {
     next();
   }else{
     if(to.meta.auth){
-      next(`/connect?redirect=${to.path}`);
+      store.dispatch("signLogin");
+      // next(`/connect?redirect=${to.path}`);
     }else{
       next();
     }

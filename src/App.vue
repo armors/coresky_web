@@ -4,7 +4,8 @@
     <div class="common-wraper no-scroller" v-else>
       <HeaderTemplate />
         <div class="widClass">
-          <router-view v-if="isRouterAlive" :current-view="currentView" />
+<!--          <router-view v-if="isRouterAlive" :current-view="currentView" />-->
+          <router-view />
         </div>
       <FooterTemplate />
     </div>
@@ -160,7 +161,7 @@
   .widClass {
     width: 100%;
     padding-top: $headerHeight;
-    min-height: 100vh;
+    /*min-height: 100vh;*/
   }
 </style>
 
