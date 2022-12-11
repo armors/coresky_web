@@ -13,7 +13,7 @@
               <ArrowUp />
             </el-icon>
           </div>
-          <div class="card-body">
+          <div class="card-body" style="height: 392px">
             <div class="arrt-list">
               <div class="arrt-item" v-for="(v, i) in tokenInfo.attributeResList" :key="`attr-item-${i}`">
                 <p class="attr-name">{{v.type}}</p>
@@ -574,7 +574,7 @@ export default {
     width: 468px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    /*justify-content: space-between;*/
     .detail-img-box {
       border-radius: 20px;
       height: 468px;

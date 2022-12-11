@@ -168,7 +168,7 @@ const routes = [
 	{
 		path: "/collection/:contract",
 		name: "collection",
-		component: () => import(/* webpackChunkName: "collection" */ "../views/sections/Connect"),
+		component: () => import(/* webpackChunkName: "collection" */ "../views/sections/Collection"),
 	},
 	{
 		path: "/detail/:contract/:tokenId",

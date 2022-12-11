@@ -5,10 +5,7 @@
 			<div class="arrow-prev arrow-icon" @click="arrowClick('prev')"></div>
 			<div class="arrow-next arrow-icon" @click="arrowClick('next')"></div>
 			<el-carousel class="drop-banner" arrow="never" ref="dropBanner" :interval="10000">
-				<el-carousel-item v-for="(v, i) in _dropList" :key="i" @click="$router.push({
-				name: 'collection',
-				params: { contract: v.contract }
-				})">
+				<el-carousel-item v-for="(v, i) in _dropList" :key="i" @click="goCollect(v)">
 					<div class="drop-box display-flex">
 						<image-box :src="v.bannerImage"></image-box>
 						<div class="box-flex1">
@@ -27,11 +24,11 @@
 							</div>
 							<div class="display-flex box-center-Y info-item">
 								<div class="label">{{$t("home.community")}}</div>
-								<div v-for="(name, i) in mediaList" @click="openWindow(name, v)" class="icon-img" :class="`icon-img-${name}`" :key="`info-item-${i}`"></div>
+								<div v-for="(name, i) in mediaList" @click.stop="openWindow(name, v)" class="icon-img" :class="`icon-img-${name}`" :key="`info-item-${i}`"></div>
 							</div>
 							<div class="display-flex box-center-Y info-item">
 								<div class="label">{{$t("home.mintingLink")}}</div>
-								<div class="icon-img icon-link-img"></div>
+								<div class="icon-img icon-link-img" @click.stop="$filters.openWindow($filters.contractExplore(v.contract).href)" ></div>
 							</div>
 						</div>
 
@@ -80,13 +77,20 @@
 			}
 		},
 		methods: {
+			goCollect(v) {
+				this.$router.push({
+					name: 'collection',
+					params: { contract: v.contract }
+				})
+			},
 			openWindow(name, v) {
+				console.log(name)
 				if (['collect',
 					'share',
 					'more'].indexOf(name) > -1) {
 
 				} else {
-					window.open(v.ckCollectionsInfoEntity[name])
+					window.open(v[name])
 				}
 			},
 			arrowClick (val) {

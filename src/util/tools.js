@@ -106,9 +106,10 @@ export default {
   },
   needLogin(path) {
     if (!store.state.connected) {
-      let url = "/connect";
-      if (path) url += "?redirect=" + path;
-      router.push(url);
+      // let url = "/connect";
+      // if (path) url += "?redirect=" + path;
+      // router.push(url);
+      store.dispatch("signLogin");
       return false;
     }
     if (!store.state.isLogin) {
@@ -119,9 +120,7 @@ export default {
   },
   needConnected(path) {
     if (!store.state.connected) {
-      let url = "/connect";
-      if (path) url += "?redirect=" + path;
-      router.push(url);
+      store.dispatch("signLogin");
       return false;
     }
     return true;
