@@ -12,7 +12,7 @@
     <div v-if="isFinished===false">
 
       <div class="nft-box">
-        <image-box class="img-box" :src="tokenInfo.ckCollectionsInfoEntity.image">
+        <image-box class="img-box" :src="tokenInfo.oriImage">
         </image-box>
         <div class="box-center">
           <span class="tokenid">#{{tokenInfo.tokenId}}</span>
@@ -66,7 +66,7 @@
     </div>
     <div v-else>
       <div class="nft-box">
-        <image-box class="img-box" :src="tokenInfo.ckCollectionsInfoEntity.image"></image-box>
+        <image-box class="img-box" :src="tokenInfo.oriImage"></image-box>
         <div class="box-center">
           <span class="tokenid">Transaction hash</span>
           <a class="hash-txt" target="_blank"

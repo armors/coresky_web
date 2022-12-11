@@ -21,7 +21,7 @@
     <div class="hidden-scrol shopping-cart-content">
       <div class="shopping-item" v-for="(v, i) in coreskyCart" :key="`cart-item-${i}`">
         <div class="shopping-info">
-          <image-box :src="v.ckCollectionsInfoEntity.image"></image-box>
+          <image-box :src="v.oriImage"></image-box>
           <div class="info-txt">
             <div class="txt1">{{v.name || '--'}}</div>
             <div class="txt2">ENS :Ethereum Na…</div>

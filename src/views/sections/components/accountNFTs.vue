@@ -85,7 +85,7 @@
             <div class="card-top">
               <div class="card-img">
                 <!-- <image-box src="https://storage.nfte.ai/asset/collection/featured/BEEWQLPGNIJCWCXJUDSRUWRWOWSOYCCT.jpg?x-oss-process=image/resize,m_fill,w_504,h_288,limit_0"></image-box> -->
-                <image-box :src="item.image"></image-box>
+                <image-box :src="item.oriImage"></image-box>
               </div>
             </div>
             <div class="card-bottom">

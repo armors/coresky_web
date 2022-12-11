@@ -3,7 +3,7 @@
     <div class="flex-center">
       <div class="page-left">
         <div class="detail-img-box">
-          <image-box :src="tokenInfo.ckCollectionsInfoEntity.image"></image-box>
+          <image-box :src="tokenInfo.oriImage"></image-box>
         </div>
         <div class="card-wrap mt30">
           <div class="card-head">
@@ -143,11 +143,11 @@
           <div class="nft-address">
             <div class="add-item">
               <div class="creator">Creator</div>
-              <div class="creator-name">{{$filters.ellipsisAddress(tokenInfo.contract)}}</div>
+              <div class="creator-name">{{$filters.ellipsisAddress(tokenInfo.ckCollectionsInfoEntity.owner)}}</div>
             </div>
             <div>
               <div class="creator">Current owner</div>
-              <div class="creator-name">{{$filters.ellipsisAddress(tokenInfo.ckCollectionsInfoEntity.owner)}}</div>
+              <div class="creator-name">{{$filters.ellipsisAddress(tokenInfo.address)}}</div>
             </div>
           </div>
           <div class="nft-bid-box">
