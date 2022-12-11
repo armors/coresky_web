@@ -1,25 +1,25 @@
 import {createRouter, createWebHistory} from "vue-router";
-// import Common from "@/views/Common";
-// import NFooter from "@/views/NFooter";
+// import Common from "../views/Common";
+// import NFooter from "../views/NFooter";
 // import {markRaw, toRaw} from "vue";
 
-import HIndex from "../views/sections/HIndex.vue";
-import NFTDetail from "../views/sections/NFTDetail.vue";
-import Profile from "@/views/sections/Profile.vue";
-import ERC721 from "../views/sections/ERC721.vue";
-import Connect from "../views/sections/Connect.vue";
-import Items from "../views/sections/Items.vue";
-import Account from "../views/sections/Account.vue";
+import HIndex from "../views/sections/HIndex";
+import NFTDetail from "../views/sections/NFTDetail";
+import Profile from "../views/sections/Profile";
+import ERC721 from "../views/sections/ERC721";
+import Connect from "../views/sections/Connect";
+import Items from "../views/sections/Items";
+import Account from "../views/sections/Account";
 
-import Search from "../views/sections/Search.vue";
-import Collection from "../views/sections/Collection.vue";
-import AllCollection from "../views/sections/AllCollection.vue";
-import Markterplace from "../views/sections/Markterplace.vue";
+import Search from "../views/sections/Search";
+import Collection from "../views/sections/Collection";
+import AllCollection from "../views/sections/AllCollection";
+import Markterplace from "../views/sections/Markterplace";
 
-import Message from "../views/sections/Message.vue";
+import Message from "../views/sections/Message";
 
-import NoFound from "@/views/sections/NoFound.vue";
-import orderMock from "../views/sections/orderMock/index.vue";
+import NoFound from "../views/sections/NoFound";
+import orderMock from "../views/sections/orderMock/index";
 
 const routes = [
 	// {
@@ -114,16 +114,16 @@ const routes = [
 	{
 		path: "/",
 		name: "home",
-		component: () => import("../views/sections/HIndex.vue"),
+		component: () => import(/* webpackChunkName: "HIndex" */ "../views/sections/HIndex"),
 	},
 	{
 		path: "/orderMock",
 		name: "orderMock",
-		component: () => import("../views/sections/orderMock/index.vue"),
+		component: () => import(/* webpackChunkName: "orderMock" */ "../views/sections/orderMock/index"),
 	},
 	{
 		path: "/items",
-		component: () => import("../views/sections/Items.vue"),
+		component: () => import(/* webpackChunkName: "Items" */ "../views/sections/Items"),
 		name: "items",
 		meta: {
 			auth: true,
@@ -132,7 +132,7 @@ const routes = [
 	{
 		path: "/erc721",
 		name: "erc721",
-		component: () => import("../views/sections/ERC721.vue"),
+		component: () => import(/* webpackChunkName: "erc721" */ "../views/sections/ERC721"),
 		meta: {
 			auth: true,
 		},
@@ -140,7 +140,7 @@ const routes = [
 	{
 		path: "/profile",
 		name: "profile",
-		component: () => import("@/views/sections/Profile.vue"),
+		component: () => import(/* webpackChunkName: "profile" */ "../views/sections/Profile"),
 		meta: {
 			auth: true,
 		},
@@ -148,32 +148,32 @@ const routes = [
 	{
 		path: "/account/:address",
 		name: "account",
-		component: () => import("../views/sections/Account.vue"),
+		component: () => import(/* webpackChunkName: "account" */ "../views/sections/Account"),
 	},
 	{
 		path: "/search",
 		name: "Search",
-		component: () => import("../views/sections/Search.vue"),
+		component: () => import(/* webpackChunkName: "search" */ "../views/sections/Search"),
 	},
 	{
 		path: "/allcollection",
 		name: "allcollection",
-		component: () => import("../views/sections/AllCollection.vue"),
+		component: () => import(/* webpackChunkName: "allcollection" */ "../views/sections/AllCollection"),
 	},
 	{
 		path: "/markterplace",
 		name: "markterplace",
-		component: () => import("../views/sections/Markterplace.vue"),
+		component: () => import(/* webpackChunkName: "markterplace" */ "../views/sections/Markterplace"),
 	},
 	{
 		path: "/collection/:contract",
 		name: "collection",
-		component: () => import("../views/sections/Connect.vue"),
+		component: () => import(/* webpackChunkName: "collection" */ "../views/sections/Connect"),
 	},
 	{
 		path: "/detail/:contract/:tokenId",
 		name: "detail",
-		component: () => import("../views/sections/NFTDetail.vue"),
+		component: () => import(/* webpackChunkName: "detail" */ "../views/sections/NFTDetail"),
 	},
 	// {
 	//   path: "/account",
@@ -183,7 +183,7 @@ const routes = [
 	{
 		path: "/message",
 		name: "message",
-		component: () => import("../views/sections/Message.vue"),
+		component: () => import(/* webpackChunkName: "message" */ "../views/sections/Message"),
 		meta: {
 			auth: true,
 		},
@@ -191,12 +191,12 @@ const routes = [
 	{
 		path: "/404",
 		name: "404",
-		component: () => import("@/views/sections/NoFound.vue"),
+		component: () => import(/* webpackChunkName: "404" */ "../views/sections/NoFound"),
 	},
 	{
 		path: "/connect",
 		name: "connect",
-		component: () => import("../views/sections/Connect.vue"),
+		component: () => import(/* webpackChunkName: "connect" */ "../views/sections/Connect"),
 	},
 	{
 		path: "/:pathMatch(.*)",
