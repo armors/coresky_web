@@ -233,7 +233,7 @@
               <div class="list-tr" v-for="(v, i) of ckAuctionEntityList" :key="`make-offer-${i}`">
                 <div class="list-th th25">
                   <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-                  {{nftPrice(v.basePrice)}}
+                  {{nftPriceFun(v.basePrice)}}
                 </div>
                 <div class="list-th th25">about 22 hours</div>
                 <div class="list-th th25 purple">{{$filters.ellipsisAddress(v.maker, 4)}}</div>
@@ -461,7 +461,7 @@ export default {
         this.tokenInfo = res.debug
         // this.tokenInfo.ckCollectionsInfoEntity.floorPrice = '0.02'
         this.ckAuctionEntityList = this.tokenInfo.ckAuctionEntityList || []
-        this.nftPrice = this.$sdk.fromWeiNum(this.tokenInfo.ckOrdersEntity.basePrice)
+        this.nftPrice = this.$sdk.fromWeiNum(this.tokenInfo.ckOrdersEntity ? this.tokenInfo.ckOrdersEntity.basePrice : this.tokenInfo.basePrice)
         if (this.tokenInfo.ckOrdersEntity !== null) {
           this.countDown()
         }
@@ -502,7 +502,7 @@ export default {
     showBuyNft () {
       this.$refs.NFTDialogBuy.showBuy(this.tokenInfo)
     },
-    nftPrice (basePrice) {
+    nftPriceFun (basePrice) {
       return this.$Web3.utils.fromWei(basePrice.toString())
     },
     // 添加购物车
