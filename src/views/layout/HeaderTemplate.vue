@@ -80,7 +80,7 @@
           <div class="user-popover">
             <!-- <profile-popover></profile-popover> -->
             <div class="user-avatar" @click="showUserDrawer=true">
-              <avatar class="avatar-img" :imageUrl="$filters.fullImageUrl(user.avatar)" :address="user.coinbase"
+              <avatar class="avatar-img" :imageUrl="user.avatar || $filters.fullImageUrl(user.avatar)" :address="user.coinbase"
                 :imgWidth="40" :imgHeight="40" shape="circular">
               </avatar>
             </div>
@@ -277,6 +277,10 @@ export default {
   top: 0;
   z-index: 100;
   background: $bg-white;
+  .avatar-img{
+    width: 40px;
+    height: 40px;
+  }
   .header-container {
     max-width: $maxWidthRate;
     margin: 0 auto;

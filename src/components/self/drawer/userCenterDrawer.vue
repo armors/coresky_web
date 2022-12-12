@@ -2,7 +2,7 @@
   <el-drawer v-model="visible" @closed="handleClose" size="406" :append-to-body="true" zIndex="99"
     custom-class="coresky-drawer" :withHeader="false">
     <div class="drawer-top">
-      <avatar class="avatar-box" :imageUrl="$filters.fullImageUrl(user.avatar)" :address="user.coinbase" :imgWidth="52"
+      <avatar class="avatar-box" :imageUrl="user.avatar || $filters.fullImageUrl(user.avatar)"  :address="user.coinbase" :imgWidth="52"
         :imgHeight="52" shape="circular">
       </avatar>
       <div class="info">
@@ -162,6 +162,8 @@ export default {
     align-items: center;
     margin-bottom: 12px;
     .avatar-box {
+      width: 52px;
+      height: 52px;
       margin-right: 12px;
     }
     .info {

@@ -72,6 +72,7 @@
     methods: {
       reload () {
         this.isRouterAlive = false;
+        this.$store.dispatch("authinfo")
         this.$nextTick(function () {
           this.isRouterAlive = true;
         });

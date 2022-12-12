@@ -41,13 +41,14 @@ export default {
     });
   },
   LOGIN(state, payload) {
+    console.log(payload)
     state.token = payload.token;
     if (payload.user && payload.user.address) {
       payload.user.address = payload.user.address.toLocaleLowerCase();
     }
     state.user = Object.assign({}, state.user, {
       coinbase: payload.user.address || "",
-      avatar: payload.user.avatar || "",
+      avatar: payload.user.photo || "",
       brief: payload.user.brief || "",
       nickname: payload.user.nickname || "",
       shortUrl: payload.user.shortUrl || "",
@@ -109,7 +110,7 @@ export default {
 
     state.user = Object.assign({}, state.user, {
       coinbase: payload.address || "",
-      avatar: payload.avatar || "",
+      avatar: payload.photo || "",
       brief: payload.brief || "",
       nickname: payload.nickname || "",
       shortUrl: payload.shortUrl || "",
