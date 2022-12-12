@@ -412,7 +412,7 @@ module.exports = {
   },
   profile: {
     goBack: "Go back",
-    editProfile: "Edit profile",
+    editProfile: "General Settings",
     text1:
       "You can set preferred display name, create your branded profile URL and manage other personal settings",
     chooseFile: "Choose file",

@@ -119,8 +119,16 @@
               <div class="flex-detial">
                 <span class="name">Creator Rebate</span>
                 <div class="value primaryColor display-flex box-center-Y">
-                  <div>0.5%</div>
-                  <div class="tip-icon"><img src="../../assets/images/icons/icon_tip_black.svg" alt=""></div>
+                  <el-tooltip
+                    placement="right"
+                  >
+                    <template #content> The creator of this collection will receive a certain <br> percentage of amout for every sale. </template>
+                    <div class="display-flex box-center-Y">
+                      <div>0.5%</div>
+                      <div class="tip-icon"><img src="../../assets/images/icons/icon_tip_black.svg" alt=""></div>
+                    </div>
+                  </el-tooltip>
+
                 </div>
               </div>
             </div>
@@ -482,18 +490,33 @@ export default {
       this.sellDialogBtnLoading = true
       this.$refs.NFTDialogSell.showSell(this.tokenInfo)
     },
-    cancelMakeOffer (v) {
+    async cancelMakeOffer (v) {
       this.cancelMakeOfferBtnLoading = true
-      this.$api("order.cancel", {
-        id: v.id
-      }).then((res) => {
+      let seller = this.$sdk.getAtomicMatchWrapOrder(v, false)
+      seller = {
+        ...seller,
+        ...{
+          basePrice: seller.basePrice.toString(),
+          v: v.v,
+          s: v.s,
+          r: v.r
+        }
+      }
+      try {
+        const hash = await this.$sdk.cancelOrder_(seller, this.user.coinbase);
+        console.log(hash)
+        this.$api("order.cancel", {
+          id: v.id,
+          type: this.$sdk.valueOrderType("MAKE_OFFER")
+        }).then((res) => {
+          this.cancelMakeOfferBtnLoading = false
+          this.$tools.message('已取消报价', 'success');
+          this.getTokenInfo()
+        })
+      } catch (e) {
+        console.log(e)
         this.cancelMakeOfferBtnLoading = false
-        this.$tools.message('已取消报价', 'success');
-        this.getTokenInfo()
-      }).catch((e) => {
-        this.cancelMakeOfferBtnLoading = false
-        this.$tools.message(e.message);
-      })
+      }
     },
     async cancelSell () {
       this.cancelBtnLoading = true
@@ -511,7 +534,8 @@ export default {
         const hash = await this.$sdk.cancelOrder_(seller, this.user.coinbase);
         console.log(hash)
         this.$api("order.cancel", {
-          id: this.tokenInfo.ckOrdersEntity.id
+          id: this.tokenInfo.ckOrdersEntity.id,
+          type: this.$sdk.valueOrderType("SALE")
         }).then((res) => {
           this.cancelBtnLoading = false
           this.$tools.message('已取消挂售', 'success');

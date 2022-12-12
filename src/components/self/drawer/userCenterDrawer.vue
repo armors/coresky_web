@@ -6,7 +6,11 @@
         :imgHeight="52" shape="circular">
       </avatar>
       <div class="info">
-        <div class="user-name">Loy</div>
+        <div class="user-name display-flex box-center-Y">
+          {{user.nickname}}
+          <div class="edit-icon" @click="goProfile"><img src="../../../assets/images/icons/icon_edit_profile.svg" alt=""></div>
+        </div>
+<!--        profile-->
         <div class="token-address">View profile</div>
       </div>
       <el-icon @click="visible=false">
@@ -130,6 +134,10 @@ export default {
     },
   },
   methods: {
+    goProfile () {
+      this.visible = false
+      this.$router.push({ path: '/profile' });
+    },
     goView (path) {
       this.$router.push(path)
       this.handleClose()
@@ -164,6 +172,12 @@ export default {
         font-size: 22px;
         line-height: 28px;
         color: $primaryColor;
+        .edit-icon{
+          cursor: pointer;
+          width: 24px;
+          height: 24px;
+          margin-left: 24px;
+        }
       }
       .token-address {
         font-weight: 400;

@@ -56,6 +56,10 @@ export default {
       url: "/user/info",
       method: "post",
     },
+    update: {
+      url: "/user/update",
+      method: "post",
+    },
     match: {
       url: "/user/match",
       method: "post",

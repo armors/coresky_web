@@ -43,8 +43,9 @@
         </div>
         <div class="item">
           <span class="lable">Contract ADD:</span>
-          <span class="value">:{{$filters.ellipsisAddress(collectInfo.contract)}}</span>
-          <el-icon>
+          <span class="value">{{$filters.ellipsisAddress(collectInfo.contract)}}</span>
+          <el-icon v-clipboard:copy="collectInfo.contract" v-clipboard:success="onSuccessCopy"
+                   v-clipboard:error="onErrorCopy">
             <CopyDocument />
           </el-icon>
         </div>
@@ -382,6 +383,12 @@ export default {
   },
 
   methods: {
+    onSuccessCopy () {
+      this.$tools.message(this.$t("request.copySuccess"), "success");
+    },
+    onErrorCopy () {
+      this.$tools.message(this.$t("request.copyError"));
+    },
     getCollectInfo () {
       this.$api("collect.info", {
         contract: this.contract

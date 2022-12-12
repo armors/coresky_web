@@ -8,10 +8,10 @@
             <div class="desc">{{$t('home.createAppDesc')}}</div>
 
             <div class="btn-list display-flex box-center-Y">
-              <router-link to="/connect" class="btn-more btn display-flex box-center">
-                {{ $t("home.moreDetail") }}
+              <router-link to="/markterplace" class="btn-more btn display-flex box-center">
+                {{ $t("navigation.marketplace") }}
               </router-link>
-              <router-link to="/connect" class="btn display-flex box-center">
+              <router-link to="/" class="btn display-flex box-center">
                 {{ $t("home.discord") }}
               </router-link>
             </div>

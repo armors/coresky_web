@@ -1,40 +1,99 @@
 <template>
 	<div class="main-wrapper">
-		<div class="profile-wrapper">
+		<div class="profile-wrapper display-flex box-column">
 			<div class="top">
-				<div class="go-back" @click="goBack">
-					<span class="iconfont icon-leftarrow"></span><span class="text">{{$t('profile.goBack')}}</span>
-				</div>
-
 				<div class="top-Row1">{{$t('profile.editProfile')}}</div>
-				<div class="top-Row2">
-					{{$t('profile.text1')}}
-				</div>
 			</div>
-			<div class="bottom">
-				<div class="flex1">
-					<div class="chooseFile-Title">{{$t('profile.chooseFile')}}</div>
-					<div class="chooseFile-Content">
-						<div class="chooseFile-Text">{{$t('profile.text2')}}</div>
-						<div class="chooseFile-Content-RightSection">
-							<avatar :imageUrl="$filters.fullImageUrl(imgSrc)" :address="user.coinbase" :imgWidth="88" :imgHeight="88"></avatar>
-							<div class="file-box">
-								<input type="file" class="file-btn" @change="imageChange" accept="image/gif,image/jpeg,image/jpg,image/png,image/svg" />
-								<span>{{$t('profile.chooseFile')}}</span>
-							</div>
-						</div>
-					</div>
-					<div class="unit">
-						<div class="font1">{{$t('profile.displayName')}}</div>
-						<el-input v-model="displayName" :placeholder="$t('profile.placeholder1')"></el-input>
-					</div>
-					<div class="unit">
-						<div class="font1">{{$t('profile.bio')}}</div>
-						<el-input v-model="bio" :placeholder="$t('profile.placeholder2')"></el-input>
+			<div class="box-flex1 display-flex">
+				<div class="main-profile">
+					<!--					:rules="rules"-->
+					<el-form
+						ref="userFromRef"
+						:rules="rules"
+						:model="userFrom"
+						label-width="120px"
+						label-position="top"
+						status-icon
+					>
+						<el-form-item label="nickname" prop="nickname">
+							<el-input v-model="userFrom.nickname" placeholder="please input username"/>
+						</el-form-item>
+						<el-form-item label="Upload Cover">
+							<el-upload
+								class="upload-background"
+								drag
+								action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+							>
+								<div class="tip-txt">支持PNG、JPG、GIF文件尺寸推荐：400*1400文件，大小推荐：&lt;1M </div>
+								<el-button type="primary" class="sub-btn upload">Choose File</el-button>
+							</el-upload>
+						</el-form-item>
+						<el-form-item label="Bio" prop="nickname">
+							<el-input v-model="userFrom.bio" placeholder="输入合集、NFT、用户的信息" type="textarea"/>
+						</el-form-item>
+
+
+						<el-form-item label="My social platform" class="platform-info">
+							<el-input v-model="userFrom.website" placeholder="https://www.iconfont.cn/">
+								<template #prefix>
+									<div class="prefix-icon"><img src="../../assets/images/icons/profile/icon_website.svg" alt=""></div>
+								</template>
+							</el-input>
+							<el-input v-model="userFrom.twitter" placeholder="https://www.iconfont.cn/">
+								<template #prefix>
+									<div class="prefix-icon"><img src="../../assets/images/icons/profile/icon_twitter.svg" alt=""></div>
+								</template>
+							</el-input>
+							<el-input v-model="userFrom.ins" placeholder="https://www.iconfont.cn/">
+								<template #prefix>
+									<div class="prefix-icon"><img src="../../assets/images/icons/profile/icon_ins.svg" alt=""></div>
+								</template>
+							</el-input>
+							<el-input v-model="userFrom.discord" placeholder="https://www.iconfont.cn/">
+								<template #prefix>
+									<div class="prefix-icon"><img src="../../assets/images/icons/profile/icon_discord.svg" alt=""></div>
+								</template>
+							</el-input>
+							<el-input v-model="userFrom.telegram" placeholder="https://www.iconfont.cn/">
+								<template #prefix>
+									<div class="prefix-icon"><img src="../../assets/images/icons/profile/icon_telegram.svg" alt=""></div>
+								</template>
+							</el-input>
+							<el-input v-model="userFrom.medium" placeholder="https://www.iconfont.cn/">
+								<template #prefix>
+									<div class="prefix-icon"><img src="../../assets/images/icons/profile/icon_medium.svg" alt=""></div>
+								</template>
+							</el-input>
+						</el-form-item>
+
+						<el-form-item>
+							<el-button type="primary" class="sub-btn" :loading="submitBtnLoading" @click="submitForm">Submit</el-button>
+						</el-form-item>
+					</el-form>
+				</div>
+				<div class="avatar-box box-flex1">
+					<div class="display-flex box-center-X">
+						<div>upload avatar</div>
+						<el-tooltip
+							placement="top"
+						>
+							<div class="tip-icon"><img src="../../assets/images/icons/icon_tips.svg" alt=""></div>
+							<template #content>
+								支持PNG、JPG、GIF，文件尺寸推荐： <br>
+								400*400，大小推荐&lt;1M
+							</template>
+						</el-tooltip>
 					</div>
 
-					<el-button type="primary" @click="updateImage" class="lastButton">
-						{{$t('profile.updateProfile')}}</el-button>
+					<div class="avatar-img">
+						<img :src="imgSrc" alt="">
+						<el-upload
+							class="upload-avatar display-flex box-center"
+							action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+						>
+							<div class="edit-icon"><img src="../../assets/images/icons/icon_edit_profile.svg" alt=""></div>
+						</el-upload>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -42,15 +101,15 @@
 </template>
 
 <script>
-	import { onMounted, ref } from "vue";
-	import { getLocalStorage } from "../../util/local-storage";
+	import {onMounted, ref} from "vue";
+	import {getLocalStorage} from "../../util/local-storage";
+
 	export default {
 		name: "Profile",
 		data: function () {
 			return {
 				imageFile: "",
 				imgSrc: "",
-
 				id: "",
 				address: "",
 				displayName: "",
@@ -60,22 +119,31 @@
 				coinbase: "",
 				networkId: "",
 				defaultImgSrc: "",
-				personalUrl: ""
+				personalUrl: "",
+				submitBtnLoading: false,
+				userFrom: {
+					nickname: '',
+					photo: '',
+					background: '',
+					bio: '',
+					website: '',
+					telegram: '',
+					twitter: '',
+					medium: '',
+					discord: '',
+					ins: ''
+				},
+				rules: {
+					nickname: [
+						{required: true, message: 'please input username', trigger: 'blur'},
+						{min: 4, max: 60, message: '4-60字符，支持English、中文', trigger: 'blur'},
+					],
+				}
 			};
 		},
-		created () {
-			this.$api("user.profile").then((res) => {
-				if (this.$tools.checkResponse(res)) {
-					(this.displayName = res.data.user.nickname),
-						(this.bio = res.data.user.brief),
-						(this.customUrl = res.data.user.shortUrl);
-					this.imgSrc = res.data.user.avatar;
-					this.id = res.data.user.id;
-					this.address = res.data.user.address;
-				} else {
-					this.$tools.message(res.errmsg);
-				}
-			});
+		created() {
+			this.userFrom.photo = this.$filters.fullImageUrl(this.user.avatar)
+			this.getUserInfo()
 		},
 		computed: {
 			user: function () {
@@ -83,7 +151,40 @@
 			},
 		},
 		methods: {
-			imageChange (e) {
+			getUserInfo() {
+				this.$api("user.info", {
+					address: this.user.coinbase
+				}).then((res) => {
+					if (this.$tools.checkResponse(res)) {
+						this.userFrom.nickname = res.debug.nickname || ''
+						this.userFrom.background = res.debug.background || ''
+						this.userFrom.photo = res.debug.photo || this.$filters.fullImageUrl(this.user.avatar);
+						this.imgSrc = this.userFrom.photo
+						this.userFrom.id = res.debug.id;
+						this.userFrom.bio = res.debug.bio || ''
+						this.userFrom.website = res.debug.website || '';
+						this.userFrom.ins = res.debug.ins || '';
+						this.userFrom.discord = res.debug.discord || '';
+						this.userFrom.telegram = res.debug.telegram || '';
+						this.userFrom.twitter = res.debug.twitter || '';
+						this.userFrom.medium = res.debug.medium || '';
+					} else {
+						this.$tools.message(res.errmsg);
+					}
+				});
+			},
+			submitForm() {
+				this.$api("user.update", {
+					"photo": 'https://ipfs.io/ipfs/QmRsJLrg27GQ1ZWyrXZFuJFdU5bapfzsyBfm3CAX1V1bw6',
+					"nickname": this.userFrom.nickname,
+					"background": this.userFrom.background,
+					"telegram": this.userFrom.telegram,
+					"twitter": this.userFrom.twitter
+				}).then((res) => {
+						this.getUserInfo()
+				});
+			},
+			imageChange(e) {
 				let file = new FileReader();
 				this.imageFile = e.target.files[0];
 				file.readAsDataURL(e.target.files[0]);
@@ -91,10 +192,7 @@
 					this.imgSrc = file.result;
 				};
 			},
-			goBack () {
-				this.$router.go(-1);
-			},
-			async updateImage () {
+			async updateImage() {
 				if (!this.imageFile) {
 					this.UpdateProfile();
 				} else {
@@ -111,7 +209,7 @@
 					});
 				}
 			},
-			UpdateProfile () {
+			UpdateProfile() {
 				let temporary = {
 					address: this.address,
 					id: this.id,
@@ -137,42 +235,50 @@
 	.profile-wrapper {
 		display: flex;
 		flex-direction: column;
-		width: 680px;
-		margin: 0 auto;
+		width: 100%;
 		padding-bottom: 100px;
 	}
+
 	.top {
 		margin-top: 20px;
+		padding-bottom: 20px;
+		border-bottom: 1px solid $borderBg;
 	}
+
 	.go-back {
 		cursor: pointer;
 		font-size: 16px;
 		font-weight: 400;
 		line-height: 48px;
 	}
+
 	.top-Row1 {
 		font-size: 32px;
 		font-weight: bold;
 		line-height: 66px;
 	}
-	.top-Row2 {
-		font-size: 16px;
-		font-weight: 400;
-		color: #999;
-		margin-top: 9px;
+
+
+	.avatar-box {
+		padding-top: 108px;
 	}
+
+
 	.bottom {
 		display: flex;
 		margin-bottom: 32px;
 	}
+
 	.unit {
 		margin-bottom: 24px;
 	}
+
 	.font1 {
 		margin-bottom: 10px;
 		font-size: 16px;
 		font-weight: 400;
 	}
+
 	.lastButton {
 		margin-top: 39px;
 		margin-left: 50%;
@@ -186,44 +292,52 @@
 		justify-content: center;
 		align-items: center;
 	}
+
 	.font2 {
 		color: rgba(4, 4, 5, 0.5);
 		font-size: 14px;
 		font-weight: 900;
 	}
+
 	.font3 {
 		color: rgb(0, 102, 255);
 		font-weight: 800;
 		font-size: 15px;
 		cursor: pointer;
 	}
+
 	.chooseFile-Title {
 		margin-top: 24px;
 		font-size: 16px;
 		font-weight: 400;
 		line-height: 24px;
 	}
+
 	.chooseFile-Text {
 		margin-top: 12px;
 		font-size: 14px;
 		font-weight: 400;
 		color: #999;
 	}
+
 	.chooseFile-Content {
 		margin-bottom: 17px;
 		display: flex;
 		justify-content: space-between;
 	}
+
 	.Verification {
 		font-size: 16px;
 		font-weight: 400;
 		line-height: 24px;
 	}
+
 	.Verification-Content {
 		margin-top: 8px;
 		display: flex;
 		justify-content: space-between;
 	}
+
 	.Verification-Text {
 		font-size: 14px;
 		font-weight: 400;
@@ -231,6 +345,7 @@
 		opacity: 0.5;
 		margin-right: 33px;
 	}
+
 	.Verification-Button {
 		padding: 0 20px;
 		width: fit-content;
@@ -244,6 +359,7 @@
 		white-space: nowrap;
 		min-height: auto;
 	}
+
 	.file-box {
 		margin-top: 10px;
 		background: $primaryColor;
@@ -254,6 +370,7 @@
 		color: #fff;
 		cursor: pointer;
 		position: relative;
+
 		.file-btn {
 			position: absolute;
 			z-index: 1;
@@ -273,22 +390,127 @@
 	}
 </style>
 <style lang="scss">
-	.unit input {
-		margin-top: 8px !important;
-		height: 40px !important;
-		background: #eeeeee !important;
-		border-radius: 5px !important;
-
-		font-size: 14px !important;
-		font-weight: 400 !important;
-		color: #000000 !important;
-		padding-left: 6px !important;
+	.main-profile {
+		width: 480px;
+		.el-form.el-form--default{
+			.el-form-item{
+				margin-top: 50px;
+				margin-bottom: 0 !important;
+				.upload-background{
+					width: 100%;
+					.el-upload-dragger{
+						border-radius: 12px
+					}
+				}
+				.el-form-item__label {
+					font-family: 'Plus Jakarta Display';
+					font-style: normal;
+					font-weight: 700;
+					font-size: 16px;
+					color: $primaryColor;
+					margin-bottom: 0 !important;
+				}
+				.el-form-item__content{
+					margin-top: 20px;
+				}
+				.el-input__wrapper{
+					height: 48px;
+					border: 1px solid $borderBg2;
+					border-radius: 12px;
+					padding: 0 16px;
+					box-shadow: none!important;
+					.el-input__inner{
+						height: 48px;
+						line-height: 48px;
+					}
+				}
+				.el-input__prefix{
+					width: 48px;
+					height: 100%;
+					display:  flex;
+					justify-content: center;
+					align-items: center;
+					.prefix-icon{
+						margin-right: 0;
+					}
+					border-right: 1px solid $borderBg2;
+					& + .el-input__inner{
+						padding-left: 20px;
+					}
+				}
+				.el-input + .el-input{
+					margin-top: 10px;
+				}
+				&.platform-info{
+					.el-input__wrapper{
+						padding-left: 0;
+					}
+				}
+			}
+		}
+		.sub-btn {
+			margin-top: 20px;
+			width: 100%;
+			height: 48px;
+			padding: 10px 0;
+			border-radius: 12px;
+			font-weight: 700;
+			border: none;
+			cursor: pointer;
+			color: $color-white;
+			background: $mainLiner;
+			&.upload{
+				width: 222px;
+				margin-top: 0;
+				border-radius: 24px;
+			}
+		}
+		.tip-txt{
+			font-family: 'Plus Jakarta Display';
+			font-style: normal;
+			font-weight: 400;
+			font-size: 14px;
+			/* identical to box height, or 21px */
+			color: $color-black2;
+		}
 	}
-	.unit input::placeholder {
-		font-size: 8px !important;
-		font-weight: 400 !important;
-		color: #000000 !important;
-		line-height: 14px !important;
-		opacity: 0.4 !important;
+	.avatar-box{
+		font-family: 'Plus Jakarta Display';
+		font-style: normal;
+		font-weight: 700;
+		font-size: 16px;
+		.tip-icon{
+			cursor: pointer;
+			margin-left: 10px;
+			width: 20px;
+			height: 20px;
+		}
+		.avatar-img{
+			width: 160px;
+			height: 160px;
+			position: relative;
+			border-radius: 50%;
+			margin: 30px auto 0;
+
+			.edit-icon{
+				width: 32px;
+				height: 32px;
+			}
+			.upload-avatar{
+				position: absolute;
+				width: 160px;
+				height: 160px;
+				border-radius: 50%;
+				left: 0;
+				top: 0;
+				background-color: $color-bg5;
+			}
+		}
+	}
+	input.el-input__inner::placeholder {
+		font-family: 'Plus Jakarta Display';
+		font-style: normal;
+		font-weight: 400;
+		font-size: 14px;
 	}
 </style>
