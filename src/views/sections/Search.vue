@@ -1,93 +1,89 @@
 <template>
   <div class="main-wrapper">
-    <div class="tab-wrap">
-      <div class="tabClass" :class="sortIndex == 'first' ? 'active' : ''" @click="handleClick('first')">
-        Collection results
-      </div>
-      <div class="tabClass m-left-20" :class="sortIndex == 'second' ? 'active' : ''" @click="handleClick('second')">
-        NFT results
-      </div>
-      <div class="tabClass m-left-20" :class="sortIndex == 'three' ? 'active' : ''" @click="handleClick('three')">
-        User results
-      </div>
-    </div>
-    <div class="list-search-wrap">
-      <el-input class="search-input-wrap" v-model="keyword" @keyup.enter="searchClick">
-        <template #prefix>
-          <div class="img-search"><img src="../../assets/images/icons/icon_search.svg" alt=""></div>
-        </template>
-      </el-input>
-      <div class="sort-wrap">
-        <span class="icon-wrap icon_filter01 active">
-        </span>
-        <span class="icon-wrap icon_filter02"></span>
-      </div>
-    </div>
-    <div class="collection-list">
-      <div class="collection-card" v-for="i in 12" :key="i">
-        <div class="collection-content">
-          <div class="card-top">
-            <div class="card-img">
-              <img class="img-lazy"
-                src="https://storage.nfte.ai/asset/collection/featured/BEEWQLPGNIJCWCXJUDSRUWRWOWSOYCCT.jpg?x-oss-process=image/resize,m_fill,w_504,h_288,limit_0"
-                alt="Image" _nk="p/rO21">
+    <div class="account-page">
+      <el-tabs v-model="activeName">
+        <el-tab-pane label="Collection results" name="collection" :lazy="true">
+          <div class="list-search-wrap" style="margin-top:10px">
+            <el-input class="search-input-wrap" v-model="collectionQuery.keyword" @keyup.enter="searchCollection">
+              <template #prefix>
+                <div class="img-search"><img src="../../assets/images/icons/icon_search.svg" alt=""></div>
+              </template>
+            </el-input>
+            <div class="sort-wrap">
+              <span class="icon-wrap icon_filter01 active">
+              </span>
+              <span class="icon-wrap icon_filter02"></span>
             </div>
           </div>
-          <div class="card-bottom">
-            <div class="head-img">
-              <img
-                src="https://storage.nfte.ai/asset/collection/featured/MFYROFVZKZSCSHUWXRGBZAAQPZWMOKFM.jpg?x-oss-process=image/resize,m_fill,w_108,h_108,limit_0"
-                alt="">
-              <img class="tag" src="../../assets/images/icons/icon_tag.svg" alt="">
-            </div>
-            <div class="head-txt">
-              HUGO x Imaginary Ones: Embrace Your Emotionss
+          <div class="collection-list">
+            <router-link :to="`/collection/${item.contract}`" class="collection-card" v-for="(item,index) in dataList"
+              :key="index">
+              <div class="collection-content">
+                <div class="card-top">
+                  <div class="card-img">
+                    <image-box :src="item.bannerImage"></image-box>
+                  </div>
+                </div>
+                <div class="card-bottom">
+                  <div class="head-img">
+                    <image-box :src="item.image"></image-box>
+                    <img class="tag" src="../../assets/images/icons/icon_tag.svg" alt="">
+                  </div>
+                  <div class="head-txt">
+                    {{item.name}}
+                  </div>
+                </div>
+              </div>
+            </router-link>
+          </div>
+          <div class="custom-pagination" v-if="listCount>collectionQuery.limit">
+            <div class="content">
+              <el-pagination background v-model:current-page="collectionQuery.page" :page-size="collectionQuery.limit"
+                :page-="collectionQuery.limit" @current-change="getCollectionData" layout="prev, pager, next"
+                align="center" :total="listCount" />
             </div>
           </div>
-        </div>
-      </div>
+        </el-tab-pane>
+        <el-tab-pane label="NFT results" name="nft" :lazy="true">
+          <markterplace ref="markterplaceRef" :searchKeyword="$route.query.keyword" style="padding-top:10px" />
+        </el-tab-pane>
+        <el-tab-pane label="User results" name="user" :lazy="true" :disabled="true">
+          User results
+        </el-tab-pane>
+      </el-tabs>
     </div>
-
-    <div class="custom-pagination">
-      <div class="content">
-        <el-pagination background layout="prev, pager, next" align="center" :total="1000" />
-      </div>
-    </div>
-
   </div>
 </template>
 <script>
+import markterplace from './Markterplace'
+
 export default {
   mixins: [],
-  components: {},
+  components: { markterplace },
   data: function () {
     return {
-      nftList: [],
-      query: {
-        search: this.$route.query.keyword || "",
+      activeName: 'collection',
+      dataList: [],
+      listCount: 1,
+      collectionQuery: {
+        keyword: "",
         page: 1,
-        limit: this.$store.state.pageLimit,
+        limit: 20,
       },
-      keyword: '',
       loadStatus: "",
-      sortIndex: "first",
       accountList: [],
     };
   },
   watch: {
-    $route (to, from) {
-      if (this.$route.path == "/search") {
-        this.query.search = this.$route.query.keyword;
-        this.query.page = 1;
-        this.loadStatus = "";
-        this.init();
-      }
+    '$route.query' (val) {
+      this.collectionQuery.keyword = val.keyword
+      this.init()
     },
   },
-  created () {
-    this.init();
+  mounted () {
+    this.collectionQuery.keyword = this.$route.query.keyword || ''
+    this.init()
   },
-  mounted () { },
   computed: {
     showAddress () {
       return (search) => {
@@ -96,40 +92,24 @@ export default {
         return res;
       };
     },
-    user: function () {
-      var user = this.$store.state.user;
-      return user;
-    },
   },
   methods: {
-    handleClick (tab) {
-      this.loadStatus = "";
-      this.sortIndex = tab;
-      this.query.page = 1;
-      this.search();
-    },
     init () {
-      this.search();
+      this.activeName = 'collection'
+      this.searchCollection();
     },
-    reloadList () {
-      this.query.page = 1;
-      this.search();
+    searchCollection () {
+      this.collectionQuery.page = 1
+      this.getCollectionData()
     },
-    loadsearchList () {
-      if (this.loadStatus == "over") return;
-      this.search();
-    },
-    search () {
-      if (this.loadStatus == "loading") return;
-      this.loadStatus = "loading";
-      let data = {
-        ...this.query,
-      };
-      if (this.sortIndex == "second") {
-        this.getAccounts(data);
-      } else {
-        this.getNFTs(data);
-      }
+    getCollectionData () {
+      this.$api("collect.query", this.collectionQuery).then((res) => {
+        if (this.$tools.checkResponse(res)) {
+          this.dataList = res.debug.listData
+          this.listCount = res.debug.listCount
+          this.collectionQuery.page = res.debug.curPage
+        }
+      })
     },
     getNFTs (parameter) {
       var data = {
@@ -151,22 +131,7 @@ export default {
         }
       });
     },
-    getAccounts (data) {
-      this.$api("home.searchuser", data).then((res) => {
-        this.loadStatus = "loaded";
-        if (this.$tools.checkResponse(res)) {
-          if (data.page == 1) this.accountList = [];
-          this.accountList = this.accountList.concat(res.data.list);
-          if (res.data.list.length < data.limit) {
-            this.loadStatus = "over";
-          } else {
-            this.query.page += 1;
-          }
-        } else {
-          this.$tools.message(res.errmsg);
-        }
-      });
-    },
+
   },
 };
 </script>
@@ -198,6 +163,33 @@ export default {
   &.active {
     color: $primaryColor;
     border-bottom: 4px solid $bgPurple;
+  }
+}
+
+.account-page {
+  width: 1200px;
+  margin: 40px auto;
+  ::v-deep {
+    .el-tabs__item {
+      font-family: 'Plus Jakarta Display';
+      padding: 0 40px;
+      font-weight: 700;
+      font-size: 32px;
+      line-height: 40px;
+      color: $color-black2;
+      padding-bottom: 16px;
+      height: 56px;
+      &.is-active {
+        color: $primaryColor;
+      }
+      &.is-top:nth-child(2) {
+        padding-right: 40px;
+      }
+    }
+    .el-tabs__active-bar {
+      background-color: $bgPurple;
+      height: 4px;
+    }
   }
 }
 

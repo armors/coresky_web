@@ -205,7 +205,7 @@
             </div>
           </div>
         </div>
-        <div class="right-content">
+        <div class="right-content" >
           <div class="list-search-wrap">
             <div class="btnfilter">
               <img src="../../assets/images/icons/icon_filter.svg" alt="">
@@ -597,5 +597,9 @@ export default {
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-start;
+}
+
+.right-content{
+  width:100%;
 }
 </style>

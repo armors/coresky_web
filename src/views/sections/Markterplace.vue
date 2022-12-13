@@ -134,6 +134,12 @@ export default {
   mixins: [],
   name: 'MarkterPlace',
   components: {},
+  props: {
+    searchKeyword: {
+      type: String,
+      default: ''
+    },
+  },
   data: function () {
     return {
       queryParams: {
@@ -149,10 +155,11 @@ export default {
       dataList: [],
     }
   },
-
   created () {
   },
   mounted () {
+    console.log(888)
+    this.queryParams.keyword = this.searchKeyword || ''
     this.searchClick()
   },
   methods: {
