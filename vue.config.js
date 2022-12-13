@@ -31,10 +31,6 @@ module.exports = defineConfig({
 
   chainWebpack: config => {
     config.entry.app = ['babel-polyfill', './src/main.js'];
-    config.optimization.minimizer('terser').tap((args) => {
-      args[0].terserOptions.compress.drop_console = true
-      return args
-    })
     config.output.filename('./js/[name].[chunkhash:8].js');
     config.output.chunkFilename('./js/[name].[chunkhash:8].js');
     if (process.env.VUE_APP_MODE === 'production') {
@@ -43,14 +39,6 @@ module.exports = defineConfig({
     config.optimization.runtimeChunk('single');
     config.plugin('CompressionWebpackPlugin')
       .use('compression-webpack-plugin');
-    config.optimization.minimize(true)
-      .minimizer('terser')
-      .tap(args => {
-        let { terserOptions } = args[0];
-        terserOptions.compress.drop_console = true;
-        terserOptions.compress.drop_debugger = true;
-        return args
-      });
     config.optimization.splitChunks({
       chunks: 'all',
       minSize: 20000, // 允许新拆出 chunk 的最小体积，也是异步 chunk 公共模块的强制拆分体积
