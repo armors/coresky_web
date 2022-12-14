@@ -1,8 +1,8 @@
 <template>
   <div class="main-wrapper">
-    <div class="filter-wrap">
+    <div class="filter-wrap" v-if="showFilterBox">
       <div class="filter-head">
-        <span class="left">
+        <span class="left" @click="showFilterBox=!showFilterBox">
           <el-icon>
             <ArrowLeft />
           </el-icon>Filter
@@ -22,58 +22,62 @@
       <div class="filter-item border">
         <div class="flex">
           <span class="left">Price</span>
-          <span class="right">
+          <span class="right" @click="isOpenPriceFilter=!isOpenPriceFilter">
             <el-icon style="font-size:16px">
               <ArrowUp />
             </el-icon>
           </span>
         </div>
-        <el-select v-model="queryParams.sort" placeholder="ETH" :teleported="false" popper-class="select-popper"
-          class="select-sort">
-          <el-option value="ETH">ETH</el-option>
-        </el-select>
-        <div class="price-range" style="margin-top:15px">
-          <el-input type="number" class="input-number" :controls="false" v-model="queryParams.minPrice"
-            :placeholder="$t('home.minPlaceholder')" />
-          <div class="line"></div>
-          <el-input type="number" class="input-number" :controls="false" v-model="queryParams.maxPrice"
-            :placeholder="$t('home.maxPlaceholder')" />
-        </div>
-        <div class="btn-apply" @click="searchClick">Application</div>
+        <template v-if="isOpenPriceFilter">
+          <el-select v-model="queryParams.sort" placeholder="ETH" :teleported="false" popper-class="select-popper"
+            class="select-sort">
+            <el-option value="ETH">ETH</el-option>
+          </el-select>
+          <div class="price-range" style="margin-top:15px">
+            <el-input type="number" class="input-number" :controls="false" v-model="queryParams.minPrice"
+              :placeholder="$t('home.minPlaceholder')" />
+            <div class="line"></div>
+            <el-input type="number" class="input-number" :controls="false" v-model="queryParams.maxPrice"
+              :placeholder="$t('home.maxPlaceholder')" />
+          </div>
+          <div class="btn-apply" @click="searchClick">Application</div>
+        </template>
       </div>
       <div class="filter-item">
         <div class="flex">
           <span class="left">Collection</span>
-          <span class="right">
+          <span class="right" @click="isOpenSearchCollection=!isOpenSearchCollection">
             <el-icon style="font-size:16px">
               <ArrowUp />
             </el-icon>
           </span>
         </div>
-        <el-input class="search-input-wrap" placeholder="Search" v-model="keyword" @keyup.enter="searchClick"
-          style="margin-top:15px;">
-          <template #prefix>
-            <div class="img-search"><img src="../../assets/images/icons/icon_search.svg" alt=""></div>
-          </template>
-        </el-input>
-        <div class="list-wrap">
-          <div class="list-item" v-for="key in 8" :key="key">
-            <div class="head-img">
-              <img
-                src="https://storage.nfte.ai/asset/collection/featured/SIPGAWJPYHJAGSVGQIXWOKPHREVQFDSL.jpg?x-oss-process=image/resize,m_fill,w_108,h_108,limit_0"
-                alt="">
-              <img class="tag" src="../../assets/images/icons/icon_tag.svg" alt="">
-            </div>
-            <div class="head-txt">
-              HUGO x Imaginary Ones: Embrace Your Emotionss
+        <template v-if="isOpenSearchCollection">
+          <el-input class="search-input-wrap" placeholder="Search" v-model="keyword" @keyup.enter="searchClick"
+            style="margin-top:15px;">
+            <template #prefix>
+              <div class="img-search"><img src="../../assets/images/icons/icon_search.svg" alt=""></div>
+            </template>
+          </el-input>
+          <div class="list-wrap">
+            <div class="list-item" v-for="key in 8" :key="key">
+              <div class="head-img">
+                <img
+                  src="https://storage.nfte.ai/asset/collection/featured/SIPGAWJPYHJAGSVGQIXWOKPHREVQFDSL.jpg?x-oss-process=image/resize,m_fill,w_108,h_108,limit_0"
+                  alt="">
+                <img class="tag" src="../../assets/images/icons/icon_tag.svg" alt="">
+              </div>
+              <div class="head-txt">
+                HUGO x Imaginary Ones: Embrace Your Emotionss
+              </div>
             </div>
           </div>
-        </div>
+        </template>
       </div>
     </div>
     <div class="right-content">
       <div class="list-search-wrap">
-        <div class="btnfilter">
+        <div class="btnfilter" @click="showFilterBox=!showFilterBox">
           <img src="../../assets/images/icons/icon_filter.svg" alt="">
           Filter
         </div>
@@ -92,37 +96,46 @@
           <el-option :value="5" label="Ending soon" />
         </el-select>
         <div class="sort-wrap">
-          <span class="icon-wrap icon_filter01 active">
+          <span class="icon-wrap icon_filter01" :class="{'active':viewType===1}" @click="viewType=1">
           </span>
-          <span class="icon-wrap icon_filter02"></span>
+          <span class="icon-wrap icon_filter02" :class="{'active':viewType===2}" @click="viewType=2"></span>
         </div>
       </div>
-      <div class="nft-list">
-        <router-link :to="`/detail/${item.contract}/${item.tokenId}`" class="nft-card" v-for="(item,index) in dataList"
-          :key="index">
-          <div class="nft-content">
-            <div class="card-top">
-              <div class="card-img">
-                <image-box :src="item.oriImage"></image-box>
-              </div>
-            </div>
-            <div class="card-bottom">
-              <div class="nft-txt">
-                {{item.ckCollectionsInfoEntity.name}} #{{item.tokenId}}
-              </div>
-              <div class="nft-price">
-                <img class="token-icon" src="../../assets/images/icons/token/token_eth2.svg" alt="">
-                <span class="price">{{item.basePrice===0?'-- ':nftPrice(item.basePrice)}} ETH</span>
-              </div>
-            </div>
-          </div>
-        </router-link>
+      <div v-if="loadStatus==='loading'">
+        <p class="loading-txt">Coming soon…</p>
       </div>
-      <div class="custom-pagination" v-if="listCount>queryParams.limit">
-        <div class="content">
-          <el-pagination background v-model:current-page="queryParams.page" :page-size="queryParams.limit"
-            :page-="queryParams.limit" @current-change="queryData" layout="prev, pager, next" align="center"
-            :total="listCount" />
+      <div v-else>
+        <div class="nft-list">
+          <router-link :to="`/detail/${item.contract}/${item.tokenId}`" class="nft-card"
+            v-for="(item,index) in dataList" :key="index">
+            <div class="nft-content">
+              <div class="card-top">
+                <div class="card-img">
+                  <image-box :src="item.oriImage"></image-box>
+                </div>
+              </div>
+              <div class="card-bottom">
+                <div class="nft-txt">
+                  {{item.ckCollectionsInfoEntity.name}} #{{item.tokenId}}
+                </div>
+                <div class="nft-price">
+                  <img class="token-icon" src="../../assets/images/icons/token/token_eth2.svg" alt="">
+                  <span class="price">{{item.basePrice===0?'-- ':nftPrice(item.basePrice)}} ETH</span>
+                </div>
+              </div>
+            </div>
+          </router-link>
+        </div>
+        <div class="custom-pagination" v-if="listCount>queryParams.limit">
+          <div class="content">
+            <el-pagination background v-model:current-page="queryParams.page" :page-size="queryParams.limit"
+              :page-="queryParams.limit" @current-change="queryData" layout="prev, pager, next" align="center"
+              :total="listCount" />
+          </div>
+        </div>
+        <div class="empty-wrap" v-if="dataList.length===0">
+          <p class="txt">No Data</p>
+          <img src="../../assets/images/no-data.png" alt="">
         </div>
       </div>
     </div>
@@ -151,8 +164,13 @@ export default {
         maxPrice: '',
         order: 1,
       },
+      showFilterBox: true,
+      isOpenPriceFilter: true,
+      isOpenSearchCollection: true,
+      viewType: 1,
       listCount: 0,
       dataList: [],
+      loadStatus: 'over'
     }
   },
   created () {
@@ -171,7 +189,10 @@ export default {
       this.queryData()
     },
     queryData () {
+      this.dataList = []
+      this.loadStatus = 'loading'
       this.$api("token.query", this.queryParams).then((res) => {
+        this.loadStatus = 'over'
         if (this.$tools.checkResponse(res)) {
           this.dataList = res.debug.listData
           this.listCount = res.debug.listCount
@@ -193,6 +214,8 @@ export default {
     width: 100%;
   }
 }
+
+
 </style>
 
 

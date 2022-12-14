@@ -9,35 +9,42 @@
         v-for="(item,index) in categoryList" :key="index">
         {{item.name}}</div>
     </div>
-    <div class="collection-list">
-      <router-link :to="`/collection/${item.contract}`" class="collection-card" v-for="(item,index) in dataList"
-        :key="index">
-        <div class="collection-content">
-          <div class="card-top">
-            <div class="card-img">
-              <image-box :src="item.bannerImage"></image-box>
-            </div>
-          </div>
-          <div class="card-bottom">
-            <div class="head-img">
-              <image-box :src="item.image"></image-box>
-              <img class="tag" src="../../assets/images/icons/icon_tag.svg" alt="">
-            </div>
-            <div class="head-txt">
-              {{item.name}}
-            </div>
-          </div>
-        </div>
-      </router-link>
+    <div v-if="loadStatus==='loading'">
+      <p class="loading-txt">Coming soon…</p>
     </div>
-
-    <div class="custom-pagination" v-if="listCount>query.limit">
-      <div class="content">
-        <el-pagination background v-model:current-page="query.page" :page-size="query.limit" :page-="query.limit"
-          @current-change="search" layout="prev, pager, next" align="center" :total="listCount" />
+    <div v-else>
+      <div class="collection-list">
+        <router-link :to="`/collection/${item.contract}`" class="collection-card" v-for="(item,index) in dataList"
+          :key="index">
+          <div class="collection-content">
+            <div class="card-top">
+              <div class="card-img">
+                <image-box :src="item.bannerImage"></image-box>
+              </div>
+            </div>
+            <div class="card-bottom">
+              <div class="head-img">
+                <image-box :src="item.image"></image-box>
+                <img class="tag" src="../../assets/images/icons/icon_tag.svg" alt="">
+              </div>
+              <div class="head-txt">
+                {{item.name}}
+              </div>
+            </div>
+          </div>
+        </router-link>
+      </div>
+      <div class="custom-pagination" v-if="listCount>query.limit">
+        <div class="content">
+          <el-pagination background v-model:current-page="query.page" :page-size="query.limit" :page-="query.limit"
+            @current-change="search" layout="prev, pager, next" align="center" :total="listCount" />
+        </div>
+      </div>
+      <div class="empty-wrap" v-if="dataList.length===0">
+        <p class="txt">No Data</p>
+        <img src="../../assets/images/no-data.png" alt="">
       </div>
     </div>
-
   </div>
 </template>
 <script>
@@ -55,7 +62,7 @@ export default {
         limit: this.$store.state.pageLimit,
       },
       keyword: '',
-      loadStatus: "",
+      loadStatus: 'over',
       sortIndex: "first",
       accountList: [],
       categoryList: [],
@@ -108,7 +115,10 @@ export default {
       this.search()
     },
     search () {
+      this.dataList = []
+      this.loadStatus = "loading";
       this.$api("collect.query", this.query).then((res) => {
+        this.loadStatus = 'over'
         if (this.$tools.checkResponse(res)) {
           this.dataList = res.debug.listData
           this.listCount = res.debug.listCount

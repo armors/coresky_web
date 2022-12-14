@@ -15,32 +15,41 @@
               <span class="icon-wrap icon_filter02"></span>
             </div>
           </div>
-          <div class="collection-list">
-            <router-link :to="`/collection/${item.contract}`" class="collection-card" v-for="(item,index) in dataList"
-              :key="index">
-              <div class="collection-content">
-                <div class="card-top">
-                  <div class="card-img">
-                    <image-box :src="item.bannerImage"></image-box>
-                  </div>
-                </div>
-                <div class="card-bottom">
-                  <div class="head-img">
-                    <image-box :src="item.image"></image-box>
-                    <img class="tag" src="../../assets/images/icons/icon_tag.svg" alt="">
-                  </div>
-                  <div class="head-txt">
-                    {{item.name}}
-                  </div>
-                </div>
-              </div>
-            </router-link>
+          <div v-if="loadStatus==='loading'">
+            <p class="loading-txt">Coming soon…</p>
           </div>
-          <div class="custom-pagination" v-if="listCount>collectionQuery.limit">
-            <div class="content">
-              <el-pagination background v-model:current-page="collectionQuery.page" :page-size="collectionQuery.limit"
-                :page-="collectionQuery.limit" @current-change="getCollectionData" layout="prev, pager, next"
-                align="center" :total="listCount" />
+          <div v-else>
+            <div class="collection-list">
+              <router-link :to="`/collection/${item.contract}`" class="collection-card" v-for="(item,index) in dataList"
+                :key="index">
+                <div class="collection-content">
+                  <div class="card-top">
+                    <div class="card-img">
+                      <image-box :src="item.bannerImage"></image-box>
+                    </div>
+                  </div>
+                  <div class="card-bottom">
+                    <div class="head-img">
+                      <image-box :src="item.image"></image-box>
+                      <img class="tag" src="../../assets/images/icons/icon_tag.svg" alt="">
+                    </div>
+                    <div class="head-txt">
+                      {{item.name}}
+                    </div>
+                  </div>
+                </div>
+              </router-link>
+            </div>
+            <div class="custom-pagination" v-if="listCount>collectionQuery.limit">
+              <div class="content">
+                <el-pagination background v-model:current-page="collectionQuery.page" :page-size="collectionQuery.limit"
+                  :page-="collectionQuery.limit" @current-change="getCollectionData" layout="prev, pager, next"
+                  align="center" :total="listCount" />
+              </div>
+            </div>
+            <div class="empty-wrap" v-if="dataList.length===0">
+              <p class="txt">No Data</p>
+              <img src="../../assets/images/no-data.png" alt="">
             </div>
           </div>
         </el-tab-pane>
@@ -70,7 +79,7 @@ export default {
         page: 1,
         limit: 20,
       },
-      loadStatus: "",
+      loadStatus: 'over',
       accountList: [],
     };
   },
@@ -103,35 +112,17 @@ export default {
       this.getCollectionData()
     },
     getCollectionData () {
+      this.dataList = []
+      this.loadStatus = "loading";
       this.$api("collect.query", this.collectionQuery).then((res) => {
+        this.loadStatus = 'over'
         if (this.$tools.checkResponse(res)) {
           this.dataList = res.debug.listData
           this.listCount = res.debug.listCount
           this.collectionQuery.page = res.debug.curPage
         }
       })
-    },
-    getNFTs (parameter) {
-      var data = {
-        ...this.query,
-      };
-      this.$api("home.search", data).then((res) => {
-        this.loadStatus = "loaded";
-        if (this.$tools.checkResponse(res)) {
-          if (data.page == 1) this.nftList = [];
-          this.nftList = this.nftList.concat(res.data.list);
-          this.queryFunction(res.data.list);
-          if (res.data.list.length < data.limit) {
-            this.loadStatus = "over";
-          } else {
-            this.query.page += 1;
-          }
-        } else {
-          this.$tools.message(res.errmsg);
-        }
-      });
-    },
-
+    }
   },
 };
 </script>
