@@ -15,21 +15,21 @@
       </div>
 
       <div class="head-navs">
-        <router-link class="nav-link" to="/erc721">
+        <div class="nav-link" to="/erc721">
           {{ $t("navigation.launchpad") }}
-        </router-link>
+        </div>
         <router-link class="nav-link" to="/markterplace">
           {{ $t("navigation.marketplace") }}
         </router-link>
         <router-link class="nav-link" to="/allcollection">
           {{ $t("navigation.collection") }}
         </router-link>
-        <router-link class="nav-link" to="/erc721">
+        <div class="nav-link" to="/erc721">
           {{ $t("navigation.create") }}
-        </router-link>
-        <router-link class="nav-link" to="/erc721">
+        </div>
+        <div class="nav-link" to="/erc721">
           {{ $t("navigation.ETH") }}
-        </router-link>
+        </div>
         <!--        <router-link class="nav-link header-margin-r"-->
         <!--          :class="$route.name == 'Items' ? 'active' : ''"-->
         <!--          :to="!connected ? '/connect' : '/items'"-->

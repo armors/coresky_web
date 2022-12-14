@@ -175,13 +175,15 @@
 			},
 			submitForm() {
 				this.$api("user.update", {
-					"photo": 'https://ipfs.io/ipfs/QmRsJLrg27GQ1ZWyrXZFuJFdU5bapfzsyBfm3CAX1V1bw6',
+					"photo": 'https://ipfs.io/ipfs/QmbcWzteFsAvdwiaZyC1YJVNsApDaPRmqkQDyrYAvP4u48',
 					"nickname": this.userFrom.nickname,
 					"background": this.userFrom.background,
 					"telegram": this.userFrom.telegram,
 					"twitter": this.userFrom.twitter
 				}).then((res) => {
-						this.getUserInfo()
+					this.$tools.message('修改成功', 'success');
+					this.getUserInfo()
+					this.$store.dispatch("authinfo")
 				});
 			},
 			imageChange(e) {
