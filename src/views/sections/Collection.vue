@@ -6,9 +6,7 @@
     <div class="collection-info">
       <div class="info-top">
         <div class="avatar-box">
-          <img
-            :src="collectInfo.image"
-            alt="">
+          <img :src="collectInfo.image" alt="">
         </div>
         <div class="info-title">
           <div class="title">
@@ -45,7 +43,7 @@
           <span class="lable">Contract ADD:</span>
           <span class="value">{{$filters.ellipsisAddress(collectInfo.contract)}}</span>
           <el-icon v-clipboard:copy="collectInfo.contract" v-clipboard:success="onSuccessCopy"
-                   v-clipboard:error="onErrorCopy">
+            v-clipboard:error="onErrorCopy">
             <CopyDocument />
           </el-icon>
         </div>
@@ -117,157 +115,34 @@
           </div>
         </div>
       </div>
-      <div class="tab-wrap">
-        <div class="tabClass active">
-          Collected
-        </div>
-        <div class="tabClass">
+      <el-tabs v-model="activeName">
+        <el-tab-pane label="Collected" name="collected" :lazy="true">
+          <collectionNFT :contract="contract" />
+        </el-tab-pane>
+        <el-tab-pane label="Transaction dynamics" name="transaction" :lazy="true" :disabled="true">
           Transaction dynamics
-        </div>
-        <div class="tabClass">
+        </el-tab-pane>
+        <el-tab-pane label="Data analysis" name="analysis" :lazy="true" :disabled="true">
           Data analysis
-        </div>
-      </div>
+        </el-tab-pane>
+      </el-tabs>
 
-      <div class="item-page">
-
-        <div class="filter-wrap">
-          <div class="filter-head">
-            <span class="left">
-              <el-icon>
-                <ArrowLeft />
-              </el-icon>Filter
-            </span>
-            <span class="right">
-              <el-icon>
-                <Refresh />
-              </el-icon>
-            </span>
-          </div>
-          <div class="filter-item flex border">
-            <span class="left">Buy Now</span>
-            <span class="right">
-              <el-switch v-model="queryParams.isNowBuy" class="ml-2" />
-            </span>
-          </div>
-          <div class="filter-item border">
-            <div class="flex">
-              <span class="left">Price</span>
-              <span class="right">
-                <el-icon style="font-size:16px">
-                  <ArrowUp />
-                </el-icon>
-              </span>
-            </div>
-            <el-select v-model="queryParams.sort" placeholder="ETH" :teleported="false" popper-class="select-popper"
-              class="select-sort">
-              <el-option value="ETH">ETH</el-option>
-            </el-select>
-            <div class="price-range" style="margin-top:15px">
-              <el-input-number class="input-number" :controls="false" v-model="queryParams.minPrice"
-                :placeholder="$t('home.minPlaceholder')" />
-              <div class="line"></div>
-              <el-input-number class="input-number" :controls="false" v-model="queryParams.maxPrice"
-                :placeholder="$t('home.maxPlaceholder')" />
-            </div>
-            <div class="btn-apply">Application</div>
-          </div>
-          <div class="filter-item">
-            <div class="flex">
-              <span class="left">Attributes</span>
-              <span class="right">
-                <el-icon style="font-size:16px">
-                  <ArrowUp />
-                </el-icon>
-              </span>
-            </div>
-            <div class="gruop-wrap">
-              <div class="type-item" v-for="(item,index) in attrList" :key="index">
-                <div class="type-head">
-                  <span class="type-name">{{item.attrNm}}</span>
-                  <div class="type-num">
-                    <span>{{item.total}}</span>
-                    <el-icon :class="{'down':item.isShow}" @click="item.isShow=!item.isShow" style="font-size:15px">
-                      <ArrowUp />
-                    </el-icon>
-                  </div>
-                </div>
-                <div class="attr-content" v-if="item.isShow">
-                  <div class="attr-item" v-for="(child,cindex) in item.dataList" :key="cindex">
-                    <span>{{child.name}}</span>
-                    <div class="attr-num">
-                      <span>{{child.num}}</span>
-                      <el-checkbox v-model="child.isChecked" label="" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="right-content" >
-          <div class="list-search-wrap">
-            <div class="btnfilter">
-              <img src="../../assets/images/icons/icon_filter.svg" alt="">
-              Filter
-            </div>
-            <el-input class="search-input-wrap" style="width:400px" placeholder="Search by name or attribute"
-              v-model="keyword" @keyup.enter="searchClick">
-              <template #prefix>
-                <div class="img-search"><img src="../../assets/images/icons/icon_search.svg" alt=""></div>
-              </template>
-            </el-input>
-            <el-select v-model="queryParams.sort" placeholder="Recently listed" :teleported="false"
-              popper-class="select-popper" class="select-sort">
-              <el-option value="Recently listed1">Recently listed</el-option>
-              <el-option value="Recently listed2">Recently listed</el-option>
-              <el-option value="Recently listed3">Recently listed</el-option>
-              <el-option value="Recently listed4">Recently listed</el-option>
-              <el-option value="Recently listed5">Recently listed</el-option>
-            </el-select>
-            <div class="sort-wrap">
-              <span class="icon-wrap icon_filter01 active">
-              </span>
-              <span class="icon-wrap icon_filter02"></span>
-            </div>
-          </div>
-          <div class="nft-list">
-            <div class="nft-card" v-for="(v, i) in tokenList" :key="`token-item-${i}`" @click="toTokenDetail(v)">
-              <div class="nft-content">
-                <div class="card-top">
-                  <div class="card-img">
-                    <image-box :src="v.oriImage"></image-box>
-                  </div>
-                </div>
-                <div class="card-bottom">
-                  <div class="nft-txt">
-                    {{v.name || '--'}} #{{v.tokenId}}
-                  </div>
-                  <div class="nft-price">
-                    <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="">
-                    <span class="nft-price">{{$Web3.utils.fromWei(v.basePrice.toString())}} ETH</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="custom-pagination">
-            <div class="content">
-              <el-pagination background layout="prev, pager, next" align="center" :total="1000" />
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
 
   </div>
 </template>
 <script>
+import collectionNFT from './components/collectionNFT'
+
 export default {
   name: "Collection",
+  components: {
+    collectionNFT,
+  },
   mixins: [],
   data () {
     return {
+      activeName: 'collected',
       dataInfo: {
         imgUrl: "https://storage.nfte.ai/asset/collection/featured/LSIWBMDTLHJRKSITPNVQWFNCVCOKRIGG.jpg?x-oss-process=image/resize,m_fill,w_4096,h_180",
         address: "",
@@ -287,7 +162,7 @@ export default {
         "minPrice": 0,
         "maxPrice": 0,
         "order": 0,
-        "filter" : {},
+        "filter": {},
         page: 1,
         limit: 20
       },
@@ -371,11 +246,9 @@ export default {
     this.contract = this.$route.params.contract
     this.tokenQueryParams.contract = this.contract
   },
-  mounted() {
-    console.log(this.contract)
+  mounted () {
     if (this.contract) {
       this.getCollectInfo()
-      this.getTokenQuery()
     }
   },
   computed: {
@@ -396,20 +269,6 @@ export default {
         this.collectInfo = res.debug
       })
     },
-    getTokenQuery () {
-      this.$api("token.query", this.tokenQueryParams).then((res) => {
-        this.tokenList = res.debug.listData
-      })
-    },
-    toTokenDetail (v) {
-      this.$router.push({
-        name: 'detail',
-        params: {
-          contract: v.contract,
-          tokenId: v.tokenId
-        }
-      })
-    }
   },
 };
 </script>
@@ -568,38 +427,34 @@ export default {
         }
       }
     }
-    .tab-wrap {
-      display: flex;
-      width: 100%;
-      display: flex;
-      border-bottom: 1px solid $borderBg;
-    }
-    .tabClass {
-      cursor: pointer;
-      font-style: normal;
-      font-weight: 500;
+  }
+  ::v-deep {
+    .el-tabs__item {
+      font-family: 'Plus Jakarta Display';
+      padding: 0 30px;
+      font-weight: 700;
       font-size: 18px;
       line-height: 24px;
-      margin-right: 60px;
       color: $color-black2;
       padding-bottom: 16px;
-      &.active {
+      height: 40px;
+      &.is-active {
         color: $primaryColor;
-        border-bottom: 4px solid $bgPurple;
       }
+      &.is-top:nth-child(2) {
+        padding-right: 30px;
+      }
+    }
+    .el-tabs__active-bar {
+      background-color: $bgPurple;
+      height: 4px;
     }
   }
 }
 
-.item-page {
-  margin-top: 40px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: flex-start;
-}
 
-.right-content{
-  width:100%;
+
+.right-content {
+  width: 100%;
 }
 </style>
