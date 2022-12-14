@@ -100,7 +100,7 @@
         <nft-list :nftList="nftList" @showDialog="showDialog" @onLike="onLike"></nft-list>
 <!--        <nft-item v-for="(nft, i) in nftList" :nft="nft" :key="i" :index="i" @showDialog="showDialog" @onLike="onLike"></nft-item>-->
         <nft-item-load :loadStatus="loadStatus"></nft-item-load>
-        <router-link to="/erc721" class="see-more display-flex box-center">{{$t("home.seeMoreCollects")}}</router-link>
+        <router-link to="/allcollection" class="see-more display-flex box-center">{{$t("home.seeMoreCollects")}}</router-link>
       </div>
       <nftTrade :popularList="popularList"></nftTrade>
       <nftDrop :dropList="dropList"></nftDrop>
@@ -166,27 +166,27 @@
             value: 'eth',
             label: 'ETH'
           },
-          {
-            value: 'heco',
-            label: 'HECO'
-          },
-          {
-            value: 'bsc',
-            label: 'BSC'
-          }
+          // {
+          //   value: 'heco',
+          //   label: 'HECO'
+          // },
+          // {
+          //   value: 'bsc',
+          //   label: 'BSC'
+          // }
         ],
         optionsTimes: [
           {
             value: '1',
-            label: '1 hour'
+            label: '24 hour'
           },
           {
-            value: '2',
-            label: '2 hour'
+            value: '7',
+            label: '7 days'
           },
           {
-            value: '4',
-            label: '6 hour'
+            value: '30',
+            label: '30 days'
           }
         ],
         banner: require("@/assets/img/home/index_bg.png"),
@@ -670,7 +670,7 @@
           width: 140px;
         }
         &.select-times{
-          width: 90px;
+          width: 110px;
         }
         .el-input__suffix{
           right: 16px;
