@@ -148,7 +148,7 @@ export default {
     pageHandle () {
       this.nftList = [];
       this.loadStatus = "loading";
-      this.$api("user.token", this.queryParams).then((res) => {
+      this.$api("token.query", this.queryParams).then((res) => {
         if (this.$tools.checkResponse(res)) {
           this.nftList = res.debug.listData
           this.queryParams.page = res.debug.curPage
