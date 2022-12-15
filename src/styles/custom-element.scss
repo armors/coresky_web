@@ -43,3 +43,22 @@
   background: $mainLiner !important;
   border-color: $bgPurple !important;
 }
+
+.el-collapse{
+  border: none!important;
+}
+.el-collapse-item__header{
+  height: 56px;
+  width: 100%;
+  background: $bg-white !important;
+  border: none!important;
+  &.is-active{
+    background: $elButtonHoverBg !important;
+  }
+}
+.el-collapse-item__arrow{
+  margin-right: 28px;
+}
+.el-collapse-item__content{
+  padding-bottom: 0;
+}
