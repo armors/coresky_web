@@ -195,7 +195,7 @@
                   <span>Best offer</span>
                   <span class="item-value">
                     <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-                    28.80
+                    {{bestPrice}}
                   </span>
                 </div>
               </div>
@@ -401,6 +401,7 @@ export default {
       ckAuctionEntityList: [],
       isCart: false,
       nftPrice: '--',
+      bestPrice: '--',
       countDownTime: '--',
       countDownFn: '',
       isMakeOffer: false,
@@ -518,6 +519,7 @@ export default {
         // this.tokenInfo.ckCollectionsInfoEntity.floorPrice = '0.02'
         this.ckAuctionEntityList = this.tokenInfo.ckAuctionEntityList || []
         this.nftPrice = this.$sdk.fromWeiNum(this.tokenInfo.ckOrdersEntity ? this.tokenInfo.ckOrdersEntity.basePrice : this.tokenInfo.basePrice)
+        this.bestPrice = this.$sdk.fromWeiNum(this.tokenInfo.bestPrice)
         if (this.tokenInfo.ckOrdersEntity !== null) {
           this.countDown()
         }

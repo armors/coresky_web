@@ -47,7 +47,7 @@ export default {
         if(url.endsWith('.gif')) return url;
         if(url.indexOf("ipfs") != -1) return url;
         if(url.startsWith("data:image")) return url;
-        return url + '!100x100';
+        return url;
       } else {
         return "";
       }
