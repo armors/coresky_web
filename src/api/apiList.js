@@ -400,5 +400,9 @@ export default {
       url: "/collections/type",
       method: "post",
     },
+    filter:{
+      url: "/collections/filter",
+      method: "post",
+    }
   }
 };

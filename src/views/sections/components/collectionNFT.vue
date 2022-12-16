@@ -68,7 +68,7 @@
                 <span>{{child.name}}</span>
                 <div class="attr-num">
                   <span>{{child.num}}</span>
-                  <el-checkbox v-model="child.isChecked" label="" />
+                  <el-checkbox v-model="child.isChecked" @change="checkChange" label="" />
                 </div>
               </div>
             </div>
@@ -177,6 +177,7 @@ export default {
       viewType: 1,
       listCount: 0,
       dataList: [],
+      attrList: [],
       loadStatus: 'over'
     }
   },
@@ -184,19 +185,50 @@ export default {
   },
   mounted () {
     this.searchClick()
+    this.initAttrList()
   },
   methods: {
+    checkChange () {
+      this.queryData()
+      // console.log(this.attrList)
+    },
+    initAttrList () {
+      this.attrList = []
+      this.$api("collections.filter", { contract: this.contract }).then((res) => {
+        if (this.$tools.checkResponse(res)) {
+          let attrData = res.debug
+          for (let attr of attrData) {
+            let data = {
+              attrNm: attr.name,
+              total: attr.count,
+              isShow: false,
+              dataList: attr.list.map(el => {
+                return {
+                  name: el.name,
+                  num: el.count,
+                  isChecked: false,
+                }
+              })
+            }
+            this.attrList.push(data)
+          }
+
+          console.log(3333, this.attrList)
+        }
+      })
+    },
     nftPrice (basePrice) {
       return this.$Web3.utils.fromWei(basePrice.toString())
     },
     searchClick () {
       this.queryParams.page = 1
       this.queryParams.contract = this.contract
-    
+
       this.queryData()
     },
     queryData () {
       this.dataList = []
+      this.getAttrFilter()
       this.loadStatus = 'loading'
       this.$api("token.query", this.queryParams).then((res) => {
         this.loadStatus = 'over'
@@ -206,6 +238,22 @@ export default {
           this.queryParams.page = res.debug.curPage
         }
       })
+    },
+    getAttrFilter () {
+      let listFilter = []
+      this.attrList.map(el => {
+        let vals = el.dataList.filter(el2 => el2.isChecked)
+        if (vals.length > 0) {
+          let filter = { name: el.attrNm, value: vals.map(el3 => el3.name).join(',') }
+          listFilter.push(filter)
+        }
+      })
+      if (listFilter.length > 0) {
+        this.queryParams.filter = listFilter[0]
+      }
+      else {
+        this.queryParams.filter = null
+      }
     }
   },
 }
