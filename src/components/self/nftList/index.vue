@@ -8,7 +8,7 @@
 				{{ $t('home.nftListTitle2') }}</div>
 			<div class="exchange-volume box-flex1 display-flex box-center-Y">
 				<div class="box-flex1"></div><div class="icon-token"></div>
-				{{ $t('home.nftListTitle3') }}</div>
+				{{ $t('home.nftListTitle3' + volTime) }}</div>
 			<div class="total-exchange-volume box-flex1 display-flex box-center-Y">
 				<div class="box-flex1"></div><div class="icon-token"></div>
 				{{ $t('home.nftListTitle4') }}</div>
@@ -35,7 +35,7 @@
 			<div class="exchange-volume box-flex1 display-flex box-center-Y">
 				<div class="box-flex1"></div>
 				<div class="icon-token"><img src="../../../assets/images/icons/token/token_eth.svg" alt=""></div>
-				<div>{{v.dayVol}}</div>
+				<div>{{volTime === 1 ? v.dayVol : (volTime === 7 ? v.weekVol : v.monthVol)}}</div>
 			</div>
 			<div class="total-exchange-volume box-flex1 display-flex box-center-Y">
 				<div class="box-flex1"></div>
@@ -55,6 +55,10 @@
 		name: "nftList",
 		mixins: [MixinsNFTInfo],
 		props: {
+			volTime: {
+				type: Number,
+				default: 1,
+			},
 			nftList: {
 				type: Object,
 				default: {},

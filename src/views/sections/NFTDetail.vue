@@ -1,138 +1,152 @@
 <template>
-  <div class="main-wrapper">
+  <div class="main-wrapper nft-detail">
     <div class="flex-center">
       <div class="page-left">
         <div class="detail-img-box">
           <image-box :src="tokenInfo.oriImage"></image-box>
         </div>
         <div class="card-wrap mt30">
-          <div class="card-head">
-            <img class="icon" src="@/assets/images/icons/icon_properties.svg" alt="">
-            <span class="card-title">Properties</span>
-            <el-icon class="down">
-              <ArrowUp />
-            </el-icon>
-          </div>
-          <div class="card-body" style="height: 392px">
-            <div class="arrt-list">
-              <div class="arrt-item" v-for="(v, i) in tokenInfo.attributeResList" :key="`attr-item-${i}`">
-                <p class="attr-name">{{v.type}}</p>
-                <p class="attr-value">{{v.value}}</p>
-                <div class="attr-bottom">
-                  <span class="attr-num">{{$filters.milliFormat(v.count)}}({{v.percent}}%)</span>
-                  <div class="attr-price">
-                    <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-                    <span class="value">{{v.price}}</span>
+          <el-collapse v-model="activeName" accordion>
+            <el-collapse-item title="Consistency" name="1">
+              <template #title>
+                <div class="card-head">
+                  <img class="icon" src="@/assets/images/icons/icon_properties.svg" alt="">
+                  <span class="card-title">Properties</span>
+<!--                  <el-icon class="down">-->
+<!--                    <ArrowUp />-->
+<!--                  </el-icon>-->
+                </div>
+              </template>
+<!--              <div class="card-body no-scroller" style="height: 392px;overflow: auto;">-->
+              <div class="card-body" style="min-height: 392px;">
+                <div class="arrt-list">
+                  <div class="arrt-item" v-for="(v, i) in tokenInfo.attributeResList" :key="`attr-item-${i}`">
+                    <p class="attr-name">{{v.type}}</p>
+                    <p class="attr-value">{{v.value}}</p>
+                    <div class="attr-bottom">
+                      <span class="attr-num">{{$filters.milliFormat(v.count)}}({{v.percent}}%)</span>
+                      <div class="attr-price">
+                        <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
+                        <span class="value">{{v.price}}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <!--              <div class="arrt-item">-->
+                  <!--                <p class="attr-name">Clothes</p>-->
+                  <!--                <p class="attr-value">Lumberjack Shirt</p>-->
+                  <!--                <div class="attr-bottom">-->
+                  <!--                  <span class="attr-num">1,232(12.32%)</span>-->
+                  <!--                  <div class="attr-price">-->
+                  <!--                    <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />-->
+                  <!--                    <span class="value">530.73</span>-->
+                  <!--                  </div>-->
+                  <!--                </div>-->
+                  <!--              </div>-->
+                  <!--              <div class="arrt-item">-->
+                  <!--                <p class="attr-name">Eyes</p>-->
+                  <!--                <p class="attr-value">X Eyes</p>-->
+                  <!--                <div class="attr-bottom">-->
+                  <!--                  <span class="attr-num">1,232(12.32%)</span>-->
+                  <!--                  <div class="attr-price">-->
+                  <!--                    <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />-->
+                  <!--                    <span class="value">530.73</span>-->
+                  <!--                  </div>-->
+                  <!--                </div>-->
+                  <!--              </div>-->
+                  <!--              <div class="arrt-item">-->
+                  <!--                <p class="attr-name">Fur</p>-->
+                  <!--                <p class="attr-value">Pink</p>-->
+                  <!--                <div class="attr-bottom">-->
+                  <!--                  <span class="attr-num">1,232(12.32%)</span>-->
+                  <!--                  <div class="attr-price">-->
+                  <!--                    <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />-->
+                  <!--                    <span class="value">530.73</span>-->
+                  <!--                  </div>-->
+                  <!--                </div>-->
+                  <!--              </div>-->
+                  <!--              <div class="arrt-item">-->
+                  <!--                <p class="attr-name">Hat</p>-->
+                  <!--                <p class="attr-value">Girl's Hair Short</p>-->
+                  <!--                <div class="attr-bottom">-->
+                  <!--                  <span class="attr-num">1,232(12.32%)</span>-->
+                  <!--                  <div class="attr-price">-->
+                  <!--                    <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />-->
+                  <!--                    <span class="value">530.73</span>-->
+                  <!--                  </div>-->
+                  <!--                </div>-->
+                  <!--              </div>-->
+                  <!--              <div class="arrt-item">-->
+                  <!--                    <p class="attr-name">Mouth</p>-->
+                  <!--                    <p class="attr-value">Bored</p>-->
+                  <!--                    <div class="attr-bottom">-->
+                  <!--                      <span class="attr-num">1,232(12.32%)</span>-->
+                  <!--                      <div class="attr-price">-->
+                  <!--                        <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />-->
+                  <!--                    <span class="value">530.73</span>-->
+                  <!--                  </div>-->
+                  <!--                </div>-->
+                  <!--              </div>-->
+                </div>
+              </div>
+            </el-collapse-item>
+          </el-collapse>
+        </div>
+        <div class="card-wrap mt30">
+          <el-collapse v-model="activeName1" accordion>
+            <el-collapse-item title="Consistency" name="1">
+              <template #title>
+                <div class="card-head">
+                  <img class="icon" src="@/assets/images/icons/icon_token.svg" alt="">
+                  <span class="card-title">Token Details</span>
+<!--                  <el-icon class="down">-->
+<!--                    <ArrowUp />-->
+<!--                  </el-icon>-->
+                </div>
+              </template>
+              <div class="card-body">
+                <div class="flex-detial-list">
+                  <div class="flex-detial">
+                    <span class="name">Token ID</span>
+                    <span class="value primaryColor">{{tokenInfo.tokenId}}</span>
+                  </div>
+                  <div class="flex-detial">
+                    <span class="name">Blockchain</span>
+                    <span class="value">Ethereum</span>
+                  </div>
+                  <div class="flex-detial">
+                    <span class="name">Token Standard</span>
+                    <span class="value">ERC721</span>
+                  </div>
+                  <div class="flex-detial line">
+                  </div>
+                  <div class="flex-detial">
+                    <span class="name">Contract</span>
+                    <div class="value display-flex box-center-Y color-purple" @click="$filters.openWindow($filters.contractExplore(tokenInfo.contract).href)">
+                      <div>{{$filters.contractExplore(tokenInfo.contract).hashShort}}</div>
+                      <div class="share-icon"><img src="../../assets/images/icons/icon_share_purple.svg" alt=""></div>
+                    </div>
+
+                  </div>
+                  <div class="flex-detial">
+                    <span class="name">Creator Rebate</span>
+                    <div class="value primaryColor display-flex box-center-Y">
+                      <el-tooltip
+                        placement="right"
+                      >
+                        <template #content> The creator of this collection will receive a certain <br> percentage of amout for every sale. </template>
+                        <div class="display-flex box-center-Y">
+                          <div>0.5%</div>
+                          <div class="tip-icon"><img src="../../assets/images/icons/icon_tip_black.svg" alt=""></div>
+                        </div>
+                      </el-tooltip>
+
+                    </div>
                   </div>
                 </div>
               </div>
-<!--              <div class="arrt-item">-->
-<!--                <p class="attr-name">Clothes</p>-->
-<!--                <p class="attr-value">Lumberjack Shirt</p>-->
-<!--                <div class="attr-bottom">-->
-<!--                  <span class="attr-num">1,232(12.32%)</span>-->
-<!--                  <div class="attr-price">-->
-<!--                    <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />-->
-<!--                    <span class="value">530.73</span>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--              <div class="arrt-item">-->
-<!--                <p class="attr-name">Eyes</p>-->
-<!--                <p class="attr-value">X Eyes</p>-->
-<!--                <div class="attr-bottom">-->
-<!--                  <span class="attr-num">1,232(12.32%)</span>-->
-<!--                  <div class="attr-price">-->
-<!--                    <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />-->
-<!--                    <span class="value">530.73</span>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--              <div class="arrt-item">-->
-<!--                <p class="attr-name">Fur</p>-->
-<!--                <p class="attr-value">Pink</p>-->
-<!--                <div class="attr-bottom">-->
-<!--                  <span class="attr-num">1,232(12.32%)</span>-->
-<!--                  <div class="attr-price">-->
-<!--                    <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />-->
-<!--                    <span class="value">530.73</span>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--              <div class="arrt-item">-->
-<!--                <p class="attr-name">Hat</p>-->
-<!--                <p class="attr-value">Girl's Hair Short</p>-->
-<!--                <div class="attr-bottom">-->
-<!--                  <span class="attr-num">1,232(12.32%)</span>-->
-<!--                  <div class="attr-price">-->
-<!--                    <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />-->
-<!--                    <span class="value">530.73</span>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--              <div class="arrt-item">-->
-<!--                    <p class="attr-name">Mouth</p>-->
-<!--                    <p class="attr-value">Bored</p>-->
-<!--                    <div class="attr-bottom">-->
-<!--                      <span class="attr-num">1,232(12.32%)</span>-->
-<!--                      <div class="attr-price">-->
-<!--                        <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />-->
-<!--                    <span class="value">530.73</span>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--              </div>-->
-            </div>
-          </div>
-        </div>
-        <div class="card-wrap mt30">
-          <div class="card-head">
-            <img class="icon" src="@/assets/images/icons/icon_token.svg" alt="">
-            <span class="card-title">Token Details</span>
-            <el-icon class="down">
-              <ArrowUp />
-            </el-icon>
-          </div>
-          <div class="card-body">
-            <div class="flex-detial-list">
-              <div class="flex-detial">
-                <span class="name">Token ID</span>
-                <span class="value primaryColor">{{tokenInfo.tokenId}}</span>
-              </div>
-              <div class="flex-detial">
-                <span class="name">Blockchain</span>
-                <span class="value">Ethereum</span>
-              </div>
-              <div class="flex-detial">
-                <span class="name">Token Standard</span>
-                <span class="value">ERC721</span>
-              </div>
-              <div class="flex-detial line">
-              </div>
-              <div class="flex-detial">
-                <span class="name">Contract</span>
-                <div class="value display-flex box-center-Y color-purple" @click="$filters.openWindow($filters.contractExplore(tokenInfo.contract).href)">
-                  <div>{{$filters.contractExplore(tokenInfo.contract).hashShort}}</div>
-                  <div class="share-icon"><img src="../../assets/images/icons/icon_share_purple.svg" alt=""></div>
-                </div>
+            </el-collapse-item>
+          </el-collapse>
 
-              </div>
-              <div class="flex-detial">
-                <span class="name">Creator Rebate</span>
-                <div class="value primaryColor display-flex box-center-Y">
-                  <el-tooltip
-                    placement="right"
-                  >
-                    <template #content> The creator of this collection will receive a certain <br> percentage of amout for every sale. </template>
-                    <div class="display-flex box-center-Y">
-                      <div>0.5%</div>
-                      <div class="tip-icon"><img src="../../assets/images/icons/icon_tip_black.svg" alt=""></div>
-                    </div>
-                  </el-tooltip>
-
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
       <div class="page-right">
@@ -210,90 +224,109 @@
           </div>
         </div>
         <div class="card-wrap mt30">
-          <div class="card-head">
-            <img class="icon" src="@/assets/images/icons/icon_pricehistory.svg" alt="">
-            <span class="card-title">Price History</span>
-            <el-icon>
-              <ArrowUp />
-            </el-icon>
-          </div>
-          <div class="card-body" style="height:200px">
+          <el-collapse v-model="activeName2" accordion>
+            <el-collapse-item title="Consistency" name="1">
+              <template #title>
+                <div class="card-head">
+                  <img class="icon" src="@/assets/images/icons/icon_pricehistory.svg" alt="">
+                  <span class="card-title">Price History</span>
+<!--                  <el-icon>-->
+<!--                    <ArrowUp />-->
+<!--                  </el-icon>-->
+                </div>
+              </template>
+              <div class="card-body" style="height:200px">
+              </div>
+            </el-collapse-item>
+          </el-collapse>
 
-          </div>
+
         </div>
         <div class="card-wrap mt30">
-          <div class="card-head">
-            <img class="icon" src="@/assets/images/icons/icon_offers.svg" alt="">
-            <span class="card-title">Offers</span>
-            <el-icon class="down">
-              <ArrowUp />
-            </el-icon>
-          </div>
-          <div class="card-body" style="height:480px;padding:0;overflow: auto;">
-            <div class="offer-list">
-              <div class="list-tr head">
-                <div class="list-th th25">Price</div>
-                <div class="list-th th25">Exporation</div>
-                <div class="list-th th25">From</div>
-                <div class="list-th th25 center">Status</div>
-              </div>
+          <el-collapse v-model="activeName3" accordion>
+            <el-collapse-item title="Consistency" name="1">
+              <template #title>
+                <div class="card-head">
+                  <img class="icon" src="@/assets/images/icons/icon_offers.svg" alt="">
+                  <span class="card-title">Offers</span>
+<!--                  <el-icon class="down">-->
+<!--                    <ArrowUp />-->
+<!--                  </el-icon>-->
+                </div>
+              </template>
+              <div class="card-body" style="height:480px;padding:0;overflow: auto;">
+                <div class="offer-list">
+                  <div class="list-tr head">
+                    <div class="list-th th25">Price</div>
+                    <div class="list-th th25">Exporation</div>
+                    <div class="list-th th25">From</div>
+                    <div class="list-th th25 center">Status</div>
+                  </div>
 
-              <div class="list-tr" v-for="(v, i) of ckAuctionEntityList" :key="`make-offer-${i}`">
-                <div class="list-th th25">
-                  <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-                  {{nftPriceFun(v.basePrice)}}
-                </div>
-                <div class="list-th th25">about 22 hours</div>
-                <div class="list-th th25 purple">{{$filters.ellipsisAddress(v.maker, 4)}}</div>
-                <div class="list-th th25 center">
-                  <el-button type="primary" class="btnAccept" v-if="isSelfMakeOffer(v)" :loading="cancelMakeOfferBtnLoading" @click="cancelMakeOffer(v)">Cancel</el-button>
-                  <el-button type="primary" class="btnAccept" v-else :disabled="!isSelf" :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT(v)">Accept</el-button>
+                  <div class="list-tr" v-for="(v, i) of ckAuctionEntityList" :key="`make-offer-${i}`">
+                    <div class="list-th th25">
+                      <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
+                      {{nftPriceFun(v.basePrice)}}
+                    </div>
+                    <div class="list-th th25">about 22 hours</div>
+                    <div class="list-th th25 purple">{{$filters.ellipsisAddress(v.maker, 4)}}</div>
+                    <div class="list-th th25 center">
+                      <el-button type="primary" class="btnAccept" v-if="isSelfMakeOffer(v)" :loading="cancelMakeOfferBtnLoading" @click="cancelMakeOffer(v)">Cancel</el-button>
+                      <el-button type="primary" class="btnAccept" v-else :disabled="!isSelf" :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT(v)">Accept</el-button>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
+            </el-collapse-item>
+          </el-collapse>
         </div>
       </div>
     </div>
 
     <div class="card-wrap mt30 activity-wrap">
-      <div class="card-head">
-        <img class="icon" src="@/assets/images/icons/icon_pricehistory.svg" alt="">
-        <span class="card-title">Item Activity</span>
-        <el-icon>
-          <ArrowUp />
-        </el-icon>
-      </div>
-      <div class="card-body" style="height:580px;padding:0;">
-        <div class="filter-box">
-          <el-checkbox-group v-model="checkList">
-            <el-checkbox label="Sales" />
-            <el-checkbox label="Listings" />
-            <el-checkbox label="Offers" />
-            <el-checkbox label="Collection offers" />
-            <el-checkbox label="Transfers" />
-          </el-checkbox-group>
-        </div>
-        <div class="offer-list">
-          <div class="list-tr head">
-            <div class="list-th" style="width:20%">Event</div>
-            <div class="list-th" style="width:20%">Price</div>
-            <div class="list-th" style="width:20%">From</div>
-            <div class="list-th" style="width:20%">To</div>
-            <div class="list-th" style="width:20%">Date</div>
-          </div>
-
-          <div class="list-tr" v-for="i of 20" :key="i">
-            <div class="list-th" style="width:20%">
-              Transfer
+      <el-collapse v-model="activeName4" accordion>
+        <el-collapse-item title="Consistency" name="1">
+          <template #title>
+            <div class="card-head">
+              <img class="icon" src="@/assets/images/icons/icon_Item_activity.svg" alt="">
+              <span class="card-title">Item Activity</span>
+<!--              <el-icon>-->
+<!--                <ArrowUp />-->
+<!--              </el-icon>-->
             </div>
-            <div class="list-th" style="width:20%">0.065 ETH</div>
-            <div class="list-th " style="width:20%">Hayiyi</div>
-            <div class="list-th " style="width:20%">Hayiyi</div>
-            <div class="list-th " style="width:20%">21 days ago</div>
+          </template>
+          <div class="card-body" style="height:580px;padding:0;">
+            <div class="filter-box">
+              <el-checkbox-group v-model="checkList">
+                <el-checkbox label="Sales" />
+                <el-checkbox label="Listings" />
+                <el-checkbox label="Offers" />
+                <el-checkbox label="Collection offers" />
+                <el-checkbox label="Transfers" />
+              </el-checkbox-group>
+            </div>
+            <div class="offer-list">
+              <div class="list-tr head">
+                <div class="list-th" style="width:20%">Event</div>
+                <div class="list-th" style="width:20%">Price</div>
+                <div class="list-th" style="width:20%">From</div>
+                <div class="list-th" style="width:20%">To</div>
+                <div class="list-th" style="width:20%">Date</div>
+              </div>
+
+              <div class="list-tr" v-for="i of 20" :key="i">
+                <div class="list-th" style="width:20%">
+                  Transfer
+                </div>
+                <div class="list-th" style="width:20%">0.065 ETH</div>
+                <div class="list-th " style="width:20%">Hayiyi</div>
+                <div class="list-th " style="width:20%">Hayiyi</div>
+                <div class="list-th " style="width:20%">21 days ago</div>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </el-collapse-item>
+      </el-collapse>
     </div>
     <NFTDialogBuy ref="NFTDialogBuy" @buySuccess="buySuccess"></NFTDialogBuy>
     <NFTDialogSell ref="NFTDialogSell" @sellCreateSuccess="sellCreateSuccess"></NFTDialogSell>
@@ -322,6 +355,11 @@ export default {
   mixins: [],
   data () {
     return {
+      activeName: '1',
+      activeName1: '1',
+      activeName2: '1',
+      activeName3: '1',
+      activeName4: '1',
       cancelMakeOfferBtnLoading: false,
       buyBtnLoading: false,
       cancelBtnLoading: false,
@@ -608,8 +646,8 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped>
-.main-wrapper {
+<style lang="scss">
+.main-wrapper.nft-detail {
   padding: 40px 0;
   margin-bottom: 20px;
   .flex-center {
@@ -636,7 +674,7 @@ export default {
     width: 708px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    /*justify-content: space-between;*/
     .collection-name {
       font-weight: 600;
       font-size: 14px;
@@ -818,8 +856,7 @@ export default {
     .card-head {
       display: flex;
       align-items: center;
-      padding: 10px 24px;
-      background: $elButtonHoverBg;
+      padding: 0 24px;
       .icon {
         width: 24px;
         height: 24px;
@@ -967,7 +1004,7 @@ export default {
   }
   .activity-wrap {
     .card-head {
-      border: 1px solid $borderBg;
+     //  border: 1px solid $borderBg;
     }
     .el-checkbox-group {
       padding-top: 15px;
@@ -977,8 +1014,20 @@ export default {
       }
     }
     .filter-box {
+      border-top: 1px solid $borderBg;
       background: $elButtonHoverBg;
       height: 56px;
+      width: 100%;
+      .el-checkbox__inner{
+        background-color: transparent;
+        border-color: $primaryColor;
+      }
+      .el-checkbox__input.is-checked+.el-checkbox__label{
+        color: $primaryColor;
+      }
+      .el-checkbox__inner::after{
+        border-color: $primaryColor;
+      }
     }
   }
 }

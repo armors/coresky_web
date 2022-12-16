@@ -49,6 +49,9 @@ module.exports = {
     // add
     nftListTitle1: "Collection",
     nftListTitle2: "Floor",
+    nftListTitle31: "24h Vol",
+    nftListTitle37: "7days Vol",
+    nftListTitle330: "30days Vol",
     nftListTitle3: "24h Vol",
     nftListTitle4: "Total Vol",
     nftListTitle5: "Owners",

@@ -278,3 +278,11 @@ input{
   color: $bgPurple;
 }
 
+.no-scroller{
+  height: 100%;
+  overflow-y: auto;
+}
+.no-scroller::-webkit-scrollbar {
+  display: none;
+}
+
