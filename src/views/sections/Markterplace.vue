@@ -53,24 +53,23 @@
           </span>
         </div>
         <template v-if="isOpenSearchCollection">
-          <el-input class="search-input-wrap" placeholder="Search" v-model="keyword" @keyup.enter="searchClick"
+          <el-input class="search-input-wrap" placeholder="Search" v-model="keyword2" @keyup.enter="searchCollection"
             style="margin-top:15px;">
             <template #prefix>
               <div class="img-search"><img src="../../assets/images/icons/icon_search.svg" alt=""></div>
             </template>
           </el-input>
           <div class="list-wrap">
-            <div class="list-item" v-for="key in 8" :key="key">
+            <router-link :to="`/collection/${item.contract}`" class="list-item"
+              v-for="(item,index) in collectionList" :key="index">
               <div class="head-img">
-                <img
-                  src="https://storage.nfte.ai/asset/collection/featured/SIPGAWJPYHJAGSVGQIXWOKPHREVQFDSL.jpg?x-oss-process=image/resize,m_fill,w_108,h_108,limit_0"
-                  alt="">
+                <image-box :src="item.image"></image-box>
                 <img class="tag" src="../../assets/images/icons/icon_tag.svg" alt="">
               </div>
               <div class="head-txt">
-                HUGO x Imaginary Ones: Embrace Your Emotionss
+                {{item.name}}
               </div>
-            </div>
+            </router-link>
           </div>
         </template>
       </div>
@@ -170,17 +169,33 @@ export default {
       viewType: 1,
       listCount: 0,
       dataList: [],
-      loadStatus: 'over'
+      loadStatus: 'over',
+      keyword2: '',
+      collectionList: []
     }
   },
   created () {
   },
   mounted () {
-    console.log(888)
+
     this.queryParams.keyword = this.searchKeyword || ''
     this.searchClick()
+    this.searchCollection()
   },
   methods: {
+    searchCollection () {
+      let params = {
+        keyword: this.keyword2,
+        page: 1,
+        order: 2,
+        limit: 6,
+      }
+      this.$api("collect.query", params).then((res) => {
+        if (this.$tools.checkResponse(res)) {
+          this.collectionList = res.debug.listData
+        }
+      })
+    },
     nftPrice (basePrice) {
       return this.$Web3.utils.fromWei(basePrice.toString())
     },
@@ -214,8 +229,6 @@ export default {
     width: 100%;
   }
 }
-
-
 </style>
 
 

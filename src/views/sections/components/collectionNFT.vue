@@ -212,8 +212,6 @@ export default {
             }
             this.attrList.push(data)
           }
-
-          console.log(3333, this.attrList)
         }
       })
     },
