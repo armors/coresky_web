@@ -4,6 +4,30 @@ const path = require('path');
 function resolve(dir) {
   return path.join(__dirname, dir);
 }
+const cdnExternals = {
+  // 忽略打包的第三方库
+  externals: {
+    vue: 'Vue',
+    vuex: 'Vuex',
+    'vue-router': 'VueRouter',
+    axios: 'axios',
+    'element-plus': 'ElementPlus'
+  },
+  cdn: {
+    // 通过cdn方式使用
+    js: [
+      'https://cdn.bootcdn.net/ajax/libs/vue/3.2.37/vue.global.js',
+      'https://cdn.bootcdn.net/ajax/libs/vue-router/4.0.16/vue-router.global.js',
+      'https://cdn.bootcdn.net/ajax/libs/vuex/4.0.2/vuex.global.js',
+      'https://cdn.bootcdn.net/ajax/libs/axios/0.27.2/axios.js',
+      'https://unpkg.com/element-plus',
+    ],
+    css: [
+      'https://unpkg.com/element-plus/dist/index.css'
+    ]
+  }
+}
+
 module.exports = defineConfig({
   publicPath: '/',
   outputDir: 'dist',
@@ -30,6 +54,12 @@ module.exports = defineConfig({
   // },
 
   chainWebpack: config => {
+    // 配置，将当前页定义的cdn值传到主页面（index.html）
+    config.plugin('html').tap(args => {
+      // 这里我是除本地环境，其余均使用CDN，可自己选择是否配置
+      args[0].cdn = cdnExternals.cdn
+      return args;
+    });
     config.entry.app = ['babel-polyfill', './src/main.js'];
     config.output.filename('./js/[name].[chunkhash:8].js');
     config.output.chunkFilename('./js/[name].[chunkhash:8].js');
@@ -39,6 +69,8 @@ module.exports = defineConfig({
     config.optimization.runtimeChunk('single');
     config.plugin('CompressionWebpackPlugin')
       .use('compression-webpack-plugin');
+
+
     config.optimization.splitChunks({
       chunks: 'all',
       minSize: 20000, // 允许新拆出 chunk 的最小体积，也是异步 chunk 公共模块的强制拆分体积
@@ -72,6 +104,7 @@ module.exports = defineConfig({
   configureWebpack: {
     plugins: [
       new NodePolyfillPlugin()
-    ]
+    ],
+    externals: cdnExternals.externals
   }
 })

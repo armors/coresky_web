@@ -126,7 +126,9 @@
         }
       })(window, window.lib || (window.lib = {}))
     </script>
-
+    <% for (var i in htmlWebpackPlugin.options.cdn && htmlWebpackPlugin.options.cdn.css) { %>
+    <link href="<%= htmlWebpackPlugin.options.cdn.css[i] %>" rel="preload" as="style">
+    <% } %>
     <style>
       @font-face {
         font-family: 'Plus Jakarta Display';
@@ -138,5 +140,8 @@
   </head>
   <body>
     <div id="app"></div>
+    <% for (var i in htmlWebpackPlugin.options.cdn && htmlWebpackPlugin.options.cdn.js) { %>
+    <script src="<%= htmlWebpackPlugin.options.cdn.js[i] %>"></script>
+    <% } %>
   </body>
 </html>
