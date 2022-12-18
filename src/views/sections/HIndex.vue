@@ -8,16 +8,16 @@
             <div class="desc">{{$t('home.createAppDesc')}}</div>
 
             <div class="btn-list display-flex box-center-Y">
-              <router-link to="/markterplace" class="btn-more btn display-flex box-center">
+              <div @click="goMarket" class="btn-more btn display-flex box-center">
                 {{ $t("navigation.marketplace") }}
-              </router-link>
+              </div>
               <router-link to="/" class="btn display-flex box-center">
                 {{ $t("home.discord") }}
               </router-link>
             </div>
           </div>
           <div class="carousel-box">
-            <el-carousel :autoplay="false" arrow="never" v-if="topCollection.length > 0">
+            <el-carousel :autoplay="false" arrow="never" v-if="topCollection.length > 0" @change="changeTop">
               <el-carousel-item v-for="(v, i) in topCollection" :key="`recommend-item-${i}`" @click="$router.push({
 				name: 'collection',
 				params: { contract: v.contract }
@@ -216,6 +216,7 @@
         loadStatus: "",
         loadStatusCollect: "",
         bannerHeight: "500px",
+        topIndex:0,
         banners: [
           // {
           //   src: null,
@@ -244,6 +245,13 @@
       },
     },
     methods: {
+      changeTop (index) {
+        this.topIndex = index
+        console.log(index)
+      },
+      goMarket () {
+        this.$filters.openWindow(this.topCollection[this.topIndex].url)
+      },
       blurPrice () {
         this.getCollectionData()
       },
@@ -578,6 +586,7 @@
             font-weight: 500;
             font-size: 16px;
             color: $primaryColor;
+            cursor: pointer;
             &.btn-more{
               background: $primaryColor;
               border-color: transparent;

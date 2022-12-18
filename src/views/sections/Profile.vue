@@ -22,7 +22,14 @@
 							<el-upload
 								class="upload-background"
 								drag
-								action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+								:show-file-list="false"
+								:action="uploadUrl"
+								:headers="headers"
+								:before-upload="beforeBackgroundUpload"
+								:on-success="handleBackgroundSuccess"
+								:style="{
+									backgroundImage: 'url('+ backgroundImage +')'
+								}"
 							>
 								<div class="tip-txt">支持PNG、JPG、GIF文件尺寸推荐：400*1400文件，大小推荐：&lt;1M </div>
 								<el-button type="primary" class="sub-btn upload">Choose File</el-button>
@@ -31,7 +38,6 @@
 						<el-form-item label="Bio" prop="nickname">
 							<el-input v-model="userFrom.bio" placeholder="输入合集、NFT、用户的信息" type="textarea"/>
 						</el-form-item>
-
 
 						<el-form-item label="My social platform" class="platform-info">
 							<el-input v-model="userFrom.website" placeholder="https://www.iconfont.cn/">
@@ -89,7 +95,11 @@
 						<img :src="imgSrc" alt="">
 						<el-upload
 							class="upload-avatar display-flex box-center"
-							action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+							:action="uploadUrl"
+							:headers="headers"
+							:show-file-list="false"
+							:before-upload="beforeAvatarUpload"
+							:on-success="handleAvatarSuccess"
 						>
 							<div class="edit-icon"><img src="../../assets/images/icons/icon_edit_profile.svg" alt=""></div>
 						</el-upload>
@@ -121,6 +131,14 @@
 				defaultImgSrc: "",
 				personalUrl: "",
 				submitBtnLoading: false,
+				headers: {
+					token: `${window.localStorage.getItem(
+						'CoreskyAuthorization'
+					) || ''}`
+				},
+				backgroundImage: '',
+				// uploadUrl: process.env.VUE_APP_API_URL,
+				uploadUrl: '/api/file/upload',
 				userFrom: {
 					nickname: '',
 					photo: '',
@@ -151,6 +169,35 @@
 			},
 		},
 		methods: {
+			getToken () {
+				this.headers = {
+					token: `${window.localStorage.getItem(
+						'CoreskyAuthorization'
+					) || ''}`
+				}
+			},
+			beforeAvatarUpload (rawFile) {
+				if (rawFile.size / 1024 / 1024 > 2) {
+					this.$tools.message('Avatar picture size can not exceed 8MB!');
+					return false
+				}
+				this.getToken()
+				return true
+			},
+			handleAvatarSuccess (response) {
+				this.imgSrc = response.debug
+			},
+			beforeBackgroundUpload (rawFile) {
+				if (rawFile.size / 1024 / 1024 > 8) {
+					this.$tools.message('Background picture size can not exceed 8MB!');
+					return false
+				}
+				this.getToken()
+				return true
+			},
+			handleBackgroundSuccess (response) {
+				this.backgroundImage = response.debug
+			},
 			getUserInfo() {
 				this.$api("user.info", {
 					address: this.user.coinbase
@@ -158,16 +205,17 @@
 					if (this.$tools.checkResponse(res)) {
 						this.userFrom.nickname = res.debug.nickname || ''
 						this.userFrom.background = res.debug.background || ''
+						this.backgroundImage = this.userFrom.background
 						this.userFrom.photo = res.debug.photo || this.$filters.fullImageUrl(this.user.avatar);
 						this.imgSrc = this.userFrom.photo
 						this.userFrom.id = res.debug.id;
-						this.userFrom.bio = res.debug.bio || ''
-						this.userFrom.website = res.debug.website || '';
+						this.userFrom.bio = res.debug.intro || ''
+						this.userFrom.website = res.debug.blog || '';
 						this.userFrom.ins = res.debug.ins || '';
 						this.userFrom.discord = res.debug.discord || '';
 						this.userFrom.telegram = res.debug.telegram || '';
 						this.userFrom.twitter = res.debug.twitter || '';
-						this.userFrom.medium = res.debug.medium || '';
+						this.userFrom.medium = res.debug.other || '';
 					} else {
 						this.$tools.message(res.errmsg);
 					}
@@ -175,11 +223,16 @@
 			},
 			submitForm() {
 				this.$api("user.update", {
-					"photo": 'https://ipfs.io/ipfs/QmbcWzteFsAvdwiaZyC1YJVNsApDaPRmqkQDyrYAvP4u48',
+					"photo": this.imgSrc,
 					"nickname": this.userFrom.nickname,
-					"background": this.userFrom.background,
+					"background": this.backgroundImage,
 					"telegram": this.userFrom.telegram,
-					"twitter": this.userFrom.twitter
+					"twitter": this.userFrom.twitter,
+					"blog": this.userFrom.website,
+					"discord": this.userFrom.discord,
+					"ins": this.userFrom.ins,
+					"other": this.userFrom.medium,
+					"intro": this.userFrom.bio
 				}).then((res) => {
 					this.$tools.message('修改成功', 'success');
 					this.getUserInfo()
@@ -400,8 +453,12 @@
 				margin-bottom: 0 !important;
 				.upload-background{
 					width: 100%;
+					background-position: center;
+					background-repeat: no-repeat;
+					background-size: 100% 100%;
 					.el-upload-dragger{
-						border-radius: 12px
+						border-radius: 12px;
+						background-color: transparent;
 					}
 				}
 				.el-form-item__label {
