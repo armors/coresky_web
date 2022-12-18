@@ -11,9 +11,9 @@
               <div @click="goMarket" class="btn-more btn display-flex box-center">
                 {{ $t("navigation.marketplace") }}
               </div>
-<!--              <router-link to="/" class="btn display-flex box-center">-->
-<!--                {{ $t("home.discord") }}-->
-<!--              </router-link>-->
+              <router-link to="/" class="btn display-flex box-center">
+                {{ $t("home.discord") }}
+              </router-link>
             </div>
           </div>
           <div class="carousel-box">
