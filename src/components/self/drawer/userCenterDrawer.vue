@@ -162,6 +162,7 @@ export default {
     align-items: center;
     margin-bottom: 12px;
     .avatar-box {
+
       width: 52px;
       height: 52px;
       margin-right: 12px;
