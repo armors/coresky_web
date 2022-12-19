@@ -75,6 +75,31 @@
       </div>
     </div>
     <div class="right-content">
+      <div class="list-search-wrap">
+        <div class="btnfilter" @click="showFilterBox=!showFilterBox">
+          <img src="../../../assets/images/icons/icon_filter.svg" alt="">
+          Filter
+        </div>
+        <el-input class="search-input-wrap" style="width:400px" placeholder="Search by name or attribute"
+          v-model="queryParams.keyword" @keyup.enter="searchClick">
+          <template #prefix>
+            <div class="img-search"><img src="../../../assets/images/icons/icon_search.svg" alt=""></div>
+          </template>
+        </el-input>
+        <el-select v-model="queryParams.order" placeholder="Recently listed" @change="searchClick" :teleported="false"
+          popper-class="select-popper" class="select-sort">
+          <el-option :value="1" label="Price low to high" />
+          <el-option :value="2" label="Price high to low" />
+          <el-option :value="3" label="Recently listed" />
+          <el-option :value="4" label="Recently sold" />
+          <el-option :value="5" label="Ending soon" />
+        </el-select>
+        <div class="sort-wrap">
+          <span class="icon-wrap icon_filter01" :class="{'active':viewType===1}" @click="viewType=1">
+          </span>
+          <span class="icon-wrap icon_filter02" :class="{'active':viewType===2}" @click="viewType=2"></span>
+        </div>
+      </div>
       <div v-if="loadStatus==='loading'">
         <p class="loading-txt">Coming soon…</p>
       </div>
@@ -138,9 +163,11 @@ export default {
         contract: '',
         minPrice: 0,
         maxPrice: 0,
-        order: 0,
+        order: 1,
         address: ''
       },
+      viewType: 1,
+      
       listCount: 0,
       loadStatus: 'over',
 
@@ -156,7 +183,7 @@ export default {
       this.queryParams.page = 1
       this.queryParams.address = this.address
       this.pageHandle()
-      
+
     },
     searchCollection () {
       let params = {
