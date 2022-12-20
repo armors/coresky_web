@@ -64,6 +64,9 @@
         <img class="icon" src="@/assets/images/icons/icon_nft.svg" alt="">
         <span>My Launchpad</span>
       </div>
+      <div class="nav-item" @click="logout">
+        {{ $t("navigation.disconnect") }}
+      </div>
       <!-- <div class="nav-item">
         <img class="icon" src="@/assets/images/icons/icon_nft.svg" alt="">
         <span>My Collect</span>
@@ -82,8 +85,8 @@
           ETH
         </div>
         <div class="price-box">
-          <div class="num">12.4456</div>
-          <div class="num2">$0</div>
+          <div class="num">{{balanceETH}}</div>
+<!--          <div class="num2">$0</div>-->
         </div>
       </div>
       <div class="wallet-item">
@@ -91,11 +94,11 @@
           <img class="coin-img" src="@/assets/images/icons/token/token_eth2.svg" alt="">
         </div>
         <div class="coin-name">
-          ETH
+          WETH
         </div>
         <div class="price-box">
-          <div class="num">12.4456</div>
-          <div class="num2">$0</div>
+          <div class="num">{{balanceWETH}}</div>
+<!--          <div class="num2">$0</div>-->
         </div>
       </div>
     </div>
@@ -103,6 +106,8 @@
 </template>
 
 <script>
+import {keepPoint} from "@/filters";
+
 export default {
   name: "userCenterDrawer",
   props: {
@@ -114,12 +119,18 @@ export default {
   watch: {
     show () {
       this.visible = this.show;
+      this.initGetBalance()
     },
+    '$store.state.user': function () {
+      this.initGetBalance()
+    }
   },
   data () {
     return {
       loading: true,
       visible: false,
+      balanceETH: '--',
+      balanceWETH: '--',
     };
   },
   created () {
@@ -134,6 +145,18 @@ export default {
     },
   },
   methods: {
+    async initGetBalance() {
+      this.balanceETH = keepPoint(await this.$sdk.getBalance({
+        address: this.$sdk.NULL_ADDRESS()
+      }, this.user.coinbase))
+      const balanceWETH = await this.$sdk.getBalance({
+        address: process.env.VUE_APP_WETH
+      }, this.user.coinbase)
+      this.balanceWETH = this.$sdk.fromWeiNum(balanceWETH)
+    },
+    logout () {
+      this.$web3.disconnect();
+    },
     goProfile () {
       this.visible = false
       this.$router.push({ path: '/profile' });
