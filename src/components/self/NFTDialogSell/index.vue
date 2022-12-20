@@ -31,8 +31,8 @@
       <el-form-item label="Expiration date" prop="time">
         <div class="flex-content">
           <el-date-picker v-model="form.time" size="large" type="datetime" placeholder="Pick a Date" style=""
-            format="YYYY-MM-DD HH:mm" />
-          <el-select v-model="form.date" class="ml20" size="large" placeholder="Select"
+            format="YYYY-MM-DD HH:mm" :default-time="defaultTime" :disabled-date="disabledDate" />
+          <el-select v-model="form.date" class="ml20" size="large" placeholder="Select" @change="dateChange"
             style="width:180px;flex-shrink: 0;">
             <el-option v-for="item in optionsDays" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
@@ -68,6 +68,8 @@ import BigNumber from "bignumber.js";
 import tools from "@/util/tools";
 import i18n from "@/i18n/i18n";
 import { ethers } from 'ethers'
+import dayjs from 'dayjs';
+
 export default {
   name: "index",
   data () {
@@ -85,7 +87,7 @@ export default {
           { required: true, message: 'Please input price', trigger: 'blur' },
         ],
         time: [
-          { required: true, message: 'Please Pick a Date', trigger: 'blur' },
+          { required: true, message: 'Please Pick a Date', trigger: 'change' },
         ],
       },
       options: [
@@ -114,7 +116,8 @@ export default {
       ],
       tokenInfo: {},
       isApproved: true,
-      registryOwner: ''
+      registryOwner: '',
+      defaultTime: new Date()
     }
   },
   computed: {
@@ -123,6 +126,12 @@ export default {
     }
   },
   methods: {
+    disabledDate (time) {
+      return time.getTime() < Date.now() || time.getTime() > dayjs().add(7, "day")
+    },
+    dateChange () {
+      this.form.time = dayjs().add(this.form.date, "day").format("YYYY-MM-DD HH:mm");
+    },
     async showSell (tokenInfo) {
       this.isShowSellDialog = true
       this.tokenInfo = tokenInfo

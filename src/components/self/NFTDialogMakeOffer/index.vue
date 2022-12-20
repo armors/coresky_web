@@ -31,8 +31,8 @@
       <el-form-item label="Expiration date" prop="time">
         <div class="flex-content">
           <el-date-picker v-model="form.time" size="large" type="datetime" placeholder="Pick a Date" style=""
-            format="YYYY-MM-DD HH:mm" />
-          <el-select v-model="form.date" class="ml20" size="large" placeholder="Select"
+            format="YYYY-MM-DD HH:mm" :default-time="defaultTime" :disabled-date="disabledDate" />
+          <el-select v-model="form.date" class="ml20" size="large" placeholder="Select" @change="dateChange"
             style="width:180px;flex-shrink: 0;">
             <el-option v-for="item in optionsDays" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
@@ -62,6 +62,7 @@
 
 <script>
 import BigNumber from "bignumber.js";
+import dayjs from 'dayjs';
 
 export default {
   name: "index",
@@ -80,7 +81,7 @@ export default {
           { required: true, message: 'Please input price', trigger: 'blur' },
         ],
         time: [
-          { required: true, message: 'Please Pick a Date', trigger: 'blur' },
+          { required: true, message: 'Please Pick a Date', trigger: 'change' },
         ],
       },
       options: [
@@ -108,7 +109,8 @@ export default {
         }
       ],
       tokenInfo: {},
-      makeOfferType: 1 // 1单个nft报价 2 对集合报价
+      makeOfferType: 1, // 1单个nft报价 2 对集合报价
+      defaultTime: new Date()
     }
   },
   computed: {
@@ -117,6 +119,12 @@ export default {
     }
   },
   methods: {
+    disabledDate (time) {
+      return time.getTime() < Date.now() || time.getTime() > dayjs().add(7, "day")
+    },
+    dateChange () {
+      this.form.time = dayjs().add(this.form.date, "day").format("YYYY-MM-DD HH:mm");
+    },
     async showMakeOffer (tokenInfo, makeOfferType = 1) {
       this.tokenInfo = tokenInfo
       this.makeOfferType = makeOfferType

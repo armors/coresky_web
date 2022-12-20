@@ -16,7 +16,7 @@
       <div class="filter-item flex border">
         <span class="left">Have an offer</span>
         <span class="right">
-          <el-switch v-model="queryParams.hasOffer" class="ml-2" />
+          <el-switch v-model="queryParams.hasOffer" @change="searchClick" class="ml-2" />
         </span>
       </div>
       <div class="filter-item border">
@@ -118,9 +118,9 @@
                 <div class="nft-txt">
                   {{item.ckCollectionsInfoEntity.name}} #{{item.tokenId}}
                 </div>
-                <div class="nft-price" v-if="item.ckOrdersEntity!==null">
-                  <img class="token-icon" src="@/assets/images/icons/token/token_eth.svg" alt="">
-                  <span class="nft-price">{{$filters.keepPoint(item.ckOrdersEntity.basePrice.toString())}} ETH</span>
+                <div class="nft-price">
+                  <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="">
+                  <span class="price">{{item.basePrice===0?'-- ':nftPrice(item.basePrice)}} ETH</span>
                 </div>
               </div>
             </div>
@@ -155,14 +155,14 @@ export default {
     return {
       nftList: [],
       queryParams: {
-        hasOffer: true,
+        hasOffer: false,
         search: '',
         page: 1,
         limit: this.$store.state.pageLimit,
         keyword: '',
         contract: '',
-        minPrice: 0,
-        maxPrice: 0,
+        minPrice: '',
+        maxPrice: '',
         order: 1,
         address: ''
       },

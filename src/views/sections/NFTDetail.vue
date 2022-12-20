@@ -12,12 +12,12 @@
                 <div class="card-head">
                   <img class="icon" src="@/assets/images/icons/icon_properties.svg" alt="">
                   <span class="card-title">Properties</span>
-<!--                  <el-icon class="down">-->
-<!--                    <ArrowUp />-->
-<!--                  </el-icon>-->
+                  <!--                  <el-icon class="down">-->
+                  <!--                    <ArrowUp />-->
+                  <!--                  </el-icon>-->
                 </div>
               </template>
-<!--              <div class="card-body no-scroller" style="height: 392px;overflow: auto;">-->
+              <!--              <div class="card-body no-scroller" style="height: 392px;overflow: auto;">-->
               <div class="card-body" style="min-height: 392px;">
                 <div class="arrt-list">
                   <div class="arrt-item" v-for="(v, i) in tokenInfo.attributeResList" :key="`attr-item-${i}`">
@@ -98,9 +98,9 @@
                 <div class="card-head">
                   <img class="icon" src="@/assets/images/icons/icon_token.svg" alt="">
                   <span class="card-title">Token Details</span>
-<!--                  <el-icon class="down">-->
-<!--                    <ArrowUp />-->
-<!--                  </el-icon>-->
+                  <!--                  <el-icon class="down">-->
+                  <!--                    <ArrowUp />-->
+                  <!--                  </el-icon>-->
                 </div>
               </template>
               <div class="card-body">
@@ -121,7 +121,8 @@
                   </div>
                   <div class="flex-detial">
                     <span class="name">Contract</span>
-                    <div class="value display-flex box-center-Y color-purple" @click="$filters.openWindow($filters.contractExplore(tokenInfo.contract).href)">
+                    <div class="value display-flex box-center-Y color-purple"
+                      @click="$filters.openWindow($filters.contractExplore(tokenInfo.contract).href)">
                       <div>{{$filters.contractExplore(tokenInfo.contract).hashShort}}</div>
                       <div class="share-icon"><img src="../../assets/images/icons/icon_share_purple.svg" alt=""></div>
                     </div>
@@ -129,10 +130,9 @@
                   <div class="flex-detial">
                     <span class="name">Creator Rebate</span>
                     <div class="value primaryColor display-flex box-center-Y">
-                      <el-tooltip
-                        placement="right"
-                      >
-                        <template #content> The creator of this collection will receive a certain <br> percentage of amout for every sale. </template>
+                      <el-tooltip placement="right">
+                        <template #content> The creator of this collection will receive a certain <br> percentage of
+                          amout for every sale. </template>
                         <div class="display-flex box-center-Y">
                           <div>0.5%</div>
                           <div class="tip-icon"><img src="../../assets/images/icons/icon_tip_black.svg" alt=""></div>
@@ -179,9 +179,9 @@
                   <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
                   <span class="value">{{nftPrice}}</span>
                 </div>
-<!--                <div class="row">-->
-<!--                  $45,332,02-->
-<!--                </div>-->
+                <!--                <div class="row">-->
+                <!--                  $45,332,02-->
+                <!--                </div>-->
               </div>
               <div class="box-right">
                 <div class="row-item">
@@ -208,17 +208,19 @@
               </template>
               <el-button type="primary" class="btnBuy" v-else-if="tokenInfo.state" @click="showBuyNft">Buy Now
               </el-button>
-<!--              <el-button class="btnBlack" v-if="!isSelf && !isCart" :disabled="!(!isSelf && !isCart) || !tokenInfo.contract || !tokenInfo.state"-->
+              <!--              <el-button class="btnBlack" v-if="!isSelf && !isCart" :disabled="!(!isSelf && !isCart) || !tokenInfo.contract || !tokenInfo.state"-->
               <el-button class="btnBlack" :disabled="!(!isSelf && !isCart) || !tokenInfo.contract || !tokenInfo.state"
                 @click="addCart">Add to Cart</el-button>
-              <el-button class="btnWhite" v-if="!isSelf && !this.isMakeOffer" :disabled="!tokenInfo.contract" @click="showMakeOfferNFT">Make
+              <el-button class="btnWhite" v-if="!isSelf && !this.isMakeOffer" :disabled="!tokenInfo.contract"
+                @click="showMakeOfferNFT">Make
                 Offer</el-button>
-              <el-button class="btnWhite" v-if="!isSelf && !this.isMakeOffer" :disabled="!tokenInfo.contract" @click="showMakeOfferCollect">
+              <el-button class="btnWhite" v-if="!isSelf && !this.isMakeOffer" :disabled="!tokenInfo.contract"
+                @click="showMakeOfferCollect">
                 Make Offer Collect</el-button>
-<!--              <el-button v-if="isSelf && ckAuctionEntityList.length > 0" class="btnWhite"-->
-<!--                :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT">Accept</el-button>-->
-<!--              <el-button v-if="isSelf && ckAuctionEntityList.length > 0" class="btnWhite"-->
-<!--                :loading="acceptDialogBtnLoading" @click="showAcceptOfferCollect">Accept Collect</el-button>-->
+              <!--              <el-button v-if="isSelf && ckAuctionEntityList.length > 0" class="btnWhite"-->
+              <!--                :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT">Accept</el-button>-->
+              <!--              <el-button v-if="isSelf && ckAuctionEntityList.length > 0" class="btnWhite"-->
+              <!--                :loading="acceptDialogBtnLoading" @click="showAcceptOfferCollect">Accept Collect</el-button>-->
             </div>
           </div>
         </div>
@@ -229,9 +231,9 @@
                 <div class="card-head">
                   <img class="icon" src="@/assets/images/icons/icon_pricehistory.svg" alt="">
                   <span class="card-title">Price History</span>
-<!--                  <el-icon>-->
-<!--                    <ArrowUp />-->
-<!--                  </el-icon>-->
+                  <!--                  <el-icon>-->
+                  <!--                    <ArrowUp />-->
+                  <!--                  </el-icon>-->
                 </div>
               </template>
               <div class="card-body price-history" style="height:200px">
@@ -239,7 +241,6 @@
               </div>
             </el-collapse-item>
           </el-collapse>
-
 
         </div>
         <div class="card-wrap mt30">
@@ -249,9 +250,9 @@
                 <div class="card-head">
                   <img class="icon" src="@/assets/images/icons/icon_offers.svg" alt="">
                   <span class="card-title">Offers</span>
-<!--                  <el-icon class="down">-->
-<!--                    <ArrowUp />-->
-<!--                  </el-icon>-->
+                  <!--                  <el-icon class="down">-->
+                  <!--                    <ArrowUp />-->
+                  <!--                  </el-icon>-->
                 </div>
               </template>
               <div class="card-body" style="height:480px;padding:0;overflow: auto;">
@@ -269,10 +270,13 @@
                       {{nftPriceFun(v.basePrice)}}
                     </div>
                     <div class="list-th th25">{{$filters.timeFormat(v.createTime)}}</div>
-                    <div class="list-th th25 purple" @click="goExplore(v.maker)">{{$filters.ellipsisAddress(v.maker, 4)}}</div>
+                    <div class="list-th th25 purple" @click="goExplore(v.maker)">
+                      {{$filters.ellipsisAddress(v.maker, 4)}}</div>
                     <div class="list-th th25 center">
-                      <el-button type="primary" class="btnAccept" v-if="isSelfMakeOffer(v)" :loading="cancelMakeOfferBtnLoading" @click="cancelMakeOffer(v)">Cancel</el-button>
-                      <el-button type="primary" class="btnAccept" v-else :disabled="!isSelf" :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT(v)">Accept</el-button>
+                      <el-button type="primary" class="btnAccept" v-if="isSelfMakeOffer(v)"
+                        :loading="cancelMakeOfferBtnLoading" @click="cancelMakeOffer(v)">Cancel</el-button>
+                      <el-button type="primary" class="btnAccept" v-else :disabled="!isSelf"
+                        :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT(v)">Accept</el-button>
                     </div>
                   </div>
                 </div>
@@ -290,15 +294,15 @@
             <div class="card-head">
               <img class="icon" src="@/assets/images/icons/icon_Item_activity.svg" alt="">
               <span class="card-title">Item Activity</span>
-<!--              <el-icon>-->
-<!--                <ArrowUp />-->
-<!--              </el-icon>-->
+              <!--              <el-icon>-->
+              <!--                <ArrowUp />-->
+              <!--              </el-icon>-->
             </div>
           </template>
           <div class="card-body" style="height:580px;padding:0; overflow-y: auto">
             <div class="filter-box">
               <el-checkbox-group v-model="checkList" @change="changeFilter">
-                <el-checkbox v-for="(v, i) in tokenEventType" :label="v" :key="`chec-item-${i}`"/>
+                <el-checkbox v-for="(v, i) in tokenEventType" :label="v" :key="`chec-item-${i}`" />
               </el-checkbox-group>
             </div>
             <div class="offer-list">
@@ -311,16 +315,21 @@
               </div>
               <div class="list-tr" v-for="(v, i) in tokenEventList" :key="`token-event-item-${i}`">
                 <div class="list-th display-flex box-center-Y" style="width:20%">
-                  <div class="event-icon"><img :src="require(`../../assets/images/icons/icon_event_${v.type}.svg`)" alt=""></div>
+                  <div class="event-icon"><img :src="require(`../../assets/images/icons/icon_event_${v.type}.svg`)"
+                      alt=""></div>
                   <div>{{v.typeUp}}</div>
                   <div class="expired" v-if="isExpired(v.expirationTime)">Expired</div>
                 </div>
-                <div class="list-th" style="width:20%">{{nftPriceFun(v.price) === '--' ? '--' : (nftPriceFun(v.price) + ' ETH')}}</div>
-                <div class="list-th" @click="goExplore(v.from)" :class="{purple: v.from!== null}" style="width:20%">{{$filters.ellipsisAddress(v.from, 4)}}</div>
-                <div class="list-th" @click="goExplore(v.to)" :class="{purple: v.to!== null}" style="width:20%">{{$filters.ellipsisAddress(v.to, 4)}}</div>
+                <div class="list-th" style="width:20%">
+                  {{nftPriceFun(v.price) === '--' ? '--' : (nftPriceFun(v.price) + ' ETH')}}</div>
+                <div class="list-th" @click="goExplore(v.from)" :class="{purple: v.from!== null}" style="width:20%">
+                  {{$filters.ellipsisAddress(v.from, 4)}}</div>
+                <div class="list-th" @click="goExplore(v.to)" :class="{purple: v.to!== null}" style="width:20%">
+                  {{$filters.ellipsisAddress(v.to, 4)}}</div>
                 <div class="list-th display-flex box-center-Y" style="width:20%" :class="{gray: v.txHash === null}">
                   <div>{{$filters.timeFormat(v.createTime)}}</div>
-                  <div class="share-icon" v-show="v.txHash !== null" @click="goExplore(v.txHash, true)"><img src="../../assets/images/icons/icon_share_purple.svg" alt=""></div>
+                  <div class="share-icon" v-show="v.txHash !== null" @click="goExplore(v.txHash, true)"><img
+                      src="../../assets/images/icons/icon_share_purple.svg" alt=""></div>
                 </div>
               </div>
             </div>
@@ -437,13 +446,13 @@ export default {
       return this.tokenInfo.address && this.user.coinbase && this.tokenInfo.address.toLowerCase() === this.user.coinbase.toLowerCase()
     },
   },
-  destroyed() {
+  destroyed () {
     if (that.countDownFn) {
       clearInterval(that.countDownFn); //清除定时器
     }
   },
   methods: {
-    isExpired (time){
+    isExpired (time) {
       return time !== null ? new Date().getTime() > time * 1000 : false
     },
     goExplore (address, isTx = false) {
@@ -452,7 +461,7 @@ export default {
         this.$filters.openWindow(isTx ? this.$filters.hashExplore(address).href : this.$filters.contractExplore(address).href)
       }
     },
-    initPriceHistory() {
+    initPriceHistory () {
       if (!this.myChart) {
         let chartDom = document.getElementById('priceHistory');
         this.myChart = echarts.init(chartDom);
@@ -480,7 +489,7 @@ export default {
         xAxis: {
           type: 'category',
           data: xAxisData,
-          axisTick:{
+          axisTick: {
             show: false
           },
           axisLabel: {
@@ -489,7 +498,7 @@ export default {
             },
           },
           axisLine: {
-            lineStyle:{
+            lineStyle: {
               color: 'rgba(0, 0, 0, 0.1)'
             }
           },
@@ -506,11 +515,11 @@ export default {
           {
             data: data,
             type: 'line',
-            itemStyle : {
-              normal : {
-                color:'#7D47FF',
-                lineStyle:{
-                  color:'#7D47FF'
+            itemStyle: {
+              normal: {
+                color: '#7D47FF',
+                lineStyle: {
+                  color: '#7D47FF'
                 },
               }
             },
@@ -538,7 +547,7 @@ export default {
       return isMakeOffer
     },
     //倒计时
-    countDownFun(time) {
+    countDownFun (time) {
       // console.log(time)
       let startTime = new Date(); //当前时间
       let end = new Date(time * 1000); //结束时间
@@ -566,13 +575,13 @@ export default {
         s = "0" + s;
       }
       if (parseInt(h) === 0 && parseInt(m) === 0) {
-        return  s + "S";
+        return s + "S";
       } else if (parseInt(h) === 0) {
-        return  m + "M " + s + "S";
-      } else if(parseInt(d) === 0) {
-        return  h + "H " + m + "M " + s + "S";
+        return m + "M " + s + "S";
+      } else if (parseInt(d) === 0) {
+        return h + "H " + m + "M " + s + "S";
       } else {
-        return  d + "D " + h + "H " + m + "M " + s + "S";
+        return d + "D " + h + "H " + m + "M " + s + "S";
       }
       // else if (parseInt(M) === 0){
       //   return  d + "d" + h + " H" + m + "M " + s + "S";
@@ -583,7 +592,7 @@ export default {
     },
     // 定时器
     // 页面多个倒计时 归零时清除
-    countDown() {
+    countDown () {
       let that = this;
       that.countDownFn = setInterval(() => {
         //  console.log(that.countDownFun(item.endTime))
@@ -614,6 +623,7 @@ export default {
         // this.tokenInfo.ckCollectionsInfoEntity.floorPrice = '0.02'
         this.ckAuctionEntityList = this.tokenInfo.ckAuctionEntityList || []
         this.nftPrice = this.$sdk.fromWeiNum(this.tokenInfo.ckOrdersEntity ? this.tokenInfo.ckOrdersEntity.basePrice : this.tokenInfo.basePrice)
+        console.log(this.tokenInfo.bestPrice)
         this.bestPrice = this.$sdk.fromWeiNum(this.tokenInfo.bestPrice)
         if (this.tokenInfo.ckOrdersEntity !== null) {
           this.countDown()
@@ -623,7 +633,7 @@ export default {
         this.isInCart()
       })
     },
-    getTokenEvent() {
+    getTokenEvent () {
       this.$api("collect.tokenEvent", this.tokenInfoParams).then((res) => {
         this.tokenEventList = res.debug
         let tokenEventType = []
@@ -703,7 +713,7 @@ export default {
       this.$refs.NFTDialogBuy.showBuy(this.tokenInfo)
     },
     nftPriceFun (basePrice) {
-      console.log(basePrice)
+      console.log(this.$Web3.utils.fromWei(basePrice.toString()))
       return basePrice !== null ? this.$filters.keepPoint(this.$Web3.utils.fromWei(basePrice.toString())) : '--'
     },
     // 添加购物车
@@ -838,8 +848,7 @@ export default {
         height: 24px;
         cursor: pointer;
         background-image: url('@/assets/images/icons/icon_shoucang.svg');
-        &.active,
-        &:hover {
+        &.active {
           background-image: url('@/assets/images/icons/icon_shoucang_active.svg');
         }
       }
@@ -995,11 +1004,11 @@ export default {
     .card-body {
       padding: 24px;
       background: $bg-white;
-      &.price-history{
+      &.price-history {
         padding: 0;
       }
-      #priceHistory{
-       width: 100%;
+      #priceHistory {
+        width: 100%;
         height: 100%;
       }
     }
@@ -1073,7 +1082,7 @@ export default {
       color: $primaryColor;
       font-size: 14px;
       font-weight: 500;
-      &:last-child{
+      &:last-child {
         border-bottom: none;
       }
       &.head {
@@ -1085,27 +1094,26 @@ export default {
         font-size: 12px;
         background: $bg-white;
         font-weight: 600;
-        &.top0{
+        &.top0 {
           top: 0;
         }
       }
       &.placeholder {
         height: 56px;
       }
-      .list-th{
+      .list-th {
         cursor: pointer;
-        .event-icon{
+        .event-icon {
           width: 24px;
           height: 24px;
           margin-right: 4px;
         }
-        .share-icon{
-
+        .share-icon {
         }
-        &.gray{
+        &.gray {
           color: $color-black3;
         }
-        .expired{
+        .expired {
           padding-left: 4px;
           color: $color-red;
           font-weight: 500;
@@ -1130,7 +1138,7 @@ export default {
     }
     .th25 {
       width: 25%;
-      &.center{
+      &.center {
         text-align: center;
       }
       .token-icon {
@@ -1155,7 +1163,7 @@ export default {
   }
   .activity-wrap {
     .card-head {
-     //  border: 1px solid $borderBg;
+      //  border: 1px solid $borderBg;
     }
     .el-checkbox-group {
       padding-top: 15px;
@@ -1173,21 +1181,21 @@ export default {
       z-index: 10;
       height: 56px;
       width: 100%;
-      .el-checkbox-group{
+      .el-checkbox-group {
         padding-top: 0;
         height: 100%;
         display: flex;
         align-items: center;
         background: $elButtonHoverBg;
       }
-      .el-checkbox__inner{
+      .el-checkbox__inner {
         background-color: transparent;
         border-color: $primaryColor;
       }
-      .el-checkbox__input.is-checked+.el-checkbox__label{
+      .el-checkbox__input.is-checked + .el-checkbox__label {
         color: $primaryColor;
       }
-      .el-checkbox__inner::after{
+      .el-checkbox__inner::after {
         border-color: $primaryColor;
       }
     }

@@ -197,7 +197,7 @@ export default {
       })
     },
     nftPrice (basePrice) {
-      return this.$Web3.utils.fromWei(basePrice.toString())
+      return this.$filters.keepPoint(this.$Web3.utils.fromWei(basePrice.toString()))
     },
     searchClick () {
       this.queryParams.page = 1

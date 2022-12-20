@@ -55,11 +55,11 @@ module.exports = defineConfig({
 
   chainWebpack: config => {
     // 配置，将当前页定义的cdn值传到主页面（index.html）
-    config.plugin('html').tap(args => {
-      // 这里我是除本地环境，其余均使用CDN，可自己选择是否配置
-      args[0].cdn = cdnExternals.cdn
-      return args;
-    });
+    // config.plugin('html').tap(args => {
+    //   // 这里我是除本地环境，其余均使用CDN，可自己选择是否配置
+    //   args[0].cdn = cdnExternals.cdn
+    //   return args;
+    // });
     config.entry.app = ['babel-polyfill', './src/main.js'];
     config.output.filename('./js/[name].[chunkhash:8].js');
     config.output.chunkFilename('./js/[name].[chunkhash:8].js');
@@ -105,6 +105,6 @@ module.exports = defineConfig({
     plugins: [
       new NodePolyfillPlugin()
     ],
-    externals: cdnExternals.externals
+    // externals: cdnExternals.externals
   }
 })

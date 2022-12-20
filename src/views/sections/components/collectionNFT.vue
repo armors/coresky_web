@@ -121,7 +121,7 @@
                 </div>
                 <div class="nft-price">
                   <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="">
-                  <span class="price">{{nftPrice(item.basePrice)}} ETH</span>
+                  <span class="price">{{item.basePrice===0?'-- ':nftPrice(item.basePrice)}} ETH</span>
                 </div>
               </div>
             </div>
