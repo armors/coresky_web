@@ -65,7 +65,7 @@
           <div class="lable">Best Offier</div>
           <div class="value">
             <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
-            <span>--</span>
+            <span>{{collectInfo.bestPriceFrom}}</span>
           </div>
           <div class="rise">
             <span class="time">24h</span>
@@ -267,6 +267,7 @@ export default {
         contract: this.contract
       }).then((res) => {
         this.collectInfo = res.debug
+        this.collectInfo.bestPriceFrom = this.$sdk.fromWeiNum(this.collectInfo.bestPrice)
       })
     },
   },

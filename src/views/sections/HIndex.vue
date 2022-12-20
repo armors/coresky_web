@@ -12,7 +12,7 @@
                 {{ $t("navigation.marketplace") }}
               </div>
               <router-link to="/" class="btn display-flex box-center">
-                {{ $t("home.discord") }}
+                {{ $t("home.moreDetail") }}
               </router-link>
             </div>
           </div>

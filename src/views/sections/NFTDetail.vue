@@ -313,6 +313,7 @@
                 <div class="list-th display-flex box-center-Y" style="width:20%">
                   <div class="event-icon"><img :src="require(`../../assets/images/icons/icon_event_${v.type}.svg`)" alt=""></div>
                   <div>{{v.typeUp}}</div>
+                  <div class="expired" v-if="isExpired(v.expirationTime)">Expired</div>
                 </div>
                 <div class="list-th" style="width:20%">{{nftPriceFun(v.price) === '--' ? '--' : (nftPriceFun(v.price) + ' ETH')}}</div>
                 <div class="list-th" @click="goExplore(v.from)" :class="{purple: v.from!== null}" style="width:20%">{{$filters.ellipsisAddress(v.from, 4)}}</div>
@@ -442,6 +443,9 @@ export default {
     }
   },
   methods: {
+    isExpired (time){
+      return time !== null ? new Date().getTime() > time * 1000 : false
+    },
     goExplore (address, isTx = false) {
       console.log(address, isTx)
       if (address !== null) {
@@ -1100,6 +1104,11 @@ export default {
         }
         &.gray{
           color: $color-black3;
+        }
+        .expired{
+          padding-left: 4px;
+          color: $color-red;
+          font-weight: 500;
         }
       }
     }
