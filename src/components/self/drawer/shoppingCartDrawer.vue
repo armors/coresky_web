@@ -31,7 +31,7 @@
         <div class="shopping-price">
           <span class="price-value">
             <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-            {{getNftPrice(v)}}
+            {{getNftPrice(v, true)}}
           </span>
           <el-icon @click="deleteCart(v)">
             <Delete />
@@ -44,7 +44,7 @@
         <div class="title">Total</div>
         <div class="total">
           <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-          {{totalPrice}}
+          {{totalPriceShow}}
         </div>
       </div>
       <div>
@@ -77,6 +77,7 @@ export default {
       buyBtnLoading: false,
       visible: false,
       totalPrice: 0,
+      totalPriceShow: 0,
       coreskyCart: [],
       ids: [],
       checkOrderData: []
@@ -115,6 +116,7 @@ export default {
     },
     getCartInfo () {
       this.totalPrice = 0
+      this.totalPriceShow = 0
       const local = getLocalStorage(this.cartName)
       console.log(local[this.cartName])
       let coresky_cart = local[this.cartName]
@@ -126,6 +128,7 @@ export default {
           this.ids.push(item.ckOrdersEntity.id)
         })
         this.totalPrice = this.totalPrice.toString()
+        this.totalPriceShow = this.$filters.keepPoint(this.totalPrice)
       } else {
         this.coreskyCart = []
       }
@@ -134,8 +137,8 @@ export default {
     handleClose () {
       this.$emit('update:show', false)
     },
-    getNftPrice(v) {
-      return this.$Web3.utils.fromWei(v.ckOrdersEntity.basePrice.toString())
+    getNftPrice(v, isShow=false) {
+      return isShow ? this.$filters.keepPoint(this.$Web3.utils.fromWei(v.ckOrdersEntity.basePrice.toString())) : this.$Web3.utils.fromWei(v.ckOrdersEntity.basePrice.toString())
     },
     async checkOrder () {
       try {
@@ -175,6 +178,16 @@ export default {
     async cartBuy () {
       this.buyBtnLoading = true
       const res = await this.checkOrder()
+      const ethBalance = await this.$sdk.getBalance({
+        address: this.$sdk.NULL_ADDRESS()
+      }, this.user.coinbase)
+      if (new BigNumber(ethBalance).isLessThan(
+        this.totalPrice
+      )) {
+        this.buyBtnLoading = false
+        this.$tools.message('No Enough Balance Of ETH');
+        return
+      }
       if (typeof res === 'object' && res.error) {
         this.buyBtnLoading = false
         return

@@ -713,7 +713,6 @@ export default {
       this.$refs.NFTDialogBuy.showBuy(this.tokenInfo)
     },
     nftPriceFun (basePrice) {
-      console.log(this.$Web3.utils.fromWei(basePrice.toString()))
       return basePrice !== null ? this.$filters.keepPoint(this.$Web3.utils.fromWei(basePrice.toString())) : '--'
     },
     // 添加购物车

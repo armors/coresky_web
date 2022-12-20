@@ -127,6 +127,14 @@ export default {
     },
     async showMakeOffer (tokenInfo, makeOfferType = 1) {
       this.tokenInfo = tokenInfo
+      const wethBalance = await this.$sdk.getBalance({
+        address: process.env.VUE_APP_WETH
+      }, this.user.coinbase)
+      console.log(wethBalance)
+      if (new BigNumber(wethBalance).isLessThan(0.0000000000000001)) {
+        this.$tools.message('No Enough Balance Of WETH');
+        return
+      }
       this.makeOfferType = makeOfferType
       this.tokenInfo.tokenId = parseInt(this.tokenInfo.tokenId)
       this.isShowMakeOfferDialog = true
@@ -135,6 +143,13 @@ export default {
     async makerBuyer () {
       if (!this.form.price || new BigNumber(this.form.price).isLessThan(0)) {
         this.$tools.message('请输入正确的价格');
+        return
+      }
+      const wethBalance = await this.$sdk.getBalance({
+        address: process.env.VUE_APP_WETH
+      }, this.user.coinbase)
+      if (new BigNumber(this.$sdk.fromWeiNum(wethBalance)).isLessThan(this.form.price)) {
+        this.$tools.message('No Enough Balance Of WETH');
         return
       }
       if (!this.form.time) {

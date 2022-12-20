@@ -49,6 +49,8 @@
 </template>
 
 <script>
+import BigNumber from "bignumber.js";
+
 export default {
   name: "index",
   data () {
@@ -105,6 +107,16 @@ export default {
     async showBuy (tokenInfo) {
       this.isBuyOver = false
       this.tokenInfo = tokenInfo
+      const ethBalance = await this.$sdk.getBalance({
+        address: this.$sdk.NULL_ADDRESS()
+      }, this.user.coinbase)
+      if (new BigNumber(ethBalance).isLessThan(
+        this.$sdk.fromWeiNum(this.tokenInfo.ckOrdersEntity.basePrice)
+      )) {
+        this.$tools.message('No Enough Balance Of ETH');
+        return
+      }
+
       this.tokenInfo.tokenId = parseInt(this.tokenInfo.tokenId)
       this.isShowBuyDialog = true
       this.nftPrice = this.$sdk.fromWeiNum(this.tokenInfo.ckOrdersEntity.basePrice)
