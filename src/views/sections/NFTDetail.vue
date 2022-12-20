@@ -125,7 +125,6 @@
                       <div>{{$filters.contractExplore(tokenInfo.contract).hashShort}}</div>
                       <div class="share-icon"><img src="../../assets/images/icons/icon_share_purple.svg" alt=""></div>
                     </div>
-
                   </div>
                   <div class="flex-detial">
                     <span class="name">Creator Rebate</span>
@@ -180,9 +179,9 @@
                   <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
                   <span class="value">{{nftPrice}}</span>
                 </div>
-                <div class="row">
-                  $45,332,02
-                </div>
+<!--                <div class="row">-->
+<!--                  $45,332,02-->
+<!--                </div>-->
               </div>
               <div class="box-right">
                 <div class="row-item">
@@ -235,7 +234,8 @@
 <!--                  </el-icon>-->
                 </div>
               </template>
-              <div class="card-body" style="height:200px">
+              <div class="card-body price-history" style="height:200px">
+                <div id="priceHistory"></div>
               </div>
             </el-collapse-item>
           </el-collapse>
@@ -256,7 +256,7 @@
               </template>
               <div class="card-body" style="height:480px;padding:0;overflow: auto;">
                 <div class="offer-list">
-                  <div class="list-tr head">
+                  <div class="list-tr head top0">
                     <div class="list-th th25">Price</div>
                     <div class="list-th th25">Exporation</div>
                     <div class="list-th th25">From</div>
@@ -268,8 +268,8 @@
                       <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
                       {{nftPriceFun(v.basePrice)}}
                     </div>
-                    <div class="list-th th25">about 22 hours</div>
-                    <div class="list-th th25 purple">{{$filters.ellipsisAddress(v.maker, 4)}}</div>
+                    <div class="list-th th25">{{$filters.timeFormat(v.createTime)}}</div>
+                    <div class="list-th th25 purple" @click="goExplore(v.maker)">{{$filters.ellipsisAddress(v.maker, 4)}}</div>
                     <div class="list-th th25 center">
                       <el-button type="primary" class="btnAccept" v-if="isSelfMakeOffer(v)" :loading="cancelMakeOfferBtnLoading" @click="cancelMakeOffer(v)">Cancel</el-button>
                       <el-button type="primary" class="btnAccept" v-else :disabled="!isSelf" :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT(v)">Accept</el-button>
@@ -297,12 +297,8 @@
           </template>
           <div class="card-body" style="height:580px;padding:0; overflow-y: auto">
             <div class="filter-box">
-              <el-checkbox-group v-model="checkList">
-                <el-checkbox label="Sales" />
-                <el-checkbox label="Listings" />
-                <el-checkbox label="Offers" />
-                <el-checkbox label="Collection offers" />
-                <el-checkbox label="Transfers" />
+              <el-checkbox-group v-model="checkList" @change="changeFilter">
+                <el-checkbox v-for="(v, i) in tokenEventType" :label="v" :key="`chec-item-${i}`"/>
               </el-checkbox-group>
             </div>
             <div class="offer-list">
@@ -313,15 +309,18 @@
                 <div class="list-th" style="width:20%">To</div>
                 <div class="list-th" style="width:20%">Date</div>
               </div>
-
               <div class="list-tr" v-for="(v, i) in tokenEventList" :key="`token-event-item-${i}`">
-                <div class="list-th" style="width:20%">
-                  {{v.type}}
+                <div class="list-th display-flex box-center-Y" style="width:20%">
+                  <div class="event-icon"><img :src="require(`../../assets/images/icons/icon_event_${v.type}.svg`)" alt=""></div>
+                  <div>{{v.typeUp}}</div>
                 </div>
                 <div class="list-th" style="width:20%">{{nftPriceFun(v.price) === '--' ? '--' : (nftPriceFun(v.price) + ' ETH')}}</div>
-                <div class="list-th " style="width:20%">{{$filters.ellipsisAddress(v.from, 4)}}</div>
-                <div class="list-th " style="width:20%">{{$filters.ellipsisAddress(v.to, 4)}}</div>
-                <div class="list-th " style="width:20%">21 days ago</div>
+                <div class="list-th" @click="goExplore(v.from)" :class="{purple: v.from!== null}" style="width:20%">{{$filters.ellipsisAddress(v.from, 4)}}</div>
+                <div class="list-th" @click="goExplore(v.to)" :class="{purple: v.to!== null}" style="width:20%">{{$filters.ellipsisAddress(v.to, 4)}}</div>
+                <div class="list-th display-flex box-center-Y" style="width:20%" :class="{gray: v.txHash === null}">
+                  <div>{{$filters.timeFormat(v.createTime)}}</div>
+                  <div class="share-icon" v-show="v.txHash !== null" @click="goExplore(v.txHash, true)"><img src="../../assets/images/icons/icon_share_purple.svg" alt=""></div>
+                </div>
               </div>
             </div>
           </div>
@@ -344,6 +343,8 @@ import NFTDialogAcceptOffer from '../../components/self/NFTDialogAcceptOffer'
 import NFTDialogBuy from '../../components/self/NFTDialogBuy'
 import { setLocalStorage, getLocalStorage, removeLocalStorage } from "@/util/local-storage";
 
+import * as echarts from "echarts";
+
 export default {
   name: "NFTDetail",
   components: {
@@ -365,7 +366,7 @@ export default {
       cancelBtnLoading: false,
       sellDialogBtnLoading: false,
       acceptDialogBtnLoading: false,
-      checkList: [],
+      checkList: ['Chain'],
       form: {
         price: '',
         date: '',
@@ -399,7 +400,11 @@ export default {
         tokenId: ''
       },
       tokenEventList: [],
+      tokenEventListOrigin: [],
+      tokenEventType: ['Chain'],
       ckAuctionEntityList: [],
+      historyPrice: [],
+      myChart: null,
       isCart: false,
       nftPrice: '--',
       bestPrice: '--',
@@ -437,6 +442,90 @@ export default {
     }
   },
   methods: {
+    goExplore (address, isTx = false) {
+      console.log(address, isTx)
+      if (address !== null) {
+        this.$filters.openWindow(isTx ? this.$filters.hashExplore(address).href : this.$filters.contractExplore(address).href)
+      }
+    },
+    initPriceHistory() {
+      if (!this.myChart) {
+        let chartDom = document.getElementById('priceHistory');
+        this.myChart = echarts.init(chartDom);
+      }
+      let xAxisData = []
+      let data = []
+      this.historyPrice.reverse().forEach(item => {
+        xAxisData.push(this.$filters.timeToUTC(item.date, true))
+        data.push(this.nftPriceFun(item.price))
+      })
+
+      const option = {
+        grid: {
+          bottom: '30px',
+          top: '20px'
+        },
+        tooltip: {//提示框组件
+          trigger: 'item', //item数据项图形触发，主要在散点图，饼图等无类目轴的图表中使用。
+          axisPointer: {
+            // 坐标轴指示器，坐标轴触发有效
+            type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+          },
+          formatter: '{b}: {c}ETH' //{a}（系列名称），{b}（数据项名称），{c}（数值）, {d}（百分比）
+        },
+        xAxis: {
+          type: 'category',
+          data: xAxisData,
+          axisTick:{
+            show: false
+          },
+          axisLabel: {
+            textStyle: {
+              color: 'rgba(0, 0, 0, 0.6)'
+            },
+          },
+          axisLine: {
+            lineStyle:{
+              color: 'rgba(0, 0, 0, 0.1)'
+            }
+          },
+          splitLine: {
+            lineStyle: {
+              color: 'rgba(0, 0, 0, 0.1)'
+            }
+          }
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: [
+          {
+            data: data,
+            type: 'line',
+            itemStyle : {
+              normal : {
+                color:'#7D47FF',
+                lineStyle:{
+                  color:'#7D47FF'
+                },
+              }
+            },
+          }
+        ]
+      };
+      option && this.myChart.setOption(option);
+
+    },
+    changeFilter (val) {
+      console.log(val)
+      this.checkList = val
+      console.log(this.checkList)
+      this.tokenEventList = this.tokenEventListOrigin.filter(item => this.checkList.indexOf(item.typeUp) > -1)
+    },
+    firstWorkToUp (word) {
+      return word.charAt(0).toUpperCase()
+        + word.slice(1)
+    },
     isSelfMakeOffer (v) {
       const isMakeOffer = v.maker.toLocaleLowerCase() === this.user.coinbase.toLocaleLowerCase()
       if (isMakeOffer) {
@@ -525,13 +614,25 @@ export default {
         if (this.tokenInfo.ckOrdersEntity !== null) {
           this.countDown()
         }
+        this.historyPrice = this.tokenInfo.historyPrice
+        this.initPriceHistory()
         this.isInCart()
       })
     },
     getTokenEvent() {
       this.$api("collect.tokenEvent", this.tokenInfoParams).then((res) => {
         this.tokenEventList = res.debug
-        console.log(this.tokenEventList)
+        let tokenEventType = []
+        this.tokenEventList.forEach(item => {
+          item.typeUp = this.firstWorkToUp(item.type)
+          if (!(tokenEventType.indexOf(item.typeUp) > -1)) {
+            tokenEventType.push(item.typeUp)
+          }
+        })
+        this.tokenEventType = tokenEventType
+        this.checkList = tokenEventType
+        this.tokenEventListOrigin = this.tokenEventList
+        console.log(this.tokenEventList, tokenEventType)
       })
     },
     showSellNft () {
@@ -599,7 +700,7 @@ export default {
     },
     nftPriceFun (basePrice) {
       console.log(basePrice)
-      return basePrice !== null ? this.$Web3.utils.fromWei(basePrice.toString()) : '--'
+      return basePrice !== null ? this.$filters.keepPoint(this.$Web3.utils.fromWei(basePrice.toString())) : '--'
     },
     // 添加购物车
     addCart () {
@@ -890,6 +991,13 @@ export default {
     .card-body {
       padding: 24px;
       background: $bg-white;
+      &.price-history{
+        padding: 0;
+      }
+      #priceHistory{
+       width: 100%;
+        height: 100%;
+      }
     }
   }
   .arrt-list {
@@ -951,13 +1059,19 @@ export default {
   }
   .offer-list {
     position: relative;
+    padding-left: 20px;
+    padding-right: 16px;
     .list-tr {
       display: flex;
-      padding: 8px 15px 8px 20px;
+      padding: 8px 0 8px 0;
       line-height: 40px;
       border-bottom: 1px solid $borderBg;
-      color: $color-black3;
+      color: $primaryColor;
       font-size: 14px;
+      font-weight: 500;
+      &:last-child{
+        border-bottom: none;
+      }
       &.head {
         position: sticky;
         left: 0;
@@ -967,9 +1081,26 @@ export default {
         font-size: 12px;
         background: $bg-white;
         font-weight: 600;
+        &.top0{
+          top: 0;
+        }
       }
       &.placeholder {
         height: 56px;
+      }
+      .list-th{
+        cursor: pointer;
+        .event-icon{
+          width: 24px;
+          height: 24px;
+          margin-right: 4px;
+        }
+        .share-icon{
+
+        }
+        &.gray{
+          color: $color-black3;
+        }
       }
     }
     .purple {

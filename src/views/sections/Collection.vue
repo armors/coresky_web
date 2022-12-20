@@ -54,7 +54,7 @@
           <div class="lable">Floor Price</div>
           <div class="value">
             <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
-            <span>{{collectInfo.foolPrice}}</span>
+            <span>{{$filters.keepPoint(collectInfo.foolPrice)}}</span>
           </div>
           <div class="rise">
             <span class="time">24h</span>
@@ -76,7 +76,7 @@
           <div class="lable">24h Volume</div>
           <div class="value">
             <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
-            <span>{{collectInfo.dayVol}}</span>
+            <span>{{$filters.keepPoint(collectInfo.dayVol)}}</span>
           </div>
           <div class="rise">
             <span class="time">24h</span>
@@ -87,7 +87,7 @@
           <div class="lable">total volume</div>
           <div class="value">
             <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
-            <span>{{collectInfo.volume}}</span>
+            <span>{{$filters.keepPoint(collectInfo.volume)}}</span>
           </div>
           <div class="rise">
             <span class="time">24h</span>

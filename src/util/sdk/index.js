@@ -9,6 +9,7 @@ var Web3 = require("web3");
 const eth_util = require("ethereumjs-util");
 import web3 from "@/util/web3/index.js";
 import {ethers} from 'ethers'
+import {keepPoint} from "@/filters";
 
 const encodeERC721ReplacementPatternSell      = '0x000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000';
 const encodeERC721ReplacementPatternBuy       = '0x00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
@@ -820,7 +821,7 @@ export default {
 		return asset;
 	},
 	fromWeiNum(value) {
-		return Web3.utils.fromWei(value.toString(), "ether");
+		return value !== null ? keepPoint(Web3.utils.fromWei(value.toString(), "ether")) : '--';
 	},
 	async getBalance(asset, owner) {
 		var web3 = await utils_web3.getWeb3();

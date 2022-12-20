@@ -120,7 +120,7 @@
                 </div>
                 <div class="nft-price" v-if="item.ckOrdersEntity!==null">
                   <img class="token-icon" src="@/assets/images/icons/token/token_eth.svg" alt="">
-                  <span class="nft-price">{{item.ckOrdersEntity.basePrice.toString()}} ETH</span>
+                  <span class="nft-price">{{$filters.keepPoint(item.ckOrdersEntity.basePrice.toString())}} ETH</span>
                 </div>
               </div>
             </div>
@@ -167,7 +167,7 @@ export default {
         address: ''
       },
       viewType: 1,
-      
+
       listCount: 0,
       loadStatus: 'over',
 

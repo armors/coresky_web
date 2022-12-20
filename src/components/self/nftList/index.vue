@@ -30,17 +30,17 @@
 			<div class="price box-flex1 display-flex box-center-Y">
 				<div class="box-flex1"></div>
 				<div class="icon-token"><img src="../../../assets/images/icons/token/token_eth.svg" alt=""></div>
-				<div>{{ v.foolPrice}}ETH</div>
+				<div>{{ $filters.keepPoint(v.foolPrice)}}ETH</div>
 			</div>
 			<div class="exchange-volume box-flex1 display-flex box-center-Y">
 				<div class="box-flex1"></div>
 				<div class="icon-token"><img src="../../../assets/images/icons/token/token_eth.svg" alt=""></div>
-				<div>{{volTime === 1 ? v.dayVol : (volTime === 7 ? v.weekVol : v.monthVol)}}</div>
+				<div>{{$filters.keepPoint(volTime === 1 ? v.dayVol : (volTime === 7 ? v.weekVol : v.monthVol))}}</div>
 			</div>
 			<div class="total-exchange-volume box-flex1 display-flex box-center-Y">
 				<div class="box-flex1"></div>
 				<div class="icon-token"><img src="../../../assets/images/icons/token/token_eth.svg" alt=""></div>
-				<div>{{v.volume}}</div>
+				<div>{{$filters.keepPoint(v.volume)}}</div>
 			</div>
 			<div class="holder box-flex1">{{$filters.milliFormat(v.holder)}}</div>
 			<div class="total box-flex1">{{$filters.milliFormat(v.total)}}</div>

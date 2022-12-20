@@ -103,7 +103,7 @@ export function timeFormatMoment (time, formatType = 'YYYY.MM.DD') {
   return moment(time * 1000).format(formatType);    // 2022/12/10;               // 12月 10日 22
 }
 
-export function timeToUTC(time) {
+export function timeToUTC(time, isMonth = false) {
   if (!time) return '--'
   let date = new Date(time * 1000); //Wed Jan 02 2019 00:00:00 GMT+0800 (China Standard Time)
 
@@ -116,7 +116,7 @@ export function timeToUTC(time) {
 
   // let displayDate = `${chinaDateArray[1]} ${chinaDateArray[2]}, ${chinaDateArray[3]}`; //"Jan 02, 2019"
    //"Jan, 2019"
-  return `${chinaDateArray[1]}   ${chinaDateArray[3]}`
+  return isMonth ? `${chinaDateArray[1]}   ${chinaDateArray[2]}` : `${chinaDateArray[1]}   ${chinaDateArray[3]}`
 }
 export function nftURI (v) {
   if (v.metadataContent) {
@@ -125,6 +125,16 @@ export function nftURI (v) {
     return tools.analysis(v.media);
   }
   return {};
+}
+
+export function keepPoint(num, point = 4, isRound = false) {
+  if (isRound) {
+    return parseFloat(num).toFixed(point);
+  } else {
+    return parseFloat(num)
+      .toFixed(point + 1 || 3)
+      .slice(0, -1);
+  }
 }
 
 export function ckCollectionsInfoEntity(v) {
