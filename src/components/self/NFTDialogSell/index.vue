@@ -127,7 +127,7 @@ export default {
   },
   methods: {
     disabledDate (time) {
-      return time.getTime() < Date.now() || time.getTime() > dayjs().add(7, "day")
+      return time.getTime() < Date.now()
     },
     dateChange () {
       this.form.time = dayjs().add(this.form.date, "day").format("YYYY-MM-DD HH:mm");
