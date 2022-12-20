@@ -120,7 +120,7 @@
                 </div>
                 <div class="nft-price">
                   <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="">
-                  <span class="price">{{item.basePrice===0?'-- ':nftPrice(item.basePrice)}} ETH</span>
+                  <span class="price">{{nftPriceFun(item.basePrice)}} ETH</span>
                 </div>
               </div>
             </div>
@@ -128,7 +128,7 @@
         </div>
         <div class="custom-pagination" v-if="queryParams.limit<listCount">
           <div class="content">
-            <el-pagination background layout="prev, pager, next" align="center" :total="1000" />
+            <el-pagination background layout="prev, pager, next" align="center" :total="listCount" />
           </div>
         </div>
         <div class="empty-wrap" v-if="nftList.length===0">
@@ -179,6 +179,9 @@ export default {
     }
   },
   methods: {
+    nftPriceFun (basePrice) {
+      return basePrice !== null ? this.$filters.keepPoint(this.$Web3.utils.fromWei(basePrice.toString())) : '--'
+    },
     init () {
       this.queryParams.page = 1
       this.queryParams.address = this.address
@@ -206,7 +209,7 @@ export default {
         if (this.$tools.checkResponse(res)) {
           this.nftList = res.debug.listData
           this.queryParams.page = res.debug.curPage
-          this.queryParams.listCount = res.debug.listCount
+          this.listCount = res.debug.listCount
         } else {
           this.$tools.message(res.errmsg);
         }

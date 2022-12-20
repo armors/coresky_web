@@ -1,5 +1,5 @@
 module.exports = {
-  pageLimit: 10,
+  pageLimit: 12,
   deploy: true,
   name: 'Finger NFT',
   url: 'http://fingernft.fingerchar.com',
