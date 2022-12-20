@@ -295,7 +295,7 @@
 <!--              </el-icon>-->
             </div>
           </template>
-          <div class="card-body" style="height:580px;padding:0;">
+          <div class="card-body" style="height:580px;padding:0; overflow-y: auto">
             <div class="filter-box">
               <el-checkbox-group v-model="checkList">
                 <el-checkbox label="Sales" />
@@ -314,13 +314,13 @@
                 <div class="list-th" style="width:20%">Date</div>
               </div>
 
-              <div class="list-tr" v-for="i of 20" :key="i">
+              <div class="list-tr" v-for="(v, i) in tokenEventList" :key="`token-event-item-${i}`">
                 <div class="list-th" style="width:20%">
-                  Transfer
+                  {{v.type}}
                 </div>
-                <div class="list-th" style="width:20%">0.065 ETH</div>
-                <div class="list-th " style="width:20%">Hayiyi</div>
-                <div class="list-th " style="width:20%">Hayiyi</div>
+                <div class="list-th" style="width:20%">{{nftPriceFun(v.price) === '--' ? '--' : (nftPriceFun(v.price) + ' ETH')}}</div>
+                <div class="list-th " style="width:20%">{{$filters.ellipsisAddress(v.from, 4)}}</div>
+                <div class="list-th " style="width:20%">{{$filters.ellipsisAddress(v.to, 4)}}</div>
                 <div class="list-th " style="width:20%">21 days ago</div>
               </div>
             </div>
@@ -398,6 +398,7 @@ export default {
         contract: '',
         tokenId: ''
       },
+      tokenEventList: [],
       ckAuctionEntityList: [],
       isCart: false,
       nftPrice: '--',
@@ -415,6 +416,7 @@ export default {
   },
   mounted () {
     this.getTokenInfo()
+    this.getTokenEvent()
     this.isInCart()
   },
   computed: {
@@ -526,6 +528,12 @@ export default {
         this.isInCart()
       })
     },
+    getTokenEvent() {
+      this.$api("collect.tokenEvent", this.tokenInfoParams).then((res) => {
+        this.tokenEventList = res.debug
+        console.log(this.tokenEventList)
+      })
+    },
     showSellNft () {
       this.sellDialogBtnLoading = true
       this.$refs.NFTDialogSell.showSell(this.tokenInfo)
@@ -590,7 +598,8 @@ export default {
       this.$refs.NFTDialogBuy.showBuy(this.tokenInfo)
     },
     nftPriceFun (basePrice) {
-      return this.$Web3.utils.fromWei(basePrice.toString())
+      console.log(basePrice)
+      return basePrice !== null ? this.$Web3.utils.fromWei(basePrice.toString()) : '--'
     },
     // 添加购物车
     addCart () {
@@ -952,7 +961,7 @@ export default {
       &.head {
         position: sticky;
         left: 0;
-        top: 0;
+        top: 56px;
         height: 56px;
         width: 100%;
         font-size: 12px;
@@ -1016,10 +1025,21 @@ export default {
       }
     }
     .filter-box {
+      position: sticky;
+      left: 0;
+      top: 0;
       border-top: 1px solid $borderBg;
-      background: $elButtonHoverBg;
+      background: $bg-white;
+      z-index: 10;
       height: 56px;
       width: 100%;
+      .el-checkbox-group{
+        padding-top: 0;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        background: $elButtonHoverBg;
+      }
       .el-checkbox__inner{
         background-color: transparent;
         border-color: $primaryColor;
