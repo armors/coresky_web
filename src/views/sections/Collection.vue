@@ -15,7 +15,7 @@
           </div>
           <div class="creator">
             <span class="txt">By</span>
-            <span class="name">TeamAzuki</span>
+            <span class="name">{{$filters.ellipsisAddress(collectInfo.owner, 4)}}</span>
             <img src="../../assets/images/icons/icon_tag_purple.svg" alt="">
           </div>
         </div>
