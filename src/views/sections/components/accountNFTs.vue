@@ -128,7 +128,9 @@
         </div>
         <div class="custom-pagination" v-if="queryParams.limit<listCount">
           <div class="content">
-            <el-pagination background layout="prev, pager, next" align="center" :total="listCount" />
+            <el-pagination background v-model:current-page="queryParams.page" :page-size="queryParams.limit"
+              :page-="queryParams.limit" @current-change="pageHandle" layout="prev, pager, next" align="center"
+              :total="listCount" />
           </div>
         </div>
         <div class="empty-wrap" v-if="nftList.length===0">
@@ -158,7 +160,7 @@ export default {
         hasOffer: false,
         search: '',
         page: 1,
-        limit: this.$store.state.pageLimit,
+        limit: 20,
         keyword: '',
         contract: '',
         minPrice: '',
