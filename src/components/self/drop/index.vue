@@ -78,6 +78,7 @@
 		},
 		methods: {
 			goCollect(v) {
+				return
 				this.$router.push({
 					name: 'collection',
 					params: { contract: v.contract }
