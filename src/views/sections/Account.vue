@@ -3,26 +3,23 @@
     <accountHead :address="address" />
     <div class="account-page">
       <el-tabs v-model="activeName" class="demo-tabs" @tab-change="handleClick">
-        <el-tab-pane label="My NFTs" name="NFTs" :lazy="true">
+        <el-tab-pane label="Collected" name="Collected" :lazy="true">
           <accountNFTs :address="address" />
         </el-tab-pane>
-        <el-tab-pane label="My Collections" name="Collections" :lazy="true">
-          Collections
+        <el-tab-pane label="Created" name="Created" :lazy="true">
+          <accountCollection :address="address" />
         </el-tab-pane>
-        <el-tab-pane label="My Favorites" name="Favorites" :lazy="true">
-          Favorites
+        <el-tab-pane label="Favorited" name="Favorited" :lazy="true">
+          <accountFavorited :address="address" />
         </el-tab-pane>
-        <el-tab-pane label="My Listing" name="Listing" :lazy="true">
-          Listing
+        <el-tab-pane label="Watchlist" name="Watchlist" :lazy="true">
+          <accountWatchlist :address="address" />
         </el-tab-pane>
-        <el-tab-pane label="My Activites" name="Activites" :lazy="true">My Activites</el-tab-pane>
-        <!-- <el-tab-pane label="Favorited" name="Favorited">Favorited</el-tab-pane>
-        <el-tab-pane label="Trading History" name="Trading">Trading History</el-tab-pane> -->
-        <el-tab-pane label="My Coupons" name="Coupons" :lazy="true">My Coupon</el-tab-pane>
-        <el-tab-pane label="My Launchpad" name="Launchpad" :lazy="true">My Launchpad</el-tab-pane>
+        <el-tab-pane label="Activities" name="Activities" :lazy="true">
+          Activities
+        </el-tab-pane>
       </el-tabs>
     </div>
-
   </div>
 </template>
 <script>
@@ -31,6 +28,8 @@ import accountHead from './components/accountHead'
 import accountNFTs from './components/accountNFTs'
 import accountCollected from './components/accountCollected'
 import accountCollection from './components/accountCollection'
+import accountFavorited from './components/accountFavorited'
+import accountWatchlist from './components/accountWatchlist'
 export default {
   name: "Items",
   mixins: [],
@@ -38,11 +37,13 @@ export default {
     accountHead,
     accountCollected,
     accountCollection,
+    accountFavorited,
+    accountWatchlist,
     accountNFTs
   },
   data () {
     return {
-      activeName: 'NFTs'
+      activeName: 'Collected'
     };
   },
   watch: {
@@ -81,6 +82,9 @@ export default {
   width: 1200px;
   margin: 0 auto 40px;
   ::v-deep {
+    .el-tabs__header.is-top{
+      margin-bottom: 0;
+    }
     .el-tabs__item {
       font-family: 'Plus Jakarta Display';
       padding: 0 20px;

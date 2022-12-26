@@ -2,15 +2,16 @@
   <el-drawer v-model="visible" @closed="handleClose" size="406" :append-to-body="true" zIndex="99"
     custom-class="coresky-drawer" :withHeader="false">
     <div class="drawer-top">
-      <avatar class="avatar-box" :imageUrl="user.avatar || $filters.fullImageUrl(user.avatar)"  :address="user.coinbase" :imgWidth="52"
-        :imgHeight="52" shape="circular">
+      <avatar class="avatar-box" :imageUrl="user.avatar || $filters.fullImageUrl(user.avatar)" :address="user.coinbase"
+        :imgWidth="52" :imgHeight="52" shape="circular">
       </avatar>
       <div class="info">
         <div class="user-name display-flex box-center-Y">
           {{user.nickname}}
-          <div class="edit-icon" @click="goProfile"><img src="../../../assets/images/icons/icon_edit_profile.svg" alt=""></div>
+          <div class="edit-icon" @click="goProfile"><img src="../../../assets/images/icons/icon_edit_profile.svg"
+              alt=""></div>
         </div>
-<!--        profile-->
+        <!--        profile-->
         <div class="token-address">View profile</div>
       </div>
       <el-icon @click="visible=false">
@@ -20,15 +21,15 @@
     <div class="drawer-nav">
       <div class="nav-item" @click="goView('/account/'+ user.coinbase)">
         <img class="icon" src="@/assets/images/icons/icon_nft.svg" alt="">
-        <span>My NFTs</span>
+        <span>Collected</span>
       </div>
-      <div class="nav-item" @click="goView('/account/'+ user.coinbase+'?tag=Collections')">
+      <div class="nav-item" @click="goView('/account/'+ user.coinbase+'?tag=Created')">
         <img class="icon" src="@/assets/images/icons/icon_collection.svg" alt="">
-        <span>My Collections</span>
+        <span>Created</span>
       </div>
-      <div class="nav-item" @click="goView('/account/'+ user.coinbase+'?tag=Favorites')">
+      <div class="nav-item" @click="goView('/account/'+ user.coinbase+'?tag=Favorited')">
         <img class="icon" src="@/assets/images/icons/icon_watchlist2.svg" alt="">
-        <span>My Favorites</span>
+        <span>Favorited</span>
       </div>
       <!-- <div class="nav-item">
         <img class="icon" src="@/assets/images/icons/icon_quotation.svg" alt="">
@@ -38,13 +39,13 @@
         <img class="icon" src="@/assets/images/icons/icon_collect2.svg" alt="">
         <span>My Collect</span>
       </div> -->
-      <div class="nav-item">
+      <div class="nav-item" @click="goView('/account/'+ user.coinbase+'?tag=Watchlist')">
         <img class="icon" src="@/assets/images/icons/icon_quotation.svg" alt="">
-        <span>My Listing</span>
+        <span>Watchlist</span>
       </div>
-      <div class="nav-item">
+      <div class="nav-item" @click="goView('/account/'+ user.coinbase+'?tag=Activities')">
         <img class="icon" src="@/assets/images/icons/icon_transaction.svg" alt="">
-        <span>My Activites</span>
+        <span>Activities</span>
       </div>
       <!-- <div class="nav-item">
         <img class="icon" src="@/assets/images/icons/icon_transaction.svg" alt="">
@@ -86,7 +87,7 @@
         </div>
         <div class="price-box">
           <div class="num">{{balanceETH}}</div>
-<!--          <div class="num2">$0</div>-->
+          <!--          <div class="num2">$0</div>-->
         </div>
       </div>
       <div class="wallet-item">
@@ -98,7 +99,7 @@
         </div>
         <div class="price-box">
           <div class="num">{{balanceWETH}}</div>
-<!--          <div class="num2">$0</div>-->
+          <!--          <div class="num2">$0</div>-->
         </div>
       </div>
     </div>
@@ -106,7 +107,7 @@
 </template>
 
 <script>
-import {keepPoint} from "@/filters";
+import { keepPoint } from "@/filters";
 
 export default {
   name: "userCenterDrawer",
@@ -145,7 +146,7 @@ export default {
     },
   },
   methods: {
-    async initGetBalance() {
+    async initGetBalance () {
       this.balanceETH = keepPoint(await this.$sdk.getBalance({
         address: this.$sdk.NULL_ADDRESS()
       }, this.user.coinbase))
@@ -185,7 +186,6 @@ export default {
     align-items: center;
     margin-bottom: 12px;
     .avatar-box {
-
       width: 52px;
       height: 52px;
       margin-right: 12px;
@@ -198,7 +198,7 @@ export default {
         font-size: 22px;
         line-height: 28px;
         color: $primaryColor;
-        .edit-icon{
+        .edit-icon {
           cursor: pointer;
           width: 24px;
           height: 24px;

@@ -603,3 +603,68 @@
     display: block;
   }
 }
+
+// 分享
+.share-wrap {
+  margin-left: auto;
+  height: 44px;
+  align-self: center;
+  display: flex;
+  .icon-img {
+    width: 44px;
+    height: 44px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
+    cursor: pointer;
+  }
+
+  .icon-img+.icon-img {
+    margin-left: 16px;
+  }
+
+  .icon-link-img {
+    background-image: url("@/assets/images/icons/icon_link.svg");
+    &:hover {
+      background-image: url("@/assets/images/icons/icon_link_active.svg");
+    }
+  }
+
+  .icon-img-website {
+    background-image: url("@/assets/images/icons/icon_lang_active_gray.svg");
+    &.active {
+      background-image: url("@/assets/images/icons/icon_lang_active.svg");
+    }
+  }
+
+  .icon-img-discord {
+    background-image: url("@/assets/images/icons/media/media_tg.svg");
+    &:active {
+      background-image: url("@/assets/images/icons/media/media_tg_active.svg");
+    }
+  }
+
+  .icon-img-twitter {
+    background-image: url("@/assets/images/icons/media/media_twitter.svg");
+    &:active {
+      background-image: url("@/assets/images/icons/media/media_twitter_active.svg");
+    }
+  }
+
+  .icon-img-collect {
+    background-color: rgba(0, 0, 0, 0.04);
+    border-radius: 50%;
+    background-image: url('@/assets/images/icons/icon_shoucang.svg');
+    background-size: 24px 24px;
+    &.active {
+      background-image: url('@/assets/images/icons/icon_shoucang_active.svg');
+    }
+  }
+
+  .icon-img-share {
+    background-image: url("@/assets/images/icons/icon_share.svg");
+    &:active {
+      background-image: url("@/assets/images/icons/icon_share_active.svg");
+    }
+  }
+}

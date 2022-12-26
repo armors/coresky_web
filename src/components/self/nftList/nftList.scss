@@ -1,8 +1,8 @@
-.nft-list{
+.nft-list {
 	display: block;
 	flex-flow: unset;
-	>.display-flex{
-		>.box-flex1{
+	>.display-flex {
+		>.box-flex1 {
 			text-align: right;
 		}
 	}
@@ -10,46 +10,53 @@
 	font-weight: 400;
 	font-size: 14px;
 	font-family: 'Plus Jakarta Display';
-	.nft-title{
+	.nft-title {
 		padding: 0 16px;
 		height: 72px;
 		color: $color-black3;
 	}
-	.nft-item{
+	.nft-item {
 		padding: 0 16px;
 		height: 72px;
 		color: $primaryColor;
 		font-weight: 500;
 		cursor: pointer;
-		&.bg-gray{
+		&.bg-gray {
 			border-top: 1px solid $borderBg;
 		}
-		&:hover{
+		&:hover {
 			background-color: $bgItem;
 		}
-		.cover-image{
+		.cover-image {
 			width: 44px;
 			height: 44px;
 			border-radius: 50%;
+			flex-shrink: 0;
+		}
+		.icon-tag{
+			flex-shrink: 0;
 		}
 		border-bottom: 1px solid $borderBg;
 	}
-	.nft-info{
+	.nft-info {
 		width: 230px;
-		.nft-name{
+		.nft-name {
 			padding-left: 16px;
 			font-size: 16px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 		}
 	}
-	.icon-token{
+	.icon-token {
 		width: 10px;
 		height: 16px;
 		margin-right: 6px;
-		img{
+		img {
 			height: 100%;
 		}
 	}
-	.index-num{
+	.index-num {
 		width: 28px;
 		text-align: left;
 		color: $color-black2;

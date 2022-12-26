@@ -19,7 +19,15 @@
             <img src="../../assets/images/icons/icon_tag_purple.svg" alt="">
           </div>
         </div>
-        <div class="info-share">
+        <div class="share-wrap">
+          <div class="icon-img icon-img-collect" :class="{active: collectInfo.followStatus}" @click="followContract">
+          </div>
+          <a class="icon-img icon-img-website" target="_blank" :href="collectInfo.website"></a>
+          <a class="icon-img icon-img-twitter" target="_blank" :href="collectInfo.twitter"></a>
+          <a class="icon-img icon-img-discord" target="_blank" :href="collectInfo.discord"></a>
+          <!-- <div class="icon-img icon-img-collect"></div> -->
+          <!-- <div class="icon-img icon-img-share"></div> -->
+          <!-- <div class="icon-img icon-img-more"></div> -->
         </div>
       </div>
       <div class="info-val">
@@ -142,6 +150,7 @@ export default {
   mixins: [],
   data () {
     return {
+      EXPLORE_URL: process.env.VUE_APP_EXPLORE,
       activeName: 'collected',
       dataInfo: {
         imgUrl: "https://storage.nfte.ai/asset/collection/featured/LSIWBMDTLHJRKSITPNVQWFNCVCOKRIGG.jpg?x-oss-process=image/resize,m_fill,w_4096,h_180",
@@ -239,9 +248,11 @@ export default {
         bannerImage: '',
         image: ''
       },
-      tokenList: []
+      tokenList: [],
+      followStatus: false,
     };
   },
+
   created () {
     this.contract = this.$route.params.contract
     this.tokenQueryParams.contract = this.contract
@@ -270,6 +281,15 @@ export default {
         this.collectInfo.bestPriceFrom = this.$sdk.fromWeiNum(this.collectInfo.bestPrice)
       })
     },
+    followContract () {
+      const tokenColloctUrl = this.collectInfo.followStatus ? "collect.contractCancel" : "collect.contractFollow"
+      this.$api(tokenColloctUrl, {
+        "contract": this.contract,
+      }).then((res) => {
+
+        this.collectInfo.followStatus = !this.collectInfo.followStatus
+      })
+    },
   },
 };
 </script>
@@ -287,6 +307,7 @@ export default {
     .info-top {
       height: 80px;
       position: relative;
+      display: flex;
       .avatar-box {
         position: absolute;
         left: 0;
@@ -452,8 +473,6 @@ export default {
     }
   }
 }
-
-
 
 .right-content {
   width: 100%;
