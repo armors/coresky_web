@@ -108,6 +108,10 @@ export default {
       url: "/user/token",
       method: "post",
     },
+    activity: {
+      url: "/user/activity",
+      method: "post",
+    },
   },
   collect: {
     tokenQuery: {

@@ -16,7 +16,7 @@
           <accountWatchlist :address="address" />
         </el-tab-pane>
         <el-tab-pane label="Activities" name="Activities" :lazy="true">
-          Activities
+          <accountActivities :address="address" />
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -30,6 +30,7 @@ import accountCollected from './components/accountCollected'
 import accountCollection from './components/accountCollection'
 import accountFavorited from './components/accountFavorited'
 import accountWatchlist from './components/accountWatchlist'
+import accountActivities from './components/accountActivities'
 export default {
   name: "Items",
   mixins: [],
@@ -39,6 +40,7 @@ export default {
     accountCollection,
     accountFavorited,
     accountWatchlist,
+    accountActivities,
     accountNFTs
   },
   data () {
@@ -82,7 +84,7 @@ export default {
   width: 1200px;
   margin: 0 auto 40px;
   ::v-deep {
-    .el-tabs__header.is-top{
+    .el-tabs__header.is-top {
       margin-bottom: 0;
     }
     .el-tabs__item {
