@@ -9,6 +9,11 @@
           Filter
         </span>
         <span class="right">
+          <!-- <svg-icon icon-class="discord" />
+          <svg-icon icon-class="telegram" />
+          <svg-icon icon-class="twitter" />
+          <svg-icon icon-class="websit" />
+          <svg-icon icon-class="zip" /> -->
           <!-- <el-icon>
             <Refresh />
           </el-icon> -->

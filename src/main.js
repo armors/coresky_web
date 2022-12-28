@@ -45,6 +45,12 @@ import * as filters from "@/filters";
 import ElementPlus from "element-plus";
 import "./permission";
 // import "../theme/index.css";
+import "./assets/icons"; // icon
+
+import '@/assets/icons'  // 导入图标资源
+import SvgIcon from '@/components/SvgIcon'// svg component
+
+
 
 import "@/styles/index.scss";
 
@@ -65,6 +71,8 @@ app.config.globalProperties.$filters = filters;
 
 app.use(VueClipboard);
 app.use(ElementPlus);
+
+app.component('svg-icon', SvgIcon)
 
 app.component("Avatar", Avatar);
 // app.component("popup-window", Window);
