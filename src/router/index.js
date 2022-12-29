@@ -65,6 +65,11 @@ const routes = [
 		component: () => import(/* webpackChunkName: "detail" */ "../views/sections/NFTDetail"),
 	},
 	{
+		path: "/launchpads",
+		name: "launchpads",
+		component: () => import(/* webpackChunkName: "launchpads" */ "../views/sections/launchpads"),
+	},
+	{
 		path: "/message",
 		name: "message",
 		component: () => import(/* webpackChunkName: "message" */ "../views/sections/Message"),
