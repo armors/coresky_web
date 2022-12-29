@@ -378,14 +378,14 @@ export default {
 			exchange: exchangeAddress,                     // 当前 exhcnage 合约地址 default : exchangeAddress
 			maker: sender,                                 // 订单创建者 default sender
 			taker: ZERO_ADDRESS,                           // 订单参与者 require
-			makerRelayerFee: 250,                          // 手续费  default: 0
-			takerRelayerFee: 0,                            // 手续费  default: 0
-			makerProtocolFee: 0,                           // 协议费  default: 0
-			takerProtocolFee: 0,                           // 协议费  default: 0
-			feeRecipient: ZERO_ADDRESS,                    // 平台费 接收账户 default: 0x0 买方和买方必须有一个是零地址
+			makerRelayerFee: 100,                           // 版税  default: 0 挂单版税卖家出在此设置
+			takerRelayerFee: 0,                            // 版税  default: 0
+			makerProtocolFee: 100,                         // 手续费  default: 0 挂单手续费卖家出在此设置
+			takerProtocolFee: 0,                           // 手续费  default: 0
+			feeRecipient: ZERO_ADDRESS,                    // 版税 接收账户 default: 0x0 买方和买方必须有一个是零地址
 			feeMethod: 1,                                  // enum FeeMethod { ProtocolFee, SplitFee }  费用收取方法：只用支付协议费，或者 是需要同时支付协议费 和 平台费
 			side: side,                                    // enum Side { Buy, Sell } 该订单是 卖方单 还是 买方单
-			saleKind: 0,                                   // { FixedPrice, DutchAuction } 销售方式是 固定价格，还是采用 竞拍的方式
+			saleKind: 0,                                    // { FixedPrice, DutchAuction } 销售方式是 固定价格，还是采用 竞拍的方式
 			target: nftAddress,                            // 交易的 nft 完成 NFT 转移
 			howToCall: 0,                                  // 调用方式是 call 还是 delegatecall
 			calldata: calldata,                            // target 执行时的 calldata

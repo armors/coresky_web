@@ -162,11 +162,13 @@ export default {
         this.user.coinbase,
         this.registryOwner,
       );
+      this.isApproved = isApproved
       console.log(isApproved)
       if (typeof isApproved == "object" && isApproved.error) {
         return isApproved;
       }
       if (!isApproved) {
+        this.acceptBtnLoading = true
         let result = await this.$sdk.setApprovalForAll(
           order,
           this.user.coinbase,
@@ -174,6 +176,7 @@ export default {
           true
         );
         if (typeof result == "object" && result.error) {
+          this.acceptBtnLoading = false
           return result;
         }
         this.isApproved = await this.$sdk.isApprovedForAll(
@@ -184,6 +187,7 @@ export default {
         this.acceptBtnLoading = false
         console.log(result)
       } else {
+        this.acceptBtnLoading = false
         console.log('true')
       }
       // return result;
@@ -201,7 +205,11 @@ export default {
       }
       seller = {
         ...seller,
-        // taker: buyer.maker,
+        makerRelayerFee: 0,                           // 版税  default: 0 挂单版税卖家出在此设置
+        takerRelayerFee: 100,                            // 版税  default: 0
+        makerProtocolFee: 0,                         // 手续费  default: 0 挂单手续费卖家出在此设置
+        takerProtocolFee: 100,                           // 手续费  default: 0
+        taker: buyer.maker,
         expirationTime: buyer.expirationTime,
         paymentToken: process.env.VUE_APP_WETH,
         listingTime: buyer.listingTime,
