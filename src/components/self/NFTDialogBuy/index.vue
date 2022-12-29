@@ -186,7 +186,7 @@ export default {
         const res = await this.$api("order.finish", {
           "orderId": this.tokenInfo.ckOrdersEntity.id,
           "txHash": hashAtomicMatch.transactionHash,
-          "taker": buyer.taker,
+          "taker": this.user.coinbase,
         })
         console.log(res)
         this.buyBtnLoading = false
