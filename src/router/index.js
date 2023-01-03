@@ -70,6 +70,11 @@ const routes = [
 		component: () => import(/* webpackChunkName: "launchpads" */ "../views/sections/launchpads"),
 	},
 	{
+		path: "/launchpad/:item",
+		name: "launchpadItem",
+		component: () => import(/* webpackChunkName: "launchpadItem" */ "../views/sections/launchpadItem"),
+	},
+	{
 		path: "/message",
 		name: "message",
 		component: () => import(/* webpackChunkName: "message" */ "../views/sections/Message"),
