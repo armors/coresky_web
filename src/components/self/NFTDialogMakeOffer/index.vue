@@ -166,6 +166,10 @@ export default {
       buyer = {
         ...buyer,
         ...{
+          makerRelayerFee: 0,                          // 版税
+          takerRelayerFee: 100,                        // 版税
+          makerProtocolFee: 0,                         // 手续费
+          takerProtocolFee: 100,                       // 手续费
           expirationTime: new Date(this.form.time).getTime() / 1000,
           // expirationTime: 0,
           paymentToken: process.env.VUE_APP_WETH,
