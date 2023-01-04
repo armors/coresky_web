@@ -221,11 +221,18 @@ export default {
       }
       console.log(typeof this.tokenInfo.tokenId)
       this.sellBtnLoading = true
-      let seller = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, this.tokenInfo.contract, 1, this.tokenInfo.tokenId)
+      let seller = this.$sdk.makeOrder({
+        exchangeAddress: process.env.VUE_APP_MARKET_EXCHANGE,
+        sender: this.user.coinbase,
+        nftAddress:  this.tokenInfo.contract,
+        side: 1,
+        tokenId: this.tokenInfo.tokenId,
+        feeRecipient: this.tokenInfo.ckCollectionsInfoEntity.feeContract,
+        RelayerFee: this.tokenInfo.ckCollectionsInfoEntity.royalty
+      })
       seller.expirationTime = new Date(this.form.time).getTime() / 1000;
       // seller.expirationTime = 0;
       seller.listingTime = Date.parse(new Date().toString()) / 1000 - 600;
-      seller.feeRecipient = this.$sdk.FEE_ADDRESS()
       seller.basePrice = this.$Web3.utils.toWei(this.form.price);
       // console.log(this.$Web3.utils.toWei(this.form.price))
       // console.log(ethers)

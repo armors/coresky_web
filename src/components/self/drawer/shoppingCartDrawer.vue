@@ -209,7 +209,15 @@ export default {
       for (let i = 0; i < sellers.length; i++) {
         console.log(sellers[i].basePrice)
         console.log(i)
-        let buyer = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, sellers[i].target, 0, sellers[i].tokenId)
+        let buyer = this.$sdk.makeOrder({
+          exchangeAddress: process.env.VUE_APP_MARKET_EXCHANGE,
+          sender: this.user.coinbase,
+          nftAddress: sellers[i].target,
+          side: 0,
+          tokenId: sellers[i].tokenId,
+          feeRecipient: sellers[i].ckCollectionsInfoEntity.feeContract,
+          RelayerFee: sellers[i].ckCollectionsInfoEntity.royalty
+        })
         buyer = {
           ...buyer,
           ...{
@@ -276,7 +284,15 @@ export default {
           r: sellerToken.r
         }
       }
-      let buyParams = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, sellerToken.contract, 0, sellerToken.tokenId)
+      let buyParams = this.$sdk.makeOrder({
+        exchangeAddress: process.env.VUE_APP_MARKET_EXCHANGE,
+        sender: this.user.coinbase,
+        nftAddress: sellerToken.contract,
+        side: 0,
+        tokenId: sellerToken.tokenId,
+        feeRecipient: sellerToken.feeRecipient,
+        RelayerFee: sellerToken.makerRelayerFee
+      })
       console.log(seller)
       let buyer = {
         ...buyParams,

@@ -5,6 +5,7 @@ import {
 } from "@/util/local-storage.js";
 import sdk from "@/util/sdk/index.js";
 import tools from "@/util/tools.js";
+import * as filters from "@/filters";
 
 export default {
   WEB_LOADING(state) {
@@ -13,6 +14,7 @@ export default {
   CONFIG(state, payload) {
     console.log(payload);
     state.config = Object.assign({}, payload);
+    state.config.protocolFeeHan = filters.feeFormat(state.config.protocolFee)
   },
   GAS_TRACKER(state,  payload){
     if(!payload) return;

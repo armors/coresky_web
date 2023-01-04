@@ -73,7 +73,9 @@ export function decimal(num, v) {
   var vv = Math.pow(10, v);
   return Math.round(num * vv) / vv;
 }
-
+export function feeFormat(fee) {
+  return fee ? (fee / 1000 + '%') : '--';
+}
 export function timeFormat(time) {
   var previous = new Date(time * 1000);
   var current = new Date();
@@ -96,6 +98,31 @@ export function timeFormat(time) {
     return Math.round(elapsed / msPerMonth) + i18n.global.t("time.monthsAgo");
   } else {
     return Math.round(elapsed / msPerYear) + i18n.global.t("time.yearsAgo");
+  }
+}
+
+export function timeFormatTime(time) {
+  var previous = new Date(time * 1000);
+  var current = new Date();
+  var msPerMinute = 60 * 1000;
+  var msPerHour = msPerMinute * 60;
+  var msPerDay = msPerHour * 24;
+  var msPerMonth = msPerDay * 30;
+  var msPerYear = msPerDay * 365;
+
+  var elapsed = previous - current;
+  if (elapsed < msPerMinute) {
+    return Math.round(elapsed / 1000) + i18n.global.t("time.seconds");
+  } else if (elapsed < msPerHour) {
+    return Math.round(elapsed / msPerMinute) + i18n.global.t("time.minutes");
+  } else if (elapsed < msPerDay) {
+    return Math.round(elapsed / msPerHour) + i18n.global.t("time.hours");
+  } else if (elapsed < msPerMonth) {
+    return Math.round(elapsed / msPerDay) + i18n.global.t("time.daysS");
+  } else if (elapsed < msPerYear) {
+    return Math.round(elapsed / msPerMonth) + i18n.global.t("time.months");
+  } else {
+    return Math.round(elapsed / msPerYear) + i18n.global.t("time.years");
   }
 }
 

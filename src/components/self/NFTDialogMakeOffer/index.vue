@@ -42,7 +42,7 @@
         <div class="describe-box">
           <div class="describe-item">
             <span class="lable">Coeesky service fee: </span>
-            <span class="value">0.5%</span>
+            <span class="value">{{serviceFee}}</span>
           </div>
           <div class="describe-item mt15">
             <span class="lable">coupon rewards:</span>
@@ -110,7 +110,8 @@ export default {
       ],
       tokenInfo: {},
       makeOfferType: 1, // 1单个nft报价 2 对集合报价
-      defaultTime: new Date()
+      defaultTime: new Date(),
+      serviceFee: '--',
     }
   },
   computed: {
@@ -138,6 +139,7 @@ export default {
       this.makeOfferType = makeOfferType
       this.tokenInfo.tokenId = parseInt(this.tokenInfo.tokenId)
       this.isShowMakeOfferDialog = true
+      this.serviceFee = this.tokenInfo.ckCollectionsInfoEntity.royalty / 1000 + '%'
       console.log(this.tokenInfo)
     },
     async makerBuyer () {
@@ -159,22 +161,40 @@ export default {
       this.btnMakeOfferLoading = true
       let buyer = null
       if (this.makeOfferType === 1) { // 单个nft报价
-        buyer = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, this.tokenInfo.contract, 0, this.tokenInfo.tokenId)
+        buyer = this.$sdk.makeOrder({
+          exchangeAddress: process.env.VUE_APP_MARKET_EXCHANGE,
+          sender: this.user.coinbase,
+          nftAddress:  this.tokenInfo.contract,
+          side: 0,
+          tokenId: this.tokenInfo.tokenId,
+          feeRecipient: this.tokenInfo.ckCollectionsInfoEntity.feeContract,
+          RelayerFee: this.tokenInfo.ckCollectionsInfoEntity.royalty,
+          feeType: 2
+        })
       } else { // 集合报价
-        buyer = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, this.tokenInfo.contract, 0, 0, true)
+        buyer = this.$sdk.makeOrder({
+          exchangeAddress: process.env.VUE_APP_MARKET_EXCHANGE,
+          sender: this.user.coinbase,
+          nftAddress:  this.tokenInfo.contract,
+          side: 0,
+          tokenId: 0,
+          isMaker: true,
+          feeRecipient: this.tokenInfo.ckCollectionsInfoEntity.feeContract,
+          RelayerFee: this.tokenInfo.ckCollectionsInfoEntity.royalty,
+          feeType: 2,
+        })
       }
       buyer = {
         ...buyer,
         ...{
-          makerRelayerFee: 0,                          // 版税
-          takerRelayerFee: 100,                        // 版税
-          makerProtocolFee: 0,                         // 手续费
-          takerProtocolFee: 100,                       // 手续费
+          // makerRelayerFee: 0,                          // 版税
+          // takerRelayerFee: 100,                        // 版税
+          // makerProtocolFee: 0,                         // 手续费
+          // takerProtocolFee: 100,                       // 手续费
           expirationTime: new Date(this.form.time).getTime() / 1000,
           // expirationTime: 0,
           paymentToken: process.env.VUE_APP_WETH,
           listingTime: Date.parse(new Date().toString()) / 1000 - 600,
-          feeRecipient: this.$sdk.FEE_ADDRESS(),
           basePrice: this.$Web3.utils.toWei(this.form.price)
         }
       }

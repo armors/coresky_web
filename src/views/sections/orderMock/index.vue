@@ -148,7 +148,6 @@
 				// }
 				seller.expirationTime = 0;
 				seller.listingTime = Date.parse(new Date().toString()) / 1000 - 24 * 3600;
-				seller.feeRecipient = this.$sdk.FEE_ADDRESS()
 				seller.basePrice = this.$Web3.utils.toWei(this.sellPrice.toString());
 				const arrayParams = [
 					[
@@ -518,7 +517,6 @@
 						expirationTime: 0,
 						paymentToken: process.env.VUE_APP_WETH,
 						listingTime: Date.parse(new Date().toString()) / 1000 - 24 * 3600,
-						feeRecipient: this.$sdk.FEE_ADDRESS(),
 						basePrice: this.$Web3.utils.toWei('0.02')
 					}
 				}

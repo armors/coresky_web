@@ -30,32 +30,32 @@
         <div class="title">Price</div>
         <div class="box-item">
           <div class="left">floor price difference</div>
-          <div class="right">1,025% above</div>
+          <div class="right">{{floorDiff}} above</div>
         </div>
         <div class="box-item">
           <div class="left">seller</div>
-          <div class="right">814596</div>
+          <div class="right">{{tokenInfo.ckCollectionsInfoEntity.sellReward}}</div>
         </div>
         <div class="box-item">
           <div class="left">maturity</div>
-          <div class="right">3days</div>
+          <div class="right">{{$filters.timeFormatTime(acceptInfo.expirationTime)}}</div>
         </div>
       </div>
       <div class="info-box">
         <div class="title">Cost</div>
         <div class="box-item">
           <div class="left">service charge</div>
-          <div class="right">2.5%</div>
+          <div class="right">{{config.protocolFeeHan}}</div>
         </div>
         <div class="box-item">
           <div class="left">creator fee</div>
-          <div class="right">10%</div>
+          <div class="right">{{$filters.feeFormat(this.tokenInfo.ckCollectionsInfoEntity.royalty)}}</div>
         </div>
       </div>
       <div class="total-box">
         <div class="title">Total revenue</div>
         <div class="number">
-          <span>0.0039 WETH</span>
+          <span>{{totalRevenue}} WETH</span>
           <span>$4.79</span>
         </div>
       </div>
@@ -80,8 +80,8 @@
 </template>
 
 <script>
-import { ethers } from 'ethers'
-
+import {keepPoint} from "@/filters";
+import BigNumber from 'bignumber.js'
 export default {
   name: "NFTDialogAcceptOffer",
   data () {
@@ -101,12 +101,17 @@ export default {
         symbol: ''
       },
       hash: '',
+      floorDiff: '--',
+      totalRevenue: '--',
       makeOfferType: 1 // 1单个nft报价 2 对集合报价
     }
   },
   computed: {
     user () {
       return this.$store.state.user;
+    },
+    config () {
+      return this.$store.state.config;
     }
   },
   methods: {
@@ -137,6 +142,14 @@ export default {
         console.log(e)
         this.$parent.acceptDialogBtnLoading = false
       }
+      this.floorDiff = this.tokenInfo.ckCollectionsInfoEntity.foolPrice !== 0
+        ? (parseFloat(keepPoint(this.nftPrice * 100 / this.tokenInfo.ckCollectionsInfoEntity.foolPrice, 2)) + '%')
+        : '--'
+      let basePrice = new BigNumber(this.$sdk.fromWeiNumOrigin(this.acceptInfo.basePrice))
+      let creatorFee = basePrice.multipliedBy(this.tokenInfo.ckCollectionsInfoEntity.royalty / 1000).div(100)
+      let serviceFee = basePrice.multipliedBy((parseInt(this.config.protocolFee)) / 1000).div(100)
+      console.log(basePrice.minus(creatorFee).minus(serviceFee).valueOf())
+      this.totalRevenue = keepPoint(basePrice.minus(creatorFee).minus(serviceFee).valueOf(), 6)
     },
     // 挂单开始
     // 注册地址
@@ -198,22 +211,40 @@ export default {
       buyer.basePrice = buyer.basePrice.toString()
       buyer.tokenId = this.tokenInfo.tokenId
       let seller = null
+      console.log(this.tokenInfo.ckCollectionsInfoEntity)
       if (this.makeOfferType === 1) {
-        seller = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, buyer.contract, 1, buyer.tokenId)
+        seller = this.$sdk.makeOrder({
+          exchangeAddress: process.env.VUE_APP_MARKET_EXCHANGE,
+          sender: this.user.coinbase,
+          nftAddress: buyer.contract,
+          side: 1,
+          tokenId: buyer.tokenId,
+          RelayerFee: this.tokenInfo.ckCollectionsInfoEntity.royalty,
+          feeType: 2
+        })
       } else {
-        seller = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, buyer.contract, 1, buyer.tokenId, true, buyer.maker)
+        seller = this.$sdk.makeOrder({
+          exchangeAddress: process.env.VUE_APP_MARKET_EXCHANGE,
+          sender: this.user.coinbase,
+          nftAddress: buyer.contract,
+          side: 1,
+          tokenId: buyer.tokenId,
+          isMaker: true,
+          buyerAddress: buyer.maker,
+          RelayerFee: this.tokenInfo.ckCollectionsInfoEntity.royalty,
+          feeType: 2
+        })
       }
       seller = {
         ...seller,
-        makerRelayerFee: 0,                           // 版税  default: 0 挂单版税卖家出在此设置
-        takerRelayerFee: 100,                            // 版税  default: 0
-        makerProtocolFee: 0,                         // 手续费  default: 0 挂单手续费卖家出在此设置
-        takerProtocolFee: 100,                           // 手续费  default: 0
+        // makerRelayerFee: 0,                           // 版税  default: 0 挂单版税卖家出在此设置
+        // takerRelayerFee: 100,                            // 版税  default: 0
+        // makerProtocolFee: 0,                         // 手续费  default: 0 挂单手续费卖家出在此设置
+        // takerProtocolFee: 100,                           // 手续费  default: 0
         taker: buyer.maker,
         expirationTime: buyer.expirationTime,
         paymentToken: process.env.VUE_APP_WETH,
         listingTime: buyer.listingTime,
-        // feeRecipient: this.$sdk.FEE_ADDRESS(),
         basePrice: buyer.basePrice
       }
       const arrayParams = [

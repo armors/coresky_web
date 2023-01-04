@@ -4,6 +4,7 @@ import utils from "./utils";
 import constants from "./constants";
 import BigNumber from 'bignumber.js'
 import {BIG_TEN} from './bigBumer'
+import store from "@/store";
 
 var Web3 = require("web3");
 const eth_util = require("ethereumjs-util");
@@ -358,9 +359,12 @@ export default {
 	 * @param tokenId
 	 * @param isMaker 是否是集合报价
 	 * @param buyerAddress 集合挂单的时候buyer地址
+	 * @param feeType 费用类型2 为报价 接受报价
+	 * @param RelayerFee 版税费率
+	 * @param feeRecipient 版税 接收账户 default: 0x0 买方和买方必须有一个是零地址
 	 * @returns {{howToCall: number, side: number, salt: number, staticExtradata: string, _sender: *, listingTime: number, maker: *, makerRelayerFee: number, takerProtocolFee: number, target: *, paymentToken: string, staticTarget: string, takerRelayerFee: number, calldata: *, expirationTime: number, extra: number, exchange: *, saleKind: number, taker: string, makerProtocolFee: number, feeRecipient: string, feeMethod: number, replacementPattern: (string), basePrice: BigNumber}}
 	 */
-	makeOrder(exchangeAddress, sender, nftAddress, side = 0, tokenId = null, isMaker=false, buyerAddress = '') {
+	makeOrder({exchangeAddress, sender, nftAddress, side = 0, tokenId = null, isMaker=false, buyerAddress = '', feeType = 1, RelayerFee = 100, feeRecipient = ZERO_ADDRESS}) {
 		let calldata = null
 		let replacementPattern = null
 		if (isMaker) {
@@ -374,15 +378,25 @@ export default {
 				: this.buyERC721ABI(sender, tokenId)) : '0x'
 			replacementPattern = side === 1 ? encodeERC721ReplacementPatternSell : encodeERC721ReplacementPatternBuy
 		}
+		let makerRelayerFee = RelayerFee                   // 版税  default: 0 挂单版税卖家出在此设置
+		let takerRelayerFee = 0                            // 版税  default: 0
+		let makerProtocolFee = parseInt(store.state.config.protocolFee)  // 手续费  default: 0 挂单手续费卖家出在此设置
+		let takerProtocolFee = 0                           // 手续费  default: 0
+		if(feeType === 2) {
+			makerRelayerFee = 0                   // 版税  default: 0 挂单版税卖家出在此设置
+			takerRelayerFee = RelayerFee                            // 版税  default: 0
+			makerProtocolFee = 0  // 手续费  default: 0 挂单手续费卖家出在此设置
+			takerProtocolFee = parseInt(store.state.config.protocolFee)                           // 手续费  default: 0
+		}
 		return {
 			exchange: exchangeAddress,                     // 当前 exhcnage 合约地址 default : exchangeAddress
 			maker: sender,                                 // 订单创建者 default sender
 			taker: ZERO_ADDRESS,                           // 订单参与者 require
-			makerRelayerFee: 100,                           // 版税  default: 0 挂单版税卖家出在此设置
-			takerRelayerFee: 0,                            // 版税  default: 0
-			makerProtocolFee: 100,                         // 手续费  default: 0 挂单手续费卖家出在此设置
-			takerProtocolFee: 0,                           // 手续费  default: 0
-			feeRecipient: ZERO_ADDRESS,                    // 版税 接收账户 default: 0x0 买方和买方必须有一个是零地址
+			makerRelayerFee: makerRelayerFee,                           // 版税  default: 0 挂单版税卖家出在此设置
+			takerRelayerFee: takerRelayerFee,                            // 版税  default: 0
+			makerProtocolFee: makerProtocolFee,                         // 手续费  default: 0 挂单手续费卖家出在此设置
+			takerProtocolFee: takerProtocolFee,                           // 手续费  default: 0
+			feeRecipient: feeRecipient,                    // 版税 接收账户 default: 0x0 买方和买方必须有一个是零地址
 			feeMethod: 1,                                  // enum FeeMethod { ProtocolFee, SplitFee }  费用收取方法：只用支付协议费，或者 是需要同时支付协议费 和 平台费
 			side: side,                                    // enum Side { Buy, Sell } 该订单是 卖方单 还是 买方单
 			saleKind: 0,                                    // { FixedPrice, DutchAuction } 销售方式是 固定价格，还是采用 竞拍的方式
@@ -822,6 +836,9 @@ export default {
 	},
 	fromWeiNum(value) {
 		return value !== null ? keepPoint(Web3.utils.fromWei(value.toString(), "ether")) : '--';
+	},
+	fromWeiNumOrigin(value) {
+		return value !== null ? Web3.utils.fromWei(value.toString(), "ether") : '--';
 	},
 	async getBalance(asset, owner) {
 		var web3 = await utils_web3.getWeb3();

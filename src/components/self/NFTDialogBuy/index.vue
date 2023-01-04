@@ -136,7 +136,15 @@ export default {
           r: this.tokenInfo.ckOrdersEntity.r
         }
       }
-      let buyParams = this.$sdk.makeOrder(process.env.VUE_APP_MARKET_EXCHANGE, this.user.coinbase, this.tokenInfo.contract, 0, this.tokenInfo.tokenId)
+      let buyParams = this.$sdk.makeOrder({
+        exchangeAddress: process.env.VUE_APP_MARKET_EXCHANGE,
+        sender: this.user.coinbase,
+        nftAddress: this.tokenInfo.contract,
+        side: 0,
+        tokenId: this.tokenInfo.tokenId,
+        // feeRecipient: this.tokenInfo.ckCollectionsInfoEntity.feeContract,
+        RelayerFee: this.tokenInfo.ckCollectionsInfoEntity.royalty
+      })
       console.log(seller)
       let buyer = {
         ...buyParams,
@@ -175,23 +183,27 @@ export default {
         // console.log('orderCalldataCanMatch', await this.$sdk.orderCalldataCanMatch(buyer, seller))
         // console.log('buy validateOrder_', await this.$sdk.validateOrder_(buyer))
         // console.log('sell validateOrder_', await this.$sdk.validateOrder_(seller))
-        const hashAtomicMatch = await this.$sdk.atomicMatch(seller, buyer, this.user.coinbase, this.user.coinbase);
-        console.log(hashAtomicMatch)
-        if (typeof hashAtomicMatch == "object" && hashAtomicMatch.error) {
+        try {
+          const hashAtomicMatch = await this.$sdk.atomicMatch(seller, buyer, this.user.coinbase, this.user.coinbase);
+          console.log(hashAtomicMatch)
+          if (typeof hashAtomicMatch == "object" && hashAtomicMatch.error) {
+            this.buyBtnLoading = false
+            return
+          }
+          this.hash = hashAtomicMatch.transactionHash
+          console.log(hashAtomicMatch)
+          const res = await this.$api("order.finish", {
+            "orderId": this.tokenInfo.ckOrdersEntity.id,
+            "txHash": hashAtomicMatch.transactionHash,
+            "taker": this.user.coinbase,
+          })
+          console.log(res)
           this.buyBtnLoading = false
-          return
+          this.isBuyOver = true // 展示交易hash值
+          this.$emit('buySuccess', hashAtomicMatch)
+        } catch (e) {
+          console.log(e)
         }
-        this.hash = hashAtomicMatch.transactionHash
-        console.log(hashAtomicMatch)
-        const res = await this.$api("order.finish", {
-          "orderId": this.tokenInfo.ckOrdersEntity.id,
-          "txHash": hashAtomicMatch.transactionHash,
-          "taker": this.user.coinbase,
-        })
-        console.log(res)
-        this.buyBtnLoading = false
-        this.isBuyOver = true // 展示交易hash值
-        this.$emit('buySuccess', hashAtomicMatch)
       } catch (e) {
         console.log(e)
         this.buyBtnLoading = false

@@ -14,7 +14,9 @@ export default {
     unread: 0,
   },
   config: {
-    loginMessage: "o8UtoUHbQu1wlNCIbkPDvPA7EiInFIKd75zT9gprPIrdqBh"
+    loginMessage: "o8UtoUHbQu1wlNCIbkPDvPA7EiInFIKd75zT9gprPIrdqBh",
+    protocolFee: '100',
+    protocolFeeHan: '--'
   },
   gasTracker: null,
   web3: {
