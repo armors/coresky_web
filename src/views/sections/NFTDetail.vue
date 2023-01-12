@@ -103,7 +103,7 @@
                   <!--                  </el-icon>-->
                 </div>
               </template>
-              <div class="card-body">
+              <div class="card-body" style="height: 279px">
                 <div class="flex-detial-list">
                   <div class="flex-detial">
                     <span class="name">Token ID</span>
@@ -115,7 +115,7 @@
                   </div>
                   <div class="flex-detial">
                     <span class="name">Token Standard</span>
-                    <span class="value">ERC721</span>
+                    <span class="value">{{tokenInfo.contractType === 1 ? 'ERC1155' : 'ERC721'}}</span>
                   </div>
                   <div class="flex-detial line">
                   </div>
@@ -161,7 +161,7 @@
             <span>{{tokenInfo.ckCollectionsInfoEntity.name}} #{{tokenInfo.tokenId}}</span>
             <div class="icon_shoucang" :class="{active: tokenInfo.followStatus}" alt="" @click="followNft" />
           </div>
-          <div class="nft-address">
+          <div class="nft-address" v-if="tokenInfo.contractType === 0">
             <div class="add-item">
               <div class="creator">Creator</div>
               <div class="creator-name">{{$filters.ellipsisAddress(tokenInfo.ckCollectionsInfoEntity.owner)}}</div>
@@ -169,6 +169,23 @@
             <div>
               <div class="creator">Current owner</div>
               <div class="creator-name">{{$filters.ellipsisAddress(tokenInfo.address)}}</div>
+            </div>
+          </div>
+          <div class="display-flex box-center-Y erc1155 nft-address" v-if="tokenInfo.contractType === 1">
+            <div class="box-flex1 display-flex box-center-Y">
+              <div class="icon-img"><img src="@/assets/images/icons/icon_detail_owner.svg" alt=""></div>
+              <div class="tip">Owner</div>
+              <div>{{tokenInfo.ckCollectionsInfoEntity.holder}}</div>
+            </div>
+            <div class="box-flex1 display-flex box-center-Y">
+              <div class="icon-img"><img src="@/assets/images/icons/icon_detail_item.svg" alt=""></div>
+              <div class="tip">Item</div>
+              <div>{{tokenInfo.ckCollectionsInfoEntity.total}}</div>
+            </div>
+            <div class="box-flex1 display-flex box-center-Y">
+              <div class="icon-img"><img src="@/assets/images/icons/icon_detail_own.svg" alt=""></div>
+              <div class="tip">You own</div>
+              <div>{{tokenInfo.ownersEntityList.length}}</div>
             </div>
           </div>
           <div class="nft-bid-box">
@@ -236,7 +253,7 @@
                   <!--                  </el-icon>-->
                 </div>
               </template>
-              <div class="card-body price-history" style="height:200px">
+              <div class="card-body price-history" style="height:177px">
                 <div id="priceHistory"></div>
               </div>
             </el-collapse-item>
@@ -249,13 +266,15 @@
               <template #title>
                 <div class="card-head">
                   <img class="icon" src="@/assets/images/icons/icon_offers.svg" alt="">
-                  <span class="card-title">Offers</span>
+                  <span class="card-title">Listings</span>
                   <!--                  <el-icon class="down">-->
                   <!--                    <ArrowUp />-->
                   <!--                  </el-icon>-->
                 </div>
               </template>
-              <div class="card-body" style="height:480px;padding:0;overflow: auto;">
+              <div class="card-body" style="height:480px;padding:0;overflow: auto;" :style="{
+                height: tokenInfo.contractType === 0 ? '480px' : '156px'
+              }">
                 <div class="offer-list">
                   <div class="list-tr head top0">
                     <div class="list-th th25">Price</div>
@@ -277,6 +296,47 @@
                         :loading="cancelMakeOfferBtnLoading" @click="cancelMakeOffer(v)">Cancel</el-button>
                       <el-button type="primary" class="btnAccept" v-else :disabled="!isSelf"
                         :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT(v)">Accept</el-button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </el-collapse-item>
+          </el-collapse>
+        </div>
+        <div class="card-wrap mt30" v-if="tokenInfo.contractType === 1">
+          <el-collapse v-model="activeName3" accordion>
+            <el-collapse-item title="Consistency" name="1">
+              <template #title>
+                <div class="card-head">
+                  <img class="icon" src="@/assets/images/icons/icon_offer.svg" alt="">
+                  <span class="card-title">Offers</span>
+                  <!--                  <el-icon class="down">-->
+                  <!--                    <ArrowUp />-->
+                  <!--                  </el-icon>-->
+                </div>
+              </template>
+              <div class="card-body" style="height:279px;padding:0;overflow: auto;">
+                <div class="offer-list">
+                  <div class="list-tr head top0">
+                    <div class="list-th th25">Price</div>
+                    <div class="list-th th25">Exporation</div>
+                    <div class="list-th th25">From</div>
+                    <div class="list-th th25 center">Status</div>
+                  </div>
+
+                  <div class="list-tr" v-for="(v, i) of ckAuctionEntityList" :key="`make-offer-${i}`">
+                    <div class="list-th th25">
+                      <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
+                      {{nftPriceFun(v.basePrice)}}
+                    </div>
+                    <div class="list-th th25">{{$filters.timeFormat(v.createTime)}}</div>
+                    <div class="list-th th25 purple" @click="goExplore(v.maker)">
+                      {{$filters.ellipsisAddress(v.maker, 4)}}</div>
+                    <div class="list-th th25 center">
+                      <el-button type="primary" class="btnAccept" v-if="isSelfMakeOffer(v)"
+                                 :loading="cancelMakeOfferBtnLoading" @click="cancelMakeOffer(v)">Cancel</el-button>
+                      <el-button type="primary" class="btnAccept" v-else :disabled="!isSelf"
+                                 :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT(v)">Accept</el-button>
                     </div>
                   </div>
                 </div>
@@ -599,7 +659,7 @@ export default {
         if (that.countDownFun(that.countDownTime) === "倒计时结束") {
           clearInterval(that.countDownFn); //清除定时器
         } else {
-          that.countDownTime = that.countDownFun(that.tokenInfo.ckOrdersEntity.expirationTime);
+          that.countDownTime = that.countDownFun(that.tokenInfo.expirationTime);
         }
       }, 1000);
     },
@@ -867,6 +927,24 @@ export default {
         font-size: 14px;
         line-height: 21px;
         color: $primaryColor;
+      }
+      &.erc1155{
+        font-style: normal;
+        font-weight: 500;
+        font-size: 14px;
+        color: $primaryColor;
+        padding-top: 26px;
+        padding-bottom: 10px;
+        .tip{
+          font-size: 12px;
+          color: $color-black3;
+          margin-right: 4px;
+        }
+        .icon-img{
+          width: 18px;
+          height: 18px;
+          margin-right: 6px;
+        }
       }
     }
     .nft-bid-box {

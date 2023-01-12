@@ -82,7 +82,8 @@ export default {
       if (this.address) {
         this.$api("user.info", { address: this.address }).then((res) => {
           if (this.$tools.checkResponse(res)) {
-            this.account = res.data
+            this.account = res.debug
+            console.log(this.account)
             // this.account.info = 'Here is a self introduction Here is a self introduction Here is a self introduction'
           } else {
             this.$tools.message(res.errmsg);

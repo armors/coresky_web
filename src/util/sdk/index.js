@@ -18,6 +18,8 @@ const encodeERC1155ReplacementPatternSell     = '0x00000000000000000000000000000
 const encodeERC1155ReplacementPatternBuy      = '0x00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
 const encodeERC721OfferReplacementPatternBuy  = '0x00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
 const encodeERC721OfferReplacementPatternSell = '0x'
+const encodeERC1155OfferReplacementPatternBuy  = '0x00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
+const encodeERC1155OfferReplacementPatternSell = '0x'
 const contract_ABI = [
 	"function transferFrom(address from, address to, uint256 tokenId)",
 	"function safeTransferFrom(address _from, address _to, uint256 _id, uint256 _value, bytes calldata _data)",
@@ -347,8 +349,19 @@ export default {
 		}
 		return iface.encodeFunctionData("transferFrom", [seller, to, id]);
 	},
-	 ERC721ABI(from, to, id) {
+	// get 1155 sell calldata
+	sellERC1155ABI(seller, id, value) {
+		return iface.encodeFunctionData("safeTransferFrom", [seller, ZERO_ADDRESS, id, value, '0x']);
+	},
+	// get 1155 buy calldata
+	buyERC1155ABI(buyer, id, value) {
+		return iface.encodeFunctionData("safeTransferFrom", [ZERO_ADDRESS, buyer, id, value, '0x']);
+	},
+	ERC721ABI(from, to, id) {
 		return iface.encodeFunctionData("transferFrom", [from, to, id]);
+	},
+	ERC1155ABI( from, to, id, value ) {
+		return iface.encodeFunctionData("safeTransferFrom", [from, to, id, value, '0x']);
 	},
 	/**
 	 * 订单数据结构初始化
@@ -362,21 +375,37 @@ export default {
 	 * @param feeType 费用类型2 为报价 接受报价
 	 * @param RelayerFee 版税费率
 	 * @param feeRecipient 版税 接收账户 default: 0x0 买方和买方必须有一个是零地址
+	 * @param contractType 合约类型 0是ERC721    1是ERC1155
+	 * @param value 此项目中表示交易的nft的数量
 	 * @returns {{howToCall: number, side: number, salt: number, staticExtradata: string, _sender: *, listingTime: number, maker: *, makerRelayerFee: number, takerProtocolFee: number, target: *, paymentToken: string, staticTarget: string, takerRelayerFee: number, calldata: *, expirationTime: number, extra: number, exchange: *, saleKind: number, taker: string, makerProtocolFee: number, feeRecipient: string, feeMethod: number, replacementPattern: (string), basePrice: BigNumber}}
 	 */
-	makeOrder({exchangeAddress, sender, nftAddress, side = 0, tokenId = null, isMaker=false, buyerAddress = '', feeType = 1, RelayerFee = 100, feeRecipient = ZERO_ADDRESS}) {
+	makeOrder({exchangeAddress, sender, nftAddress, side = 0, tokenId = null, isMaker=false, buyerAddress = '', feeType = 1, RelayerFee = 100, feeRecipient = ZERO_ADDRESS, contractType = 0, value = 1}) {
 		let calldata = null
 		let replacementPattern = null
-		if (isMaker) {
-			calldata = (side === 1 ?
-				this.ERC721ABI(sender, buyerAddress, tokenId)
-				: this.ERC721ABI(ZERO_ADDRESS, sender, 0))
-			replacementPattern = side === 1 ? encodeERC721OfferReplacementPatternSell : encodeERC721OfferReplacementPatternBuy
+		if (isMaker) { // 是否是挂单
+			if (contractType === 0) { // 是否是erc721
+				calldata = (side === 1 ? // 是否是卖家
+					this.ERC721ABI(sender, buyerAddress, tokenId)
+					: this.ERC721ABI(ZERO_ADDRESS, sender, 0))
+				replacementPattern = side === 1 ? encodeERC721OfferReplacementPatternSell : encodeERC721OfferReplacementPatternBuy
+			} else {
+				calldata = (side === 1 ?// 是否是卖家
+					this.ERC1155ABI(sender, buyerAddress, tokenId, value)
+					: this.ERC1155ABI(ZERO_ADDRESS, sender, 0, value))
+				replacementPattern = side === 1 ? encodeERC1155OfferReplacementPatternSell : encodeERC1155OfferReplacementPatternBuy
+			}
 		} else {
-			calldata = tokenId !== null ? (side === 1 ?
-				this.sellERC721ABI(sender, tokenId)
-				: this.buyERC721ABI(sender, tokenId)) : '0x'
-			replacementPattern = side === 1 ? encodeERC721ReplacementPatternSell : encodeERC721ReplacementPatternBuy
+			if (contractType === 0) { // 是否是erc721
+				calldata = tokenId !== null ? (side === 1 ? // 是否是卖家
+					this.sellERC721ABI(sender, tokenId)
+					: this.buyERC721ABI(sender, tokenId)) : '0x'
+				replacementPattern = side === 1 ? encodeERC721ReplacementPatternSell : encodeERC721ReplacementPatternBuy
+			} else {
+				calldata = tokenId !== null ? (side === 1 ?
+					this.sellERC1155ABI(sender, tokenId, value)
+					: this.buyERC1155ABI(sender, tokenId, value)) : '0x'
+				replacementPattern = side === 1 ? encodeERC1155ReplacementPatternSell : encodeERC1155ReplacementPatternBuy
+			}
 		}
 		let makerRelayerFee = RelayerFee                   // 版税  default: 0 挂单版税卖家出在此设置
 		let takerRelayerFee = 0                            // 版税  default: 0
