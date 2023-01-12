@@ -1,17 +1,16 @@
 <template>
   <div class="launchpadItem-wrap">
     <div class="head">
-      <image-box src="https://i.seadn.io/gcs/files/d54bb731a10636767f8ed4ba7eb9a4b9.png?auto=format&w=256">
+      <image-box :src="dataInfo.image">
       </image-box>
-      <div class="title">TNOkibont</div>
-      <svg-icon icon-class="tag_01" />
+      <div class="title">{{dataInfo.name}}</div>
+      <svg-icon icon-class="tag_01" v-if="dataInfo.isCertification==='1'" />
     </div>
     <div class="flex-wrap">
       <div class="flex-left">
         <div class="banner-wrap">
           <div class="box-img">
-            <image-box
-              src="https://storage.nfte.ai/asset/collection/featured/42673bda-bf33-439b-91a3-b4b005aa6ead.png?x-oss-process=image/resize,m_fill,w_504,h_252,limit_0" />
+            <image-box :src="dataInfo.bannerImage" />
           </div>
           <div class="banner-swiper">
             <div class="banner-item">
@@ -34,19 +33,28 @@
         </div>
         <el-tabs v-model="activeName" class="demo-tabs" @tab-change="handleClick">
           <el-tab-pane label="Highlights" name="Highlights" :lazy="true">
-            <div class="describe-txt" v-html="html">
+            <div v-for="(item,index) in introduceList" :key="index">
+              <div class="describe-txt" v-if="item.type==='text'" v-html="item.content">
+              </div>
+              <el-image class="describe-img" :src="item.content" v-if="item.type==='image'" :initial-index="2000">
+              </el-image>
             </div>
           </el-tab-pane>
           <el-tab-pane label="Team" name="Team" :lazy="true">
-            <div class="describe-txt" v-html="html">
-            </div>
-            <image-box class="describe-img"
-              src="https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840" />
-            <div class="describe-txt" v-html="html">
+            <div v-for="(item,index) in teamIntroList" :key="index">
+              <div class="describe-txt" v-if="item.type==='text'" v-html="item.content">
+              </div>
+              <el-image class="describe-img" :src="item.content" v-if="item.type==='image'" :initial-index="2000">
+              </el-image>
             </div>
           </el-tab-pane>
           <el-tab-pane label="Roadmap" name="Roadmap" :lazy="true">
-            Roadmap
+            <div v-for="(item,index) in roadmapList" :key="index">
+              <div class="describe-txt" v-if="item.type==='text'" v-html="item.content">
+              </div>
+              <el-image class="describe-img" :src="item.content" v-if="item.type==='image'" :initial-index="2000">
+              </el-image>
+            </div>
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -55,73 +63,73 @@
           <div class="info-txt1">There is still time to start betting</div>
           <div class="time-wrap">
             <div class="item">
-              <div class="num">0</div>
+              <div class="num">{{countDownData.d||'--'}}</div>
               <div class="time-txt">DAYS</div>
             </div>
-            <div class="split">
-              :
-            </div>
+            <div class="split">:</div>
             <div class="item">
-              <div class="num">12</div>
+              <div class="num">{{countDownData.h||'--'}}</div>
               <div class="time-txt">HRS</div>
             </div>
-            <div class="split">
-              :
-            </div>
+            <div class="split">:</div>
             <div class="item">
-              <div class="num">44</div>
+              <div class="num">{{countDownData.m||'--'}}</div>
               <div class="time-txt">MINS</div>
             </div>
-            <div class="split">
-              :
-            </div>
+            <div class="split">:</div>
             <div class="item">
-              <div class="num">36</div>
+              <div class="num">{{countDownData.s||'--'}}</div>
               <div class="time-txt">SECS</div>
             </div>
           </div>
           <div class="flex-between">
             <div class="item">
               <div class="txt1">Launch price</div>
-              <div class="txt2">0.08 ETH</div>
+              <div class="txt2">{{ numberParse(dataInfo.price,4) }} {{ payment[dataInfo.payment] }}</div>
             </div>
             <div class="item">
               <div class="txt1">launch quantity</div>
-              <div class="txt2">10,000</div>
+              <div class="txt2">{{numberParse(dataInfo.total)}}</div>
             </div>
           </div>
           <div class="label-list">
             <div class="item">
               <div class="label">Number of lottery tickets in the prize pool: </div>
-              <div class="val">189, 234</div>
+              <div class="val">{{ dataInfo.countInfo&&numberParse(dataInfo.countInfo.totalCount) }}</div>
             </div>
             <div class="item">
-              <div class="label">Number of lottery tickets in the prize pool: </div>
-              <div class="val">189, 234</div>
+              <div class="label">Number of lottery tickets I have played : </div>
+              <div class="val">{{ dataInfo.countInfo&&numberParse(dataInfo.countInfo.currentCount) }}</div>
             </div>
             <div class="item">
-              <div class="label">Number of lottery tickets in the prize pool: </div>
-              <div class="val">189, 234</div>
+              <div class="label">Number of tickets I hold: </div>
+              <div class="val">{{ dataInfo.countInfo&&numberParse(dataInfo.countInfo.myTotalCount) }}</div>
             </div>
           </div>
           <div>
-            <el-button type="primary" class="btnOption" @click="isShowAcceptDialog=false">查看中奖结果</el-button>
+            <el-button type="primary" :disabled="disabledBet" class="btnOption" @click="showLaunchpadBetDialog">
+              Betting</el-button>
           </div>
           <div style="margin-top:34px;text-align: center;">
-            <a target="_blank" class="link" href="http://www.baidu.com">开奖规则</a>
-            <a target="_blank" class="link" href="http://www.baidu.com">服务条款</a>
+            <a target="_blank" class="link" :href="dataInfo.rewardLink">Lottery rules</a>
+            <a target="_blank" class="link" :href="dataInfo.privacyLink">Privacy Policy</a>
           </div>
         </div>
         <div class="table-wrap">
           <div class="table-title">我的下注记录</div>
-          <el-table :data="tableData2" height="250" style="width: 100%">
-            <el-table-column align="left" prop="code" label="中奖号" width="120">
+          <el-table :data="betList" height="250" style="width: 100%">
+            <el-table-column align="left" prop="code" label="中奖号" width="160">
               <template #default="props">
-                <a class="link">0012…6384</a>
+                <div class="txt3" v-for="(item) in props.row.records" :key="item"><a
+                    class="link">{{$filters.ellipsisAddress(item)}}</a></div>
               </template>
             </el-table-column>
-            <el-table-column align="center" prop="num" label="投入彩票数" width="120" />
-            <el-table-column align="center" prop="datetime" label="时间" />
+            <el-table-column align="center" prop="listCount" label="投入彩票数" width="120" />
+            <el-table-column align="center" prop="datetime" label="时间">
+              <template #default="scope">
+                {{ dateParse(scope.row.date) }}
+              </template>
+            </el-table-column>
           </el-table>
         </div>
         <div class="table-wrap">
@@ -144,16 +152,28 @@
         </div>
       </div>
     </div>
+    <launchpadBetDialog ref="launchpadBetDialogRef" />
   </div>
 </template>
 <script>
+import BigNumber from "bignumber.js";
+import dayjs from 'dayjs';
+import launchpadBetDialog from './components/launchpadBetDialog'
 export default {
   mixins: [],
   name: 'launchpadItem',
-  components: {},
+  components: { launchpadBetDialog },
   data () {
     return {
-      tableData2:[],
+      dataInfo: {},
+      roadmapList: [],
+      teamIntroList: [],
+      introduceList: [],
+      tableData2: [],
+      payment: {
+        '0x0000000000000000000000000000000000000000': 'ETH',
+        '0x55d398326f99059fF775485246999027B3197955': 'USDT'
+      },
       tableData: [
         {
           code: '0012…6384',
@@ -162,10 +182,12 @@ export default {
         },
       ],
       activeName: 'Highlights',
-      html: `A good place to start is: what is Polkastarter? (We’ll give you the brief version). Polkastarter is a platform that connects young projects …A good place to start is: what is Polkastarter? (We’ll give you the brief version). Polkastarter is a platform that connects young projects A good place to start is: what is Polkastarter? (We’ll give you the brief version). Polkastarter is a platform that connects young projects A good place to start is: what is Polkastarter? (We’ll give you the brief version). Polkastarter is a 
-
-platform that connects young projects A good place to start is: what is Polkastarter? (We’ll give you the brief version). Polkastarter is a platform that connects young projects A good place to start is: what is Polkastarter? (We’ll give you the brief version). Polkastarter is a platform that connects young projects A good place to start is: what is Polkastarter? (We’ll give you the brief version). Polkastarter is a platform that connects young projects A good place to start is: what is Polkastarter? (We’ll give you the brief version). Polkastarter is a platform that connects young projects `
-    };
+      countDown: undefined,
+      countDownData: {},
+      disabledBet: true,
+      betList: [],
+      winList: [],
+    }
   },
   watch: {
   },
@@ -185,12 +207,130 @@ platform that connects young projects A good place to start is: what is Polkasta
       var user = this.$store.state.user;
       return user;
     },
+    contract: function () {
+      return '0xeb1e502410bb45e51907b88b0ea9a08fb575d3c9'
+    }
   },
   methods: {
-    init () {
+    dateParse (time) {
+      return dayjs.unix(time).format('YYYY-MM-DD HH:mm:ss')
+    },
+    showLaunchpadBetDialog () {
+      this.$refs.launchpadBetDialogRef.show(this.dataInfo)
+    },
+    numberParse (val, maxLen = 0) {
+      let big = new BigNumber(new BigNumber(val).toFixed(maxLen, 1)).toFormat()
+      return big
+    },
+    //倒计时
+    countDownFun (time) {
+      let startTime = new Date(); //当前时间
+      let end = new Date(time * 1000); //结束时间
+      let result = parseInt((end - startTime) / 1000); //计算出豪秒
+      let M = parseInt(result / (24 * 60 * 60 * 30)); //用总共的秒数除以月30天的秒数
+      let d = parseInt(result / (24 * 60 * 60)); //用总共的秒数除以1天的秒数
+      let h = parseInt((result / (60 * 60)) % 24); //精确小时，用去余
+      let m = parseInt((result / 60) % 60); //剩余分钟就是用1小时等于60分钟进行趣余
+      let s = parseInt(result % 60);
+      //当倒计时结束时，改变内容
+      if (result <= 0) {
+        return null
+      }
+      if (M < 10) {
+        M = "0" + M;
+      }
+      if (d < 10) {
+        d = "0" + d;
+      }
+      if (h < 10) {
+        h = "0" + h;
+      }
+      if (m < 10) {
+        m = "0" + m;
+      }
+      if (s < 10) {
+        s = "0" + s;
+      }
+      return {
+        M,
+        d,
+        h,
+        m,
+        s,
+      }
+    },
+    getBetList () {
+      this.$api("launchpad.bet", {
+        contract: this.contract,
+        state: 0,
+      }).then((res) => {
+        this.betList = res.debug
+      })
+    },
+    getwinList () {
+      this.$api("launchpad.bet", {
+        contract: this.contract,
+        state: 1,
+      }).then((res) => {
+        this.winList = res.debug
+      })
+    },
+    getInfo () {
+      this.$api("launchpad.info", {
+        contract: this.contract,
+      }).then((res) => {
+        this.dataInfo = res.debug
+        this.roadmapList = []
+        this.teamIntroList = []
+        this.introduceList = []
+        if (!!this.dataInfo.roadmap) {
+          this.roadmapList = JSON.parse(this.dataInfo.roadmap) || []
+        }
+        if (!!this.dataInfo.teamIntro) {
+          this.teamIntroList = JSON.parse(this.dataInfo.teamIntro) || []
+        }
+        if (!!this.dataInfo.introduce) {
+          this.introduceList = JSON.parse(this.dataInfo.introduce) || []
+        }
+        if (this.dataInfo.startTime * 1000 < new Date().getTime() && this.dataInfo.endTime * 1000 > new Date().getTime()) {
+          this.disabledBet = false
+        }
+        else {
+          this.disabledBet = true
+        }
+        this.getwinList()
+        // if (this.dataInfo.rewardTime * 1000 < new Date().getTime()) {
+        //   this.getwinList()
+        // }
+        if (this.dataInfo.endTime * 1000 > new Date().getTime()) {
+          this.countDown = setInterval(() => {
+            let time = this.countDownFun(this.dataInfo.endTime)
+            if (!!time) {
+              this.countDownData = time
+            }
+            else {
+              clearInterval(this.countDown);
+              this.countDownData = {
+                M: '00',
+                d: '00',
+                h: '00',
+                m: '00',
+                s: '00',
+              }
+            }
+          }, 1000);
+        }
 
+      })
+    },
+    init () {
+      this.getInfo()
+      this.getBetList()
     },
   },
+  beforeUnmount () {
+    clearInterval(this.countDown)
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -262,7 +402,9 @@ platform that connects young projects A good place to start is: what is Polkasta
         color: $color-black3;
         line-height: 26px;
         white-space: pre-line;
+        word-break: break-all;
       }
+
       .describe-img {
         margin-bottom: 20px;
         height: auto;
@@ -420,6 +562,10 @@ platform that connects young projects A good place to start is: what is Polkasta
     background-color: $bgPurple;
     height: 4px;
   }
+}
+.txt3 {
+  color: $bgPurple;
+  line-height: 24px;
 }
 </style>
 
