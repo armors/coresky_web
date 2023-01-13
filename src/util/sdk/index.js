@@ -5,12 +5,12 @@ import constants from "./constants";
 import BigNumber from 'bignumber.js'
 import {BIG_TEN} from './bigBumer'
 import store from "@/store";
-
-var Web3 = require("web3");
-const eth_util = require("ethereumjs-util");
 import web3 from "@/util/web3/index.js";
 import {ethers} from 'ethers'
 import {keepPoint} from "@/filters";
+
+var Web3 = require("web3");
+const eth_util = require("ethereumjs-util");
 
 const encodeERC721ReplacementPatternSell      = '0x000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000';
 const encodeERC721ReplacementPatternBuy       = '0x00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
@@ -53,6 +53,12 @@ export default {
 	async getMarketWrapContract() {
 		let abi = utils.contractAbi("MARKET_WRAP");
 		return await utils.contractAt({abi}, process.env.VUE_APP_NFT_MARKET_WRAP);
+	},
+	// erc1155合约
+	async getERC1155(address) {
+		let abi = utils.contractAbi("ERC1155");
+		console.log(abi)
+		return await utils.contractAt(abi, address);
 	},
 	// 注册合约进行注册地址
 	async getOwnerProxy(address) {
@@ -677,6 +683,17 @@ export default {
 		try {
 			return await contract.isApprovedForAll(owner, operator);
 		} catch (e) {
+			return {error: e.message};
+		}
+	},
+	async getERC1155Amount(contractAddress, tokenId, sender) {
+		let contract = await this.getERC1155(contractAddress);
+		console.log(contract)
+		if (contract.error) return contract;
+		try {
+			return await contract.balanceOf(sender, tokenId)
+		} catch (e) {
+			console.log(e)
 			return {error: e.message};
 		}
 	},

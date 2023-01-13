@@ -28,6 +28,12 @@
           </el-select>
         </div>
       </el-form-item>
+      <el-form-item :label="`Quantity (Available:  ${nftAmount1155})`" prop="quantity">
+        <div class="flex-content">
+          <el-input v-model="form.quantity" size="large" style="width:100%;" />
+          <el-button @click="form.quantity = nftAmount1155" type="primary" class="btnBuy ml20" style="width:180px;flex-shrink: 0;margin-top: 0" >MAX</el-button>
+        </div>
+      </el-form-item>
       <el-form-item label="Expiration date" prop="time">
         <div class="flex-content">
           <el-date-picker v-model="form.time" size="large" type="datetime" placeholder="Pick a Date" style=""
@@ -74,17 +80,22 @@ export default {
   name: "index",
   data () {
     return {
+      nftAmount1155: 0,
       isShowSellDialog: false,
       sellBtnLoading: false,
       form: {
         price: '',
         date: '',
         time: '',
-        symbol: 'ETH'
+        symbol: 'ETH',
+        quantity: ''
       },
       rules: {
         price: [
           { required: true, message: 'Please input price', trigger: 'blur' },
+        ],
+        quantity: [
+          { required: true, message: 'Please input quantity', trigger: 'blur' },
         ],
         time: [
           { required: true, message: 'Please Pick a Date', trigger: 'change' },
@@ -138,12 +149,21 @@ export default {
       this.tokenInfo.tokenId = parseInt(this.tokenInfo.tokenId)
       console.log(this.tokenInfo)
       try {
+        const amount = await this.$sdk.getERC1155Amount(this.tokenInfo.contract, this.tokenInfo.tokenId, this.user.coinbase)
+        console.log(amount)
+        if (typeof amount == 'object' && amount.error) {
+          this.$parent.sellDialogBtnLoading = false
+          return
+        }
+        this.nftAmount1155 = amount
         await this.getRegistryOwner()
+        console.log(this.tokenInfo.contractType)
         let order = {
-          type: 'IERC721',
+          type: this.tokenInfo.contractType === 0 ? "IERC721" : "IERC1155",
           address: this.tokenInfo.contract,
           tokenId: this.tokenInfo.tokenId,
         };
+        console.log(order)
         this.isApproved = await this.$sdk.isApprovedForAll(
           order,
           this.user.coinbase,
@@ -172,7 +192,7 @@ export default {
     // 授权
     async setApproveAll () {
       let order = {
-        type: 'IERC721',
+        type: this.tokenInfo.contractType === 0 ? "IERC721" : "IERC1155",
         address: this.tokenInfo.contract,
         tokenId: this.tokenInfo.tokenId,
       };
@@ -185,6 +205,7 @@ export default {
       if (typeof isApproved == "object" && isApproved.error) {
         return isApproved;
       }
+      this.sellBtnLoading = true
       if (!isApproved) {
         let result = await this.$sdk.setApprovalForAll(
           order,
@@ -228,7 +249,9 @@ export default {
         side: 1,
         tokenId: this.tokenInfo.tokenId,
         feeRecipient: this.tokenInfo.ckCollectionsInfoEntity.feeContract,
-        RelayerFee: this.tokenInfo.ckCollectionsInfoEntity.royalty
+        RelayerFee: this.tokenInfo.ckCollectionsInfoEntity.royalty,
+        contractType: this.tokenInfo.contractType,
+        value: Number(this.form.quantity)
       })
       seller.expirationTime = new Date(this.form.time).getTime() / 1000;
       // seller.expirationTime = 0;
@@ -335,7 +358,8 @@ export default {
             s: sig.s,
             hash: hashToSign,
             sign: JSON.stringify(sig),
-            basePrice: this.$Web3.utils.toWei(this.form.price)
+            basePrice: this.$Web3.utils.toWei(this.form.price),
+            amount: Number(this.form.quantity)
           }
         }
         console.log(orderParams)

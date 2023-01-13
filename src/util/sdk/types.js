@@ -52,6 +52,7 @@ const AssetType = {
   "ETH": 0,
   "ERC20": 1,
   "ERC721": 3,
+  "ERC1155": 6,
   "ERC721Deprecated": 4,
   "WETH": 5,
 }

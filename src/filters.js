@@ -53,10 +53,21 @@ export function contractExplore(hash) {
     href: `${process.env.VUE_APP_EXPLORE}/address/${hash}`
   }
 }
-export function milliFormat(num) {
+export function milliFormat(num, isK =true) {
   if (!num) return '--'
+  if (isK) {
+    if (num > 10000) {
+      num = keepPoint(num / 10000, 1)
+      return num && num.toString()
+        .replace(/\d+/, (s) => s.replace(/(\d)(?=(\d{3})+$)/g, '$1,'))
+    } else {
+      return num && num.toString()
+        .replace(/\d+/, (s) => s.replace(/(\d)(?=(\d{3})+$)/g, '$1,'))
+    }
+  }
   return num && num.toString()
     .replace(/\d+/, (s) => s.replace(/(\d)(?=(\d{3})+$)/g, '$1,'))
+
   // return (
   //   num &&
   //   num.toString().replace(/\d+/, function(s) {

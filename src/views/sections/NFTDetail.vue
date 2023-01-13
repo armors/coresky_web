@@ -260,7 +260,7 @@
           </el-collapse>
 
         </div>
-        <div class="card-wrap mt30">
+        <div class="card-wrap mt30" v-if="tokenInfo.contractType === 1">
           <el-collapse v-model="activeName3" accordion>
             <el-collapse-item title="Consistency" name="1">
               <template #title>
@@ -272,22 +272,24 @@
                   <!--                  </el-icon>-->
                 </div>
               </template>
-              <div class="card-body" style="height:480px;padding:0;overflow: auto;" :style="{
+              <div class="card-body" style="height:156px;padding:0;overflow: auto;" :style="{
                 height: tokenInfo.contractType === 0 ? '480px' : '156px'
               }">
                 <div class="offer-list">
                   <div class="list-tr head top0">
                     <div class="list-th th25">Price</div>
+                    <div class="list-th th25">Quantity</div>
                     <div class="list-th th25">Exporation</div>
                     <div class="list-th th25">From</div>
                     <div class="list-th th25 center">Status</div>
                   </div>
 
-                  <div class="list-tr" v-for="(v, i) of ckAuctionEntityList" :key="`make-offer-${i}`">
+                  <div class="list-tr" v-for="(v, i) of ckOrdersEntityList" :key="`listing-item-${i}`">
                     <div class="list-th th25">
                       <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
                       {{nftPriceFun(v.basePrice)}}
                     </div>
+                    <div class="list-th th25">{{$filters.milliFormat(v.amount)}}</div>
                     <div class="list-th th25">{{$filters.timeFormat(v.createTime)}}</div>
                     <div class="list-th th25 purple" @click="goExplore(v.maker)">
                       {{$filters.ellipsisAddress(v.maker, 4)}}</div>
@@ -295,7 +297,7 @@
                       <el-button type="primary" class="btnAccept" v-if="isSelfMakeOffer(v)"
                         :loading="cancelMakeOfferBtnLoading" @click="cancelMakeOffer(v)">Cancel</el-button>
                       <el-button type="primary" class="btnAccept" v-else :disabled="!isSelf"
-                        :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT(v)">Accept</el-button>
+                        :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT(v)">Buy</el-button>
                     </div>
                   </div>
                 </div>
@@ -303,8 +305,8 @@
             </el-collapse-item>
           </el-collapse>
         </div>
-        <div class="card-wrap mt30" v-if="tokenInfo.contractType === 1">
-          <el-collapse v-model="activeName3" accordion>
+        <div class="card-wrap mt30">
+          <el-collapse v-model="activeName5" accordion>
             <el-collapse-item title="Consistency" name="1">
               <template #title>
                 <div class="card-head">
@@ -315,7 +317,9 @@
                   <!--                  </el-icon>-->
                 </div>
               </template>
-              <div class="card-body" style="height:279px;padding:0;overflow: auto;">
+              <div class="card-body" style="height:279px;padding:0;overflow: auto;" :style="{
+                height: tokenInfo.contractType === 0 ? '435px' : '279px'
+              }">
                 <div class="offer-list">
                   <div class="list-tr head top0">
                     <div class="list-th th25">Price</div>
@@ -431,6 +435,7 @@ export default {
       activeName2: '1',
       activeName3: '1',
       activeName4: '1',
+      activeName5: '1',
       cancelMakeOfferBtnLoading: false,
       buyBtnLoading: false,
       cancelBtnLoading: false,
@@ -473,6 +478,7 @@ export default {
       tokenEventListOrigin: [],
       tokenEventType: ['Chain'],
       ckAuctionEntityList: [],
+      ckOrdersEntityList: [],
       historyPrice: [],
       myChart: null,
       isCart: false,
@@ -682,6 +688,7 @@ export default {
         this.tokenInfo = res.debug
         // this.tokenInfo.ckCollectionsInfoEntity.floorPrice = '0.02'
         this.ckAuctionEntityList = this.tokenInfo.ckAuctionEntityList || []
+        this.ckOrdersEntityList = this.tokenInfo.ckOrdersEntityList || []
         this.nftPrice = this.$sdk.fromWeiNum(this.tokenInfo.ckOrdersEntity ? this.tokenInfo.ckOrdersEntity.basePrice : this.tokenInfo.basePrice)
         console.log(this.tokenInfo.bestPrice)
         this.bestPrice = this.$sdk.fromWeiNum(this.tokenInfo.bestPrice)
