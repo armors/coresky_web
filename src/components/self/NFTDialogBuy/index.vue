@@ -21,6 +21,16 @@
       </div>
       <div class="price-box">
         <div class="label">
+          Quantity
+        </div>
+        <div class="price-wrap">
+          <span class="buy-price">
+            {{$filters.milliFormat(sellInfo.amount)}}
+          </span>
+        </div>
+      </div>
+      <div class="price-box">
+        <div class="label">
           Price
         </div>
         <div class="price-wrap">
@@ -58,17 +68,6 @@ export default {
       isBuyOver: false,
       isShowBuyDialog: false,
       buyBtnLoading: false,
-      form: {
-        price: '',
-        date: '',
-        time: '',
-        symbol: ''
-      },
-      rules: {
-        price: [
-          { required: true, message: 'Please input price', trigger: 'blur' },
-        ],
-      },
       options: [
         {
           value: 'ETH',
@@ -95,7 +94,8 @@ export default {
       ],
       tokenInfo: {},
       nftPrice: '--',
-      hash: ''
+      hash: '',
+      sellInfo: null
     }
   },
   computed: {
@@ -104,36 +104,41 @@ export default {
     }
   },
   methods: {
-    async showBuy (tokenInfo) {
+    async showBuy (tokenInfo, v = null) {
       this.isBuyOver = false
       this.tokenInfo = tokenInfo
+      if (this.tokenInfo.contractType ===0) {
+        this.sellInfo = this.tokenInfo.ckOrdersEntityList[0]
+      } else {
+        console.log(v)
+        this.sellInfo = v
+      }
       const ethBalance = await this.$sdk.getBalance({
         address: this.$sdk.NULL_ADDRESS()
       }, this.user.coinbase)
       if (new BigNumber(ethBalance).isLessThan(
-        this.$sdk.fromWeiNum(this.tokenInfo.ckOrdersEntity.basePrice)
+        this.$sdk.fromWeiNum(this.sellInfo.basePrice)
       )) {
         this.$tools.message('No Enough Balance Of ETH');
         return
       }
-
       this.tokenInfo.tokenId = parseInt(this.tokenInfo.tokenId)
       this.isShowBuyDialog = true
-      this.nftPrice = this.$sdk.fromWeiNum(this.tokenInfo.ckOrdersEntity.basePrice)
+      this.nftPrice = this.$sdk.fromWeiNum(this.sellInfo.basePrice)
       console.log(this.tokenInfo)
     },
     async buyNft () {
       this.buyBtnLoading = true
-      let seller = this.$sdk.getAtomicMatchWrapOrder(this.tokenInfo.ckOrdersEntity, false)
+      let seller = this.$sdk.getAtomicMatchWrapOrder(this.sellInfo, false)
       seller = {
         ...seller,
         ...{
-          _sender: this.tokenInfo.ckOrdersEntity.maker,
+          _sender: this.sellInfo.maker,
           basePrice: seller.basePrice.toString(),
           // basePrice: ethers.BigNumber.from(seller.basePrice.toString()),
-          v: this.tokenInfo.ckOrdersEntity.v,
-          s: this.tokenInfo.ckOrdersEntity.s,
-          r: this.tokenInfo.ckOrdersEntity.r
+          v: this.sellInfo.v,
+          s: this.sellInfo.s,
+          r: this.sellInfo.r
         }
       }
       let buyParams = this.$sdk.makeOrder({
@@ -143,7 +148,9 @@ export default {
         side: 0,
         tokenId: this.tokenInfo.tokenId,
         // feeRecipient: this.tokenInfo.ckCollectionsInfoEntity.feeContract,
-        RelayerFee: this.tokenInfo.ckCollectionsInfoEntity.royalty
+        RelayerFee: this.tokenInfo.ckCollectionsInfoEntity.royalty,
+        contractType: this.tokenInfo.contractType,
+        value: this.sellInfo.amount
       })
       console.log(seller)
       let buyer = {
@@ -174,15 +181,15 @@ export default {
             sign: JSON.stringify(sigBuyer),
           }
         }
-        console.log(buyer)
-        console.log(seller)
-        // console.log('sell validateOrderParameters', await this.$sdk.validateOrderParameters(seller))
-        // console.log('buy validateOrderParameters', await this.$sdk.validateOrderParameters(buyer))
+        console.log(JSON.stringify(buyer))
+        console.log(JSON.stringify(seller))
+        console.log('sell validateOrderParameters', await this.$sdk.validateOrderParameters(seller))
+        console.log('buy validateOrderParameters', await this.$sdk.validateOrderParameters(buyer))
         // console.log(JSON.stringify(buyer), JSON.stringify(seller))
-        // console.log('orderCanMatch', await this.$sdk.orderCanMatch(buyer, seller))
-        // console.log('orderCalldataCanMatch', await this.$sdk.orderCalldataCanMatch(buyer, seller))
-        // console.log('buy validateOrder_', await this.$sdk.validateOrder_(buyer))
-        // console.log('sell validateOrder_', await this.$sdk.validateOrder_(seller))
+        console.log('orderCanMatch', await this.$sdk.orderCanMatch(buyer, seller))
+        console.log('orderCalldataCanMatch', await this.$sdk.orderCalldataCanMatch(buyer, seller))
+        console.log('buy validateOrder_', await this.$sdk.validateOrder_(buyer))
+        console.log('sell validateOrder_', await this.$sdk.validateOrder_(seller))
         try {
           const hashAtomicMatch = await this.$sdk.atomicMatch(seller, buyer, this.user.coinbase, this.user.coinbase);
           console.log(hashAtomicMatch)
@@ -193,7 +200,7 @@ export default {
           this.hash = hashAtomicMatch.transactionHash
           console.log(hashAtomicMatch)
           const res = await this.$api("order.finish", {
-            "orderId": this.tokenInfo.ckOrdersEntity.id,
+            "orderId": this.sellInfo.id,
             "txHash": hashAtomicMatch.transactionHash,
             "taker": this.user.coinbase,
           })

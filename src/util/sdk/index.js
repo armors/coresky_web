@@ -343,6 +343,9 @@ export default {
 		}
 
 	},
+	ERC721ABI(from, to, id) {
+		return iface.encodeFunctionData("transferFrom", [from, to, id]);
+	},
 	buyERC721ABI(buyer, id, from) {
 		if (!from) {
 			from = ZERO_ADDRESS;
@@ -355,19 +358,17 @@ export default {
 		}
 		return iface.encodeFunctionData("transferFrom", [seller, to, id]);
 	},
+	ERC1155ABI( from, to, id, value ) {
+		return iface.encodeFunctionData("safeTransferFrom", [from, to, id, value, '0x']);
+	},
 	// get 1155 sell calldata
 	sellERC1155ABI(seller, id, value) {
 		return iface.encodeFunctionData("safeTransferFrom", [seller, ZERO_ADDRESS, id, value, '0x']);
 	},
 	// get 1155 buy calldata
 	buyERC1155ABI(buyer, id, value) {
+		console.log(buyer, id, value)
 		return iface.encodeFunctionData("safeTransferFrom", [ZERO_ADDRESS, buyer, id, value, '0x']);
-	},
-	ERC721ABI(from, to, id) {
-		return iface.encodeFunctionData("transferFrom", [from, to, id]);
-	},
-	ERC1155ABI( from, to, id, value ) {
-		return iface.encodeFunctionData("safeTransferFrom", [from, to, id, value, '0x']);
 	},
 	/**
 	 * 订单数据结构初始化
@@ -660,7 +661,7 @@ export default {
 				// value: new BigNumber(1.5).multipliedBy(new BigNumber(seller.basePrice)),
 			}
 		}
-		console.log('atomicMatch')
+		console.log('atomicMatch', pa)
 		try {
 			let tx = await contract.atomicMatch_(
 				...params,

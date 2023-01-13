@@ -29,31 +29,35 @@
       <div class="info-box">
         <div class="title">Price</div>
         <div class="box-item">
-          <div class="left">floor price difference</div>
+          <div class="left">Floor Price Difference</div>
           <div class="right">{{floorDiff}} above</div>
         </div>
         <div class="box-item">
-          <div class="left">seller</div>
+          <div class="left">Seller</div>
           <div class="right">{{tokenInfo.ckCollectionsInfoEntity.sellReward}}</div>
         </div>
         <div class="box-item">
-          <div class="left">maturity</div>
+          <div class="left">Quantity</div>
+          <div class="right">{{$filters.milliFormat(acceptInfo.amount)}}</div>
+        </div>
+        <div class="box-item">
+          <div class="left">Maturity</div>
           <div class="right">{{$filters.timeFormatTime(acceptInfo.expirationTime)}}</div>
         </div>
       </div>
       <div class="info-box">
         <div class="title">Cost</div>
         <div class="box-item">
-          <div class="left">service charge</div>
+          <div class="left">Service Charge</div>
           <div class="right">{{config.protocolFeeHan}}</div>
         </div>
         <div class="box-item">
-          <div class="left">creator fee</div>
+          <div class="left">Creator Fee</div>
           <div class="right">{{$filters.feeFormat(this.tokenInfo.ckCollectionsInfoEntity.royalty)}}</div>
         </div>
       </div>
       <div class="total-box">
-        <div class="title">Total revenue</div>
+        <div class="title">Total Revenue</div>
         <div class="number">
           <span>{{totalRevenue}} WETH</span>
           <span>$4.79</span>
@@ -127,7 +131,7 @@ export default {
       try {
         await this.getRegistryOwner()
         let order = {
-          type: 'IERC721',
+          type: this.tokenInfo.contractType === 0 ? "IERC721" : "IERC1155",
           address: this.tokenInfo.contract,
           tokenId: this.tokenInfo.tokenId,
         };
@@ -166,7 +170,7 @@ export default {
     // 授权
     async setApproveAll () {
       let order = {
-        type: 'IERC721',
+        type: this.tokenInfo.contractType === 0 ? "IERC721" : "IERC1155",
         address: this.tokenInfo.contract,
         tokenId: this.tokenInfo.tokenId,
       };
@@ -220,7 +224,9 @@ export default {
           side: 1,
           tokenId: buyer.tokenId,
           RelayerFee: this.tokenInfo.ckCollectionsInfoEntity.royalty,
-          feeType: 2
+          feeType: 2,
+          contractType: this.tokenInfo.contractType,
+          value: this.acceptInfo.amount
         })
       } else {
         seller = this.$sdk.makeOrder({
@@ -232,7 +238,9 @@ export default {
           isMaker: true,
           buyerAddress: buyer.maker,
           RelayerFee: this.tokenInfo.ckCollectionsInfoEntity.royalty,
-          feeType: 2
+          feeType: 2,
+          contractType: this.tokenInfo.contractType,
+          value: this.acceptInfo.amount
         })
       }
       seller = {
@@ -312,6 +320,7 @@ export default {
             s: sig.s,
             hash: hashToSign,
             sign: JSON.stringify(sig),
+            amount: this.acceptInfo.amount
           }
         })
         console.log(orderCreate)

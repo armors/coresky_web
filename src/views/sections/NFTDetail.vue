@@ -220,10 +220,10 @@
               <template v-if="isSelf">
                 <el-button type="primary" class="btnBuy" v-if="!tokenInfo.state" :loading="sellDialogBtnLoading"
                   @click="showSellNft">Sell Now</el-button>
-                <el-button type="primary" class="btnBuy" v-else :loading="cancelBtnLoading" @click="cancelSell">Cancel
+                <el-button type="primary" class="btnBuy" v-else-if="tokenInfo.contractType === 0" :loading="cancelBtnLoading" @click="cancelSell">Cancel
                   Sell</el-button>
               </template>
-              <el-button type="primary" class="btnBuy" v-else-if="tokenInfo.state" @click="showBuyNft">Buy Now
+              <el-button type="primary" class="btnBuy" v-else-if="tokenInfo.state && tokenInfo.contractType === 0" @click="showBuyNft">Buy Now
               </el-button>
               <!--              <el-button class="btnBlack" v-if="!isSelf && !isCart" :disabled="!(!isSelf && !isCart) || !tokenInfo.contract || !tokenInfo.state"-->
               <el-button class="btnBlack" :disabled="!(!isSelf && !isCart) || !tokenInfo.contract || !tokenInfo.state"
@@ -295,9 +295,9 @@
                       {{$filters.ellipsisAddress(v.maker, 4)}}</div>
                     <div class="list-th th25 center">
                       <el-button type="primary" class="btnAccept" v-if="isSelfMakeOffer(v)"
-                        :loading="cancelMakeOfferBtnLoading" @click="cancelMakeOffer(v)">Cancel</el-button>
-                      <el-button type="primary" class="btnAccept" v-else :disabled="!isSelf"
-                        :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT(v)">Buy</el-button>
+                        :loading="cancelMakeOfferBtnLoading" @click="cancelSell(v)">Cancel</el-button>
+                      <el-button type="primary" class="btnAccept" v-else :disabled="isSelf"
+                        :loading="acceptDialogBtnLoading" @click="showBuyNft(v)">Buy</el-button>
                     </div>
                   </div>
                 </div>
@@ -318,11 +318,12 @@
                 </div>
               </template>
               <div class="card-body" style="height:279px;padding:0;overflow: auto;" :style="{
-                height: tokenInfo.contractType === 0 ? '435px' : '279px'
+                height: tokenInfo.contractType === 0 ? '570px' : '279px'
               }">
                 <div class="offer-list">
                   <div class="list-tr head top0">
                     <div class="list-th th25">Price</div>
+                    <div class="list-th th25">Quantity</div>
                     <div class="list-th th25">Exporation</div>
                     <div class="list-th th25">From</div>
                     <div class="list-th th25 center">Status</div>
@@ -333,6 +334,7 @@
                       <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
                       {{nftPriceFun(v.basePrice)}}
                     </div>
+                    <div class="list-th th25">{{$filters.milliFormat(v.amount)}}</div>
                     <div class="list-th th25">{{$filters.timeFormat(v.createTime)}}</div>
                     <div class="list-th th25 purple" @click="goExplore(v.maker)">
                       {{$filters.ellipsisAddress(v.maker, 4)}}</div>
@@ -689,10 +691,10 @@ export default {
         // this.tokenInfo.ckCollectionsInfoEntity.floorPrice = '0.02'
         this.ckAuctionEntityList = this.tokenInfo.ckAuctionEntityList || []
         this.ckOrdersEntityList = this.tokenInfo.ckOrdersEntityList || []
-        this.nftPrice = this.$sdk.fromWeiNum(this.tokenInfo.ckOrdersEntity ? this.tokenInfo.ckOrdersEntity.basePrice : this.tokenInfo.basePrice)
+        this.nftPrice = this.$sdk.fromWeiNum(this.tokenInfo.basePrice)
         console.log(this.tokenInfo.bestPrice)
         this.bestPrice = this.$sdk.fromWeiNum(this.tokenInfo.bestPrice)
-        if (this.tokenInfo.ckOrdersEntity !== null) {
+        if (this.tokenInfo.ckOrdersEntityList.length > 0) {
           this.countDown()
         }
         this.historyPrice = this.tokenInfo.historyPrice
@@ -748,23 +750,27 @@ export default {
         this.cancelMakeOfferBtnLoading = false
       }
     },
-    async cancelSell () {
+    async cancelSell (cancelItem = null) {
       this.cancelBtnLoading = true
-      let seller = this.$sdk.getAtomicMatchWrapOrder(this.tokenInfo.ckOrdersEntity, false)
+      if (this.tokenInfo.contractType === 0 && cancelItem === null) {
+        cancelItem = this.tokenInfo.ckOrdersEntityList[0]
+      }
+      let seller = this.$sdk.getAtomicMatchWrapOrder(cancelItem, false)
       seller = {
         ...seller,
         ...{
           basePrice: seller.basePrice.toString(),
-          v: this.tokenInfo.ckOrdersEntity.v,
-          s: this.tokenInfo.ckOrdersEntity.s,
-          r: this.tokenInfo.ckOrdersEntity.r
+          v: cancelItem.v,
+          s: cancelItem.s,
+          r: cancelItem.r
         }
       }
+      console.log(seller)
       try {
         const hash = await this.$sdk.cancelOrder_(seller, this.user.coinbase);
         console.log(hash)
         this.$api("order.cancel", {
-          id: this.tokenInfo.ckOrdersEntity.id,
+          id: cancelItem.id,
           type: this.$sdk.valueOrderType("SALE")
         }).then((res) => {
           this.cancelBtnLoading = false
@@ -776,8 +782,8 @@ export default {
         this.cancelBtnLoading = false
       }
     },
-    showBuyNft () {
-      this.$refs.NFTDialogBuy.showBuy(this.tokenInfo)
+    showBuyNft (v) {
+      this.$refs.NFTDialogBuy.showBuy(this.tokenInfo, v)
     },
     nftPriceFun (basePrice) {
       return basePrice !== null ? this.$filters.keepPoint(this.$Web3.utils.fromWei(basePrice.toString())) : '--'

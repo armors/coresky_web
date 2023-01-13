@@ -28,6 +28,12 @@
           </el-select>
         </div>
       </el-form-item>
+      <el-form-item :label="`Quantity`" prop="quantity" v-if="tokenInfo.contractType === 1">
+        <div class="flex-content">
+          <el-input v-model="form.quantity" size="large" style="width:100%;" />
+<!--          <el-button @click="form.quantity = nftAmount1155" type="primary" class="btnBuy ml20" style="width:180px;flex-shrink: 0;margin-top: 0" >MAX</el-button>-->
+        </div>
+      </el-form-item>
       <el-form-item label="Expiration date" prop="time">
         <div class="flex-content">
           <el-date-picker v-model="form.time" size="large" type="datetime" placeholder="Pick a Date" style=""
@@ -74,7 +80,8 @@ export default {
         price: '',
         date: '',
         time: '',
-        symbol: 'WETH'
+        symbol: 'WETH',
+        quantity: ''
       },
       rules: {
         price: [
@@ -128,6 +135,24 @@ export default {
     },
     async showMakeOffer (tokenInfo, makeOfferType = 1) {
       this.tokenInfo = tokenInfo
+      this.rules = this.tokenInfo.contractType === 0 ? {
+        price: [
+          { required: true, message: 'Please input price', trigger: 'blur' },
+        ],
+        time: [
+          { required: true, message: 'Please Pick a Date', trigger: 'change' },
+        ],
+      } : {
+        price: [
+          { required: true, message: 'Please input price', trigger: 'blur' },
+        ],
+        quantity: [
+          { required: true, message: 'Please input quantity', trigger: 'blur' },
+        ],
+        time: [
+          { required: true, message: 'Please Pick a Date', trigger: 'change' },
+        ],
+      }
       const wethBalance = await this.$sdk.getBalance({
         address: process.env.VUE_APP_WETH
       }, this.user.coinbase)
@@ -169,7 +194,9 @@ export default {
           tokenId: this.tokenInfo.tokenId,
           feeRecipient: this.tokenInfo.ckCollectionsInfoEntity.feeContract,
           RelayerFee: this.tokenInfo.ckCollectionsInfoEntity.royalty,
-          feeType: 2
+          feeType: 2,
+          contractType: this.tokenInfo.contractType,
+          value: Number(this.form.quantity)
         })
       } else { // 集合报价
         buyer = this.$sdk.makeOrder({
@@ -182,6 +209,8 @@ export default {
           feeRecipient: this.tokenInfo.ckCollectionsInfoEntity.feeContract,
           RelayerFee: this.tokenInfo.ckCollectionsInfoEntity.royalty,
           feeType: 2,
+          contractType: this.tokenInfo.contractType,
+          value: Number(this.form.quantity)
         })
       }
       buyer = {
@@ -218,6 +247,7 @@ export default {
           r: sigBuyer.r,
           s: sigBuyer.s,
           sign: JSON.stringify(sigBuyer),
+          amount: Number(this.form.quantity)
         }
       }
       console.log(buyer)

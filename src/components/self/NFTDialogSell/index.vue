@@ -28,7 +28,7 @@
           </el-select>
         </div>
       </el-form-item>
-      <el-form-item :label="`Quantity (Available:  ${nftAmount1155})`" prop="quantity">
+      <el-form-item :label="`Quantity (Available:  ${nftAmount1155})`" prop="quantity" v-if="tokenInfo.contractType === 1">
         <div class="flex-content">
           <el-input v-model="form.quantity" size="large" style="width:100%;" />
           <el-button @click="form.quantity = nftAmount1155" type="primary" class="btnBuy ml20" style="width:180px;flex-shrink: 0;margin-top: 0" >MAX</el-button>
@@ -90,17 +90,7 @@ export default {
         symbol: 'ETH',
         quantity: ''
       },
-      rules: {
-        price: [
-          { required: true, message: 'Please input price', trigger: 'blur' },
-        ],
-        quantity: [
-          { required: true, message: 'Please input quantity', trigger: 'blur' },
-        ],
-        time: [
-          { required: true, message: 'Please Pick a Date', trigger: 'change' },
-        ],
-      },
+      rules: null,
       options: [
         {
           value: 'ETH',
@@ -147,6 +137,24 @@ export default {
       this.isShowSellDialog = true
       this.tokenInfo = tokenInfo
       this.tokenInfo.tokenId = parseInt(this.tokenInfo.tokenId)
+      this.rules = this.tokenInfo.contractType === 0 ? {
+        price: [
+          { required: true, message: 'Please input price', trigger: 'blur' },
+        ],
+        time: [
+          { required: true, message: 'Please Pick a Date', trigger: 'change' },
+        ],
+      } : {
+        price: [
+          { required: true, message: 'Please input price', trigger: 'blur' },
+        ],
+        quantity: [
+          { required: true, message: 'Please input quantity', trigger: 'blur' },
+        ],
+        time: [
+          { required: true, message: 'Please Pick a Date', trigger: 'change' },
+        ],
+      }
       console.log(this.tokenInfo)
       try {
         const amount = await this.$sdk.getERC1155Amount(this.tokenInfo.contract, this.tokenInfo.tokenId, this.user.coinbase)
