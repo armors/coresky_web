@@ -277,7 +277,7 @@
               }">
                 <div class="offer-list">
                   <div class="list-tr head top0">
-                    <div class="list-th th25">Price</div>
+                    <div class="list-th th25">Unit Price</div>
                     <div class="list-th th25">Quantity</div>
                     <div class="list-th th25">Exporation</div>
                     <div class="list-th th25">From</div>
