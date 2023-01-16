@@ -52,6 +52,11 @@ export default {
 		let abi = utils.contractAbi("MARKET_WRAP");
 		return await utils.contractAt({abi}, process.env.VUE_APP_NFT_MARKET_WRAP);
 	},
+	// launchpad铸造
+	async getLaunchpadContract() {
+		let abi = utils.contractAbi("LAUNCHPAD_WRAP");
+		return await utils.contractAt({abi}, process.env.VUE_APP_NFT_LAUNCHPAD_WRAP);
+	},
 	// 注册合约进行注册地址
 	async getOwnerProxy(address) {
 		let contract = await this.getMarketRegistryContract();

@@ -430,5 +430,9 @@ export default {
       url: "/launchpad/query",
       method: "post",
     },
+    result: {
+      url: "/launchpad/result",
+      method: "post",
+    }
   }
 };

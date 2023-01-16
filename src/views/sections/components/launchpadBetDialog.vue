@@ -100,6 +100,7 @@ export default {
     show (dataInfo) {
       this.isShowDialog = true
       this.dataInfo = dataInfo
+      this.form.count = 1
       this.form.contract = dataInfo.contract
     }
   }

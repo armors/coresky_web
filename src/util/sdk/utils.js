@@ -153,7 +153,8 @@ function contractAbi(type){
     case "WETH":
       file = require('./abi/WETH.json')
       break;
-
+    case "LAUNCHPAD_WRAP":
+      file = require('./abi/launchpad.json')
   }
   return file || {};
 }

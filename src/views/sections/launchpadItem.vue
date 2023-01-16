@@ -134,25 +134,25 @@
         </div>
         <div class="table-wrap">
           <div class="table-title">我的开奖记录</div>
-          <el-table :data="tableData2" height="250" style="width: 100%">
-            <el-table-column align="left" prop="code" label="中奖号" width="120">
-              <template #default="props">
-                <a class="link">00123747747575757…2757579283236384</a>
+          <el-table :data="winList" height="250" style="width: 100%">
+            <el-table-column align="left" prop="code" label="中奖号">
+              <template #default="scope">
+                <a class="link">{{scope.row.uuid}}</a>
               </template>
             </el-table-column>
-            <el-table-column align="center" prop="datetime" label="">
-              <template #default="props">
-                <a class="link">领奖</a>
+            <el-table-column align="center" prop="datetime" width="120">
+              <template #default="scope">
+                <el-button type="danger" link @click="mintNft(scope.row)">Mint</el-button>
               </template>
             </el-table-column>
           </el-table>
-          <div style="text-align: center;" v-if="tableData2.length>0">
+          <!-- <div style="text-align: center;" v-if="winList.length>0">
             <el-button type="primary" class="btnOption small" @click="isShowAcceptDialog=false">一键领取奖励</el-button>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
-    <launchpadBetDialog ref="launchpadBetDialogRef" />
+    <launchpadBetDialog ref="launchpadBetDialogRef" @launchpadBuy="getInfo()" />
   </div>
 </template>
 <script>
@@ -169,18 +169,11 @@ export default {
       roadmapList: [],
       teamIntroList: [],
       introduceList: [],
-      tableData2: [],
+      // tableData2: [],
       payment: {
         '0x0000000000000000000000000000000000000000': 'ETH',
         '0x55d398326f99059fF775485246999027B3197955': 'USDT'
       },
-      tableData: [
-        {
-          code: '0012…6384',
-          num: '5',
-          datetime: '2022/9/10 14:00',
-        },
-      ],
       activeName: 'Highlights',
       countDown: undefined,
       countDownData: {},
@@ -194,7 +187,11 @@ export default {
   created () {
     this.init();
   },
-  mounted () { },
+  computed: {
+    user () {
+      return this.$store.state.user;
+    },
+  },
   computed: {
     showAddress () {
       return (search) => {
@@ -208,7 +205,7 @@ export default {
       return user;
     },
     contract: function () {
-      return '0xeb1e502410bb45e51907b88b0ea9a08fb575d3c9'
+      return this.$route.params.item
     }
   },
   methods: {
@@ -268,9 +265,8 @@ export default {
       })
     },
     getwinList () {
-      this.$api("launchpad.bet", {
-        contract: this.contract,
-        state: 1,
+      this.$api("launchpad.result", {
+        contract: this.contract
       }).then((res) => {
         this.winList = res.debug
       })
@@ -322,6 +318,28 @@ export default {
         }
 
       })
+    },
+    async mintNft (item) {
+      console.log(item)
+      const launchpadContract = await this.$sdk.getLaunchpadContract()
+      console.log(item.lpId, parseInt(item.lpIndex), 1, item.calldata, JSON.parse(item.proof), {
+        from: this.user.coinbase,
+        value: this.$Web3.utils.toWei(this.dataInfo.price)
+      })
+      const result = await launchpadContract.claim(
+        item.lpId,
+        parseInt(item.lpIndex),
+        1,
+        item.calldata,
+        JSON.parse(item.proof),
+        {
+          from: this.user.coinbase,
+          value: this.$Web3.utils.toWei(this.dataInfo.price)
+        })
+      console.log(result)
+    },
+    mintERC721 () {
+
     },
     init () {
       this.getInfo()
