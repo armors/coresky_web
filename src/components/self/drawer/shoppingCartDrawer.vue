@@ -11,7 +11,7 @@
     </div>
     <div class="shopping-cart-content-head">
       <div class="left">
-        Items {{coreskyCart.length}}
+        Items {{items}}
       </div>
       <div class="right" @click="clearCart">
         <img src="@/assets/images/icons/icon_clearcart.svg" class="icon-clear" alt="">
@@ -19,25 +19,27 @@
       </div>
     </div>
     <div class="hidden-scrol shopping-cart-content">
-      <div class="shopping-item" v-for="(v, i) in coreskyCart" :key="`cart-item-${i}`">
-        <div class="shopping-info">
-          <image-box :src="v.oriImage"></image-box>
-          <div class="info-txt">
-            <div class="txt1">{{v.name || '--'}}</div>
-            <div class="txt2">ENS :Ethereum Na…</div>
-            <div class="txt3">Creator Fee {{getRate(v)}}</div>
+      <template v-for="(v, i) in coreskyCart" :key="`cart-item-p-${i}`">
+        <div class="shopping-item" v-for="(vc, ic) in v.ckOrdersEntityList" :key="`cart-item-${i}`">
+          <div class="shopping-info">
+            <image-box :src="v.oriImage"></image-box>
+            <div class="info-txt">
+              <div class="txt1">{{v.name || '--'}}</div>
+              <div class="txt2">ENS :Ethereum Na…</div>
+              <div class="txt3">Creator Fee {{getRate(vc)}}</div>
+            </div>
           </div>
-        </div>
-        <div class="shopping-price">
+          <div class="shopping-price">
           <span class="price-value">
             <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-            {{getNftPrice(v, true)}}
+            {{getNftPrice(vc, true)}}
           </span>
-          <el-icon @click="deleteCart(v)">
-            <Delete />
-          </el-icon>
+            <el-icon @click="deleteCart(v, vc.id)">
+              <Delete />
+            </el-icon>
+          </div>
         </div>
-      </div>
+      </template>
     </div>
     <div class="shopping-cart-footer">
       <div class="total-box">
@@ -79,6 +81,7 @@ export default {
       totalPrice: 0,
       totalPriceShow: 0,
       coreskyCart: [],
+      items: 0,
       ids: [],
       checkOrderData: []
     };
@@ -100,8 +103,21 @@ export default {
       removeLocalStorage([this.cartName])
       this.getCartInfo()
     },
-    deleteCart (v) {
-      const cart = this.coreskyCart.filter((item => !(item.contract === v.contract && item.tokenId === v.tokenId)))
+    deleteCart (v, id) {
+      const coreskyCartLength = this.coreskyCart.length
+      let cart = []
+      for (let i = 0;i < coreskyCartLength; i++) {
+        let item = this.coreskyCart[i]
+        if (item.contract === v.contract && item.tokenId === v.tokenId) {
+          let ckOrdersEntityList = item.ckOrdersEntityList.filter(vc => vc.id !== id)
+          if (ckOrdersEntityList.length > 0) {
+            item.ckOrdersEntityList = ckOrdersEntityList
+            cart.push(item)
+          }
+        } else {
+          cart.push(item)
+        }
+      }
       if (cart.length < 1) {
         this.clearCart()
       } else {
@@ -112,7 +128,7 @@ export default {
       this.getCartInfo()
     },
     getRate (v) {
-      return (v.ckOrdersEntity.makerRelayerFee / 1000) +'%'
+      return (v.makerRelayerFee / 1000) +'%'
     },
     getCartInfo () {
       this.totalPrice = 0
@@ -121,11 +137,15 @@ export default {
       console.log(local[this.cartName])
       let coresky_cart = local[this.cartName]
       this.ids = []
+      this.items = 0
       if (local[this.cartName] !== null) {
         this.coreskyCart = JSON.parse(coresky_cart)
-        this.coreskyCart.forEach(item => {
-          this.totalPrice = new BigNumber(this.getNftPrice(item)).plus(new BigNumber(this.totalPrice))
-          this.ids.push(item.ckOrdersEntity.id)
+        this.coreskyCart.forEach(v => {
+          this.items += v.ckOrdersEntityList.length
+          v.ckOrdersEntityList.forEach(item => {
+            this.totalPrice = new BigNumber(this.getNftPrice(item)).plus(new BigNumber(this.totalPrice))
+            this.ids.push(item.id)
+          })
         })
         this.totalPrice = this.totalPrice.toString()
         this.totalPriceShow = this.$filters.keepPoint(this.totalPrice)
@@ -138,7 +158,7 @@ export default {
       this.$emit('update:show', false)
     },
     getNftPrice(v, isShow=false) {
-      return isShow ? this.$filters.keepPoint(this.$Web3.utils.fromWei(v.ckOrdersEntity.basePrice.toString())) : this.$Web3.utils.fromWei(v.ckOrdersEntity.basePrice.toString())
+      return isShow ? this.$filters.keepPoint(this.$Web3.utils.fromWei(v.basePrice.toString())) : this.$Web3.utils.fromWei(v.basePrice.toString())
     },
     async checkOrder () {
       try {
@@ -147,7 +167,7 @@ export default {
         })
         console.log(res)
         this.checkOrderData = res.debug
-        if (this.coreskyCart.length !== this.checkOrderData.length){
+        if (this.items !== this.checkOrderData.length){
           this.$tools.message('已过滤掉无效订单，请重新确认购买');
           if (this.checkOrderData.length < 1) {
             this.clearCart()

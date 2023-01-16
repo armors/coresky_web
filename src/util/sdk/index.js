@@ -714,6 +714,7 @@ export default {
 				from: coinbase,
 			});
 		} catch (e) {
+			console.log(e)
 			return {error: e.message};
 		}
 	},

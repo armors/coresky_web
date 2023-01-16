@@ -185,7 +185,7 @@
             <div class="box-flex1 display-flex box-center-Y">
               <div class="icon-img"><img src="@/assets/images/icons/icon_detail_own.svg" alt=""></div>
               <div class="tip">You own</div>
-              <div>{{tokenInfo.youOwnAmount}}</div>
+              <div>{{youOwnAmount}}</div>
             </div>
           </div>
           <div class="nft-bid-box">
@@ -218,15 +218,15 @@
             </div>
             <div class="btn-box display-flex box-center-Y">
               <template v-if="isSelf">
-                <el-button type="primary" class="btnBuy" v-if="!tokenInfo.state" :loading="sellDialogBtnLoading"
+                <el-button type="primary" class="btnBuy" v-if="!tokenInfo.state || tokenInfo.contractType === 1" :loading="sellDialogBtnLoading"
                   @click="showSellNft">Sell Now</el-button>
-                <el-button type="primary" class="btnBuy" v-else-if="tokenInfo.contractType === 0" :loading="cancelBtnLoading" @click="cancelSell">Cancel
+                <el-button type="primary" class="btnBuy" v-if="tokenInfo.contractType === 0" :loading="cancelBtnLoading" @click="cancelSell">Cancel
                   Sell</el-button>
               </template>
               <el-button type="primary" class="btnBuy" v-else-if="tokenInfo.state && tokenInfo.contractType === 0" @click="showBuyNft">Buy Now
               </el-button>
               <!--              <el-button class="btnBlack" v-if="!isSelf && !isCart" :disabled="!(!isSelf && !isCart) || !tokenInfo.contract || !tokenInfo.state"-->
-              <el-button class="btnBlack" :disabled="!(!isSelf && !isCart) || !tokenInfo.contract || !tokenInfo.state"
+              <el-button class="btnBlack" v-if="tokenInfo.contractType === 0" :disabled="isCart || !tokenInfo.contract || !tokenInfo.state"
                 @click="addCart">Add to Cart</el-button>
               <el-button class="btnWhite" v-if="tokenInfo.contractType === 1 || (!isSelf && !this.isMakeOffer)" :disabled="!tokenInfo.contract"
                 @click="showMakeOfferNFT">Make Offer</el-button>
@@ -280,6 +280,7 @@
                     <div class="list-th th25">Exporation</div>
                     <div class="list-th th25">From</div>
                     <div class="list-th th25 center">Status</div>
+                    <div class="list-th th25 center">Cart</div>
                   </div>
 
                   <div class="list-tr" v-for="(v, i) of ckOrdersEntityList" :key="`listing-item-${i}`">
@@ -294,8 +295,11 @@
                     <div class="list-th th25 center">
                       <el-button type="primary" class="btnAccept" v-if="isSelfMakeOffer(v)"
                         :loading="cancelMakeOfferBtnLoading" @click="cancelSell(v)">Cancel</el-button>
-                      <el-button type="primary" class="btnAccept" v-else :disabled="isSelf"
+                      <el-button type="primary" class="btnAccept" v-else :disabled="isSelf1155(v)"
                         :loading="acceptDialogBtnLoading" @click="showBuyNft(v)">Buy</el-button>
+                    </div>
+                    <div class="list-th th25 center">
+                      <el-button type="primary" class="btnAccept" :disabled="isInCart1155(v.id)"  @click="addCart1155(i)">Add</el-button>
                     </div>
                   </div>
                 </div>
@@ -462,10 +466,10 @@ export default {
           label: 'Option2',
         }
       ],
+      youOwnAmount: '--',
       tokenInfo: {
         contract: '',
         tokenId: '',
-        youOwnAmount: '--',
         ckCollectionsInfoEntity: {
           bannerImage: '',
           image: ''
@@ -510,14 +514,17 @@ export default {
       return `coresky_cart_${this.$store.state.user.coinbase}`
     },
     isSelf () {
-      if (this.tokenInfo.contractType === 1) {
+      console.log(this.tokenInfo)
+      if (this.tokenInfo?.ownersEntityList) {
         let  ownerList = []
         this.tokenInfo.ownersEntityList.forEach(item => {
           ownerList.push(item.address)
         })
-        return(this.tokenInfo.address && this.user.coinbase && this.tokenInfo.address.toLowerCase() === this.user.coinbase.toLowerCase()) || ownerList.indexOf(this.user.coinbase.toLowerCase() > -1)
+        console.log(ownerList, this.user.coinbase.toLowerCase())
+        console.log(ownerList.indexOf(this.user.coinbase.toLowerCase()) > -1)
+        return ownerList.indexOf(this.user.coinbase.toLowerCase()) > -1
       } else {
-        return this.tokenInfo.address && this.user.coinbase && this.tokenInfo.address.toLowerCase() === this.user.coinbase.toLowerCase()
+        return false
       }
     },
   },
@@ -527,6 +534,9 @@ export default {
     }
   },
   methods: {
+    isSelf1155 (v) {
+      return v.maker.toLowerCase() === this.user.coinbase.toLowerCase()
+    },
     isExpired (time) {
       return time !== null ? new Date().getTime() > time * 1000 : false
     },
@@ -678,7 +688,7 @@ export default {
         }
       }, 1000);
     },
-    isInCart () {
+    isInCart (id) {
       const local = getLocalStorage(this.cartName)
       console.log(local[this.cartName])
       let coresky_cart = local[this.cartName]
@@ -692,6 +702,29 @@ export default {
         this.isCart = false
       }
     },
+    isInCart1155 (id) {
+      const local = getLocalStorage(this.cartName)
+      console.log(local[this.cartName])
+      let coresky_cart = local[this.cartName]
+      let isCart = false
+      if (local[this.cartName] !== null) {
+        coresky_cart = JSON.parse(coresky_cart)
+        const token = coresky_cart.find(item => item.contract === this.tokenInfo.contract && item.tokenId === this.tokenInfo.tokenId)
+        console.log(token)
+        if (token !== undefined) {
+          // const ckOrdersEntityListInfo = this.tokenInfo.ckOrdersEntityList
+          const ckOrdersEntityList = token.ckOrdersEntityList
+          let v = ckOrdersEntityList.find(v => v.id === id)
+          isCart = v !== undefined
+        } else {
+          isCart = false
+        }
+      } else {
+        coresky_cart = []
+        isCart = false
+      }
+      return isCart
+    },
     getTokenInfo () {
       this.$api("collect.tokenInfo", this.tokenInfoParams).then((res) => {
         this.tokenInfo = res.debug
@@ -701,10 +734,10 @@ export default {
         this.nftPrice = this.$sdk.fromWeiNum(this.tokenInfo.basePrice)
         this.tokenInfo.ownersEntityList.forEach(item => {
           if (item.address === this.user.coinbase.toLowerCase()) {
-            this.tokenInfo.youOwnAmount = item.amount
+            this.youOwnAmount = item.amount
           }
         })
-        console.log(this.tokenInfo.bestPrice)
+        console.log(this.tokenInfo)
         this.bestPrice = this.$sdk.fromWeiNum(this.tokenInfo.bestPrice)
         if (this.tokenInfo.ckOrdersEntityList.length > 0) {
           this.countDown()
@@ -816,6 +849,29 @@ export default {
       obj[this.cartName] = JSON.stringify(coresky_cart)
       setLocalStorage(obj)
       this.isInCart()
+    },
+    addCart1155 (id) {
+      this.tokenInfo.ckOrdersEntityList.map(item => {
+        if (this.isInCart1155(id)) {
+          item.isIncart = true
+        } else if (item.id === id) {
+          item.isIncart = true
+        }
+        return item
+      })
+      this.tokenInfo.ckOrdersEntityList = ckOrdersEntityList
+
+      let coresky_cart = local[this.cartName]
+      if (local[this.cartName] !== null) {
+        coresky_cart = JSON.parse(coresky_cart)
+      } else {
+        coresky_cart = []
+      }
+      console.log(coresky_cart)
+      coresky_cart.push(this.tokenInfo)
+      const obj = {}
+      obj[this.cartName] = JSON.stringify(coresky_cart)
+      setLocalStorage(obj)
     },
     showMakeOfferNFT () {
       this.$refs.NFTDialogMakeOffer.showMakeOffer(this.tokenInfo)
