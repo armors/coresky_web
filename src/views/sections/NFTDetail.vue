@@ -185,7 +185,7 @@
             <div class="box-flex1 display-flex box-center-Y">
               <div class="icon-img"><img src="@/assets/images/icons/icon_detail_own.svg" alt=""></div>
               <div class="tip">You own</div>
-              <div>{{tokenInfo.ownersEntityList.length}}</div>
+              <div>{{tokenInfo.youOwnAmount}}</div>
             </div>
           </div>
           <div class="nft-bid-box">
@@ -228,12 +228,10 @@
               <!--              <el-button class="btnBlack" v-if="!isSelf && !isCart" :disabled="!(!isSelf && !isCart) || !tokenInfo.contract || !tokenInfo.state"-->
               <el-button class="btnBlack" :disabled="!(!isSelf && !isCart) || !tokenInfo.contract || !tokenInfo.state"
                 @click="addCart">Add to Cart</el-button>
-              <el-button class="btnWhite" v-if="!isSelf && !this.isMakeOffer" :disabled="!tokenInfo.contract"
-                @click="showMakeOfferNFT">Make
-                Offer</el-button>
-              <el-button class="btnWhite" v-if="!isSelf && !this.isMakeOffer" :disabled="!tokenInfo.contract"
-                @click="showMakeOfferCollect">
-                Make Offer Collect</el-button>
+              <el-button class="btnWhite" v-if="tokenInfo.contractType === 1 || (!isSelf && !this.isMakeOffer)" :disabled="!tokenInfo.contract"
+                @click="showMakeOfferNFT">Make Offer</el-button>
+              <el-button class="btnWhite" v-if="tokenInfo.contractType === 1 || (!isSelf && !this.isMakeOffer)" :disabled="!tokenInfo.contract"
+                @click="showMakeOfferCollect">Make Offer Collect</el-button>
               <!--              <el-button v-if="isSelf && ckAuctionEntityList.length > 0" class="btnWhite"-->
               <!--                :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT">Accept</el-button>-->
               <!--              <el-button v-if="isSelf && ckAuctionEntityList.length > 0" class="btnWhite"-->
@@ -467,6 +465,7 @@ export default {
       tokenInfo: {
         contract: '',
         tokenId: '',
+        youOwnAmount: '--',
         ckCollectionsInfoEntity: {
           bannerImage: '',
           image: ''
@@ -511,7 +510,15 @@ export default {
       return `coresky_cart_${this.$store.state.user.coinbase}`
     },
     isSelf () {
-      return this.tokenInfo.address && this.user.coinbase && this.tokenInfo.address.toLowerCase() === this.user.coinbase.toLowerCase()
+      if (this.tokenInfo.contractType === 1) {
+        let  ownerList = []
+        this.tokenInfo.ownersEntityList.forEach(item => {
+          ownerList.push(item.address)
+        })
+        return(this.tokenInfo.address && this.user.coinbase && this.tokenInfo.address.toLowerCase() === this.user.coinbase.toLowerCase()) || ownerList.indexOf(this.user.coinbase.toLowerCase() > -1)
+      } else {
+        return this.tokenInfo.address && this.user.coinbase && this.tokenInfo.address.toLowerCase() === this.user.coinbase.toLowerCase()
+      }
     },
   },
   destroyed () {
@@ -692,6 +699,11 @@ export default {
         this.ckAuctionEntityList = this.tokenInfo.ckAuctionEntityList || []
         this.ckOrdersEntityList = this.tokenInfo.ckOrdersEntityList || []
         this.nftPrice = this.$sdk.fromWeiNum(this.tokenInfo.basePrice)
+        this.tokenInfo.ownersEntityList.forEach(item => {
+          if (item.address === this.user.coinbase.toLowerCase()) {
+            this.tokenInfo.youOwnAmount = item.amount
+          }
+        })
         console.log(this.tokenInfo.bestPrice)
         this.bestPrice = this.$sdk.fromWeiNum(this.tokenInfo.bestPrice)
         if (this.tokenInfo.ckOrdersEntityList.length > 0) {
