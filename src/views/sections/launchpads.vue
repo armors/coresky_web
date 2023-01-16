@@ -4,55 +4,54 @@
       <div class="title">Welcome to Coresky Launchpad !</div>
       <div class="title-sub">Coresky is a new generation NFT exchange. It aims to leading a new trend of NFT trading.
       </div>
-      <div class="banner-wrap">
-        <div class="name">HELIX - PARALLEL CITY LAND</div>
+      <div class="banner-wrap"
+        :style=" topDatInfo.bannerImage ? 'background: url('+ topDatInfo.bannerImage +') no-repeat; background-size: cover;':'' ">
+        <div class="name">{{ topDatInfo.name }}</div>
         <div class="txt">By Name of Creator</div>
-        <div class="txt"><span>10,000 items</span>. <span>0.05ETH</span></div>
+        <div class="txt">
+          <span>{{ numberParse(topDatInfo.total) }} items</span>
+          <span style="font-weight: 600;margin: 0 5px;">·</span>
+          <span>{{ numberParse(topDatInfo.price,4) }} {{ payment[topDatInfo.payment] }}</span>
+        </div>
         <div class="time-wrap">
           <div class="item">
-            <div class="num">0</div>
+            <div class="num">{{countDownData.d||'--'}}</div>
             <div class="time-txt">DAYS</div>
           </div>
-          <div class="split">
-            :
-          </div>
+          <div class="split">:</div>
           <div class="item">
-            <div class="num">12</div>
+            <div class="num">{{countDownData.h||'--'}}</div>
             <div class="time-txt">HRS</div>
           </div>
-          <div class="split">
-            :
-          </div>
+          <div class="split">:</div>
           <div class="item">
-            <div class="num">44</div>
+            <div class="num">{{countDownData.m||'--'}}</div>
             <div class="time-txt">MINS</div>
           </div>
-          <div class="split">
-            :
-          </div>
+          <div class="split">:</div>
           <div class="item">
-            <div class="num">36</div>
+            <div class="num">{{countDownData.s||'--'}}</div>
             <div class="time-txt">SECS</div>
           </div>
         </div>
-        <div class="time-wrap" v-if="false">
-          <el-button class="btn-detail" :dark="false" plain>More details >></el-button>
-        </div>
         <div class="icon-wrap">
-          <div class="icon-item">
+          <a class="icon-item" target="_blank" :href="topDatInfo.website">
             <svg-icon icon-class="websit" />
-          </div>
-          <div class="icon-item">
+          </a>
+          <a class="icon-item" target="_blank" :href="topDatInfo.twitter">
             <svg-icon icon-class="twitter" />
-          </div>
-          <div class="icon-item">
+          </a>
+          <a class="icon-item" target="_blank" :href="topDatInfo.discord">
             <svg-icon icon-class="discord" />
-          </div>
-          <div class="icon-item">
+          </a>
+          <a class="icon-item" target="_blank" :href="topDatInfo.telegram">
             <svg-icon icon-class="telegram" />
-          </div>
+          </a>
         </div>
-
+        <div>
+          <el-button class="btn-detail" @click="$router.push('/launchpad/'+topDatInfo.contract)" :dark="false" plain>
+            More details >></el-button>
+        </div>
       </div>
     </div>
     <div class="describe-wrap">
@@ -83,123 +82,45 @@
     <div class="soon-wrap">
       <div class="soon-title">Upcoming on Coresky Launchpad</div>
       <div class="soon-list">
-        <div class="soon-item">
-          <image-box src="https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840">
+        <div class="soon-item" v-for="(item,index) in showList" :key="index"
+          @click="$router.push('/launchpad/'+item.contract)">
+          <image-box :src="item.bannerImage">
           </image-box>
           <div class="soon-content">
-            <div class="item-title">Name of Collection</div>
+            <div class="item-title">{{item.name}}</div>
             <div class="item-txt">
-              <span>By</span><span class="purple">Name of Creator</span>
+              <span>By</span><span class="purple">{{item.ownerName}}</span>
             </div>
             <div class="item-info">
               <div class="item-row">
                 <div class="label">Price：</div>
-                <div class="value">0.08 ETH</div>
+                <div class="value">{{ numberParse(item.price,4) }} {{ payment[item.payment] }}</div>
               </div>
               <div class="item-row">
-                <div class="label">Price：</div>
-                <div class="value">10,000</div>
-              </div>
-              <div class="item-row">
-                <div class="label">Community</div>
-                <div class="min-icon-wrap">
-                  <div class="icon-item">
-                    <svg-icon icon-class="websit" />
-                  </div>
-                  <div class="icon-item">
-                    <svg-icon icon-class="twitter" />
-                  </div>
-                  <div class="icon-item">
-                    <svg-icon icon-class="discord" />
-                  </div>
-                  <div class="icon-item">
-                    <svg-icon icon-class="telegram" />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="item-bottom">
-              28d : 12h : 27m : 54
-            </div>
-          </div>
-        </div>
-        <div class="soon-item">
-          <image-box src="https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840">
-          </image-box>
-          <div class="soon-content">
-            <div class="item-title">Name of Collection</div>
-            <div class="item-txt">
-              <span>By</span><span class="purple">Name of Creator</span>
-            </div>
-            <div class="item-info">
-              <div class="item-row">
-                <div class="label">Price：</div>
-                <div class="value">0.08 ETH</div>
-              </div>
-              <div class="item-row">
-                <div class="label">Price：</div>
-                <div class="value">10,000</div>
+                <div class="label">Items：</div>
+                <div class="value">{{ numberParse(item.total) }}</div>
               </div>
               <div class="item-row">
                 <div class="label">Community</div>
                 <div class="min-icon-wrap">
-                  <div class="icon-item">
+                  <a class="icon-item" target="_blank" :href="item.website">
                     <svg-icon icon-class="websit" />
-                  </div>
-                  <div class="icon-item">
+                  </a>
+                  <a class="icon-item" target="_blank" :href="item.twitter">
                     <svg-icon icon-class="twitter" />
-                  </div>
-                  <div class="icon-item">
+                  </a>
+                  <a class="icon-item" target="_blank" :href="item.discord">
                     <svg-icon icon-class="discord" />
-                  </div>
-                  <div class="icon-item">
+                  </a>
+                  <a class="icon-item" target="_blank" :href="item.telegram">
                     <svg-icon icon-class="telegram" />
-                  </div>
+                  </a>
                 </div>
               </div>
             </div>
             <div class="item-bottom">
-              28d : 12h : 27m : 54
-            </div>
-          </div>
-        </div>
-        <div class="soon-item">
-          <image-box src="https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840">
-          </image-box>
-          <div class="soon-content">
-            <div class="item-title">Name of Collection</div>
-            <div class="item-txt">
-              <span>By</span><span class="purple">Name of Creator</span>
-            </div>
-            <div class="item-info">
-              <div class="item-row">
-                <div class="label">Price：</div>
-                <div class="value">0.08 ETH</div>
-              </div>
-              <div class="item-row">
-                <div class="label">Price：</div>
-                <div class="value">10,000</div>
-              </div>
-              <div class="item-row">
-                <div class="label">Community</div>
-                <div class="min-icon-wrap">
-                  <div class="icon-item">
-                    <svg-icon icon-class="websit" />
-                  </div>
-                  <div class="icon-item">
-                    <svg-icon icon-class="twitter" />
-                  </div>
-                  <div class="icon-item">
-                    <svg-icon icon-class="discord" />
-                  </div>
-                  <div class="icon-item">
-                    <svg-icon icon-class="telegram" />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="item-bottom">
-              28d : 12h : 27m : 54
+              {{item.countDownData.d}}d : {{item.countDownData.h}}h : {{item.countDownData.m}}m :
+              {{item.countDownData.s}}s
             </div>
           </div>
         </div>
@@ -218,12 +139,22 @@
   </div>
 </template>
 <script>
+import BigNumber from "bignumber.js";
+import dayjs from 'dayjs';
 export default {
   mixins: [],
   name: 'launchpads',
   components: {},
-  data: function () {
+  data () {
     return {
+      topDatInfo: {},
+      payment: {
+        '0x0000000000000000000000000000000000000000': 'ETH',
+        '0x55d398326f99059fF775485246999027B3197955': 'USDT'
+      },
+      countDown: undefined,
+      countDownData: {},
+      showList: [],
     };
   },
   watch: {
@@ -233,23 +164,108 @@ export default {
   },
   mounted () { },
   computed: {
-    showAddress () {
-      return (search) => {
-        var res =
-          search.address.slice(0, 11) + "..." + search.address.slice(-4);
-        return res;
-      };
-    },
-    user: function () {
-      var user = this.$store.state.user;
-      return user;
-    },
   },
   methods: {
+    //倒计时
+    countDownFun (time) {
+      let startTime = new Date(); //当前时间
+      let end = new Date(time * 1000); //结束时间
+      let result = parseInt((end - startTime) / 1000); //计算出豪秒
+      let M = parseInt(result / (24 * 60 * 60 * 30)); //用总共的秒数除以月30天的秒数
+      let d = parseInt(result / (24 * 60 * 60)); //用总共的秒数除以1天的秒数
+      let h = parseInt((result / (60 * 60)) % 24); //精确小时，用去余
+      let m = parseInt((result / 60) % 60); //剩余分钟就是用1小时等于60分钟进行趣余
+      let s = parseInt(result % 60);
+      //当倒计时结束时，改变内容
+      if (result <= 0) {
+        return null
+      }
+      if (M < 10) {
+        M = "0" + M;
+      }
+      if (d < 10) {
+        d = "0" + d;
+      }
+      if (h < 10) {
+        h = "0" + h;
+      }
+      if (m < 10) {
+        m = "0" + m;
+      }
+      if (s < 10) {
+        s = "0" + s;
+      }
+      return {
+        M,
+        d,
+        h,
+        m,
+        s,
+      }
+    },
+    numberParse (val, maxLen = 0) {
+      let big = new BigNumber(new BigNumber(val).toFixed(maxLen, 1)).toFormat()
+      return big
+    },
+    getTop () {
+      this.$api("launchpad.query", {
+        top: true,
+        state: 1,
+      }).then((res) => {
+        if (res.debug.listData.length > 0) {
+          this.topDatInfo = res.debug.listData[0]
+          if (this.topDatInfo.endTime * 1000 > new Date().getTime()) {
+            this.countDown = setInterval(() => {
+              let time = this.countDownFun(this.topDatInfo.endTime)
+              if (!!time) {
+                this.countDownData = time
+              }
+              else {
+                clearInterval(this.countDown);
+                this.countDownData = { M: '00', d: '00', h: '00', m: '00', s: '00' }
+              }
+            }, 1000);
+          }
+        }
+      })
+    },
+    getList () {
+      this.$api("launchpad.query", {
+        top: false,
+        state: 0,
+        page: 1,
+        limit: 3,
+      }).then((res) => {
+        this.showList = res.debug.listData.map(el => {
+          let that = this
+          let obj = el
+          obj.countDownData = {}
+          obj.countDown = setInterval(() => {
+            console.log(44)
+            let time = that.countDownFun(el.endTime)
+            if (!!time) {
+              obj.countDownData = time
+            }
+            else {
+              clearInterval(obj.countDown);
+              this.countDownData = { M: '00', d: '00', h: '00', m: '00', s: '00' }
+            }
+          }, 1000);
+          return obj
+        })
+      })
+    },
     init () {
-
+      this.getTop()
+      this.getList()
     },
   },
+  beforeUnmount () {
+    clearInterval(this.countDown)
+    for (let i = 0; i < this.showList.length; i++) {
+      clearInterval(this.showList[i].countDown);
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -282,11 +298,12 @@ export default {
       width: 1200px;
       height: 374px;
       margin: 55px auto 66px;
-      padding-top: 87px;
+      padding-top: 67px;
       padding-left: 77px;
       border-radius: 20px;
-      position: relative;
-      background: url('https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840');
+      // position: relative;
+      cursor: pointer;
+      // background: url('https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840');
       background-size: cover;
       background-position: center;
       object-fit: cover;
@@ -472,6 +489,7 @@ export default {
       .cover-image {
         width: 100%;
         height: 250px;
+        cursor: pointer;
       }
       .soon-content {
         padding: 10px 20px 15px;
@@ -515,6 +533,7 @@ export default {
           border-radius: 8px;
           text-align: center;
           font-size: 14px;
+          font-weight: 600;
         }
       }
     }

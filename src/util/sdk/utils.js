@@ -1,5 +1,4 @@
 import ethABI from 'ethereumjs-abi';
-
 const BN = require('bn.js');
 import utils_web3 from "@/util/web3/index";
 // import truffle_contract from "@truffle/contract";
@@ -7,12 +6,12 @@ import store from "@/store";
 import constants from './constants'
 
 const SolidityTypes = {
-	Address: "address",
-	Uint256: "uint256",
-	Uint8: "uint8",
-	Uint: "uint",
-	Bytes: "bytes",
-	String: "string"
+  Address: "address",
+  Uint256: "uint256",
+  Uint8: "uint8",
+  Uint: "uint",
+  Bytes: "bytes",
+  String: "string"
 }
 
 function bigNumberToBN(value) {
@@ -158,7 +157,8 @@ function contractAbi(type) {
 		case "WETH":
 			file = require('./abi/WETH.json')
 			break;
-
+    case "LAUNCHPAD_WRAP":
+      file = require('./abi/launchpad.json')
 	}
 	return file || {};
 }

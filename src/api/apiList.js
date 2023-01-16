@@ -408,8 +408,30 @@ export default {
       url: "/collections/type",
       method: "post",
     },
-    filter:{
+    filter: {
       url: "/collections/filter",
+      method: "post",
+    }
+  },
+  launchpad: {
+    info: {
+      url: "/launchpad/info",
+      method: "post",
+    },
+    buy: {
+      url: "/launchpad/buy",
+      method: "post",
+    },
+    bet: {
+      url: "/launchpad/bet",
+      method: "post",
+    },
+    query: {
+      url: "/launchpad/query",
+      method: "post",
+    },
+    result: {
+      url: "/launchpad/result",
       method: "post",
     }
   }
