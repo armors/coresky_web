@@ -106,7 +106,7 @@ export default {
     getCategoryList () {
       this.$api("collections.type").then((res) => {
         if (this.$tools.checkResponse(res)) {
-          this.categoryList = res.data;
+          this.categoryList = res.debug;
         }
       });
     },
