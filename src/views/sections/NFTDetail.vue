@@ -299,7 +299,7 @@
                         :loading="acceptDialogBtnLoading" @click="showBuyNft(v)">Buy</el-button>
                     </div>
                     <div class="list-th th25 center">
-                      <el-button type="primary" class="btnAccept" :disabled="isInCart1155(v.id)"  @click="addCart1155(i)">Add</el-button>
+                      <el-button type="primary" class="btnAccept" :disabled="isInCart1155(v.id) || isSelfSell(v.maker)"  @click="addCart1155(i)">Add</el-button>
                     </div>
                   </div>
                 </div>
@@ -702,6 +702,10 @@ export default {
         this.isCart = false
       }
     },
+    isSelfSell (maker) {
+      console.log()
+      return maker === this.user.coinbase.toLowerCase()
+    },
     isInCart1155 (id) {
       const local = getLocalStorage(this.cartName)
       console.log(local[this.cartName])
@@ -859,8 +863,7 @@ export default {
         }
         return item
       })
-      this.tokenInfo.ckOrdersEntityList = ckOrdersEntityList
-
+      const local = getLocalStorage(this.cartName)
       let coresky_cart = local[this.cartName]
       if (local[this.cartName] !== null) {
         coresky_cart = JSON.parse(coresky_cart)

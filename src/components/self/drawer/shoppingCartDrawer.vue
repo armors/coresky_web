@@ -165,6 +165,10 @@ export default {
         const res = await this.$api('order.check', {
           ids: this.ids
         })
+        if (res.code !== 200) {
+          this.buyBtnLoading = false
+          return
+        }
         console.log(res)
         this.checkOrderData = res.debug
         if (this.items !== this.checkOrderData.length){
@@ -187,17 +191,28 @@ export default {
             setLocalStorage(obj)
             this.getCartInfo()
           }
-          return {error: e.error}
+          return {
+            error: e.error,
+            code: 500
+          }
         } else {
           return res
         }
       } catch (e) {
-        return {error: e.error}
+        return {
+          error: e.error,
+          code: 500
+        }
       }
     },
     async cartBuy () {
       this.buyBtnLoading = true
       const res = await this.checkOrder()
+      if (res.code !== 200) {
+        this.$tools.message(res.errmsg || res.error);
+        this.buyBtnLoading = false
+        return
+      }
       const ethBalance = await this.$sdk.getBalance({
         address: this.$sdk.NULL_ADDRESS()
       }, this.user.coinbase)
@@ -235,8 +250,9 @@ export default {
           nftAddress: sellers[i].target,
           side: 0,
           tokenId: sellers[i].tokenId,
-          feeRecipient: sellers[i].ckCollectionsInfoEntity.feeContract,
-          RelayerFee: sellers[i].ckCollectionsInfoEntity.royalty
+          RelayerFee: sellers[i].makerRelayerFee,
+          contractType: sellers[i].contractType,
+          value: sellers[i].amount
         })
         buyer = {
           ...buyer,
@@ -310,8 +326,10 @@ export default {
         nftAddress: sellerToken.contract,
         side: 0,
         tokenId: sellerToken.tokenId,
-        feeRecipient: sellerToken.feeRecipient,
-        RelayerFee: sellerToken.makerRelayerFee
+        // feeRecipient: sellerToken.feeRecipient,
+        RelayerFee: sellerToken.makerRelayerFee,
+        contractType: sellerToken.contractType,
+        value: sellerToken.amount
       })
       console.log(seller)
       let buyer = {
