@@ -182,7 +182,14 @@ export default {
             })
             const coreskyCart = []
             this.coreskyCart.forEach(item => {
-              if (ids.includes(item.ckOrdersEntity.id)) {
+              let ckOrdersEntityList = []
+              item.ckOrdersEntityList.forEach(v => {
+                if (ids.includes(v.id)) {
+                  ckOrdersEntityList.push(v)
+                }
+              })
+              if (ckOrdersEntityList.length > 1) {
+                item.ckOrdersEntityList = ckOrdersEntityList
                 coreskyCart.push(item)
               }
             })
@@ -221,10 +228,6 @@ export default {
       )) {
         this.buyBtnLoading = false
         this.$tools.message('No Enough Balance Of ETH');
-        return
-      }
-      if (typeof res === 'object' && res.error) {
-        this.buyBtnLoading = false
         return
       }
       if (this.coreskyCart.length > 1) {
