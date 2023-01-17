@@ -60,8 +60,8 @@
             </template>
           </el-input>
           <div class="list-wrap">
-            <router-link :to="`/collection/${item.contract}`" class="list-item"
-              v-for="(item,index) in collectionList" :key="index">
+            <router-link :to="`/collection/${item.contract}`" class="list-item" v-for="(item,index) in collectionList"
+              :key="index">
               <div class="head-img">
                 <image-box :src="item.image"></image-box>
                 <img class="tag" src="../../assets/images/icons/icon_tag.svg" alt="">
@@ -119,7 +119,7 @@
                 </div>
                 <div class="nft-price">
                   <img class="token-icon" src="../../assets/images/icons/token/token_eth2.svg" alt="">
-                  <span class="price">{{item.basePrice===0?'-- ':nftPrice(item.basePrice)}} ETH</span>
+                  <span class="price">{{!!item.basePrice?nftPrice(item.basePrice):'-- '}} ETH</span>
                 </div>
               </div>
             </div>
