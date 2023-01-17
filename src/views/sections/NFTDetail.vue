@@ -224,7 +224,7 @@
                 <el-button type="primary" class="btnBuy" v-if="tokenInfo.contractType === 0" :loading="cancelBtnLoading" @click="cancelSell">Cancel
                   Sell</el-button>
               </template>
-              <el-button type="primary" class="btnBuy" v-else-if="tokenInfo.state && tokenInfo.contractType === 0" @click="showBuyNft">Buy Now
+              <el-button type="primary" class="btnBuy" v-else-if="tokenInfo.state && tokenInfo.contractType === 0 && tokenInfo.basePrice > 0" @click="showBuyNft">Buy Now
               </el-button>
               <!--              <el-button class="btnBlack" v-if="!isSelf && !isCart" :disabled="!(!isSelf && !isCart) || !tokenInfo.contract || !tokenInfo.state"-->
               <el-button class="btnBlack" v-if="tokenInfo.contractType === 0" :disabled="isCart || !tokenInfo.contract || !tokenInfo.state"
@@ -233,10 +233,6 @@
                 @click="showMakeOfferNFT">Make Offer</el-button>
               <el-button class="btnWhite" v-if="tokenInfo.contractType === 1 || (!isSelf && !this.isMakeOffer)" :disabled="!tokenInfo.contract"
                 @click="showMakeOfferCollect">Make Offer Collect</el-button>
-              <!--              <el-button v-if="isSelf && ckAuctionEntityList.length > 0" class="btnWhite"-->
-              <!--                :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT">Accept</el-button>-->
-              <!--              <el-button v-if="isSelf && ckAuctionEntityList.length > 0" class="btnWhite"-->
-              <!--                :loading="acceptDialogBtnLoading" @click="showAcceptOfferCollect">Accept Collect</el-button>-->
             </div>
           </div>
         </div>

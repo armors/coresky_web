@@ -377,11 +377,11 @@ export default {
 	},
 	/**
 	 * 订单数据结构初始化
-	 * @param exchangeAddress
-	 * @param sender
-	 * @param nftAddress
-	 * @param side
-	 * @param tokenId
+	 * @param exchangeAddress // 操作合约
+	 * @param sender // 当前钱包地址
+	 * @param nftAddress nft合约地址
+	 * @param side 0 买家 1 卖家
+	 * @param tokenId // nft tokenId
 	 * @param isMaker 是否是集合报价
 	 * @param buyerAddress 集合挂单的时候buyer地址
 	 * @param feeType 费用类型2 为报价 接受报价
@@ -744,7 +744,7 @@ export default {
 			return {error: e.message};
 		}
 	},
-
+	// 购买接受报价订单数据
 	getAtomicMatchWrapOrder(order, isBeta=true) {
 		if (!isBeta) {
 			return {
@@ -804,7 +804,7 @@ export default {
 	ethersUtilsParseEther (value) {
 		return ethers.utils.parseEther(value.toString())
 	},
-
+	// 购物车多个订单购买
 	async _atomicMatchWrap(buyers, sellers, owner, value) {
 		console.log(value.toString())
 		let buys = []
