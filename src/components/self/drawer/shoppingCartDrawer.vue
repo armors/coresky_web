@@ -382,7 +382,7 @@ export default {
         this.buyBtnLoading = false
         this.clearCart()
         const res = await this.$api("order.finish", {
-          "orderId": this.tokenInfo.ckOrdersEntity.id,
+          "orderId": sellerToken.id,
           "txHash": hashAtomicMatch.transactionHash,
           "taker": buyer.taker,
         })
