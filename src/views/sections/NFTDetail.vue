@@ -175,7 +175,8 @@
             <div class="box-flex1 display-flex box-center-Y">
               <div class="icon-img"><img src="@/assets/images/icons/icon_detail_owner.svg" alt=""></div>
               <div class="tip">Owner</div>
-              <div>{{tokenInfo.ckCollectionsInfoEntity.holder}}</div>
+<!--              <div>{{tokenInfo.ckCollectionsInfoEntity.holder}}</div>-->
+              <div>{{tokenInfo.ownersEntityList.length}}</div>
             </div>
             <div class="box-flex1 display-flex box-center-Y">
               <div class="icon-img"><img src="@/assets/images/icons/icon_detail_item.svg" alt=""></div>
