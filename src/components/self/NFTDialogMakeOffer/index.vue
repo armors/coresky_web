@@ -247,7 +247,7 @@ export default {
           r: sigBuyer.r,
           s: sigBuyer.s,
           sign: JSON.stringify(sigBuyer),
-          amount: Number(this.form.quantity)
+          amount: this.tokenInfo.contractType === 1 ? Number(this.form.quantity) : 1
         }
       }
       console.log(buyer)

@@ -367,7 +367,7 @@ export default {
             hash: hashToSign,
             sign: JSON.stringify(sig),
             basePrice: this.$Web3.utils.toWei(this.form.price),
-            amount: Number(this.form.quantity)
+            amount: this.tokenInfo.contractType === 1 ? Number(this.form.quantity) : 1
           }
         }
         console.log(orderParams)
