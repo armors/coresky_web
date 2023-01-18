@@ -11,7 +11,7 @@
         <div class="txt">
           <span>{{ numberParse(topDatInfo.total) }} items</span>
           <span style="font-weight: 600;margin: 0 5px;">·</span>
-          <span>{{ numberParse(topDatInfo.price,4) }} {{ payment[topDatInfo.payment] }}</span>
+          <span>{{ numberParse(topDatInfo.price,4) }} {{  curToken }}</span>
         </div>
         <div class="time-wrap">
           <div class="item">
@@ -94,7 +94,7 @@
             <div class="item-info">
               <div class="item-row">
                 <div class="label">Price：</div>
-                <div class="value">{{ numberParse(item.price,4) }} {{ payment[item.payment] }}</div>
+                <div class="value">{{ numberParse(item.price,4) }} {{ item.token }}</div>
               </div>
               <div class="item-row">
                 <div class="label">Items：</div>
@@ -141,6 +141,7 @@
 <script>
 import BigNumber from "bignumber.js";
 import dayjs from 'dayjs';
+import config from '@/config/index'
 export default {
   mixins: [],
   name: 'launchpads',
@@ -152,9 +153,11 @@ export default {
         '0x0000000000000000000000000000000000000000': 'ETH',
         '0x55d398326f99059fF775485246999027B3197955': 'USDT'
       },
+      tokenList: config.tokenList(),
       countDown: undefined,
       countDownData: {},
       showList: [],
+      curToken: ''
     };
   },
   watch: {
@@ -166,6 +169,16 @@ export default {
   computed: {
   },
   methods: {
+    getTokenCoin (val) {
+      let curToken = ''
+      for (let key in this.tokenList) {
+        if (this.tokenList[key] === val) {
+          curToken = key
+          break
+        }
+      }
+      return curToken
+    },
     //倒计时
     countDownFun (time) {
       let startTime = new Date(); //当前时间
@@ -213,10 +226,13 @@ export default {
         state: 1,
       }).then((res) => {
         if (res.debug.listData.length > 0) {
-          this.topDatInfo = res.debug.listData[0]
+          const data = res.debug.listData[0]
+          this.curToken = this.getTokenCoin(data.payment)
+          this.topDatInfo = JSON.parse(JSON.stringify(data))
           if (this.topDatInfo.endTime * 1000 > new Date().getTime()) {
+
             this.countDown = setInterval(() => {
-              let time = this.countDownFun(this.topDatInfo.endTime)
+              let time = this.countDownFun(data.endTime)
               if (!!time) {
                 this.countDownData = time
               }
@@ -239,9 +255,10 @@ export default {
         this.showList = res.debug.listData.map(el => {
           let that = this
           let obj = el
+          obj.token = this.getTokenCoin(el.payment)
+          console.log(this.getTokenCoin(el.payment))
           obj.countDownData = {}
           obj.countDown = setInterval(() => {
-            console.log(44)
             let time = that.countDownFun(el.endTime)
             if (!!time) {
               obj.countDownData = time

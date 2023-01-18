@@ -142,7 +142,7 @@
             </el-table-column>
             <el-table-column align="center" prop="datetime" width="120">
               <template #default="scope">
-                <el-button type="danger" link @click="mintNft(scope.row)">Mint</el-button>
+                <el-button type="danger" :loading="scope.row.loading" link @click="mintNft(scope.row)">Mint</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -261,7 +261,10 @@ export default {
         contract: this.contract,
         state: 0,
       }).then((res) => {
-        this.betList = res.debug
+        this.betList = res.debug.map(el => {
+          el.loading = false
+          return el
+        })
       })
     },
     getwinList () {
@@ -316,30 +319,87 @@ export default {
             }
           }, 1000);
         }
-
       })
     },
-    async mintNft (item) {
-      console.log(item)
-      const launchpadContract = await this.$sdk.getLaunchpadContract()
-      console.log(item.lpId, parseInt(item.lpIndex), 1, item.calldata, JSON.parse(item.proof), {
-        from: this.user.coinbase,
-        value: this.$Web3.utils.toWei(this.dataInfo.price)
-      })
-      const result = await launchpadContract.claim(
-        item.lpId,
-        parseInt(item.lpIndex),
-        1,
-        item.calldata,
-        JSON.parse(item.proof),
-        {
+    mintNft (item) {
+      if (this.dataInfo.payment !== '0x0000000000000000000000000000000000000000') {
+        return this.mintERC20(item)
+      }
+      else {
+        this.mintByETH(item)
+      }
+    },
+    async mintByETH (item) {
+      try {
+        item.loading = true
+        const price = 0
+        if (this.dataInfo.payment === '0x0000000000000000000000000000000000000000') {
+          price = this.$Web3.utils.toWei(this.dataInfo.price)
+        }
+        const launchpadContract = await this.$sdk.getLaunchpadContract()
+        console.log(item.lpId, parseInt(item.lpIndex), 1, item.calldata, JSON.parse(item.proof), {
           from: this.user.coinbase,
-          value: this.$Web3.utils.toWei(this.dataInfo.price)
+          value: price
         })
-      console.log(result)
-    },
-    mintERC721 () {
 
+        const result = await launchpadContract.claim(
+          item.lpId,
+          parseInt(item.lpIndex),
+          1,
+          item.calldata,
+          JSON.parse(item.proof),
+          {
+            from: this.user.coinbase,
+            value: price
+          })
+        this.$tools.message('success', 'success');
+        item.loading = false
+      }
+      catch (ex) {
+        this.$tools.message(ex.message);
+        item.loading = false
+      }
+    },
+    async mintERC20 (item) {
+      try {
+
+
+        item.loading = true
+        // 获取代币账户wei
+        const balance = await this.$sdk.getBalance({
+          address: this.dataInfo.payment
+        }, this.user.coinbase)
+        const userBalance = this.$Web3.utils.fromWei(balance.toString(), 'ether')
+        if (new BigNumber(userBalance).isLessThan(this.dataInfo.price)) {
+          this.$tools.message('No Enough Balance Of WETH');
+          item.loading = false
+          return
+        }
+        // 获取授权
+        const launchpadContract = '0xee45A094ad3CCE1A8171eb00Af6862893AbD7dC5'
+        const allowancePayToken = await this.$sdk.allowancePayToken({
+          type: 5,
+          address: this.dataInfo.payment // weth token
+        }, this.user.coinbase, launchpadContract)
+        if (parseFloat(allowancePayToken) === 0) {
+          const approve = await this.$sdk.approvePayToken({
+            type: 5,
+            address: this.dataInfo.payment
+          }, this.user.coinbase, launchpadContract)
+          if (typeof approve == "object" && approve.error) {
+            item.loading = false
+            return
+          }
+        }
+        // let data = JSON.parse(JSON.stringify(item))
+        // data.price = 0
+        this.mintByETH(item)
+        console.log('allowancePayToken', allowancePayToken)
+      }
+      catch (ex) {
+        this.$tools.message(ex.message);
+        item.loading = false
+      }
     },
     init () {
       this.getInfo()

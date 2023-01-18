@@ -15,9 +15,9 @@
       </div>
 
       <div class="head-navs">
-        <div class="nav-link" to="/erc721">
+        <router-link class="nav-link" to="/launchpads">
           {{ $t("navigation.launchpad") }}
-        </div>
+        </router-link>
         <router-link class="nav-link" to="/markterplace">
           {{ $t("navigation.marketplace") }}
         </router-link>
