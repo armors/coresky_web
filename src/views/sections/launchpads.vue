@@ -119,8 +119,8 @@
               </div>
             </div>
             <div class="item-bottom">
-              {{item.countDownData.d}}d : {{item.countDownData.h}}h : {{item.countDownData.m}}m :
-              {{item.countDownData.s}}s
+              {{item.countDownData.d}} d : {{item.countDownData.h}} h : {{item.countDownData.m}} m :
+              {{item.countDownData.s}} s
             </div>
           </div>
         </div>
@@ -209,11 +209,11 @@ export default {
         s = "0" + s;
       }
       return {
-        M,
-        d,
-        h,
-        m,
-        s,
+        M: M.toString(),
+        d: d.toString(),
+        h: h.toString(),
+        m: m.toString(),
+        s: s.toString(),
       }
     },
     numberParse (val, maxLen = 0) {
@@ -230,7 +230,6 @@ export default {
           this.curToken = this.getTokenCoin(data.payment)
           this.topDatInfo = JSON.parse(JSON.stringify(data))
           if (this.topDatInfo.endTime * 1000 > new Date().getTime()) {
-
             this.countDown = setInterval(() => {
               let time = this.countDownFun(data.endTime)
               if (!!time) {
@@ -252,24 +251,26 @@ export default {
         page: 1,
         limit: 3,
       }).then((res) => {
-        this.showList = res.debug.listData.map(el => {
-          let that = this
+        let that = this
+        this.showList = res.debug.listData.map((el, index) => {
           let obj = el
           obj.token = this.getTokenCoin(el.payment)
-          console.log(this.getTokenCoin(el.payment))
-          obj.countDownData = {}
-          obj.countDown = setInterval(() => {
+          obj.countDownData = { M: '--', d: '--', h: '--', m: '--', s: '--' }
+          obj.countDown = window.setInterval(() => {
             let time = that.countDownFun(el.endTime)
-            if (!!time) {
-              obj.countDownData = time
+            if (time !== null) {
+              that.showList[index].countDownData = time
             }
             else {
-              clearInterval(obj.countDown);
-              this.countDownData = { M: '00', d: '00', h: '00', m: '00', s: '00' }
+              that.showList[index].countDownData = { M: '00', d: '00', h: '00', m: '00', s: '00' }
+              clearInterval(that.showList[index].countDown);
             }
           }, 1000);
           return obj
         })
+        setTimeout(() => {
+          console.log(this.showList)
+        }, 2000);
       })
     },
     init () {

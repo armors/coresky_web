@@ -13,21 +13,8 @@
             <image-box :src="dataInfo.bannerImage" />
           </div>
           <div class="banner-swiper">
-            <div class="banner-item">
-              <image-box
-                src="https://storage.nfte.ai/asset/collection/featured/9b32b83e-7194-4cb2-9229-0b78d3eae868.png?x-oss-process=image/resize,m_fill,w_504,h_252,limit_0" />
-            </div>
-            <div class="banner-item">
-              <image-box
-                src="https://storage.nfte.ai/asset/collection/featured/9b32b83e-7194-4cb2-9229-0b78d3eae868.png?x-oss-process=image/resize,m_fill,w_504,h_252,limit_0" />
-            </div>
-            <div class="banner-item">
-              <image-box
-                src="https://storage.nfte.ai/asset/collection/featured/9b32b83e-7194-4cb2-9229-0b78d3eae868.png?x-oss-process=image/resize,m_fill,w_504,h_252,limit_0" />
-            </div>
-            <div class="banner-item">
-              <image-box
-                src="https://storage.nfte.ai/asset/collection/featured/9b32b83e-7194-4cb2-9229-0b78d3eae868.png?x-oss-process=image/resize,m_fill,w_504,h_252,limit_0" />
+            <div class="banner-item" v-for="(item,index) in imageList" :key="index">
+              <image-box :src="item" />
             </div>
           </div>
         </div>
@@ -180,6 +167,7 @@ export default {
       disabledBet: true,
       betList: [],
       winList: [],
+      imageList: []
     }
   },
   watch: {
@@ -282,6 +270,7 @@ export default {
         this.roadmapList = []
         this.teamIntroList = []
         this.introduceList = []
+        this.imageList = res.debug.imageList
         if (!!this.dataInfo.roadmap) {
           this.roadmapList = JSON.parse(this.dataInfo.roadmap) || []
         }
@@ -456,7 +445,9 @@ export default {
           height: 96px;
           display: flex;
           margin-top: 14px;
+          overflow-x: auto;
           .banner-item {
+            flex: 0 0 auto;
             width: 146px;
             height: 100%;
             background: #d8d8d8;
