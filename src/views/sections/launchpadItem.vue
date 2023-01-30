@@ -321,7 +321,7 @@ export default {
     async mintByETH (item) {
       try {
         item.loading = true
-        const price = 0
+        let price = 0
         if (this.dataInfo.payment === '0x0000000000000000000000000000000000000000') {
           price = this.$Web3.utils.toWei(this.dataInfo.price)
         }
@@ -351,8 +351,6 @@ export default {
     },
     async mintERC20 (item) {
       try {
-
-
         item.loading = true
         // 获取代币账户wei
         const balance = await this.$sdk.getBalance({
