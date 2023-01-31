@@ -12,8 +12,11 @@
       </div>
     </template>
     <template v-else-if="layout==='fullscreen'">
-      <HeaderTemplateNew />
-      <router-view />
+      <div class="page-fullscreen">
+        <HeaderTemplateNew />
+        <router-view />
+      </div>
+
     </template>
   </div>
 </template>
@@ -180,4 +183,15 @@ body {
   /*min-height: 100vh;*/
 }
 </style>
-
+<style lang="scss" scoped>
+.page-fullscreen {
+  display: flex;
+  align-items: normal;
+  flex-direction: column;
+  justify-content: normal;
+  width: 100vw;
+  height: 100vh;
+  margin: 0px auto;
+  max-height: 100%;
+}
+</style>

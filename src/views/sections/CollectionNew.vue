@@ -1,5 +1,5 @@
 <template>
-  <div class="collection-detail">
+  <div class="collection-page">
   </div>
 </template>
 <script>
@@ -130,4 +130,8 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.collection-page {
+  flex: 1 1 0%;
+  min-height: 0px;
+}
 </style>

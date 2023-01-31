@@ -25,7 +25,7 @@
         <el-popover v-model:visible="languagePopover" placement="bottom" trigger="hover" :show-arrow="false"
           popper-class="nav-popover">
           <template #reference>
-            <svg-icon class="head-icon" icon-class="yuyan" />
+            <svg-icon class="head-icon" icon-class="yuyan" style="font-size:20px" />
           </template>
           <div class="popover-menu-item" @click="languageSelect('English')" :class="language =='English' ? 'active':''">
             English</div>
@@ -237,7 +237,7 @@ export default {
     align-items: center;
     font-size: 15px;
     line-height: 40px;
-    height: $headerHeight;
+    height: 62px;
     color: $color-white;
   }
 }
