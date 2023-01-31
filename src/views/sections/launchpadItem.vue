@@ -12,11 +12,29 @@
           <div class="box-img">
             <image-box :src="dataInfo.bannerImage" />
           </div>
-          <div class="banner-swiper">
+          <!-- <div class="banner-swiper">
             <div class="banner-item" v-for="(item,index) in imageList" :key="index">
               <image-box :src="item" />
             </div>
-          </div>
+          </div> -->
+          <!-- {{ imageList }} -->
+          <el-carousel class="banner-swiper" :autoplay="false" indicator-position="none" style="margin-top:14px"
+            :height="96">
+            <el-carousel-item v-for="(child,index) in imageList" :key="index" class="banner-swiper">
+              <div class="banner-item" v-for="(citem,index) in child" :key="citem">
+                <image-box :src="citem" />
+              </div>
+              <!-- <div class="banner-item">
+                <image-box src="http://54.169.232.16:8083/static/upload/hkj0dp23izanczjbge3k.jpeg" />
+              </div>
+              <div class="banner-item">
+                <image-box src="http://54.169.232.16:8083/static/upload/hkj0dp23izanczjbge3k.jpeg" />
+              </div>
+              <div class="banner-item">
+                <image-box src="http://54.169.232.16:8083/static/upload/hkj0dp23izanczjbge3k.jpeg" />
+              </div> -->
+            </el-carousel-item>
+          </el-carousel>
         </div>
         <el-tabs v-model="activeName" class="demo-tabs" @tab-change="handleClick">
           <el-tab-pane label="Highlights" name="Highlights" :lazy="true">
@@ -47,7 +65,13 @@
       </div>
       <div class="flex-right">
         <div class="info-wrap">
-          <div class="info-txt1">There is still time to start betting</div>
+          <div class="info-txt1">
+            <span v-if="status==='notstart'">下注开始时间为</span>
+            <span v-if="status==='starting'">下注结束时间为</span>
+            <span v-if="status==='wating'">开奖时间为</span>
+            <span v-if="status==='open'">已开奖</span>
+            <span v-if="status==='end'">活动已结束</span>
+          </div>
           <div class="time-wrap">
             <div class="item">
               <div class="num">{{countDownData.d||'--'}}</div>
@@ -72,7 +96,7 @@
           <div class="flex-between">
             <div class="item">
               <div class="txt1">Launch price</div>
-              <div class="txt2">{{ numberParse(dataInfo.price,4) }} {{ payment[dataInfo.payment] }}</div>
+              <div class="txt2">{{ numberParse(dataInfo.price,4) }} {{ getTokenCoin(dataInfo.payment) }}</div>
             </div>
             <div class="item">
               <div class="txt1">launch quantity</div>
@@ -94,8 +118,13 @@
             </div>
           </div>
           <div>
-            <el-button type="primary" :disabled="disabledBet" class="btnOption" @click="showLaunchpadBetDialog">
+            <el-button type="primary" v-if="status === 'notstart'||status === 'starting'"
+              :disabled="!(status === 'starting')" class="btnOption" @click="showLaunchpadBetDialog">
               Betting</el-button>
+            <el-link type="primary" v-if="status === 'wating'||status === 'end'||status === 'open'" href="#test"
+              :disabled="status === 'wating'" class="btnOption">
+              查看中奖记录</el-link>
+
           </div>
           <div style="margin-top:34px;text-align: center;">
             <a target="_blank" class="link" :href="dataInfo.rewardLink">Lottery rules</a>
@@ -119,7 +148,7 @@
             </el-table-column>
           </el-table>
         </div>
-        <div class="table-wrap">
+        <div class="table-wrap" id="test">
           <div class="table-title">我的开奖记录</div>
           <el-table :data="winList" height="250" style="width: 100%">
             <el-table-column align="left" prop="code" label="中奖号">
@@ -129,7 +158,8 @@
             </el-table-column>
             <el-table-column align="center" prop="datetime" width="120">
               <template #default="scope">
-                <el-button type="danger" :loading="scope.row.loading" link @click="mintNft(scope.row)">Mint</el-button>
+                <el-button type="danger" :disabled="status === 'end'||scope.row.isOver===true"
+                  :loading="scope.row.loading" link @click="mintNft(scope.row)">Mint</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -139,12 +169,13 @@
         </div>
       </div>
     </div>
-    <launchpadBetDialog ref="launchpadBetDialogRef" @launchpadBuy="getInfo()" />
+    <launchpadBetDialog ref="launchpadBetDialogRef" @launchpadBuy="init()" />
   </div>
 </template>
 <script>
 import BigNumber from "bignumber.js";
 import dayjs from 'dayjs';
+import config from '@/config/index'
 import launchpadBetDialog from './components/launchpadBetDialog'
 export default {
   mixins: [],
@@ -157,17 +188,15 @@ export default {
       teamIntroList: [],
       introduceList: [],
       // tableData2: [],
-      payment: {
-        '0x0000000000000000000000000000000000000000': 'ETH',
-        '0x55d398326f99059fF775485246999027B3197955': 'USDT'
-      },
+      tokenList: config.tokenList(),
       activeName: 'Highlights',
       countDown: undefined,
       countDownData: {},
       disabledBet: true,
       betList: [],
       winList: [],
-      imageList: []
+      imageList: [],
+      status: 'nostart'
     }
   },
   watch: {
@@ -181,13 +210,7 @@ export default {
     },
   },
   computed: {
-    showAddress () {
-      return (search) => {
-        var res =
-          search.address.slice(0, 11) + "..." + search.address.slice(-4);
-        return res;
-      };
-    },
+
     user: function () {
       var user = this.$store.state.user;
       return user;
@@ -197,6 +220,16 @@ export default {
     }
   },
   methods: {
+    getTokenCoin (val) {
+      let curToken = ''
+      for (let key in this.tokenList) {
+        if (this.tokenList[key] === val) {
+          curToken = key
+          break
+        }
+      }
+      return curToken
+    },
     dateParse (time) {
       return dayjs.unix(time).format('YYYY-MM-DD HH:mm:ss')
     },
@@ -251,6 +284,7 @@ export default {
       }).then((res) => {
         this.betList = res.debug.map(el => {
           el.loading = false
+          el.isOver = false
           return el
         })
       })
@@ -270,7 +304,9 @@ export default {
         this.roadmapList = []
         this.teamIntroList = []
         this.introduceList = []
-        this.imageList = res.debug.imageList
+        if (!!res.debug.imageList) {
+          this.imageList = this.$tools.sliceArrayTo(res.debug.imageList, 4)
+        }
         if (!!this.dataInfo.roadmap) {
           this.roadmapList = JSON.parse(this.dataInfo.roadmap) || []
         }
@@ -280,30 +316,44 @@ export default {
         if (!!this.dataInfo.introduce) {
           this.introduceList = JSON.parse(this.dataInfo.introduce) || []
         }
-        if (this.dataInfo.startTime * 1000 < new Date().getTime() && this.dataInfo.endTime * 1000 > new Date().getTime()) {
-          this.disabledBet = false
+        console.log(this.dataInfo.overTime * 1000)
+        this.status = 'nostart'
+        // this.dataInfo.overTime = 1691157054
+        // 小于投注开始时间
+        let calcTime = null
+        if (this.dataInfo.startTime * 1000 > new Date().getTime()) {
+          calcTime = this.dataInfo.startTime
+          this.status = 'notstart'
+        } // 小于投注结束时间
+        else if (this.dataInfo.endTime * 1000 > new Date().getTime()) {
+          calcTime = this.dataInfo.endTime
+          this.status = 'starting'
+        } // 小于开奖时间 
+        else if (this.dataInfo.rewardTime * 1000 > new Date().getTime()) {
+          calcTime = this.dataInfo.rewardTime
+          this.status = 'wating'
+        }
+        else if (this.dataInfo.overTime * 1000 > new Date().getTime()) {
+          this.countDownData = { M: '00', d: '00', h: '00', m: '00', s: '00' }
+          this.status = 'open'
+          this.getwinList()
         }
         else {
-          this.disabledBet = true
+          this.countDownData = { M: '00', d: '00', h: '00', m: '00', s: '00' }
+          this.getwinList()
+          this.status = 'end'
         }
-        this.getwinList()
-        // if (this.dataInfo.rewardTime * 1000 < new Date().getTime()) {
-        //   this.getwinList()
-        // }
-        if (this.dataInfo.endTime * 1000 > new Date().getTime()) {
+        if (calcTime !== null && this.status !== 'end' && this.status !== 'open') {
           this.countDown = setInterval(() => {
-            let time = this.countDownFun(this.dataInfo.endTime)
+            let time = this.countDownFun(calcTime)
             if (!!time) {
               this.countDownData = time
             }
             else {
               clearInterval(this.countDown);
-              this.countDownData = {
-                M: '00',
-                d: '00',
-                h: '00',
-                m: '00',
-                s: '00',
+              this.countDownData = { M: '00', d: '00', h: '00', m: '00', s: '00' }
+              if (this.status !== 'end') {
+                this.init()
               }
             }
           }, 1000);
@@ -341,6 +391,7 @@ export default {
             from: this.user.coinbase,
             value: price
           })
+        item.isOver = true
         this.$tools.message('success', 'success');
         item.loading = false
       }
@@ -363,7 +414,7 @@ export default {
           return
         }
         // 获取授权
-        const launchpadContract = '0xee45A094ad3CCE1A8171eb00Af6862893AbD7dC5'
+        const launchpadContract = this.dataInfo.treeAddress
         const allowancePayToken = await this.$sdk.allowancePayToken({
           type: 5,
           address: this.dataInfo.payment // weth token
@@ -389,6 +440,7 @@ export default {
       }
     },
     init () {
+      clearInterval(this.countDown)
       this.getInfo()
       this.getBetList()
     },
@@ -402,6 +454,10 @@ export default {
 .launchpadItem-wrap {
   width: 1200px;
   margin: 40px auto;
+  ::v-deep .el-carousel__container {
+    width: 100%;
+    height: 100%;
+  }
   .head {
     display: flex;
     align-items: center;
@@ -442,8 +498,8 @@ export default {
         .banner-swiper {
           height: 96px;
           display: flex;
-          margin-top: 14px;
-          overflow-x: auto;
+          // margin-top: 14px;
+          // overflow-x: auto;
           .banner-item {
             flex: 0 0 auto;
             width: 146px;
