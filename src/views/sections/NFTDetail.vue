@@ -322,7 +322,7 @@
                 <div class="offer-list">
                   <div class="list-tr head top0">
                     <div class="list-th th25">Price</div>
-                    <div class="list-th th25">Quantity</div>
+                    <div class="list-th th25" v-if="tokenInfo.contractType === 1">Quantity</div>
                     <div class="list-th th25">Exporation</div>
                     <div class="list-th th25">From</div>
                     <div class="list-th th25 center">Status</div>
@@ -333,7 +333,7 @@
                       <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
                       {{nftPriceFun(v.basePrice)}}
                     </div>
-                    <div class="list-th th25">{{$filters.milliFormat(v.amount)}}</div>
+                    <div class="list-th th25" v-if="tokenInfo.contractType === 1">{{$filters.milliFormat(v.amount)}}</div>
                     <div class="list-th th25">{{$filters.timeFormat(v.createTime)}}</div>
                     <div class="list-th th25 purple" @click="goExplore(v.maker)">
                       {{$filters.ellipsisAddress(v.maker, 4)}}</div>

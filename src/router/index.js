@@ -11,6 +11,11 @@ const routes = [
 		component: () => import(/* webpackChunkName: "orderMock" */ "../views/sections/orderMock/index"),
 	},
 	{
+		path: "/reservoir",
+		name: "reservoir",
+		component: () => import(/* webpackChunkName: "reservoir" */ "../views/sections/orderMock/reservoir"),
+	},
+	{
 		path: "/items",
 		component: () => import(/* webpackChunkName: "Items" */ "../views/sections/Items"),
 		name: "items",

@@ -120,7 +120,7 @@ export default {
   watch: {
     show () {
       this.visible = this.show;
-      this.initGetBalance()
+      // this.initGetBalance()
     },
     '$store.state.user': function () {
       this.initGetBalance()
