@@ -101,6 +101,7 @@ export default {
   methods: {
     clearCart () {
       removeLocalStorage([this.cartName])
+      this.$store.commit('initShoppingCart')
       this.getCartInfo()
     },
     deleteCart (v, id) {
@@ -119,12 +120,13 @@ export default {
         }
       }
       if (cart.length < 1) {
-        this.clearCart()
+        removeLocalStorage([this.cartName])
       } else {
         let obj = []
         obj[this.cartName] = JSON.stringify(cart)
         setLocalStorage(obj)
       }
+      this.$store.commit('initShoppingCart')
       this.getCartInfo()
     },
     getRate (v) {
@@ -152,7 +154,6 @@ export default {
       } else {
         this.coreskyCart = []
       }
-      console.log(this.coreskyCart)
     },
     handleClose () {
       this.$emit('update:show', false)

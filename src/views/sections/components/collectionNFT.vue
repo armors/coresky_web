@@ -117,9 +117,9 @@
               </div>
               <div class="card-bottom">
                 <div class="nft-txt">
-                  {{item.ckCollectionsInfoEntity.name}} #{{item.tokenId}}
+                  {{item.name?item.name:('#'+item.tokenId)}}
                 </div>
-                <div class="nft-price">
+                <div class="nft-price" v-if="item.basePrice">
                   <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="">
                   <span class="price">{{!!item.basePrice?nftPrice(item.basePrice):'-- '}} ETH</span>
                 </div>
@@ -216,7 +216,7 @@ export default {
       })
     },
     nftPrice (basePrice) {
-      return this.$filters.keepPoint(this.$Web3.utils.fromWei(basePrice.toString()))
+      return this.$filters.keepMaxPoint(this.$Web3.utils.fromWei(basePrice.toString()))
     },
     searchClick () {
       this.queryParams.page = 1

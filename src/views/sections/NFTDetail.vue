@@ -31,61 +31,6 @@
                       </div>
                     </div>
                   </div>
-                  <!--              <div class="arrt-item">-->
-                  <!--                <p class="attr-name">Clothes</p>-->
-                  <!--                <p class="attr-value">Lumberjack Shirt</p>-->
-                  <!--                <div class="attr-bottom">-->
-                  <!--                  <span class="attr-num">1,232(12.32%)</span>-->
-                  <!--                  <div class="attr-price">-->
-                  <!--                    <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />-->
-                  <!--                    <span class="value">530.73</span>-->
-                  <!--                  </div>-->
-                  <!--                </div>-->
-                  <!--              </div>-->
-                  <!--              <div class="arrt-item">-->
-                  <!--                <p class="attr-name">Eyes</p>-->
-                  <!--                <p class="attr-value">X Eyes</p>-->
-                  <!--                <div class="attr-bottom">-->
-                  <!--                  <span class="attr-num">1,232(12.32%)</span>-->
-                  <!--                  <div class="attr-price">-->
-                  <!--                    <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />-->
-                  <!--                    <span class="value">530.73</span>-->
-                  <!--                  </div>-->
-                  <!--                </div>-->
-                  <!--              </div>-->
-                  <!--              <div class="arrt-item">-->
-                  <!--                <p class="attr-name">Fur</p>-->
-                  <!--                <p class="attr-value">Pink</p>-->
-                  <!--                <div class="attr-bottom">-->
-                  <!--                  <span class="attr-num">1,232(12.32%)</span>-->
-                  <!--                  <div class="attr-price">-->
-                  <!--                    <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />-->
-                  <!--                    <span class="value">530.73</span>-->
-                  <!--                  </div>-->
-                  <!--                </div>-->
-                  <!--              </div>-->
-                  <!--              <div class="arrt-item">-->
-                  <!--                <p class="attr-name">Hat</p>-->
-                  <!--                <p class="attr-value">Girl's Hair Short</p>-->
-                  <!--                <div class="attr-bottom">-->
-                  <!--                  <span class="attr-num">1,232(12.32%)</span>-->
-                  <!--                  <div class="attr-price">-->
-                  <!--                    <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />-->
-                  <!--                    <span class="value">530.73</span>-->
-                  <!--                  </div>-->
-                  <!--                </div>-->
-                  <!--              </div>-->
-                  <!--              <div class="arrt-item">-->
-                  <!--                    <p class="attr-name">Mouth</p>-->
-                  <!--                    <p class="attr-value">Bored</p>-->
-                  <!--                    <div class="attr-bottom">-->
-                  <!--                      <span class="attr-num">1,232(12.32%)</span>-->
-                  <!--                      <div class="attr-price">-->
-                  <!--                        <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />-->
-                  <!--                    <span class="value">530.73</span>-->
-                  <!--                  </div>-->
-                  <!--                </div>-->
-                  <!--              </div>-->
                 </div>
               </div>
             </el-collapse-item>
@@ -158,7 +103,7 @@
             <span class="value">{{tokenInfo.ckCollectionsInfoEntity.floorPrice}}</span>
           </div>
           <div class="nft-name">
-            <span>{{tokenInfo.ckCollectionsInfoEntity.name}} #{{tokenInfo.tokenId}}</span>
+            <span> {{tokenInfo.name?tokenInfo.name:('#'+tokenInfo.tokenId)}}</span>
             <div class="icon_shoucang" :class="{active: tokenInfo.followStatus}" alt="" @click="followNft" />
           </div>
           <div class="nft-address" v-if="tokenInfo.contractType === 0">
@@ -175,7 +120,7 @@
             <div class="box-flex1 display-flex box-center-Y">
               <div class="icon-img"><img src="@/assets/images/icons/icon_detail_owner.svg" alt=""></div>
               <div class="tip">Owner</div>
-<!--              <div>{{tokenInfo.ckCollectionsInfoEntity.holder}}</div>-->
+              <!--              <div>{{tokenInfo.ckCollectionsInfoEntity.holder}}</div>-->
               <div>{{tokenInfo.ownersEntityList.length}}</div>
             </div>
             <div class="box-flex1 display-flex box-center-Y">
@@ -219,20 +164,23 @@
             </div>
             <div class="btn-box display-flex box-center-Y">
               <template v-if="isSelf">
-                <el-button type="primary" class="btnBuy" v-if="!tokenInfo.state || tokenInfo.contractType === 1" :loading="sellDialogBtnLoading"
-                  @click="showSellNft">Sell Now</el-button>
-                <el-button type="primary" class="btnBuy" v-if="tokenInfo.contractType === 0" :loading="cancelBtnLoading" @click="cancelSell">Cancel
+                <el-button type="primary" class="btnBuy" v-if="!tokenInfo.state || tokenInfo.contractType === 1"
+                  :loading="sellDialogBtnLoading" @click="showSellNft">Sell Now</el-button>
+                <el-button type="primary" class="btnBuy" v-if="tokenInfo.contractType === 0" :loading="cancelBtnLoading"
+                  @click="cancelSell()">Cancel
                   Sell</el-button>
               </template>
-              <el-button type="primary" class="btnBuy" v-else-if="tokenInfo.state && tokenInfo.contractType === 0 && tokenInfo.basePrice > 0" @click="showBuyNft">Buy Now
+              <el-button type="primary" class="btnBuy"
+                v-else-if="tokenInfo.state && tokenInfo.contractType === 0 && tokenInfo.basePrice > 0"
+                @click="showBuyNft">Buy Now
               </el-button>
               <!--              <el-button class="btnBlack" v-if="!isSelf && !isCart" :disabled="!(!isSelf && !isCart) || !tokenInfo.contract || !tokenInfo.state"-->
-              <el-button class="btnBlack" v-if="tokenInfo.contractType === 0" :disabled="isCart || !tokenInfo.contract || !tokenInfo.state"
-                @click="addCart">Add to Cart</el-button>
-              <el-button class="btnWhite" v-if="tokenInfo.contractType === 1 || (!isSelf && !this.isMakeOffer)" :disabled="!tokenInfo.contract"
-                @click="showMakeOfferNFT">Make Offer</el-button>
-              <el-button class="btnWhite" v-if="tokenInfo.contractType === 1 || (!isSelf && !this.isMakeOffer)" :disabled="!tokenInfo.contract"
-                @click="showMakeOfferCollect">Make Offer Collect</el-button>
+              <el-button class="btnBlack" v-if="tokenInfo.contractType === 0"
+                :disabled="isCart || !tokenInfo.contract || !tokenInfo.state" @click="addCart">Add to Cart</el-button>
+              <el-button class="btnWhite" v-if="tokenInfo.contractType === 1 || (!isSelf && !this.isMakeOffer)"
+                :disabled="!tokenInfo.contract" @click="showMakeOfferNFT">Make Offer</el-button>
+              <el-button class="btnWhite" v-if="tokenInfo.contractType === 1 || (!isSelf && !this.isMakeOffer)"
+                :disabled="!tokenInfo.contract" @click="showMakeOfferCollect">Make Offer Collect</el-button>
             </div>
           </div>
         </div>
@@ -296,7 +244,8 @@
                         :loading="acceptDialogBtnLoading" @click="showBuyNft(v)">Buy</el-button>
                     </div>
                     <div class="list-th th25 center">
-                      <el-button type="primary" class="btnAccept" :disabled="isInCart1155(v.id) || isSelfSell(v.maker)"  @click="addCart1155(i)">Add</el-button>
+                      <el-button type="primary" class="btnAccept" :disabled="isInCart1155(v.id) || isSelfSell(v.maker)"
+                        @click="addCart1155(i)">Add</el-button>
                     </div>
                   </div>
                 </div>
@@ -339,9 +288,9 @@
                       {{$filters.ellipsisAddress(v.maker, 4)}}</div>
                     <div class="list-th th25 center">
                       <el-button type="primary" class="btnAccept" v-if="isSelfMakeOffer(v)"
-                                 :loading="cancelMakeOfferBtnLoading" @click="cancelMakeOffer(v)">Cancel</el-button>
+                        :loading="cancelMakeOfferBtnLoading" @click="cancelMakeOffer(v)">Cancel</el-button>
                       <el-button type="primary" class="btnAccept" v-else :disabled="!isSelf"
-                                 :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT(v)">Accept</el-button>
+                        :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT(v)">Accept</el-button>
                     </div>
                   </div>
                 </div>
@@ -483,7 +432,7 @@ export default {
       ckOrdersEntityList: [],
       historyPrice: [],
       myChart: null,
-      isCart: false,
+      // isCart: false,
       nftPrice: '--',
       bestPrice: '--',
       countDownTime: '--',
@@ -500,7 +449,7 @@ export default {
   mounted () {
     this.getTokenInfo()
     this.getTokenEvent()
-    this.isInCart()
+    // this.isInCart()
   },
   computed: {
     user () {
@@ -513,7 +462,7 @@ export default {
     isSelf () {
       console.log(this.tokenInfo)
       if (this.tokenInfo?.ownersEntityList) {
-        let  ownerList = []
+        let ownerList = []
         this.tokenInfo.ownersEntityList.forEach(item => {
           ownerList.push(item.address)
         })
@@ -524,6 +473,19 @@ export default {
         return false
       }
     },
+    isCart () {
+      let shoppingList = this.$store.state.shoppingCartList || []
+      if (shoppingList === null || shoppingList.length === 0) {
+        return false
+      }
+      const token = shoppingList.find(item => item.contract === this.tokenInfo.contract && item.tokenId === this.tokenInfo.tokenId)
+      if (token) {
+        return true
+      }
+      else {
+        return false
+      }
+    }
   },
   destroyed () {
     if (that.countDownFn) {
@@ -685,20 +647,20 @@ export default {
         }
       }, 1000);
     },
-    isInCart (id) {
-      const local = getLocalStorage(this.cartName)
-      console.log(local[this.cartName])
-      let coresky_cart = local[this.cartName]
-      if (local[this.cartName] !== null) {
-        coresky_cart = JSON.parse(coresky_cart)
-        const token = coresky_cart.find(item => item.contract === this.tokenInfo.contract && item.tokenId === this.tokenInfo.tokenId)
-        console.log(token)
-        this.isCart = token !== undefined
-      } else {
-        coresky_cart = []
-        this.isCart = false
-      }
-    },
+    // isInCart (id) {
+    //   const local = getLocalStorage(this.cartName)
+    //   console.log(local[this.cartName])
+    //   let coresky_cart = local[this.cartName]
+    //   if (local[this.cartName] !== null) {
+    //     coresky_cart = JSON.parse(coresky_cart)
+    //     const token = coresky_cart.find(item => item.contract === this.tokenInfo.contract && item.tokenId === this.tokenInfo.tokenId)
+    //     console.log(token)
+    //     this.isCart = token !== undefined
+    //   } else {
+    //     coresky_cart = []
+    //     this.isCart = false
+    //   }
+    // },
     isSelfSell (maker) {
       console.log()
       return maker === this.user.coinbase.toLowerCase()
@@ -732,20 +694,19 @@ export default {
         // this.tokenInfo.ckCollectionsInfoEntity.floorPrice = '0.02'
         this.ckAuctionEntityList = this.tokenInfo.ckAuctionEntityList || []
         this.ckOrdersEntityList = this.tokenInfo.ckOrdersEntityList || []
-        this.nftPrice = this.$sdk.fromWeiNum(this.tokenInfo.basePrice)
+        this.nftPrice = this.nftPriceFun(this.tokenInfo.basePrice)
         this.tokenInfo.ownersEntityList.forEach(item => {
           if (item.address === this.user.coinbase.toLowerCase()) {
             this.youOwnAmount = item.amount
           }
         })
-        console.log(this.tokenInfo)
-        this.bestPrice = this.$sdk.fromWeiNum(this.tokenInfo.bestPrice)
+        this.bestPrice = this.nftPriceFun(this.tokenInfo.bestPrice)
         if (this.tokenInfo.ckOrdersEntityList.length > 0) {
           this.countDown()
         }
         this.historyPrice = this.tokenInfo.historyPrice
         this.initPriceHistory()
-        this.isInCart()
+        // this.isInCart()
       })
     },
     getTokenEvent () {
@@ -832,24 +793,27 @@ export default {
       this.$refs.NFTDialogBuy.showBuy(this.tokenInfo, v)
     },
     nftPriceFun (basePrice) {
-      return basePrice !== null ? this.$filters.keepPoint(this.$Web3.utils.fromWei(basePrice.toString())) : '--'
+      return basePrice !== null ? this.$filters.keepMaxPoint(this.$Web3.utils.fromWei(basePrice.toString())) : '--'
     },
+
     // 添加购物车
     addCart () {
-      const local = getLocalStorage(this.cartName)
-      console.log(local[this.cartName])
-      let coresky_cart = local[this.cartName]
-      if (local[this.cartName] !== null) {
-        coresky_cart = JSON.parse(coresky_cart)
-      } else {
-        coresky_cart = []
-      }
-      console.log(coresky_cart)
-      coresky_cart.push(this.tokenInfo)
-      const obj = {}
-      obj[this.cartName] = JSON.stringify(coresky_cart)
-      setLocalStorage(obj)
-      this.isInCart()
+      // const local = getLocalStorage(this.cartName)
+      // console.log(local[this.cartName])
+      // let coresky_cart = local[this.cartName]
+      // if (local[this.cartName] !== null) {
+      //   coresky_cart = JSON.parse(coresky_cart)
+      // } else {
+      //   coresky_cart = []
+      // }
+      // console.log(coresky_cart)
+      // coresky_cart.push(this.tokenInfo)
+      // const obj = {}
+      // obj[this.cartName] = JSON.stringify(coresky_cart)
+      // setLocalStorage(obj)
+      this.$store.commit('addShoppingCart', this.tokenInfo)
+      // addShoppingCart(this.tokenInfo)
+      // this.isInCart()
     },
     addCart1155 (id) {
       this.tokenInfo.ckOrdersEntityList.map(item => {
@@ -1009,19 +973,19 @@ export default {
         line-height: 21px;
         color: $primaryColor;
       }
-      &.erc1155{
+      &.erc1155 {
         font-style: normal;
         font-weight: 500;
         font-size: 14px;
         color: $primaryColor;
         padding-top: 26px;
         padding-bottom: 10px;
-        .tip{
+        .tip {
           font-size: 12px;
           color: $color-black3;
           margin-right: 4px;
         }
-        .icon-img{
+        .icon-img {
           width: 18px;
           height: 18px;
           margin-right: 6px;

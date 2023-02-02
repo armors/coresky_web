@@ -2,9 +2,10 @@ import store from "@/store";
 import i18n from "@/i18n/i18n";
 import tools from "@/util/tools";
 import moment from 'moment'
+import BigNumber from "bignumber.js";
 const isAbsoluteURL = (str) => /^[a-z][a-z0-9+.-]*:/.test(str);
 
-export function fullImageUrl(url) {
+export function fullImageUrl (url) {
   console.log(url)
   if (!url) return "";
   if (url.toLowerCase().startsWith("ipfs:/")) {
@@ -25,11 +26,11 @@ export function fullImageUrl(url) {
   return cdnUrl ? cdnUrl + url : url;
 }
 
-export function ellipsisAddress(address, start=7, end=-4) {
+export function ellipsisAddress (address, start = 7, end = -4) {
   if (!address) return '--'
   return address.slice(0, start) + "..." + address.slice(end);
 }
-export function hashExplore(hash) {
+export function hashExplore (hash) {
   if (!hash) {
     return {
       hashShort: '--',
@@ -41,7 +42,7 @@ export function hashExplore(hash) {
     href: `${process.env.VUE_APP_EXPLORE}/tx/${hash}`
   }
 }
-export function contractExplore(hash) {
+export function contractExplore (hash) {
   if (!hash) {
     return {
       hashShort: '--',
@@ -53,7 +54,7 @@ export function contractExplore(hash) {
     href: `${process.env.VUE_APP_EXPLORE}/address/${hash}`
   }
 }
-export function milliFormat(num, isK =true) {
+export function milliFormat (num, isK = true) {
   if (!num) return '--'
   if (isK) {
     if (num > 10000) {
@@ -75,19 +76,19 @@ export function milliFormat(num, isK =true) {
   //   })
   // );
 }
-export function openWindow(url) {
+export function openWindow (url) {
   window.open(url, '_blank'); //注意第二个参数
 
 }
 
-export function decimal(num, v) {
+export function decimal (num, v) {
   var vv = Math.pow(10, v);
   return Math.round(num * vv) / vv;
 }
-export function feeFormat(fee) {
+export function feeFormat (fee) {
   return fee ? (fee / 1000 + '%') : '--';
 }
-export function timeFormat(time) {
+export function timeFormat (time) {
   var previous = new Date(time * 1000);
   var current = new Date();
   var msPerMinute = 60 * 1000;
@@ -112,7 +113,7 @@ export function timeFormat(time) {
   }
 }
 
-export function timeFormatTime(time) {
+export function timeFormatTime (time) {
   var previous = new Date(time * 1000);
   var current = new Date();
   var msPerMinute = 60 * 1000;
@@ -141,7 +142,7 @@ export function timeFormatMoment (time, formatType = 'YYYY.MM.DD') {
   return moment(time * 1000).format(formatType);    // 2022/12/10;               // 12月 10日 22
 }
 
-export function timeToUTC(time, isMonth = false) {
+export function timeToUTC (time, isMonth = false) {
   if (!time) return '--'
   let date = new Date(time * 1000); //Wed Jan 02 2019 00:00:00 GMT+0800 (China Standard Time)
 
@@ -153,7 +154,7 @@ export function timeToUTC(time, isMonth = false) {
   let chinaDateArray = chinaDate.split(' '); //["Wed", "Jan", "02", "2019"]
 
   // let displayDate = `${chinaDateArray[1]} ${chinaDateArray[2]}, ${chinaDateArray[3]}`; //"Jan 02, 2019"
-   //"Jan, 2019"
+  //"Jan, 2019"
   return isMonth ? `${chinaDateArray[1]}   ${chinaDateArray[2]}` : `${chinaDateArray[1]}   ${chinaDateArray[3]}`
 }
 export function nftURI (v) {
@@ -165,7 +166,7 @@ export function nftURI (v) {
   return {};
 }
 
-export function keepPoint(num, point = 4, isRound = false) {
+export function keepPoint (num, point = 4, isRound = false) {
   if (isRound) {
     return parseFloat(num).toFixed(point);
   } else {
@@ -175,7 +176,12 @@ export function keepPoint(num, point = 4, isRound = false) {
   }
 }
 
-export function ckCollectionsInfoEntity(v) {
+export function keepMaxPoint (num, point = 4, isRound = 1) {
+  return new BigNumber(new BigNumber(num).toFixed(point, isRound)).toFormat()
+}
+
+
+export function ckCollectionsInfoEntity (v) {
   console.log(v, v.ckCollectionsInfoEntity, v.ckCollectionsInfoEntity.bannerImage)
   return v.ckCollectionsInfoEntity.bannerImage
 }

@@ -103,7 +103,7 @@
         <router-link to="/allcollection" class="see-more display-flex box-center">{{$t("home.seeMoreCollects")}}</router-link>
       </div>
       <nftTrade :popularList="popularList"></nftTrade>
-      <nftDrop :dropList="dropList"></nftDrop>
+      <!-- <nftDrop :dropList="dropList"></nftDrop> -->
       <partners></partners>
 <!--      <nft-item-load :loadStatus="loadStatus"></nft-item-load>-->
     </div>

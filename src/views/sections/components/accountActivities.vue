@@ -106,7 +106,7 @@
           <template #default="props">
             <div class="flex-center" v-if="props.row.price">
               <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="">
-              <span class="item-name">5,678.45</span>
+              <span class="item-name">{{!!props.row.price?nftPrice(props.row.price):'-- '}}</span>
             </div>
             <div v-else>
               --
@@ -178,6 +178,9 @@ export default {
     }
   },
   methods: {
+    nftPrice (basePrice) {
+      return this.$filters.keepMaxPoint(this.$Web3.utils.fromWei(basePrice.toString()))
+    },
     changeChecked () {
       if (this.checkList === undefined || this.checkList.length == 0) {
         this.dataList = this.allDataList

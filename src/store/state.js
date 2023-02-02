@@ -44,4 +44,5 @@ export default {
   defalutPayToken: null,
   categorys: [],
   ...settings,
+  shoppingCartList: []
 };

@@ -62,7 +62,7 @@
           <div class="lable">Floor Price</div>
           <div class="value">
             <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
-            <span>{{$filters.keepPoint(collectInfo.foolPrice)}}</span>
+            <span>{{$filters.keepMaxPoint(collectInfo.foolPrice)}}</span>
           </div>
           <div class="rise">
             <span class="time">24h</span>
@@ -73,7 +73,7 @@
           <div class="lable">Best Offier</div>
           <div class="value">
             <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
-            <span>{{collectInfo.bestPriceFrom}}</span>
+            <span>{{$filters.keepMaxPoint(collectInfo.bestPriceFrom)}}</span>
           </div>
           <div class="rise">
             <span class="time">24h</span>
@@ -84,7 +84,7 @@
           <div class="lable">24h Volume</div>
           <div class="value">
             <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
-            <span>{{$filters.keepPoint(collectInfo.dayVol)}}</span>
+            <span>{{$filters.keepMaxPoint(collectInfo.dayVol)}}</span>
           </div>
           <div class="rise">
             <span class="time">24h</span>
@@ -95,7 +95,7 @@
           <div class="lable">total volume</div>
           <div class="value">
             <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
-            <span>{{$filters.keepPoint(collectInfo.volume)}}</span>
+            <span>{{$filters.keepMaxPoint(collectInfo.volume)}}</span>
           </div>
           <div class="rise">
             <span class="time">24h</span>
@@ -124,15 +124,15 @@
         </div>
       </div>
       <el-tabs v-model="activeName">
-        <el-tab-pane label="Collected" name="collected" :lazy="true">
+        <el-tab-pane label="Collected" name="collected" >
           <collectionNFT :contract="contract" />
         </el-tab-pane>
-        <el-tab-pane label="Transaction dynamics" name="transaction" :lazy="true" :disabled="true">
+        <!-- <el-tab-pane label="Transaction dynamics" name="transaction" :lazy="true" :disabled="true">
           Transaction dynamics
         </el-tab-pane>
         <el-tab-pane label="Data analysis" name="analysis" :lazy="true" :disabled="true">
           Data analysis
-        </el-tab-pane>
+        </el-tab-pane> -->
       </el-tabs>
 
     </div>
@@ -464,7 +464,7 @@ export default {
         color: $primaryColor;
       }
       &.is-top:nth-child(2) {
-        padding-right: 30px;
+        // padding-right: 30px;
       }
     }
     .el-tabs__active-bar {
