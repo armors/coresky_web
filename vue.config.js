@@ -121,6 +121,7 @@ module.exports = defineConfig({
     plugins: [
       new NodePolyfillPlugin()
     ],
+    resolve: { fallback: { fs: false } }
     // externals: cdnExternals.externals
   }
 })

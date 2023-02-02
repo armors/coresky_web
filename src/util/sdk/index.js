@@ -31,8 +31,28 @@ const ZERO_ADDRESS = ethers.constants.AddressZero;
 const ZERO_HASH = ethers.constants.HashZero;
 const ZERO = ethers.constants.Zero;
 const SALT = new Date().getTime();
+import { OpenSeaSDK, Network } from 'opensea-js'
+
 export default {
 	// self start
+
+	// opensea start
+	async initOpenSea () {
+		if (!window.openseaSDK) {
+			console.log({
+				networkName: Network.Goerli,
+				apiKey: process.env.VUE_APP_OPENSEA_KEY
+			})
+			window.openseaSDK = new OpenSeaSDK(window.web3.currentProvider, {
+				networkName: Network.Goerli,
+				// networkName: Network.Main,
+				// apiKey: process.env.VUE_APP_OPENSEA_KEY
+			})
+		}
+		return window.openseaSDK
+	},
+	// opensea end
+
 	ZERO_HASH () {
 		return ZERO_HASH
 	},

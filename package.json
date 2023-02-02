@@ -26,6 +26,7 @@
     "ethereumjs-abi": "^0.6.8",
     "ethereumjs-util": "^7.0.10",
     "ethers": "^5.1.0",
+    "fs": "^0.0.1-security",
     "inobounce": "^0.2.1",
     "install": "^0.13.0",
     "lib-flexible": "^0.3.2",
@@ -35,6 +36,7 @@
     "node-polyfill-webpack-plugin": "^1.1.4",
     "normalize.css": "^8.0.1",
     "npm": "^9.1.2",
+    "opensea-js": "^4.0.13",
     "postcss-loader": "^7.0.1",
     "postcss-pxtorem": "^6.0.0",
     "qrcode.vue": "^3.3.3",
@@ -109,5 +111,10 @@
         ]
       }
     }
+  },
+  "browser": {
+    "fs": false,
+    "path": false,
+    "os": false
   }
 }
