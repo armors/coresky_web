@@ -1,4 +1,4 @@
-import {createRouter, createWebHistory} from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 const routes = [
 	{
 		path: "/",
@@ -63,6 +63,14 @@ const routes = [
 		path: "/collection/:contract",
 		name: "collection",
 		component: () => import(/* webpackChunkName: "collection" */ "../views/sections/Collection"),
+	},
+	{
+		path: "/collectionnew/:contract",
+		name: "collectionnew",
+		component: () => import(/* webpackChunkName: "collectionnew" */ "../views/sections/CollectionNew"),
+		meta: {
+			layout: 'fullscreen'
+		},
 	},
 	{
 		path: "/detail/:contract/:tokenId",

@@ -44,3 +44,22 @@ $bgItem: #F5F5F5;
 //@used "element-plus/theme-chalk/src/dark/var.scss" with (
 //	$primaryColor: #f359d4
 //);
+
+:root {
+  --page-head-bg1: #fff;
+  --page-head-bg2: rgba(0, 0, 0, 0.04);
+  --page-head-color1: #000;
+  --page-head-color4: rgba(17, 17, 17, 0.6);
+  --page-head-color4-hover: #7D47FF;
+  --page-head-btn-bg1: rgba(41, 44, 66, 1);
+
+
+}
+:root[theme='dark'] {
+  --page-head-bg1: rgba(18, 18, 34, 1);
+  --page-head-bg2: rgba(31, 31, 46, 1);
+  --page-head-color1: #fff;
+  --page-head-color4: rgba(255, 255, 255, 0.6);
+  --page-head-color4-hover: #fff;
+  --page-head-btn-bg1: rgba(41, 44, 66, 1);
+}

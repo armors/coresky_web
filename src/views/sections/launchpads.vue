@@ -7,11 +7,11 @@
       <div class="banner-wrap"
         :style=" topDatInfo.bannerImage ? 'background: url('+ topDatInfo.bannerImage +') no-repeat; background-size: cover;':'' ">
         <div class="name">{{ topDatInfo.name }}</div>
-        <div class="txt">By Name of Creator</div>
+        <div class="txt">By {{ topDatInfo.ownerName }}</div>
         <div class="txt">
-          <span>{{ numberParse(topDatInfo.total) }} items</span>
+          <span>{{ topDatInfo.total&&numberParse(topDatInfo.total) }} items</span>
           <span style="font-weight: 600;margin: 0 5px;">·</span>
-          <span>{{ numberParse(topDatInfo.price,4) }} {{  curToken }}</span>
+          <span>{{ topDatInfo.price&&numberParse(topDatInfo.price,4)}} {{  curToken }}</span>
         </div>
         <div class="time-wrap">
           <div class="item">
@@ -49,7 +49,7 @@
           </a>
         </div>
         <div>
-          <el-button class="btn-detail" @click="$router.push('/launchpad/'+topDatInfo.contract)" :dark="false" plain>
+          <el-button class="btn-detail" :disabled="!topDatInfo.contract" @click="$router.push('/launchpad/'+topDatInfo.contract)" :dark="false" plain>
             More details >></el-button>
         </div>
       </div>
@@ -118,10 +118,10 @@
                 </div>
               </div>
             </div>
-            <div class="item-bottom">
+            <!-- <div class="item-bottom">
               {{item.countDownData.d}} d : {{item.countDownData.h}} h : {{item.countDownData.m}} m :
               {{item.countDownData.s}} s
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -226,20 +226,22 @@ export default {
         state: 1,
       }).then((res) => {
         if (res.debug.listData.length > 0) {
-          const data = res.debug.listData[0]
-          this.curToken = this.getTokenCoin(data.payment)
-          this.topDatInfo = JSON.parse(JSON.stringify(data))
-          if (this.topDatInfo.endTime * 1000 > new Date().getTime()) {
-            this.countDown = setInterval(() => {
-              let time = this.countDownFun(data.endTime)
-              if (!!time) {
-                this.countDownData = time
-              }
-              else {
-                clearInterval(this.countDown);
-                this.countDownData = { M: '00', d: '00', h: '00', m: '00', s: '00' }
-              }
-            }, 1000);
+          if (res.debug.listData.length > 0) {
+            const data = res.debug.listData[0]
+            this.curToken = this.getTokenCoin(data.payment)
+            this.topDatInfo = JSON.parse(JSON.stringify(data))
+            if (this.topDatInfo.endTime * 1000 > new Date().getTime()) {
+              this.countDown = setInterval(() => {
+                let time = this.countDownFun(data.endTime)
+                if (!!time) {
+                  this.countDownData = time
+                }
+                else {
+                  clearInterval(this.countDown);
+                  this.countDownData = { M: '00', d: '00', h: '00', m: '00', s: '00' }
+                }
+              }, 1000);
+            }
           }
         }
       })
