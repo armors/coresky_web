@@ -14,22 +14,22 @@
         <!--        profile-->
         <div class="token-address">View profile</div>
       </div>
-      <el-icon @click="visible=false">
+      <!-- <el-icon @click="visible=false">
         <Close />
-      </el-icon>
+      </el-icon> -->
     </div>
     <div class="drawer-nav">
       <div class="nav-item" @click="goView('/account/'+ user.coinbase+'?tag=Collected')">
         <img class="icon" src="@/assets/images/icons/icon_nft.svg" alt="">
-        <span>Collected</span>
+        <span>Collect</span>
       </div>
-      <div class="nav-item" @click="goView('/account/'+ user.coinbase+'?tag=Created')">
+      <!-- <div class="nav-item" @click="goView('/account/'+ user.coinbase+'?tag=Created')">
         <img class="icon" src="@/assets/images/icons/icon_collection.svg" alt="">
         <span>Created</span>
-      </div>
+      </div> -->
       <div class="nav-item" @click="goView('/account/'+ user.coinbase+'?tag=Favorited')">
         <img class="icon" src="@/assets/images/icons/icon_watchlist2.svg" alt="">
-        <span>Favorited</span>
+        <span>Favorites</span>
       </div>
       <!-- <div class="nav-item">
         <img class="icon" src="@/assets/images/icons/icon_quotation.svg" alt="">
@@ -39,13 +39,17 @@
         <img class="icon" src="@/assets/images/icons/icon_collect2.svg" alt="">
         <span>My Collect</span>
       </div> -->
-      <div class="nav-item" @click="goView('/account/'+ user.coinbase+'?tag=Watchlist')">
+      <!-- <div class="nav-item" @click="goView('/account/'+ user.coinbase+'?tag=Watchlist')">
         <img class="icon" src="@/assets/images/icons/icon_quotation.svg" alt="">
         <span>Watchlist</span>
-      </div>
-      <div class="nav-item" @click="goView('/account/'+ user.coinbase+'?tag=Activities')">
+      </div> -->
+      <!-- <div class="nav-item" @click="goView('/account/'+ user.coinbase+'?tag=Activities')">
         <img class="icon" src="@/assets/images/icons/icon_transaction.svg" alt="">
         <span>Activities</span>
+      </div> -->
+      <div class="nav-item" @click="goProfile">
+        <svg-icon class="icon" icon-class="setting" />
+        Setting
       </div>
       <div class="nav-item" @click="logout">
         <svg-icon class="icon" icon-class="tuichu" />
