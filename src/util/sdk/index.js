@@ -39,12 +39,17 @@ export default {
 	// opensea start
 	async initOpenSea () {
 		if (!window.openseaSDK) {
+			let web3 = await utils_web3.getWeb3();
+			const gasPrice = await web3.eth.getGasPrice()
+			console.log(gasPrice)
 			console.log({
 				networkName: Network.Goerli,
-				apiKey: process.env.VUE_APP_OPENSEA_KEY
+				apiKey: process.env.VUE_APP_OPENSEA_KEY,
+				gasPrice: new BigNumber(gasPrice * 1.5)
 			})
 			window.openseaSDK = new OpenSeaSDK(window.web3.currentProvider, {
 				networkName: Network.Goerli,
+				gasPrice: new BigNumber(gasPrice * 1.5)
 				// networkName: Network.Main,
 				// apiKey: process.env.VUE_APP_OPENSEA_KEY
 			})
