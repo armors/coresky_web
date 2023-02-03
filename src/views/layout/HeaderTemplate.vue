@@ -67,14 +67,14 @@
           <div class="notify-num" v-if="shoppingCartList&&shoppingCartList.length>0">{{ shoppingCartList.length }}</div>
           <svg-icon class="head-icon" icon-class="gouwuche" />
         </div>
-        <div class="nav-link" @click="showUserDrawer=true">
+        <div class="head-connect display-flex box-center" v-if="!connected" @click="login">
+          {{ $t("navigation.connectWallet") }}
+        </div>
+        <div class="nav-link" @click="showUserDrawer=true" v-else>
           <avatar class="avatar-img" :imageUrl="user.avatar || $filters.fullImageUrl(user.avatar)"
-            :address="user.coinbase" :imgWidth="40" :imgHeight="40" shape="circular">
+            :address="user.coinbase" :imgWidth="32" :imgHeight="32" shape="circular">
           </avatar>
         </div>
-        <!-- <div>
-          {{ shoppingCartList }}
-        </div> -->
       </div>
       <!-- <div class="head-menus">
         <div class="head-connect display-flex box-center" v-if="!connected" @click="login">

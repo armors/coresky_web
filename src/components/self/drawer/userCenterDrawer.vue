@@ -19,7 +19,7 @@
       </el-icon>
     </div>
     <div class="drawer-nav">
-      <div class="nav-item" @click="goView('/account/'+ user.coinbase)">
+      <div class="nav-item" @click="goView('/account/'+ user.coinbase+'?tag=Collected')">
         <img class="icon" src="@/assets/images/icons/icon_nft.svg" alt="">
         <span>Collected</span>
       </div>
@@ -47,40 +47,16 @@
         <img class="icon" src="@/assets/images/icons/icon_transaction.svg" alt="">
         <span>Activities</span>
       </div>
-      <!-- <div class="nav-item">
-        <img class="icon" src="@/assets/images/icons/icon_transaction.svg" alt="">
-        <span>My Coupon</span>
-      </div>
-      <div class="nav-item">
-        <img class="icon" src="@/assets/images/icons/icon_transaction.svg" alt="">
-        <span>My Launchpad</span>
-      </div> -->
-      <div class="nav-item line">
-      </div>
-      <div class="nav-item">
-        <img class="icon" src="@/assets/images/icons/icon_collect2.svg" alt="">
-        <span>My Coupons</span>
-      </div>
-      <div class="nav-item">
-        <img class="icon" src="@/assets/images/icons/icon_nft.svg" alt="">
-        <span>My Launchpad</span>
-      </div>
       <div class="nav-item" @click="logout">
-        {{ $t("navigation.disconnect") }}
+        <svg-icon class="icon" icon-class="tuichu" />
+        Quit
       </div>
-      <!-- <div class="nav-item">
-        <img class="icon" src="@/assets/images/icons/icon_nft.svg" alt="">
-        <span>My Collect</span>
-      </div>
-      <div class="nav-item">
-        <img class="icon" src="@/assets/images/icons/icon_nft.svg" alt="">
-        <span>Transaction Record</span>
-      </div> -->
+      <div class="nav-item line" style="margin:25px 0"></div>
     </div>
     <div class="drawer-wallet">
       <div class="wallet-item">
         <div class="coin-box">
-          <img class="coin-img" src="@/assets/images/icons/token/token_eth2.svg" alt="">
+          <svg-icon class="eth-icon" icon-class="eth_01" />
         </div>
         <div class="coin-name">
           ETH
@@ -92,7 +68,7 @@
       </div>
       <div class="wallet-item">
         <div class="coin-box">
-          <img class="coin-img" src="@/assets/images/icons/token/token_eth2.svg" alt="">
+          <svg-icon class="eth-icon weth" icon-class="eth_01" />
         </div>
         <div class="coin-name">
           WETH
@@ -101,6 +77,21 @@
           <div class="num">{{balanceWETH}}</div>
           <!--          <div class="num2">$0</div>-->
         </div>
+      </div>
+    </div>
+    <div class="drawer-wallet" style="margin-top:30px;">
+      <div class="wallet-item">
+        <!-- <div class="coin-box">
+        </div> -->
+        <div class="coin-name">
+          Score:
+        </div>
+        <div class="price-box">
+          <div class="num">333</div>
+        </div>
+      </div>
+      <div class="wallet-item">
+        <el-link :underline="false" type="primary" class="btnDetail">Details</el-link>
       </div>
     </div>
   </el-drawer>
@@ -157,10 +148,12 @@ export default {
     },
     logout () {
       this.$web3.disconnect();
+      this.handleClose()
     },
     goProfile () {
       this.visible = false
       this.$router.push({ path: '/profile' });
+      this.handleClose()
     },
     goView (path) {
       this.$router.push(path)
@@ -269,6 +262,13 @@ export default {
           width: 12px;
           height: 20px;
         }
+        .eth-icon {
+          color: #728be7;
+          font-size: 18px;
+          &.weth{
+            color: #ED8EE4;
+          }
+        }
       }
       .coin-name {
         margin-left: 10px;
@@ -291,6 +291,11 @@ export default {
           line-height: 18px;
           color: $color-black2;
         }
+      }
+      .btnDetail {
+        margin: 0 auto;
+        font-size: 16px;
+        color: #7d47ff;
       }
     }
   }
