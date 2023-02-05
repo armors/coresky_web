@@ -145,8 +145,101 @@
           </div>
         </div>
       </div>
-      <div class="btn-submit" >Confirm the price</div>
+      <div class="btn-submit">Confirm the price</div>
     </div>
+    <el-dialog :model-value="isShowDialog" :show-close="false" :close-on-click-modal="false"
+      @closed="isShowDialog=false" class="custom-dialog" destroy-on-close>
+      <template #title>
+        <div class="left">
+          <span>正在进行中的挂单</span>
+        </div>
+        <el-icon @click="isShowDialog=false">
+          <Close />
+        </el-icon>
+      </template>
+      <div>
+        <el-steps direction="vertical" :active="3">
+          <el-step>
+            <template #title>
+              <div class="txt1">
+                授权收藏品
+              </div>
+            </template>
+            <template #description>
+              <div class="txt2">
+                还剩余1个合集的授权
+              </div>
+              <div class="txt3">
+                <el-icon class="success">
+                  <SuccessFilled />
+                </el-icon>
+                <span>ENS: Ethereum Name Service for</span>
+                <svg-icon icon-class="logo" />
+              </div>
+              <div class="txt3">
+                <el-icon class="fail">
+                  <CircleCloseFilled />
+                </el-icon>
+                <span>ENS: Ethereum Name Service for</span>
+                <svg-icon icon-class="os-logo" />
+              </div>
+              <div class="txt3">
+                <el-icon class="my-loading">
+                  <Loading />
+                </el-icon>
+                <span>ENS: Ethereum Name Service for</span>
+                <svg-icon icon-class="os-logo" />
+              </div>
+            </template>
+          </el-step>
+          <el-step>
+            <template #title>
+              <div class="txt1">
+                上架签名
+              </div>
+            </template>
+            <template #description>
+              <div class="txt2">
+                剩余0个签名
+              </div>
+              <div class="txt3">
+                <el-icon class="success">
+                  <SuccessFilled />
+                </el-icon>
+                <span>masturbat.eth</span>
+                <svg-icon icon-class="logo" />
+              </div>
+              <div class="txt3">
+                <el-icon class="fail">
+                  <CircleCloseFilled />
+                </el-icon>
+                <span>masturbat.eth</span>
+                <svg-icon icon-class="os-logo" />
+              </div>
+              <div class="txt3">
+                <el-icon class="my-loading">
+                  <Loading />
+                </el-icon>
+                <span>masturbat.eth</span>
+                <svg-icon icon-class="os-logo" />
+              </div>
+            </template>
+          </el-step>
+          <el-step title="">
+            <template #icon>
+              <div></div>
+            </template>
+            <template #title>
+            </template>
+          </el-step>
+        </el-steps>
+      </div>
+      <div>
+        <el-button type="primary" class="btnOption" loading="true" >
+          授权藏品</el-button>
+      </div>
+
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -195,7 +288,8 @@ export default {
       defaultTime: new Date(),
       form: {
         time: ''
-      }
+      },
+      isShowDialog: true
     };
   },
   watch: {
@@ -431,7 +525,85 @@ export default {
   text-align: center;
   font-size: 16px;
   cursor: pointer;
-  margin-bottom: 50px;
+  margin-bottom: 30px;
+}
+::v-deep {
+  .custom-dialog {
+    width: 480px;
+    padding: 30px 30px;
+    .txt1 {
+      margin-bottom: 10px;
+      height: 28px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #000000;
+      line-height: 25px;
+    }
+    .txt2 {
+      margin-bottom: 10px;
+      height: 20px;
+      font-size: 14px;
+      color: #000000;
+      line-height: 20px;
+    }
+    .txt3 {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      height: 18px;
+      font-size: 14px;
+      color: #000000;
+      line-height: 18px;
+
+      .el-icon,
+      .svg-icon {
+        font-size: 16px;
+        margin-right: 5px;
+        &.success {
+          color: #17c586;
+        }
+        &.fail {
+          color: #ff4949;
+        }
+      }
+      .svg-icon {
+        margin-left: 5px;
+      }
+    }
+    .btnOption {
+      width: 100%;
+      height: 48px;
+      padding: 10px 0;
+      border-radius: 24px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      color: $color-white;
+      background: $mainLiner;
+      &:hover {
+        background: $mainLiner;
+      }
+      &.small {
+        height: 38px;
+        border-radius: 19px;
+        width: 280px;
+      }
+    }
+  }
+}
+.my-loading {
+  color: #409eff;
+  width: 16px;
+  height: 16px;
+  animation: icon-loading 2s infinite linear;
+}
+@keyframes icon-loading {
+  0% {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(1turn);
+  }
 }
 </style>
 
