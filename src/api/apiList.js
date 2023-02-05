@@ -16,6 +16,10 @@ export default {
       url: "/home/indexlist",
       method: "post",
     },
+    addTopic: {
+      url: "/home/addTopic",
+      method: "post",
+    }
   },
   config: {
     fetch: {
