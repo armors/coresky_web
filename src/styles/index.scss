@@ -252,72 +252,7 @@ input:-internal-autofill-selected {
   border-color: $primaryColor;
 }
 
-.el-button--default {
-  &:hover,
-  &:focus,
-  &:active {
-    color: #409eff;
-    background-color: #ecf5ff;
-    border-color: #c6e2ff;
-  }
-  &.is-disabled {
-    &:hover,
-    &:focus,
-    &:active {
-      color: #c0c4cc;
-      background-color: #ffffff;
-      border-color: #e4e7ed;
-    }
-  }
-}
-.el-button--primary {
-  color: #ffffff;
-  background-color: $primaryColor;
-  border-color: $primaryColor;
-  &:hover,
-  &:focus,
-  &:active {
-    color: #fff;
-    background: #66b1ff;
-    border-color: #66b1ff;
-  }
-  &.is-disabled {
-    color: #fff;
-    background-color: #a0cfff;
-    border-color: #a0cfff;
-    &:hover,
-    &:focus,
-    &:active {
-      color: #fff;
-      background-color: #a0cfff;
-      border-color: #a0cfff;
-    }
-  }
-}
-.el-button--primary.is-plain {
-  color: #409eff;
-  background-color: #ecf5ff;
-  border-color: #c6e2ff;
-  &:hover,
-  &:focus,
-  &:active {
-    color: #fff;
-    background: $primaryColor;
-    border-color: $primaryColor;
-  }
-  &.is-disabled {
-    color: #8cc5ff;
-    background-color: #ecf5ff;
-    border-color: #d9ecff;
-    &:hover,
-    &:focus,
-    &:active {
-      color: #8cc5ff;
-      background-color: #ecf5ff;
-      border-color: #d9ecff;
-    }
-  }
-}
+
 
 .custom-button {
   color: #ffffff;

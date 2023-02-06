@@ -91,11 +91,11 @@
           Score:
         </div>
         <div class="price-box">
-          <div class="num">333</div>
+          <div class="num">{{user&&user.rewards}}</div>
         </div>
       </div>
       <div class="wallet-item">
-        <el-link :underline="false" type="primary" class="btnDetail">Details</el-link>
+        <el-link :underline="false" type="primary" @click="goView('/reward')" class="btnDetail">Details</el-link>
       </div>
     </div>
   </el-drawer>
@@ -115,7 +115,9 @@ export default {
   watch: {
     show () {
       this.visible = this.show;
-      this.initGetBalance()
+      if (this.visible) {
+        this.initGetBalance()
+      }
     },
     '$store.state.user': function () {
       this.initGetBalance()
@@ -145,10 +147,17 @@ export default {
       this.balanceETH = keepPoint(await this.$sdk.getBalance({
         address: this.$sdk.NULL_ADDRESS()
       }, this.user.coinbase))
-      const balanceWETH = await this.$sdk.getBalance({
-        address: process.env.VUE_APP_WETH
-      }, this.user.coinbase)
-      this.balanceWETH = this.$sdk.fromWeiNum(balanceWETH)
+
+      try {
+        let balanceWETH = await this.$sdk.getBalance({
+          address: process.env.VUE_APP_WETH
+        }, this.user.coinbase)
+        this.balanceWETH = this.$sdk.fromWeiNum(balanceWETH)
+      }
+      catch (err) {
+
+      }
+      console.log(this.user)
     },
     logout () {
       this.$web3.disconnect();
@@ -269,8 +278,8 @@ export default {
         .eth-icon {
           color: #728be7;
           font-size: 18px;
-          &.weth{
-            color: #ED8EE4;
+          &.weth {
+            color: #ed8ee4;
           }
         }
       }
