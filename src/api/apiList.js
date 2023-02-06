@@ -154,6 +154,10 @@ export default {
       url: "/token/info",
       method: "post",
     },
+    tokenOrderOffer: {
+      url: "/token/orders",
+      method: "post",
+    },
     tokenEvent: {
       url: "/token/event",
       method: "post",

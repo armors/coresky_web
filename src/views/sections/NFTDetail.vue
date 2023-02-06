@@ -203,7 +203,8 @@
           </el-collapse>
 
         </div>
-        <div class="card-wrap mt30" v-if="tokenInfo.contractType === 1">
+<!--        <div class="card-wrap mt30" v-if="tokenInfo.contractType === 1">-->
+        <div class="card-wrap mt30">
           <el-collapse v-model="activeName3" accordion>
             <el-collapse-item title="Consistency" name="1">
               <template #title>
@@ -215,13 +216,14 @@
                   <!--                  </el-icon>-->
                 </div>
               </template>
-              <div class="card-body" style="height:156px;padding:0;overflow: auto;" :style="{
-                height: tokenInfo.contractType === 0 ? '480px' : '156px'
-              }">
+<!--              <div class="card-body" style="height:156px;padding:0;overflow: auto;" :style="{-->
+<!--                height: tokenInfo.contractType === 0 ? '480px' : '156px'-->
+<!--              }">-->
+              <div class="card-body" style="height:156px;padding:0;overflow: auto;">
                 <div class="offer-list">
                   <div class="list-tr head top0">
                     <div class="list-th th25">Unit Price</div>
-                    <div class="list-th th25">Quantity</div>
+                    <div class="list-th th25" v-if="tokenInfo.contractType === 1">Quantity</div>
                     <div class="list-th th25">Exporation</div>
                     <div class="list-th th25">From</div>
                     <div class="list-th th25 center">Status</div>
@@ -229,24 +231,27 @@
                   </div>
 
                   <div class="list-tr" v-for="(v, i) of ckOrdersEntityList" :key="`listing-item-${i}`">
-                    <div class="list-th th25">
-                      <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-                      {{nftPriceFun(v.basePrice)}}
-                    </div>
-                    <div class="list-th th25">{{$filters.milliFormat(v.amount)}}</div>
-                    <div class="list-th th25">{{$filters.timeFormat(v.createTime)}}</div>
-                    <div class="list-th th25 purple" @click="goExplore(v.maker)">
-                      {{$filters.ellipsisAddress(v.maker, 4)}}</div>
-                    <div class="list-th th25 center">
-                      <el-button type="primary" class="btnAccept" v-if="isSelfMakeOffer(v)"
-                        :loading="cancelMakeOfferBtnLoading" @click="cancelSell(v)">Cancel</el-button>
-                      <el-button type="primary" class="btnAccept" v-else :disabled="isSelf1155(v)"
-                        :loading="acceptDialogBtnLoading" @click="showBuyNft(v)">Buy</el-button>
-                    </div>
-                    <div class="list-th th25 center">
-                      <el-button type="primary" class="btnAccept" :disabled="isInCart1155(v.id) || isSelfSell(v.maker)"
-                        @click="addCart1155(i)">Add</el-button>
-                    </div>
+                    <template v-if="v.source === 'coresky'">
+                      <div class="list-th th25">
+                        <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
+                        {{nftPriceFun(v.info.basePrice)}}
+                      </div>
+                      <div class="list-th th25" v-if="tokenInfo.contractType === 1">{{$filters.milliFormat(v.info.amount)}}</div>
+                      <div class="list-th th25">{{$filters.timeFormat(v.info.createTime)}}</div>
+                      <div class="list-th th25 purple" @click="goExplore(v.info.maker)">
+                        {{$filters.ellipsisAddress(v.info.maker, 4)}}</div>
+                      <div class="list-th th25 center">
+                        <el-button type="primary" class="btnAccept" v-if="isSelfMakeOffer(v.info)"
+                                   :loading="cancelMakeOfferBtnLoading" @click="cancelSell(v.info)">Cancel</el-button>
+                        <el-button type="primary" class="btnAccept" v-else :disabled="isSelf1155(v.info)"
+                                   :loading="acceptDialogBtnLoading" @click="showBuyNft(v.info)">Buy</el-button>
+                      </div>
+                      <div class="list-th th25 center">
+                        <el-button type="primary" class="btnAccept" :disabled="isInCart1155(v.info.id) || isSelfSell(v.info.maker)"
+                                   @click="addCart1155(i)">Add</el-button>
+                      </div>
+                    </template>
+
                   </div>
                 </div>
               </div>
@@ -265,9 +270,10 @@
                   <!--                  </el-icon>-->
                 </div>
               </template>
-              <div class="card-body" style="height:279px;padding:0;overflow: auto;" :style="{
-                height: tokenInfo.contractType === 0 ? '570px' : '279px'
-              }">
+<!--              <div class="card-body" style="height:279px;padding:0;overflow: auto;" :style="{-->
+<!--                height: tokenInfo.contractType === 0 ? '570px' : '279px'-->
+<!--              }">-->
+              <div class="card-body" style="height:279px;padding:0;overflow: auto;">
                 <div class="offer-list">
                   <div class="list-tr head top0">
                     <div class="list-th th25">Price</div>
@@ -278,20 +284,22 @@
                   </div>
 
                   <div class="list-tr" v-for="(v, i) of ckAuctionEntityList" :key="`make-offer-${i}`">
-                    <div class="list-th th25">
-                      <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-                      {{nftPriceFun(v.basePrice)}}
-                    </div>
-                    <div class="list-th th25" v-if="tokenInfo.contractType === 1">{{$filters.milliFormat(v.amount)}}</div>
-                    <div class="list-th th25">{{$filters.timeFormat(v.createTime)}}</div>
-                    <div class="list-th th25 purple" @click="goExplore(v.maker)">
-                      {{$filters.ellipsisAddress(v.maker, 4)}}</div>
-                    <div class="list-th th25 center">
-                      <el-button type="primary" class="btnAccept" v-if="isSelfMakeOffer(v)"
-                        :loading="cancelMakeOfferBtnLoading" @click="cancelMakeOffer(v)">Cancel</el-button>
-                      <el-button type="primary" class="btnAccept" v-else :disabled="!isSelf"
-                        :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT(v)">Accept</el-button>
-                    </div>
+                    <template v-if="v.source === 'coresky'">
+                      <div class="list-th th25">
+                        <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
+                        {{nftPriceFun(v.info.basePrice)}}
+                      </div>
+                      <div class="list-th th25" v-if="tokenInfo.contractType === 1">{{$filters.milliFormat(v.info.amount)}}</div>
+                      <div class="list-th th25">{{$filters.timeFormat(v.info.createTime)}}</div>
+                      <div class="list-th th25 purple" @click="goExplore(v.info.maker)">
+                        {{$filters.ellipsisAddress(v.info.maker, 4)}}</div>
+                      <div class="list-th th25 center">
+                        <el-button type="primary" class="btnAccept" v-if="isSelfMakeOffer(v.info)"
+                                   :loading="cancelMakeOfferBtnLoading" @click="cancelMakeOffer(v.info)">Cancel</el-button>
+                        <el-button type="primary" class="btnAccept" v-else :disabled="!isSelf"
+                                   :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT(v.info)">Accept</el-button>
+                      </div>
+                    </template>
                   </div>
                 </div>
               </div>
@@ -449,6 +457,7 @@ export default {
   mounted () {
     this.getTokenInfo()
     this.getTokenEvent()
+    this.getOrdersAndOffers()
     // this.isInCart()
   },
   computed: {
@@ -691,9 +700,6 @@ export default {
     getTokenInfo () {
       this.$api("collect.tokenInfo", this.tokenInfoParams).then((res) => {
         this.tokenInfo = res.debug
-        // this.tokenInfo.ckCollectionsInfoEntity.floorPrice = '0.02'
-        this.ckAuctionEntityList = this.tokenInfo.ckAuctionEntityList || []
-        this.ckOrdersEntityList = this.tokenInfo.ckOrdersEntityList || []
         this.nftPrice = this.nftPriceFun(this.tokenInfo.basePrice)
         this.tokenInfo.ownersEntityList.forEach(item => {
           if (item.address === this.user.coinbase.toLowerCase()) {
@@ -701,12 +707,30 @@ export default {
           }
         })
         this.bestPrice = this.nftPriceFun(this.tokenInfo.bestPrice)
-        if (this.tokenInfo.ckOrdersEntityList.length > 0) {
-          this.countDown()
-        }
         this.historyPrice = this.tokenInfo.historyPrice
         this.initPriceHistory()
         // this.isInCart()
+      })
+    },
+    getOrdersAndOffers () {
+      this.$api("collect.tokenOrderOffer", this.tokenInfoParams).then((res) => {
+        console.log(res)
+        let offer = res.debug.offer || []
+        let listed = res.debug.listed || []
+        offer = offer.map(item => {
+          item.info = JSON.parse(item.info)
+          return item
+        })
+        listed = listed.map(item => {
+          item.info = JSON.parse(item.info)
+          return item
+        })
+        this.ckAuctionEntityList = offer
+        this.ckOrdersEntityList = listed
+        if (this.ckOrdersEntityList.length > 0) {
+          this.countDown()
+        }
+        console.log(this.ckAuctionEntityList, this.ckOrdersEntityList)
       })
     },
     getTokenEvent () {
@@ -793,7 +817,8 @@ export default {
       this.$refs.NFTDialogBuy.showBuy(this.tokenInfo, v)
     },
     nftPriceFun (basePrice) {
-      return basePrice !== null ? this.$filters.keepMaxPoint(this.$Web3.utils.fromWei(basePrice.toString())) : '--'
+      console.log(basePrice)
+      return (basePrice !== null && basePrice !== undefined) ? this.$filters.keepMaxPoint(this.$Web3.utils.fromWei(basePrice.toString())) : '--'
     },
 
     // 添加购物车
