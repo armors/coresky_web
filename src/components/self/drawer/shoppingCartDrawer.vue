@@ -26,7 +26,7 @@
             <div class="info-txt">
               <div class="txt1">{{v.name || '--'}}</div>
               <div class="txt2">ENS :Ethereum Na…</div>
-              <div class="txt3">Creator Fee {{getRate(vc)}}</div>
+              <div class="txt3">Creator Fee {{$filters.feeFormat(vc)}}</div>
             </div>
           </div>
           <div class="shopping-price">
@@ -128,9 +128,6 @@ export default {
       }
       this.$store.commit('initShoppingCart')
       this.getCartInfo()
-    },
-    getRate (v) {
-      return (v.makerRelayerFee / 1000) +'%'
     },
     getCartInfo () {
       this.totalPrice = 0

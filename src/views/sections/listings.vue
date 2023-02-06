@@ -1,610 +1,929 @@
 <template>
-  <div class="main-wrapper">
-    <div>
-      <div class="listings-head">
-        <el-button class="btn-back" plain>
-          <el-icon>
-            <Back />
-          </el-icon>
-        </el-button>
-        <span class="title">Cross-Market Listing</span>
-      </div>
-      <div class="nft-box">
-        <image-box class="img-box" src="http://54.169.232.16:8083/nft/0x6c3dc05a3ee2f15e010d02a4a4daca8251cc7511/2.jpg">
-        </image-box>
-        <div class="box-center">
-          <span class="tokenid">Bean #11566</span>
-          <span class="collection-name">ENS: Ethereum Name Service
+	<div class="main-wrapper">
+		<div>
+			<div class="listings-head">
+				<el-button class="btn-back" plain @click="goBack">
+					<el-icon>
+						<Back/>
+					</el-icon>
+				</el-button>
+				<span class="title">Cross-Market Listing</span>
+			</div>
+			<div class="nft-box">
+				<image-box class="img-box" src="http://54.169.232.16:8083/nft/0x6c3dc05a3ee2f15e010d02a4a4daca8251cc7511/2.jpg">
+				</image-box>
+				<div class="box-center">
+					<span class="tokenid">Bean #11566</span>
+					<span class="collection-name">ENS: Ethereum Name Service
             <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
           </span>
-        </div>
-        <div style="margin-right: 30px;">
-          <el-input-number :min="1" :max="999" />
-        </div>
-      </div>
-      <div class="title2">
-        NFT Marketplace
-      </div>
-      <div class="platform">
-        <div class="item" :class="{'active':platformList.find(el => el.name === 'Coresky')}"
-          @click="togglePlatform('Coresky')">
-          <svg-icon class="platform-logo" icon-class="logo" />
-          <span class="name">Coresky</span>
-        </div>
-        <div class="item" :class="{'active':platformList.find(el => el.name === 'Opensea')}"
-          @click="togglePlatform('Opensea')">
-          <svg-icon class="platform-logo" icon-class="os-logo" />
-          <span class="name">Opensea</span>
-        </div>
-      </div>
-      <div class="flex-com" style="">
-        <div class="item">
-          <span class="mr10">Same price </span>
-          <el-switch v-model="isSamePrice" size="small" :active-value="true" :inactive-value="false" />
-        </div>
-        <div class="item" v-if="isSamePrice">
-          <el-input v-model="samePrice" @change="samePriceChange" size="small" type="number" style="width:140px"
-            class="input-with-select">
-            <template #append>
-              <el-select model-value="eth" placeholder=" " size="small" style="width:60px" :teleported="false">
-                <el-option label="ETH" value="eth" />
-              </el-select>
-            </template>
-          </el-input>
-        </div>
-        <div class="item">
-          <span class="mr10">Auto Adjust for Fees </span>
-          <el-switch v-model="isProceeds" size="small" :active-value="true" :inactive-value="false" />
-        </div>
-        <div style="margin-left: auto;">
-          <div>
-            <el-date-picker v-model="form.time" type="datetime" placeholder="Pick a Date" style=""
-              format="YYYY-MM-DD HH:mm" :default-time="defaultTime" :disabled-date="disabledDate" />
-            <el-select v-model="form.date" class="ml20" placeholder="Select" @change="dateChange"
-              style="width:120px;flex-shrink: 0;">
-              <el-option v-for="item in optionsDays" :key="item.value" :label="item.label" :value="item.value" />
-            </el-select>
-          </div>
-        </div>
-      </div>
-      <el-table :data="dataList" style="width: 100%" class="mytable" header-row-class-name="head-row">
-        <el-table-column prop="date" label="Market" width="180">
-          <template #default="props">
-            <div class="flex-m">
-              <svg-icon class="platform-logo" v-if="props.row.name==='Coresky'" icon-class="logo" />
-              <svg-icon class="platform-logo" v-if="props.row.name==='Opensea'" icon-class="os-logo" />
-              <span>{{ props.row.name }}</span>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column prop="Item" label="List Price" width="200" :show-overflow-tooltip="true">
-          <template #default="props">
-            <el-input v-model="props.row.listPrice" size="small" type="number" style="width:140px"
-              class="input-with-select" :teleported="false">
-              <template #append>
-                <el-select model-value="eth" placeholder=" " size="small" style="width:60px">
-                  <el-option label="ETH" value="eth" />
-                </el-select>
-              </template>
-            </el-input>
-            <div class="txt1">
-              <span>Floor:</span>
-              <svg-icon class="token" icon-class="token_eth2" />
-              <span class="item-name">0.0075</span>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column prop="address" label="Last Sale">
-          <template #default="props">
-            <svg-icon class="token" icon-class="token_eth2" />
-            <span class="item-name">0.0075</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="Item" label="Fees" width="140">
-          <template #default="props">
-            0.5%
-          </template>
-        </el-table-column>
-        <el-table-column label="Royalties">
-          <template #default="props">
-            0.5%
-          </template>
-        </el-table-column>
-        <el-table-column prop="address" label="Proceeds">
-          <template #default="props">
-            <el-input v-model="props.row.proceeds" size="small" type="number" style="width:140px"
-              class="input-with-select" :teleported="false">
-              <template #append>
-                <el-select model-value="eth" placeholder=" " size="small" style="width:60px">
-                  <el-option label="ETH" value="eth" />
-                </el-select>
-              </template>
-            </el-input>
-          </template>
-        </el-table-column>
-        <template #empty>
-          <div class="empty-wrap">
-            <p class="txt">No Data</p>
-            <img src="@/assets/images/no-data.png" alt="">
-          </div>
-        </template>
-      </el-table>
-      <div class="title3">
-        Coupons:
-      </div>
-      <div class="coupons-wrap">
-        <div class="txt1">
-          Coupon rewadrds:
-        </div>
-        <div>
-          <div class="txt2">
-            1 coupon / 0.5eth
-          </div>
-          <div class="txt2 mt5">
-            1 coupon / listing / day
-          </div>
-        </div>
-      </div>
-      <div class="btn-submit">Confirm the price</div>
-    </div>
-    <el-dialog :model-value="isShowDialog" :show-close="false" :close-on-click-modal="false"
-      @closed="isShowDialog=false" class="custom-dialog" destroy-on-close>
-      <template #title>
-        <div class="left">
-          <span>正在进行中的挂单</span>
-        </div>
-        <el-icon @click="isShowDialog=false">
-          <Close />
-        </el-icon>
-      </template>
-      <div>
-        <el-steps direction="vertical" :active="3">
-          <el-step>
-            <template #title>
-              <div class="txt1">
-                授权收藏品
-              </div>
-            </template>
-            <template #description>
-              <div class="txt2">
-                还剩余1个合集的授权
-              </div>
-              <div class="txt3">
-                <el-icon class="success">
-                  <SuccessFilled />
-                </el-icon>
-                <span>ENS: Ethereum Name Service for</span>
-                <svg-icon icon-class="logo" />
-              </div>
-              <div class="txt3">
-                <el-icon class="fail">
-                  <CircleCloseFilled />
-                </el-icon>
-                <span>ENS: Ethereum Name Service for</span>
-                <svg-icon icon-class="os-logo" />
-              </div>
-              <div class="txt3">
-                <el-icon class="my-loading">
-                  <Loading />
-                </el-icon>
-                <span>ENS: Ethereum Name Service for</span>
-                <svg-icon icon-class="os-logo" />
-              </div>
-            </template>
-          </el-step>
-          <el-step>
-            <template #title>
-              <div class="txt1">
-                上架签名
-              </div>
-            </template>
-            <template #description>
-              <div class="txt2">
-                剩余0个签名
-              </div>
-              <div class="txt3">
-                <el-icon class="success">
-                  <SuccessFilled />
-                </el-icon>
-                <span>masturbat.eth</span>
-                <svg-icon icon-class="logo" />
-              </div>
-              <div class="txt3">
-                <el-icon class="fail">
-                  <CircleCloseFilled />
-                </el-icon>
-                <span>masturbat.eth</span>
-                <svg-icon icon-class="os-logo" />
-              </div>
-              <div class="txt3">
-                <el-icon class="my-loading">
-                  <Loading />
-                </el-icon>
-                <span>masturbat.eth</span>
-                <svg-icon icon-class="os-logo" />
-              </div>
-            </template>
-          </el-step>
-          <el-step title="">
-            <template #icon>
-              <div></div>
-            </template>
-            <template #title>
-            </template>
-          </el-step>
-        </el-steps>
-      </div>
-      <div>
-        <el-button type="primary" class="btnOption" loading="true" >
-          授权藏品</el-button>
-      </div>
+				</div>
+				<div style="margin-right: 30px;">
+					<el-input-number :min="1" :max="999"/>
+				</div>
+			</div>
+			<div class="title2">
+				NFT Marketplace
+			</div>
+			<div class="platform">
+				<div class="item" :class="{'active':platformList.find(el => el.name === 'Coresky')}"
+				     @click="togglePlatform('Coresky')">
+					<svg-icon class="platform-logo" icon-class="logo"/>
+					<span class="name">Coresky</span>
+				</div>
+				<div class="item" :class="{'active':platformList.find(el => el.name === 'Opensea')}"
+				     @click="togglePlatform('Opensea')">
+					<svg-icon class="platform-logo" icon-class="os-logo"/>
+					<span class="name">Opensea</span>
+				</div>
+			</div>
+			<div class="flex-com" style="">
+				<div class="item">
+					<span class="mr10">Same price </span>
+					<el-switch v-model="isSamePrice" size="small" :active-value="true" :inactive-value="false"/>
+				</div>
+				<div class="item" v-if="isSamePrice">
+					<el-input v-model="samePrice" @change="samePriceChange" size="small" type="number" style="width:140px"
+					          class="input-with-select">
+						<template #append>
+							<el-select model-value="eth" placeholder=" " size="small" style="width:60px" :teleported="false">
+								<el-option label="ETH" value="eth"/>
+							</el-select>
+						</template>
+					</el-input>
+				</div>
+				<div class="item">
+					<span class="mr10">Auto Adjust for Fees </span>
+					<el-switch v-model="isProceeds" size="small" :active-value="true" :inactive-value="false"/>
+				</div>
+				<div style="margin-left: auto;">
+					<div>
+						<el-date-picker v-model="form.time" type="datetime" placeholder="Pick a Date" style=""
+						                format="YYYY-MM-DD HH:mm" :default-time="defaultTime" :disabled-date="disabledDate"/>
+						<el-select v-model="form.date" class="ml20" placeholder="Select" @change="dateChange"
+						           style="width:120px;flex-shrink: 0;">
+							<el-option v-for="item in optionsDays" :key="item.value" :label="item.label" :value="item.value"/>
+						</el-select>
+					</div>
+				</div>
+			</div>
+			<el-table :data="dataList" style="width: 100%" class="mytable" header-row-class-name="head-row">
+				<el-table-column prop="date" label="Market" width="180">
+					<template #default="props">
+						<div class="flex-m">
+							<svg-icon class="platform-logo" v-if="props.row.name==='Coresky'" icon-class="logo"/>
+							<svg-icon class="platform-logo" v-if="props.row.name==='Opensea'" icon-class="os-logo"/>
+							<span>{{ props.row.name }}</span>
+						</div>
+					</template>
+				</el-table-column>
+				<el-table-column prop="Item" label="List Price" width="200" :show-overflow-tooltip="true">
+					<template #default="props">
+						<el-input v-model="props.row.listPrice" size="small" type="number" style="width:140px"
+						          class="input-with-select" :teleported="false">
+							<template #append>
+								<el-select model-value="eth" placeholder=" " size="small" style="width:60px">
+									<el-option label="ETH" value="eth"/>
+								</el-select>
+							</template>
+						</el-input>
+						<div class="txt1">
+							<span>Floor:</span>
+							<svg-icon class="token" icon-class="token_eth2"/>
+							<span class="item-name">{{props.row.floorPrice}}</span>
+						</div>
+					</template>
+				</el-table-column>
+				<el-table-column prop="address" label="Last Sale">
+					<template #default="props">
+						<svg-icon class="token" icon-class="token_eth2"/>
+						<span class="item-name">{{props.row.lastSale}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column prop="Item" label="Fees" width="140">
+					<template #default="props">
+						{{props.row.fee}}
+					</template>
+				</el-table-column>
+				<el-table-column label="Royalties">
+					<template #default="props">
+						{{props.row.Royalties}}
+					</template>
+				</el-table-column>
+				<el-table-column prop="address" label="Proceeds">
+					<template #default="props">
+						<el-input v-model="props.row.proceeds" size="small" type="number" style="width:140px"
+						          class="input-with-select" :teleported="false">
+							<template #append>
+								<el-select model-value="eth" placeholder=" " size="small" style="width:60px">
+									<el-option label="ETH" value="eth"/>
+								</el-select>
+							</template>
+						</el-input>
+					</template>
+				</el-table-column>
+				<template #empty>
+					<div class="empty-wrap">
+						<p class="txt">No Data</p>
+						<img src="@/assets/images/no-data.png" alt="">
+					</div>
+				</template>
+			</el-table>
+			<div class="title3">
+				Coupons:
+			</div>
+			<div class="coupons-wrap">
+				<div class="txt1">
+					Coupon rewadrds:
+				</div>
+				<div>
+					<div class="txt2">
+						1 coupon / 0.5eth
+					</div>
+					<div class="txt2 mt5">
+						1 coupon / listing / day
+					</div>
+				</div>
+			</div>
+			<div class="btn-submit">Confirm the price</div>
+		</div>
+		<el-dialog :model-value="isShowDialog" :show-close="false" :close-on-click-modal="false"
+		           @closed="isShowDialog=false" class="custom-dialog" destroy-on-close>
+			<template #title>
+				<div class="left">
+					<span>正在进行中的挂单</span>
+				</div>
+				<el-icon @click="isShowDialog=false">
+					<Close/>
+				</el-icon>
+			</template>
+			<div>
+				<el-steps direction="vertical" :active="3">
+					<el-step>
+						<template #title>
+							<div class="txt1">
+								授权收藏品
+							</div>
+						</template>
+						<template #description>
+							<div class="txt2">
+								还剩余1个合集的授权
+							</div>
+							<div class="txt3">
+								<el-icon class="success">
+									<SuccessFilled/>
+								</el-icon>
+								<span>ENS: Ethereum Name Service for</span>
+								<svg-icon icon-class="logo"/>
+							</div>
+							<div class="txt3">
+								<el-icon class="fail">
+									<CircleCloseFilled/>
+								</el-icon>
+								<span>ENS: Ethereum Name Service for</span>
+								<svg-icon icon-class="os-logo"/>
+							</div>
+							<div class="txt3">
+								<el-icon class="my-loading">
+									<Loading/>
+								</el-icon>
+								<span>ENS: Ethereum Name Service for</span>
+								<svg-icon icon-class="os-logo"/>
+							</div>
+						</template>
+					</el-step>
+					<el-step>
+						<template #title>
+							<div class="txt1">
+								上架签名
+							</div>
+						</template>
+						<template #description>
+							<div class="txt2">
+								剩余0个签名
+							</div>
+							<div class="txt3">
+								<el-icon class="success">
+									<SuccessFilled/>
+								</el-icon>
+								<span>masturbat.eth</span>
+								<svg-icon icon-class="logo"/>
+							</div>
+							<div class="txt3">
+								<el-icon class="fail">
+									<CircleCloseFilled/>
+								</el-icon>
+								<span>masturbat.eth</span>
+								<svg-icon icon-class="os-logo"/>
+							</div>
+							<div class="txt3">
+								<el-icon class="my-loading">
+									<Loading/>
+								</el-icon>
+								<span>masturbat.eth</span>
+								<svg-icon icon-class="os-logo"/>
+							</div>
+						</template>
+					</el-step>
+					<el-step title="">
+						<template #icon>
+							<div></div>
+						</template>
+						<template #title>
+						</template>
+					</el-step>
+				</el-steps>
+			</div>
+			<div>
+				<el-button type="primary" class="btnOption" loading="true">
+					授权藏品
+				</el-button>
+			</div>
 
-    </el-dialog>
-  </div>
+		</el-dialog>
+	</div>
 </template>
 <script>
 import BigNumber from "bignumber.js";
 import dayjs from 'dayjs';
 import config from '@/config/index'
+import {keepPoint} from "@/filters";
+import store from "@/store";
+
 export default {
-  mixins: [],
-  name: 'listings',
-  components: {},
-  data () {
-    return {
-      optionsDays: [
-        {
-          value: 1,
-          label: '1days',
-        },
-        {
-          value: 3,
-          label: '3days',
-        },
-        {
-          value: 5,
-          label: '5days',
-        },
-        {
-          value: 7,
-          label: '7days',
-        }
-      ],
-      platformList: [],
-      dataList: [{
-        name: 'Coresky',
-        logo: 'logo',
-        coin: 'eth',
-        listPrice: '',
-      }, {
-        name: 'Opensea',
-        logo: 'os-logo',
-        coin: 'eth',
-        listPrice: ''
-      }],
-      isSamePrice: false,
-      samePrice: '',
-      isProceeds: false,
-      defaultTime: new Date(),
-      form: {
-        time: ''
-      },
-      isShowDialog: true
-    };
-  },
-  watch: {
-  },
-  created () {
-    this.init();
-  },
-  mounted () { },
-  computed: {
-  },
-  methods: {
-    samePriceChange () {
+		mixins: [],
+		name: 'listings',
+		components: {},
+		data() {
+			return {
+				isGetOSInfo: false,
+				optionsDays: [
+					{
+						value: 1,
+						label: '1days',
+					},
+					{
+						value: 3,
+						label: '3days',
+					},
+					{
+						value: 5,
+						label: '5days',
+					},
+					{
+						value: 7,
+						label: '7days',
+					}
+				],
+				platformList: [],
+				dataList: [
+					{
+						name: 'Coresky',
+						logo: 'logo',
+						coin: 'eth',
+						listPrice: '',
+						fee: '--',
+						Royalties: '--',
+						floorPrice: '--',
+						lastSale: '--'
+					},
+					{
+						name: 'Opensea',
+						logo: 'os-logo',
+						coin: 'eth',
+						listPrice: '',
+						fee: '--',
+						Royalties: '--',
+						floorPrice: '--',
+						lastSale: '--'
+					}
+				],
+				isSamePrice: false,
+				samePrice: '',
+				isProceeds: false,
+				defaultTime: new Date(),
+				form: {
+					time: ''
+				},
+				isShowDialog: false,
+				basePrice: '--',
+				tokenInfo: {
+					contract: '',
+					tokenId: '',
+					ckCollectionsInfoEntity: {
+						bannerImage: '',
+						image: ''
+					}
+				},
+			};
+		},
+		watch: {},
+		created() {
+			this.tokenInfoParams = {
+				contract: this.$route.params.contract,
+				tokenId: this.$route.params.tokenId
+			}
+		},
+		mounted() {
+			this.getTokenInfo()
+			this.getOsTokenInfo()
+		},
+		computed: {
+			user () {
+				console.log(this.$store.state.user)
+				return this.$store.state.user;
+			},
+		},
+		methods: {
+			getTokenInfo() {
+				this.$api("collect.tokenInfo", this.tokenInfoParams).then((res) => {
+					this.tokenInfo = res.debug
+					this.dataList[0].listedPrice = this.$sdk.fromWeiNum(this.tokenInfo.listedPriceCs)
+					this.dataList[0].floorPrice = parseFloat(this.tokenInfo.ckCollectionsInfoEntity.foolPrice)
+					this.dataList[0].Royalties = this.$filters.feeFormat(this.tokenInfo.ckCollectionsInfoEntity.royalty)
+					this.dataList[0].fee = this.$filters.feeFormat(store.state.config.protocolFee)
+					this.dataList[1].listedPrice = this.$sdk.fromWeiNum(this.tokenInfo.listedPriceOs)
+				})
+			},
+			async getOsTokenInfo () {
+				const asset = {
+					tokenAddress: this.$route.params.contract, // CryptoKitties
+					tokenId: this.$route.params.tokenId
+					// schemaName: WyvernSchemaName.ERC721
+				}
+				console.log(asset)
+				this.isGetOSInfo = false
+				try {
+					this.isGetOSInfo = true
+					const openseaSDK = await this.$sdk.initOpenSea()
+					console.log(openseaSDK)
+					const assetInfo = await openseaSDK.api.getAsset(asset)
+					console.log(assetInfo)
+					this.dataList[1].floorPrice = assetInfo.collection.stats.floor_price
+					this.dataList[1].Royalties = this.$filters.feeFormat(assetInfo.assetContract.openseaSellerFeeBasisPoints)
+					this.dataList[1].fee = this.$filters.feeFormat(assetInfo.assetContract.sellerFeeBasisPoints)
+				} catch (e) {
+					console.log(e)
+					this.dataList[1].floorPrice = 0
+					this.dataList[1].Royalties = this.$filters.feeFormat(250)
+					this.dataList[1].fee = this.$filters.feeFormat(250)
+				}
+			},
+			goBack() {
+				window.history.go(-1)
+			},
+			samePriceChange() {
 
-      this.dataList.map(el => {
-        console.log()
-        el.listPrice = this.samePrice
-      })
-    },
-    disabledDate (time) {
-      return time.getTime() < Date.now()
-    },
-    dateChange () {
-      this.form.time = dayjs().add(this.form.date, "day").format("YYYY-MM-DD HH:mm");
-    },
-    togglePlatform (name) {
-      let obj = this.platformList.find(el => el.name === name)
-      if (obj) {
-        this.platformList = this.platformList.filter(el => el.name !== name)
-      }
-      else {
-        this.platformList.push({ name })
-      }
-    },
-    init () {
-    },
-  },
-  beforeUnmount () {
+				this.dataList.map(el => {
+					console.log()
+					el.listPrice = this.samePrice
+				})
+			},
+			disabledDate(time) {
+				return time.getTime() < Date.now()
+			},
+			dateChange() {
+				this.form.time = dayjs().add(this.form.date, "day").format("YYYY-MM-DD HH:mm");
+				console.log(this.form.time)
+			},
+			togglePlatform(name) {
+				let obj = this.platformList.find(el => el.name === name)
+				if (obj) {
+					this.platformList = this.platformList.filter(el => el.name !== name)
+				} else {
+					this.platformList.push({name})
+				}
+			},
 
-  }
-};
+			// 挂单开始
+			// 注册地址
+			async getRegistryOwner () {
+				console.log(this.user.coinbase)
+				let registryOwner = await this.$sdk.getOwnerProxy(this.user.coinbase);
+				if (typeof registryOwner == 'object' && registryOwner.error) {
+					return registryOwner;
+				}
+				this.registryOwner = registryOwner.proxiesAddress
+				console.log(registryOwner)
+			},
+			// 授权
+			async setApproveAll () {
+				let order = {
+					type: this.tokenInfo.contractType === 0 ? "IERC721" : "IERC1155",
+					address: this.tokenInfo.contract,
+					tokenId: this.tokenInfo.tokenId,
+				};
+				let isApproved = await this.$sdk.isApprovedForAll(
+					order,
+					this.user.coinbase,
+					this.registryOwner,
+				);
+				console.log(isApproved)
+				if (typeof isApproved == "object" && isApproved.error) {
+					return isApproved;
+				}
+				this.sellBtnLoading = true
+				if (!isApproved) {
+					let result = await this.$sdk.setApprovalForAll(
+						order,
+						this.user.coinbase,
+						this.registryOwner,
+						true
+					);
+					if (typeof result == "object" && result.error) {
+						return result;
+					}
+					this.isApproved = await this.$sdk.isApprovedForAll(
+						order,
+						this.user.coinbase,
+						this.registryOwner,
+					);
+					this.sellBtnLoading = false
+					console.log(result)
+				} else {
+					console.log('true')
+				}
+				// return result;
+			},
+			// 挂单
+			async getExchangeHashOrder () {
+				console.log(this.form.price)
+				console.log()
+				if (!this.form.price || new BigNumber(this.form.price).isLessThan(0)) {
+					this.$tools.message('请输入正确的价格');
+					return
+				}
+				if (!this.form.time) {
+					this.$tools.message('请选择过期时间');
+					return
+				}
+				console.log(typeof this.tokenInfo.tokenId)
+				this.sellBtnLoading = true
+				let seller = this.$sdk.makeOrder({
+					exchangeAddress: process.env.VUE_APP_MARKET_EXCHANGE,
+					sender: this.user.coinbase,
+					nftAddress:  this.tokenInfo.contract,
+					side: 1,
+					tokenId: this.tokenInfo.tokenId,
+					feeRecipient: this.tokenInfo.ckCollectionsInfoEntity.feeContract,
+					RelayerFee: this.tokenInfo.ckCollectionsInfoEntity.royalty,
+					contractType: this.tokenInfo.contractType,
+					value: Number(this.form.quantity)
+				})
+				seller.expirationTime = new Date(this.form.time).getTime() / 1000;
+				// seller.expirationTime = 0;
+				seller.listingTime = Date.parse(new Date().toString()) / 1000 - 600;
+				seller.basePrice = this.$Web3.utils.toWei(this.form.price);
+				// console.log(this.$Web3.utils.toWei(this.form.price))
+				// console.log(ethers)
+				// seller.basePrice = ethers.BigNumber.from(this.$Web3.utils.toWei(this.form.price));
+				const arrayParams = [
+					[
+						seller.exchange,
+						seller.maker,
+						seller.taker,
+						seller.feeRecipient,
+						seller.target,
+						seller.staticTarget,
+						seller.paymentToken
+					],
+					[
+						seller.makerRelayerFee,
+						seller.takerRelayerFee,
+						seller.makerProtocolFee,
+						seller.takerProtocolFee,
+						seller.basePrice,
+						seller.extra,
+						seller.listingTime,
+						seller.expirationTime,
+						seller.salt
+					],
+					seller.feeMethod,
+					seller.side,
+					seller.saleKind,
+					seller.howToCall,
+					seller.calldata,
+					seller.replacementPattern,
+					seller.staticExtradata
+				]
+				// const hash = await this.$sdk.callhashOrder_(arrayParams);
+				try {
+					const hashToSign = await this.$sdk.callhashToSign_(seller)
+					if (typeof hashToSign == "object" && hashToSign.error) {
+						this.sellBtnLoading = false
+						return
+					}
+					console.log(seller)
+					console.log()
+					const sig = await this.$sdk.signature(seller, this.user.coinbase)
+					if (typeof sig == "object" && sig.error) {
+						this.sellBtnLoading = false
+						return
+					}
+					const validateOrderArrayParams = [
+						...arrayParams,
+						...[
+							sig.v,
+							sig.r,
+							sig.s
+						]
+					]
+					console.log(validateOrderArrayParams)
+					const validateOrderArrayParams1 = [
+						[
+							seller.exchange,
+							seller.maker,
+							seller.taker,
+							seller.feeRecipient,
+							seller.target,
+							seller.staticTarget,
+							seller.paymentToken
+						],
+						[
+							seller.makerRelayerFee,
+							seller.takerRelayerFee,
+							seller.makerProtocolFee,
+							seller.takerProtocolFee,
+							seller.basePrice,
+							seller.extra,
+							seller.listingTime,
+							seller.expirationTime,
+							seller.salt
+						],
+						seller.feeMethod,
+						seller.side,
+						seller.saleKind,
+						seller.howToCall,
+						seller.calldata,
+						seller.replacementPattern,
+						seller.staticExtradata,
+						sig.v,
+						sig.r,
+						sig.s
+					]
+					console.log(validateOrderArrayParams1)
+					// const resvalidateOrder_ = await this.$sdk.validateOrder_(validateOrderArrayParams)
+					// console.log(resvalidateOrder_)
+					const orderParams = {
+						...seller,
+						...{
+							tokenId: this.tokenInfo.tokenId,
+							contract: this.tokenInfo.contract,
+							type: this.$sdk.valueOrderType("SALE"),
+							v: sig.v,
+							r: sig.r,
+							s: sig.s,
+							hash: hashToSign,
+							sign: JSON.stringify(sig),
+							basePrice: this.$Web3.utils.toWei(this.form.price),
+							amount: this.tokenInfo.contractType === 1 ? Number(this.form.quantity) : 1
+						}
+					}
+					console.log(orderParams)
+					// this.nftToBuy = orderParams
+					this.$api("order.create", orderParams).then((res) => {
+						this.sellBtnLoading = false
+						if (res.code === 200) {
+							this.isShowSellDialog = false
+							this.$tools.message('挂售成功', 'success');
+							this.$emit('sellCreateSuccess', res)
+						} else {
+							this.$tools.message(res.message);
+						}
+					}).catch(e => {
+						this.$tools.message(e.message || e);
+						this.sellBtnLoading = false
+					})
+				} catch (e) {
+					console.log(e)
+					this.sellBtnLoading = false
+				}
+
+			},
+		},
+		beforeUnmount() {
+
+		}
+	};
 </script>
 <style lang="scss" scoped>
-// .main-wrapper {
-//   ::v-deep .el-input__wrapper {
-//     padding: 1px 5px;
-//     --el-input-focus-border-color: #7d47ff;
-//     --el-input-hover-border-color: #7d47ff;
-//   }
-// }
-.mr10 {
-  margin-right: 10px;
-}
-.mt5 {
-  margin-top: 10px;
-}
-.listings-head {
-  display: flex;
-  align-items: center;
-  .title {
-    height: 41px;
-    font-size: 32px;
-    font-weight: bold;
-    color: #000000;
-    line-height: 41px;
-  }
-  .btn-back {
-    margin-right: 10px;
-    &:hover {
-      border: 1px solid #dcdfe6;
-      color: #000;
-    }
-    .el-icon {
-      font-size: 18px;
-    }
-  }
-}
-.nft-box {
-  width: 800px;
-  display: flex;
-  margin-top: 30px;
-  padding: 14px;
-  border: 1px solid $borderBg;
-  border-radius: 12px;
-  align-items: center;
-  .img-box {
-    width: 84px;
-    height: 84px;
-    border-radius: 10px;
-    margin-right: 10px;
-  }
-  .box-center {
-    display: flex;
-    flex-grow: 1;
-    flex-direction: column;
-    justify-content: center;
-    align-items: self-start;
-    .tokenid {
-      font-weight: 500;
-      font-size: 20px;
-      line-height: 30px;
-      color: $primaryColor;
-      margin-bottom: 5px;
-      font-weight: 600;
-    }
-    .tag {
-      width: 16px;
-      height: 16px;
-      display: inline-block;
-      vertical-align: bottom;
-      margin-left: 5px;
-    }
-  }
-}
-.title2 {
-  margin: 30px 0 20px;
-  height: 29px;
-  font-size: 22px;
-  font-weight: bold;
-  color: #000000;
-  line-height: 29px;
-}
-.title3 {
-  margin: 30px 0 20px;
-  font-size: 16px;
-  font-weight: bold;
-  color: #000000;
-}
-.platform {
-  display: flex;
-  .item {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 138px;
-    margin-right: 20px;
-    font-size: 14px;
-    height: 44px;
-    background: #ffffff;
-    border-radius: 10px;
-    border: 1px solid $borderBg;
-    cursor: pointer;
-    &.active {
-      background: rgba(125, 71, 255, 0.04);
-      border: 1px solid #7d47ff;
-    }
-    &:hover {
-      border: 1px solid #7d47ff;
-    }
-  }
-}
-.platform-logo {
-  width: 24px;
-  height: 24px;
-  margin-right: 10px;
-}
-.flex-com {
-  margin-top: 30px;
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  .item {
-    margin-right: 50px;
-  }
-}
-.mytable {
-  border: 1px solid $borderBg;
-  border-radius: 10px;
-  .flex-m {
-    display: flex;
-    align-items: center;
-    min-height: 80px;
-  }
-  .txt1 {
-    margin-top: 5px;
-    font-size: 12px;
-  }
-}
+	// .main-wrapper {
+	//   ::v-deep .el-input__wrapper {
+	//     padding: 1px 5px;
+	//     --el-input-focus-border-color: #7d47ff;
+	//     --el-input-hover-border-color: #7d47ff;
+	//   }
+	// }
+	.mr10 {
+		margin-right: 10px;
+	}
 
-::v-deep .el-table {
-  .head-row th.el-table__cell {
-    height: 50px;
-    background-color: $elButtonHoverBg;
-  }
-  .el-input-group__append {
-    // background-color: transparent;
-  }
-  .el-input__wrapper {
-    padding: 1px 5px;
-  }
-  .el-input__inner {
-    font-size: 12px;
-    &::-webkit-input-placeholder {
-      font-size: 12px;
-    }
-  }
-}
-.el-select-dropdown__item {
-  padding: 0 10px;
-  height: 30px;
-  line-height: 30px;
-  font-size: 12px;
-}
-.coupons-wrap {
-  display: flex;
-  align-items: center;
-  padding: 0 20px;
-  height: 78px;
-  background: $elButtonHoverBg;
-  border-radius: 10px;
-  border: 1px solid $borderBg;
-  margin-bottom: 30px;
-  .txt1 {
-    height: 18px;
-    font-size: 14px;
-    color: $color-black2;
-    line-height: 18px;
-    margin-right: 20px;
-  }
-  .txt2 {
-    height: 18px;
-    font-size: 14px;
-    color: #000000;
-    line-height: 18px;
-  }
-}
-.btn-submit {
-  width: 320px;
-  height: 44px;
-  line-height: 44px;
-  color: $color-white;
-  background: $mainLiner;
-  border-radius: 12px;
-  text-align: center;
-  font-size: 16px;
-  cursor: pointer;
-  margin-bottom: 30px;
-}
-::v-deep {
-  .custom-dialog {
-    width: 480px;
-    padding: 30px 30px;
-    .txt1 {
-      margin-bottom: 10px;
-      height: 28px;
-      font-size: 20px;
-      font-weight: bold;
-      color: #000000;
-      line-height: 25px;
-    }
-    .txt2 {
-      margin-bottom: 10px;
-      height: 20px;
-      font-size: 14px;
-      color: #000000;
-      line-height: 20px;
-    }
-    .txt3 {
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      height: 18px;
-      font-size: 14px;
-      color: #000000;
-      line-height: 18px;
+	.mt5 {
+		margin-top: 10px;
+	}
 
-      .el-icon,
-      .svg-icon {
-        font-size: 16px;
-        margin-right: 5px;
-        &.success {
-          color: #17c586;
-        }
-        &.fail {
-          color: #ff4949;
-        }
-      }
-      .svg-icon {
-        margin-left: 5px;
-      }
-    }
-    .btnOption {
-      width: 100%;
-      height: 48px;
-      padding: 10px 0;
-      border-radius: 24px;
-      font-weight: 700;
-      border: none;
-      cursor: pointer;
-      color: $color-white;
-      background: $mainLiner;
-      &:hover {
-        background: $mainLiner;
-      }
-      &.small {
-        height: 38px;
-        border-radius: 19px;
-        width: 280px;
-      }
-    }
-  }
-}
-.my-loading {
-  color: #409eff;
-  width: 16px;
-  height: 16px;
-  animation: icon-loading 2s infinite linear;
-}
-@keyframes icon-loading {
-  0% {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(1turn);
-  }
-}
+	.listings-head {
+		display: flex;
+		align-items: center;
+
+		.title {
+			height: 41px;
+			font-size: 32px;
+			font-weight: bold;
+			color: #000000;
+			line-height: 41px;
+		}
+
+		.btn-back {
+			margin-right: 10px;
+
+			&:hover {
+				border: 1px solid #dcdfe6;
+				color: #000;
+			}
+
+			.el-icon {
+				font-size: 18px;
+			}
+		}
+	}
+
+	.nft-box {
+		width: 800px;
+		display: flex;
+		margin-top: 30px;
+		padding: 14px;
+		border: 1px solid $borderBg;
+		border-radius: 12px;
+		align-items: center;
+
+		.img-box {
+			width: 84px;
+			height: 84px;
+			border-radius: 10px;
+			margin-right: 10px;
+		}
+
+		.box-center {
+			display: flex;
+			flex-grow: 1;
+			flex-direction: column;
+			justify-content: center;
+			align-items: self-start;
+
+			.tokenid {
+				font-weight: 500;
+				font-size: 20px;
+				line-height: 30px;
+				color: $primaryColor;
+				margin-bottom: 5px;
+				font-weight: 600;
+			}
+
+			.tag {
+				width: 16px;
+				height: 16px;
+				display: inline-block;
+				vertical-align: bottom;
+				margin-left: 5px;
+			}
+		}
+	}
+
+	.title2 {
+		margin: 30px 0 20px;
+		height: 29px;
+		font-size: 22px;
+		font-weight: bold;
+		color: #000000;
+		line-height: 29px;
+	}
+
+	.title3 {
+		margin: 30px 0 20px;
+		font-size: 16px;
+		font-weight: bold;
+		color: #000000;
+	}
+
+	.platform {
+		display: flex;
+
+		.item {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 138px;
+			margin-right: 20px;
+			font-size: 14px;
+			height: 44px;
+			background: #ffffff;
+			border-radius: 10px;
+			border: 1px solid $borderBg;
+			cursor: pointer;
+
+			&.active {
+				background: rgba(125, 71, 255, 0.04);
+				border: 1px solid #7d47ff;
+			}
+
+			&:hover {
+				border: 1px solid #7d47ff;
+			}
+		}
+	}
+
+	.platform-logo {
+		width: 24px;
+		height: 24px;
+		margin-right: 10px;
+	}
+
+	.flex-com {
+		margin-top: 30px;
+		margin-bottom: 20px;
+		display: flex;
+		align-items: center;
+
+		.item {
+			margin-right: 50px;
+		}
+	}
+
+	.mytable {
+		border: 1px solid $borderBg;
+		border-radius: 10px;
+
+		.flex-m {
+			display: flex;
+			align-items: center;
+			min-height: 80px;
+		}
+
+		.txt1 {
+			margin-top: 5px;
+			font-size: 12px;
+		}
+	}
+
+	::v-deep .el-table {
+		.head-row th.el-table__cell {
+			height: 50px;
+			background-color: $elButtonHoverBg;
+		}
+
+		.el-input-group__append {
+			// background-color: transparent;
+		}
+
+		.el-input__wrapper {
+			padding: 1px 5px;
+		}
+
+		.el-input__inner {
+			font-size: 12px;
+
+			&::-webkit-input-placeholder {
+				font-size: 12px;
+			}
+		}
+	}
+
+	.el-select-dropdown__item {
+		padding: 0 10px;
+		height: 30px;
+		line-height: 30px;
+		font-size: 12px;
+	}
+
+	.coupons-wrap {
+		display: flex;
+		align-items: center;
+		padding: 0 20px;
+		height: 78px;
+		background: $elButtonHoverBg;
+		border-radius: 10px;
+		border: 1px solid $borderBg;
+		margin-bottom: 30px;
+
+		.txt1 {
+			height: 18px;
+			font-size: 14px;
+			color: $color-black2;
+			line-height: 18px;
+			margin-right: 20px;
+		}
+
+		.txt2 {
+			height: 18px;
+			font-size: 14px;
+			color: #000000;
+			line-height: 18px;
+		}
+	}
+
+	.btn-submit {
+		width: 320px;
+		height: 44px;
+		line-height: 44px;
+		color: $color-white;
+		background: $mainLiner;
+		border-radius: 12px;
+		text-align: center;
+		font-size: 16px;
+		cursor: pointer;
+		margin-bottom: 30px;
+	}
+
+	::v-deep {
+		.custom-dialog {
+			width: 480px;
+			padding: 30px 30px;
+
+			.txt1 {
+				margin-bottom: 10px;
+				height: 28px;
+				font-size: 20px;
+				font-weight: bold;
+				color: #000000;
+				line-height: 25px;
+			}
+
+			.txt2 {
+				margin-bottom: 10px;
+				height: 20px;
+				font-size: 14px;
+				color: #000000;
+				line-height: 20px;
+			}
+
+			.txt3 {
+				margin-bottom: 10px;
+				display: flex;
+				align-items: center;
+				height: 18px;
+				font-size: 14px;
+				color: #000000;
+				line-height: 18px;
+
+				.el-icon,
+				.svg-icon {
+					font-size: 16px;
+					margin-right: 5px;
+
+					&.success {
+						color: #17c586;
+					}
+
+					&.fail {
+						color: #ff4949;
+					}
+				}
+
+				.svg-icon {
+					margin-left: 5px;
+				}
+			}
+
+			.btnOption {
+				width: 100%;
+				height: 48px;
+				padding: 10px 0;
+				border-radius: 24px;
+				font-weight: 700;
+				border: none;
+				cursor: pointer;
+				color: $color-white;
+				background: $mainLiner;
+
+				&:hover {
+					background: $mainLiner;
+				}
+
+				&.small {
+					height: 38px;
+					border-radius: 19px;
+					width: 280px;
+				}
+			}
+		}
+	}
+
+	.my-loading {
+		color: #409eff;
+		width: 16px;
+		height: 16px;
+		animation: icon-loading 2s infinite linear;
+	}
+
+	@keyframes icon-loading {
+		0% {
+			transform: rotate(0deg);
+		}
+		to {
+			transform: rotate(1turn);
+		}
+	}
 </style>
 
 

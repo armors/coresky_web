@@ -45,7 +45,7 @@ const routes = [
 		component: () => import(/* webpackChunkName: "account" */ "../views/sections/Account"),
 	},
 	{
-		path: "/listings",
+		path: "/listings/:contract/:tokenId",
 		name: "listings",
 		component: () => import(/* webpackChunkName: "listings" */ "../views/sections/listings"),
 	},

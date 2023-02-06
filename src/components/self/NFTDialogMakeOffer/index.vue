@@ -164,7 +164,7 @@ export default {
       this.makeOfferType = makeOfferType
       this.tokenInfo.tokenId = parseInt(this.tokenInfo.tokenId)
       this.isShowMakeOfferDialog = true
-      this.serviceFee = this.tokenInfo.ckCollectionsInfoEntity.royalty / 1000 + '%'
+      this.serviceFee = this.$filters.feeFormat(this.tokenInfo.ckCollectionsInfoEntity.royalty)
       console.log(this.tokenInfo)
     },
     async makerBuyer () {

@@ -86,7 +86,7 @@ export function decimal (num, v) {
   return Math.round(num * vv) / vv;
 }
 export function feeFormat (fee) {
-  return fee ? (fee / 1000 + '%') : '--';
+  return fee ? (fee / 10000 + '%') : '--';
 }
 export function timeFormat (time) {
   var previous = new Date(time * 1000);

@@ -750,8 +750,11 @@ export default {
       })
     },
     showSellNft () {
-      this.sellDialogBtnLoading = true
-      this.$refs.NFTDialogSell.showSell(this.tokenInfo)
+      this.$router.push({
+        path: `/listings/${this.tokenInfoParams.contract}/${this.tokenInfoParams.tokenId}`
+      })
+      // this.sellDialogBtnLoading = true
+      // this.$refs.NFTDialogSell.showSell(this.tokenInfo)
     },
     async cancelMakeOffer (v) {
       this.cancelMakeOfferBtnLoading = true

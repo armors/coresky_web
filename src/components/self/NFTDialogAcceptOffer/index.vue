@@ -150,8 +150,8 @@ export default {
         ? (parseFloat(keepPoint(this.nftPrice * 100 / this.tokenInfo.ckCollectionsInfoEntity.foolPrice, 2)) + '%')
         : '--'
       let basePrice = new BigNumber(this.$sdk.fromWeiNumOrigin(this.acceptInfo.basePrice))
-      let creatorFee = basePrice.multipliedBy(this.tokenInfo.ckCollectionsInfoEntity.royalty / 1000).div(100)
-      let serviceFee = basePrice.multipliedBy((parseInt(this.config.protocolFee)) / 1000).div(100)
+      let creatorFee = basePrice.multipliedBy(this.tokenInfo.ckCollectionsInfoEntity.royalty / 10000).div(100)
+      let serviceFee = basePrice.multipliedBy((parseInt(this.config.protocolFee)) / 10000).div(100)
       console.log(basePrice.minus(creatorFee).minus(serviceFee).valueOf())
       this.totalRevenue = keepPoint(basePrice.minus(creatorFee).minus(serviceFee).valueOf(), 6)
     },
