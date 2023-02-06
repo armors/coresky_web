@@ -18,8 +18,8 @@
             <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
           </span>
 				</div>
-				<div style="margin-right: 30px;">
-					<el-input-number :min="1" :max="999"/>
+				<div style="margin-right: 30px;" v-if="tokenInfo.contractType === 1">
+					<el-input-number v-model="quantity" :min="1" :max="nftAmount1155"/>
 				</div>
 			</div>
 			<div class="title2">
@@ -59,7 +59,7 @@
 				<div style="margin-left: auto;">
 					<div>
 						<el-date-picker v-model="form.time" type="datetime" placeholder="Pick a Date" style=""
-						                format="YYYY-MM-DD HH:mm" :default-time="defaultTime" :disabled-date="disabledDate"/>
+						                format="YYYY/MM/DD HH:mm" :default-time="defaultTime" :disabled-date="disabledDate"/>
 						<el-select v-model="form.date" class="ml20" placeholder="Select" @change="dateChange"
 						           style="width:120px;flex-shrink: 0;">
 							<el-option v-for="item in optionsDays" :key="item.value" :label="item.label" :value="item.value"/>
@@ -145,7 +145,11 @@
 					</div>
 				</div>
 			</div>
-			<div class="btn-submit">Confirm the price</div>
+
+			<el-button type="primary" v-if="isApproved" class="btn-submit" :loading="sellBtnLoading" @click="getExchangeHashOrder">Confirm the price</el-button>
+			<el-button type="primary" v-else class="btn-submit" :loading="sellBtnLoading" @click="setApproveAll">Approve</el-button>
+
+<!--			<div class="btn-submit">Confirm the price</div>-->
 		</div>
 		<el-dialog :model-value="isShowDialog" :show-close="false" :close-on-click-modal="false"
 		           @closed="isShowDialog=false" class="custom-dialog" destroy-on-close>
@@ -235,9 +239,7 @@
 				</el-steps>
 			</div>
 			<div>
-				<el-button type="primary" class="btnOption" loading="true">
-					授权藏品
-				</el-button>
+				<el-button type="primary" class="btnOption" loading="true">Approve Nft</el-button>
 			</div>
 
 		</el-dialog>
@@ -246,238 +248,352 @@
 <script>
 import BigNumber from "bignumber.js";
 import dayjs from 'dayjs';
-import config from '@/config/index'
-import {keepPoint} from "@/filters";
 import store from "@/store";
+import {WyvernSchemaName} from "opensea-js/lib/types";
 
 export default {
-		mixins: [],
-		name: 'listings',
-		components: {},
-		data() {
-			return {
-				isGetOSInfo: false,
-				optionsDays: [
-					{
-						value: 1,
-						label: '1days',
-					},
-					{
-						value: 3,
-						label: '3days',
-					},
-					{
-						value: 5,
-						label: '5days',
-					},
-					{
-						value: 7,
-						label: '7days',
-					}
-				],
-				platformList: [],
-				dataList: [
-					{
-						name: 'Coresky',
-						logo: 'logo',
-						coin: 'eth',
-						listPrice: '',
-						fee: '--',
-						Royalties: '--',
-						floorPrice: '--',
-						lastSale: '--'
-					},
-					{
-						name: 'Opensea',
-						logo: 'os-logo',
-						coin: 'eth',
-						listPrice: '',
-						fee: '--',
-						Royalties: '--',
-						floorPrice: '--',
-						lastSale: '--'
-					}
-				],
-				isSamePrice: false,
-				samePrice: '',
-				isProceeds: false,
-				defaultTime: new Date(),
-				form: {
-					time: ''
+	mixins: [],
+	name: 'listings',
+	components: {},
+	data() {
+		return {
+			isGetOSInfo: false,
+			optionsDays: [
+				{
+					value: 1,
+					label: '1days',
 				},
-				isShowDialog: false,
-				basePrice: '--',
-				tokenInfo: {
-					contract: '',
-					tokenId: '',
-					ckCollectionsInfoEntity: {
-						bannerImage: '',
-						image: ''
-					}
+				{
+					value: 3,
+					label: '3days',
 				},
-			};
-		},
-		watch: {},
-		created() {
-			this.tokenInfoParams = {
-				contract: this.$route.params.contract,
+				{
+					value: 5,
+					label: '5days',
+				},
+				{
+					value: 7,
+					label: '7days',
+				}
+			],
+			platformList: [
+				{
+					name: 'Coresky'
+				}
+			],
+			dataList: [
+				{
+					name: 'Coresky',
+					logo: 'logo',
+					coin: 'eth',
+					listPrice: '',
+					fee: '--',
+					Royalties: '--',
+					floorPrice: '--',
+					lastSale: '--'
+				},
+				{
+					name: 'Opensea',
+					logo: 'os-logo',
+					coin: 'eth',
+					listPrice: '',
+					fee: '--',
+					Royalties: '--',
+					floorPrice: '--',
+					lastSale: '--'
+				}
+			],
+			isSamePrice: false,
+			samePrice: '',
+			isProceeds: false,
+			defaultTime: new Date(),
+			quantity: 1,
+			form: {
+				time: ''
+			},
+			isShowDialog: false,
+			basePrice: '--',
+			tokenInfo: {
+				contract: '',
+				tokenId: '',
+				ckCollectionsInfoEntity: {
+					bannerImage: '',
+					image: ''
+				}
+			},
+			sellBtnLoading: false,
+			nftAmount1155: 0,
+			isApproved: true,
+			registryOwner: '',
+			asset: {
+				tokenAddress: this.$route.params.contract, // CryptoKitties
 				tokenId: this.$route.params.tokenId
 			}
+		};
+	},
+	watch: {
+		'$store.state.user': function () {
+			this.initSellInfo()
+		}
+	},
+	created() {
+		this.tokenInfoParams = {
+			contract: this.$route.params.contract,
+			tokenId: this.$route.params.tokenId
+		}
+	},
+	mounted() {
+		this.getTokenInfo()
+		this.getOsTokenInfo()
+	},
+	computed: {
+		user () {
+			console.log(this.$store.state.user)
+			return this.$store.state.user;
 		},
-		mounted() {
-			this.getTokenInfo()
-			this.getOsTokenInfo()
-		},
-		computed: {
-			user () {
-				console.log(this.$store.state.user)
-				return this.$store.state.user;
-			},
-		},
-		methods: {
-			getTokenInfo() {
-				this.$api("collect.tokenInfo", this.tokenInfoParams).then((res) => {
-					this.tokenInfo = res.debug
-					this.dataList[0].listedPrice = this.$sdk.fromWeiNum(this.tokenInfo.listedPriceCs)
-					this.dataList[0].floorPrice = parseFloat(this.tokenInfo.ckCollectionsInfoEntity.foolPrice)
-					this.dataList[0].Royalties = this.$filters.feeFormat(this.tokenInfo.ckCollectionsInfoEntity.royalty)
-					this.dataList[0].fee = this.$filters.feeFormat(store.state.config.protocolFee)
-					this.dataList[1].listedPrice = this.$sdk.fromWeiNum(this.tokenInfo.listedPriceOs)
-				})
-			},
-			async getOsTokenInfo () {
-				const asset = {
-					tokenAddress: this.$route.params.contract, // CryptoKitties
-					tokenId: this.$route.params.tokenId
-					// schemaName: WyvernSchemaName.ERC721
+	},
+	methods: {
+		async initSellInfo () {
+			this.tokenInfo.tokenId = parseInt(this.tokenInfo.tokenId)
+			try {
+				if (this.tokenInfo.contractType === 1) {
+					const amount = await this.$sdk.getERC1155Amount(this.tokenInfo.contract, this.tokenInfo.tokenId, this.user.coinbase)
+					if (typeof amount == 'object' && amount.error) {
+						this.nftAmount1155 = 0
+					} else {
+						this.nftAmount1155 = amount
+					}
 				}
-				console.log(asset)
-				this.isGetOSInfo = false
-				try {
-					this.isGetOSInfo = true
-					const openseaSDK = await this.$sdk.initOpenSea()
-					console.log(openseaSDK)
-					const assetInfo = await openseaSDK.api.getAsset(asset)
-					console.log(assetInfo)
-					this.dataList[1].floorPrice = assetInfo.collection.stats.floor_price
-					this.dataList[1].Royalties = this.$filters.feeFormat(assetInfo.assetContract.openseaSellerFeeBasisPoints)
-					this.dataList[1].fee = this.$filters.feeFormat(assetInfo.assetContract.sellerFeeBasisPoints)
-				} catch (e) {
-					console.log(e)
-					this.dataList[1].floorPrice = 0
-					this.dataList[1].Royalties = this.$filters.feeFormat(250)
-					this.dataList[1].fee = this.$filters.feeFormat(250)
-				}
-			},
-			goBack() {
-				window.history.go(-1)
-			},
-			samePriceChange() {
-
-				this.dataList.map(el => {
-					console.log()
-					el.listPrice = this.samePrice
-				})
-			},
-			disabledDate(time) {
-				return time.getTime() < Date.now()
-			},
-			dateChange() {
-				this.form.time = dayjs().add(this.form.date, "day").format("YYYY-MM-DD HH:mm");
-				console.log(this.form.time)
-			},
-			togglePlatform(name) {
-				let obj = this.platformList.find(el => el.name === name)
-				if (obj) {
-					this.platformList = this.platformList.filter(el => el.name !== name)
-				} else {
-					this.platformList.push({name})
-				}
-			},
-
-			// 挂单开始
-			// 注册地址
-			async getRegistryOwner () {
-				console.log(this.user.coinbase)
-				let registryOwner = await this.$sdk.getOwnerProxy(this.user.coinbase);
-				if (typeof registryOwner == 'object' && registryOwner.error) {
-					return registryOwner;
-				}
-				this.registryOwner = registryOwner.proxiesAddress
-				console.log(registryOwner)
-			},
-			// 授权
-			async setApproveAll () {
+				await this.getRegistryOwner()
+				console.log(this.tokenInfo.contractType)
 				let order = {
 					type: this.tokenInfo.contractType === 0 ? "IERC721" : "IERC1155",
 					address: this.tokenInfo.contract,
 					tokenId: this.tokenInfo.tokenId,
 				};
-				let isApproved = await this.$sdk.isApprovedForAll(
+				console.log(order)
+				this.isApproved = await this.$sdk.isApprovedForAll(
 					order,
 					this.user.coinbase,
 					this.registryOwner,
 				);
-				console.log(isApproved)
-				if (typeof isApproved == "object" && isApproved.error) {
-					return isApproved;
+				console.log(this.isApproved)
+			} catch (e) {
+				console.log(e)
+			}
+
+		},
+		getTokenInfo() {
+			this.$api("collect.tokenInfo", this.tokenInfoParams).then((res) => {
+				this.tokenInfo = res.debug
+				this.dataList[0].listedPrice = this.$sdk.fromWeiNum(this.tokenInfo.listedPriceCs)
+				this.dataList[0].floorPrice = parseFloat(this.tokenInfo.ckCollectionsInfoEntity.foolPrice)
+				this.dataList[0].Royalties = this.$filters.feeFormat(this.tokenInfo.ckCollectionsInfoEntity.royalty)
+				this.dataList[0].fee = this.$filters.feeFormat(store.state.config.protocolFee)
+				this.dataList[0].RoyaltiesFee = this.tokenInfo.ckCollectionsInfoEntity.royalty
+				this.dataList[0].protocolFee = store.state.config.protocolFee
+				this.dataList[1].listedPrice = this.$sdk.fromWeiNum(this.tokenInfo.listedPriceOs)
+				if (this.user.coinbase) {
+					this.initSellInfo()
 				}
-				this.sellBtnLoading = true
-				if (!isApproved) {
-					let result = await this.$sdk.setApprovalForAll(
-						order,
-						this.user.coinbase,
-						this.registryOwner,
-						true
-					);
-					if (typeof result == "object" && result.error) {
-						return result;
-					}
-					this.isApproved = await this.$sdk.isApprovedForAll(
-						order,
-						this.user.coinbase,
-						this.registryOwner,
-					);
-					this.sellBtnLoading = false
-					console.log(result)
-				} else {
-					console.log('true')
-				}
-				// return result;
-			},
-			// 挂单
-			async getExchangeHashOrder () {
-				console.log(this.form.price)
+			})
+		},
+		async getOsTokenInfo () {
+			console.log(this.asset)
+			this.isGetOSInfo = false
+			try {
+				const openseaSDK = await this.$sdk.initOpenSea()
+				console.log(openseaSDK)
+				const assetInfo = await openseaSDK.api.getAsset(this.asset)
+				console.log(assetInfo)
+				this.isGetOSInfo = true
+				this.dataList[1].floorPrice = assetInfo.collection.stats.floor_price
+				this.dataList[1].Royalties = this.$filters.feeFormat(assetInfo.assetContract.openseaSellerFeeBasisPoints)
+				this.dataList[1].fee = this.$filters.feeFormat(assetInfo.assetContract.sellerFeeBasisPoints)
+
+				this.dataList[0].RoyaltiesFee = assetInfo.assetContract.openseaSellerFeeBasisPoints
+				this.dataList[0].protocolFee = assetInfo.assetContract.sellerFeeBasisPoints
+			} catch (e) {
+				console.log(e)
+				this.dataList[1].floorPrice = 0
+				this.dataList[1].Royalties = this.$filters.feeFormat(250)
+				this.dataList[1].fee = this.$filters.feeFormat(250)
+			}
+		},
+		goBack() {
+			window.history.go(-1)
+		},
+		samePriceChange() {
+
+			this.dataList.map(el => {
 				console.log()
-				if (!this.form.price || new BigNumber(this.form.price).isLessThan(0)) {
-					this.$tools.message('请输入正确的价格');
+				el.listPrice = this.samePrice
+			})
+		},
+		disabledDate(time) {
+			return time.getTime() < Date.now()
+		},
+		dateChange() {
+			this.form.time = dayjs().add(this.form.date, "day").format("YYYY/MM/DD HH:mm");
+			console.log(this.form.time)
+		},
+		togglePlatform(name) {
+			console.log(this.isGetOSInfo)
+			// if (!this.isGetOSInfo) {
+			// 	this.$tools.message('正在拉取opensea数据，请稍等', 'warning');
+			// 	return
+			// }
+			let obj = this.platformList.find(el => el.name === name)
+			if (obj) {
+				this.platformList = this.platformList.filter(el => el.name !== name)
+			} else {
+				this.platformList.push({name})
+			}
+		},
+
+		// 挂单开始
+		// 注册地址
+		async getRegistryOwner () {
+			console.log(this.user.coinbase)
+			let registryOwner = await this.$sdk.getOwnerProxy(this.user.coinbase);
+			if (typeof registryOwner == 'object' && registryOwner.error) {
+				return registryOwner;
+			}
+			this.registryOwner = registryOwner.proxiesAddress
+			console.log(registryOwner)
+		},
+		// 授权
+		async setApproveAll () {
+			let order = {
+				type: this.tokenInfo.contractType === 0 ? "IERC721" : "IERC1155",
+				address: this.tokenInfo.contract,
+				tokenId: this.tokenInfo.tokenId,
+			};
+			let isApproved = await this.$sdk.isApprovedForAll(
+				order,
+				this.user.coinbase,
+				this.registryOwner,
+			);
+			console.log(isApproved)
+			if (typeof isApproved == "object" && isApproved.error) {
+				return isApproved;
+			}
+			this.sellBtnLoading = true
+			if (!isApproved) {
+				let result = await this.$sdk.setApprovalForAll(
+					order,
+					this.user.coinbase,
+					this.registryOwner,
+					true
+				);
+				if (typeof result == "object" && result.error) {
+					return result;
+				}
+				this.isApproved = await this.$sdk.isApprovedForAll(
+					order,
+					this.user.coinbase,
+					this.registryOwner,
+				);
+				this.sellBtnLoading = false
+				console.log(result)
+			} else {
+				console.log('true')
+			}
+			// return result;
+		},
+		// 挂单
+		async getExchangeHashOrder () {
+			if (this.platformList.find(el => el.name === 'Coresky')) {
+				this.sellNftCoresky()
+			} else if (this.platformList.find(el => el.name === 'Opensea')) {
+				this.sellNftOS()
+			} else {
+				this.$tools.message('请选择挂售平台', 'warning');
+			}
+		},
+		async sellNftCoresky () {
+			const price = this.dataList[0].listPrice
+			if (!price || new BigNumber(price).isLessThan(0)) {
+				this.$tools.message('请输入正确的价格', 'warning');
+				return
+			}
+			if (!this.form.time) {
+				this.$tools.message('请选择过期时间', 'warning');
+				return
+			}
+			console.log(typeof this.tokenInfo.tokenId)
+			this.sellBtnLoading = true
+			let seller = this.$sdk.makeOrder({
+				exchangeAddress: process.env.VUE_APP_MARKET_EXCHANGE,
+				sender: this.user.coinbase,
+				nftAddress:  this.tokenInfo.contract,
+				side: 1,
+				tokenId: this.tokenInfo.tokenId,
+				feeRecipient: this.tokenInfo.ckCollectionsInfoEntity.feeContract,
+				RelayerFee: this.tokenInfo.ckCollectionsInfoEntity.royalty,
+				contractType: this.tokenInfo.contractType,
+				value: Number(this.quantity)
+			})
+			seller.expirationTime = new Date(this.form.time).getTime() / 1000;
+			// seller.expirationTime = 0;
+			seller.listingTime = Date.parse(new Date().toString()) / 1000 - 600;
+			seller.basePrice = this.$Web3.utils.toWei(price.toString());
+			// console.log(this.$Web3.utils.toWei(price))
+			// console.log(ethers)
+			// seller.basePrice = ethers.BigNumber.from(this.$Web3.utils.toWei(price));
+			const arrayParams = [
+				[
+					seller.exchange,
+					seller.maker,
+					seller.taker,
+					seller.feeRecipient,
+					seller.target,
+					seller.staticTarget,
+					seller.paymentToken
+				],
+				[
+					seller.makerRelayerFee,
+					seller.takerRelayerFee,
+					seller.makerProtocolFee,
+					seller.takerProtocolFee,
+					seller.basePrice,
+					seller.extra,
+					seller.listingTime,
+					seller.expirationTime,
+					seller.salt
+				],
+				seller.feeMethod,
+				seller.side,
+				seller.saleKind,
+				seller.howToCall,
+				seller.calldata,
+				seller.replacementPattern,
+				seller.staticExtradata
+			]
+			// const hash = await this.$sdk.callhashOrder_(arrayParams);
+			try {
+				const hashToSign = await this.$sdk.callhashToSign_(seller)
+				if (typeof hashToSign == "object" && hashToSign.error) {
+					this.sellBtnLoading = false
 					return
 				}
-				if (!this.form.time) {
-					this.$tools.message('请选择过期时间');
+				console.log(seller)
+				console.log()
+				const sig = await this.$sdk.signature(seller, this.user.coinbase)
+				if (typeof sig == "object" && sig.error) {
+					this.sellBtnLoading = false
 					return
 				}
-				console.log(typeof this.tokenInfo.tokenId)
-				this.sellBtnLoading = true
-				let seller = this.$sdk.makeOrder({
-					exchangeAddress: process.env.VUE_APP_MARKET_EXCHANGE,
-					sender: this.user.coinbase,
-					nftAddress:  this.tokenInfo.contract,
-					side: 1,
-					tokenId: this.tokenInfo.tokenId,
-					feeRecipient: this.tokenInfo.ckCollectionsInfoEntity.feeContract,
-					RelayerFee: this.tokenInfo.ckCollectionsInfoEntity.royalty,
-					contractType: this.tokenInfo.contractType,
-					value: Number(this.form.quantity)
-				})
-				seller.expirationTime = new Date(this.form.time).getTime() / 1000;
-				// seller.expirationTime = 0;
-				seller.listingTime = Date.parse(new Date().toString()) / 1000 - 600;
-				seller.basePrice = this.$Web3.utils.toWei(this.form.price);
-				// console.log(this.$Web3.utils.toWei(this.form.price))
-				// console.log(ethers)
-				// seller.basePrice = ethers.BigNumber.from(this.$Web3.utils.toWei(this.form.price));
-				const arrayParams = [
+				const validateOrderArrayParams = [
+					...arrayParams,
+					...[
+						sig.v,
+						sig.r,
+						sig.s
+					]
+				]
+				console.log(validateOrderArrayParams)
+				const validateOrderArrayParams1 = [
 					[
 						seller.exchange,
 						seller.maker,
@@ -504,116 +620,113 @@ export default {
 					seller.howToCall,
 					seller.calldata,
 					seller.replacementPattern,
-					seller.staticExtradata
+					seller.staticExtradata,
+					sig.v,
+					sig.r,
+					sig.s
 				]
-				// const hash = await this.$sdk.callhashOrder_(arrayParams);
-				try {
-					const hashToSign = await this.$sdk.callhashToSign_(seller)
-					if (typeof hashToSign == "object" && hashToSign.error) {
-						this.sellBtnLoading = false
-						return
+				console.log(validateOrderArrayParams1)
+				// const resvalidateOrder_ = await this.$sdk.validateOrder_(validateOrderArrayParams)
+				// console.log(resvalidateOrder_)
+				const orderParams = {
+					...seller,
+					...{
+						tokenId: this.tokenInfo.tokenId,
+						contract: this.tokenInfo.contract,
+						type: this.$sdk.valueOrderType("SALE"),
+						v: sig.v,
+						r: sig.r,
+						s: sig.s,
+						hash: hashToSign,
+						sign: JSON.stringify(sig),
+						basePrice: this.$Web3.utils.toWei(price),
+						amount: this.tokenInfo.contractType === 1 ? Number(this.quantity) : 1
 					}
-					console.log(seller)
-					console.log()
-					const sig = await this.$sdk.signature(seller, this.user.coinbase)
-					if (typeof sig == "object" && sig.error) {
-						this.sellBtnLoading = false
-						return
-					}
-					const validateOrderArrayParams = [
-						...arrayParams,
-						...[
-							sig.v,
-							sig.r,
-							sig.s
-						]
-					]
-					console.log(validateOrderArrayParams)
-					const validateOrderArrayParams1 = [
-						[
-							seller.exchange,
-							seller.maker,
-							seller.taker,
-							seller.feeRecipient,
-							seller.target,
-							seller.staticTarget,
-							seller.paymentToken
-						],
-						[
-							seller.makerRelayerFee,
-							seller.takerRelayerFee,
-							seller.makerProtocolFee,
-							seller.takerProtocolFee,
-							seller.basePrice,
-							seller.extra,
-							seller.listingTime,
-							seller.expirationTime,
-							seller.salt
-						],
-						seller.feeMethod,
-						seller.side,
-						seller.saleKind,
-						seller.howToCall,
-						seller.calldata,
-						seller.replacementPattern,
-						seller.staticExtradata,
-						sig.v,
-						sig.r,
-						sig.s
-					]
-					console.log(validateOrderArrayParams1)
-					// const resvalidateOrder_ = await this.$sdk.validateOrder_(validateOrderArrayParams)
-					// console.log(resvalidateOrder_)
-					const orderParams = {
-						...seller,
-						...{
-							tokenId: this.tokenInfo.tokenId,
-							contract: this.tokenInfo.contract,
-							type: this.$sdk.valueOrderType("SALE"),
-							v: sig.v,
-							r: sig.r,
-							s: sig.s,
-							hash: hashToSign,
-							sign: JSON.stringify(sig),
-							basePrice: this.$Web3.utils.toWei(this.form.price),
-							amount: this.tokenInfo.contractType === 1 ? Number(this.form.quantity) : 1
-						}
-					}
-					console.log(orderParams)
-					// this.nftToBuy = orderParams
-					this.$api("order.create", orderParams).then((res) => {
-						this.sellBtnLoading = false
-						if (res.code === 200) {
-							this.isShowSellDialog = false
-							this.$tools.message('挂售成功', 'success');
-							this.$emit('sellCreateSuccess', res)
-						} else {
-							this.$tools.message(res.message);
-						}
-					}).catch(e => {
-						this.$tools.message(e.message || e);
-						this.sellBtnLoading = false
-					})
-				} catch (e) {
-					console.log(e)
-					this.sellBtnLoading = false
 				}
-
-			},
+				if (this.platformList.find(el => el.name === 'Opensea')) {
+					this.sellNftOS()
+				}
+				console.log(orderParams)
+				// this.nftToBuy = orderParams
+				this.$api("order.create", orderParams).then((res) => {
+					this.sellBtnLoading = false
+					if (res.code === 200) {
+						this.isShowSellDialog = false
+						this.$tools.message('Coresky 挂售成功', 'success');
+						this.$emit('sellCreateSuccess', res)
+					} else {
+						this.$tools.message(res.message);
+					}
+				}).catch(e => {
+					this.$tools.message(e.message || e);
+					this.sellBtnLoading = false
+				})
+			} catch (e) {
+				console.log(e)
+				this.sellBtnLoading = false
+			}
 		},
-		beforeUnmount() {
+		async sellNftOS () {
+			// if (!this.isGetOSInfo) {
+			// 	this.$tools.message('正在拉取opensea数据，请稍等', 'warning');
+			// 	await this.getOsTokenInfo()
+			// }
+			const price = this.dataList[1].listPrice
+			if (!price || new BigNumber(price).isLessThan(0)) {
+				this.$tools.message('请输入正确的价格', 'warning');
+				return
+			}
+			if (!this.form.time) {
+				this.$tools.message('请选择过期时间', 'warning');
+				return
+			}
+			try {
+				const asset = {
+					...this.asset,
+					...{
+						schemaName: this.tokenInfo.contractType === 1 ? WyvernSchemaName.ERC1155 : WyvernSchemaName.ERC721
+					}
+				}
+				const expirationTime = new Date(this.form.time).getTime() / 1000
+				const listingTime = Date.parse(new Date().toString()) / 1000 - 600;
+				let sellOrderParams = {
+					asset,
+					accountAddress: this.user.coinbase,
+					startAmount: parseFloat(price),
+					// If `endAmount` is specified, the order will decline in value to that amount until `expirationTime`. Otherwise, it's a fixed-price order:
+					expirationTime,
+					listingTime,
+				}
+				if (this.tokenInfo.contractType === 1) {
+					sellOrderParams = {
+						...sellOrderParams,
+						...{
+							quantity: Number(this.quantity)
+						}
+					}
+				}
+				const openseaSDK = await this.$sdk.initOpenSea()
+				console.log(openseaSDK)
+				// Expire this auction one day from now.
+				// Note that we convert from the JavaScript timestamp (milliseconds):
+				const listing = await openseaSDK.createSellOrder(sellOrderParams)
+				this.$tools.message('Opensea 挂售成功', 'success');
+				console.log(listing)
+			} catch (e) {
+				this.$tools.message(e);
+				console.log(e)
+			}
+		},
+	},
+	beforeUnmount() {
 
-		}
-	};
+	}
+};
 </script>
 <style lang="scss" scoped>
-	// .main-wrapper {
-	//   ::v-deep .el-input__wrapper {
-	//     padding: 1px 5px;
-	//     --el-input-focus-border-color: #7d47ff;
-	//     --el-input-hover-border-color: #7d47ff;
-	//   }
-	// }
+	.main-wrapper {
+	  padding-bottom: 30px;
+	}
 	.mr10 {
 		margin-right: 10px;
 	}
@@ -832,7 +945,6 @@ export default {
 		text-align: center;
 		font-size: 16px;
 		cursor: pointer;
-		margin-bottom: 30px;
 	}
 
 	::v-deep {

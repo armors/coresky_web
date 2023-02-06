@@ -157,13 +157,15 @@ export default {
       }
       console.log(this.tokenInfo)
       try {
-        const amount = await this.$sdk.getERC1155Amount(this.tokenInfo.contract, this.tokenInfo.tokenId, this.user.coinbase)
-        console.log(amount)
-        if (typeof amount == 'object' && amount.error) {
-          this.$parent.sellDialogBtnLoading = false
-          return
+        if (this.tokenInfo.contractType === 1) {
+          const amount = await this.$sdk.getERC1155Amount(this.tokenInfo.contract, this.tokenInfo.tokenId, this.user.coinbase)
+          console.log(amount)
+          if (typeof amount == 'object' && amount.error) {
+            this.$parent.sellDialogBtnLoading = false
+            return
+          }
+          this.nftAmount1155 = amount
         }
-        this.nftAmount1155 = amount
         await this.getRegistryOwner()
         console.log(this.tokenInfo.contractType)
         let order = {

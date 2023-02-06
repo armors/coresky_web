@@ -166,7 +166,7 @@
               <template v-if="isSelf">
                 <el-button type="primary" class="btnBuy" v-if="!tokenInfo.state || tokenInfo.contractType === 1"
                   :loading="sellDialogBtnLoading" @click="showSellNft">Sell Now</el-button>
-                <el-button type="primary" class="btnBuy" v-if="tokenInfo.contractType === 0" :loading="cancelBtnLoading"
+                <el-button type="primary" class="btnBuy" v-if="tokenInfo.contractType === 0 && ckOrdersEntityList.length > 0" :loading="cancelBtnLoading"
                   @click="cancelSell()">Cancel
                   Sell</el-button>
               </template>
@@ -222,6 +222,7 @@
               <div class="card-body" style="height:156px;padding:0;overflow: auto;">
                 <div class="offer-list">
                   <div class="list-tr head top0">
+                    <div class="list-th th25">Market</div>
                     <div class="list-th th25">Unit Price</div>
                     <div class="list-th th25" v-if="tokenInfo.contractType === 1">Quantity</div>
                     <div class="list-th th25">Exporation</div>
@@ -233,21 +234,47 @@
                   <div class="list-tr" v-for="(v, i) of ckOrdersEntityList" :key="`listing-item-${i}`">
                     <template v-if="v.source === 'coresky'">
                       <div class="list-th th25">
+                        <svg-icon class="platform-logo" icon-class="logo"/>
+                      </div>
+                      <div class="list-th th25">
                         <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
                         {{nftPriceFun(v.info.basePrice)}}
                       </div>
                       <div class="list-th th25" v-if="tokenInfo.contractType === 1">{{$filters.milliFormat(v.info.amount)}}</div>
-                      <div class="list-th th25">{{$filters.timeFormat(v.info.createTime)}}</div>
+                      <div class="list-th th25">{{$filters.timeFormatTime(v.info.expirationTime)}}</div>
                       <div class="list-th th25 purple" @click="goExplore(v.info.maker)">
                         {{$filters.ellipsisAddress(v.info.maker, 4)}}</div>
                       <div class="list-th th25 center">
-                        <el-button type="primary" class="btnAccept" v-if="isSelfMakeOffer(v.info)"
+                        <el-button type="primary" class="btnAccept" v-if="isSelfMakeOffer(v.info.maker)"
                                    :loading="cancelMakeOfferBtnLoading" @click="cancelSell(v.info)">Cancel</el-button>
-                        <el-button type="primary" class="btnAccept" v-else :disabled="isSelf1155(v.info)"
+                        <el-button type="primary" class="btnAccept" v-else :disabled="isSelf1155(v.info.maker)"
                                    :loading="acceptDialogBtnLoading" @click="showBuyNft(v.info)">Buy</el-button>
                       </div>
                       <div class="list-th th25 center">
                         <el-button type="primary" class="btnAccept" :disabled="isInCart1155(v.info.id) || isSelfSell(v.info.maker)"
+                                   @click="addCart1155(i)">Add</el-button>
+                      </div>
+                    </template>
+                    <template v-else>
+                      <div class="list-th th25">
+                        <svg-icon class="platform-logo" icon-class="os-logo"/>
+                      </div>
+                      <div class="list-th th25">
+                        <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
+                        {{nftPriceFun(v.info.current_price)}}
+                      </div>
+                      <div class="list-th th25" v-if="tokenInfo.contractType === 1">{{$filters.milliFormat(v.info.amount)}}</div>
+                      <div class="list-th th25">{{$filters.timeFormatTime(v.info.expiration_time)}}</div>
+                      <div class="list-th th25 purple" @click="goExplore(v.info.maker.address)">
+                        {{$filters.ellipsisAddress(v.info.maker.address, 4)}}</div>
+                      <div class="list-th th25 center">
+                        <el-button type="primary" class="btnAccept" v-if="isSelfMakeOffer(v.info.maker.address)"
+                                   :loading="cancelMakeOfferBtnLoading" @click="cancelSell(v.info)">Cancel</el-button>
+                        <el-button type="primary" class="btnAccept" v-else :disabled="isSelf1155(v.info.maker.address)"
+                                   :loading="acceptDialogBtnLoading" @click="showBuyNft(v.info)">Buy</el-button>
+                      </div>
+                      <div class="list-th th25 center">
+                        <el-button type="primary" class="btnAccept" :disabled="isInCart1155(v.info.id) || isSelfSell(v.info.maker.address)"
                                    @click="addCart1155(i)">Add</el-button>
                       </div>
                     </template>
@@ -276,6 +303,7 @@
               <div class="card-body" style="height:279px;padding:0;overflow: auto;">
                 <div class="offer-list">
                   <div class="list-tr head top0">
+                    <div class="list-th th25">Market</div>
                     <div class="list-th th25">Price</div>
                     <div class="list-th th25" v-if="tokenInfo.contractType === 1">Quantity</div>
                     <div class="list-th th25">Exporation</div>
@@ -284,20 +312,37 @@
                   </div>
 
                   <div class="list-tr" v-for="(v, i) of ckAuctionEntityList" :key="`make-offer-${i}`">
+<!--                    <div class="list-th th25">-->
+<!--                        <svg-icon class="platform-logo" icon-class="logo"/>-->
+<!--                        &lt;!&ndash;                        Coresky&ndash;&gt;-->
+<!--                      </template>-->
+<!--                      <template v-else>-->
+<!--                        <svg-icon class="platform-logo" icon-class="os-logo"/>-->
+<!--                        &lt;!&ndash;                        Opensea&ndash;&gt;-->
+<!--                      </template>-->
+<!--                    </div>-->
                     <template v-if="v.source === 'coresky'">
+                      <div class="list-th th25">
+                        <svg-icon class="platform-logo" icon-class="logo"/>
+                      </div>
                       <div class="list-th th25">
                         <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
                         {{nftPriceFun(v.info.basePrice)}}
                       </div>
                       <div class="list-th th25" v-if="tokenInfo.contractType === 1">{{$filters.milliFormat(v.info.amount)}}</div>
-                      <div class="list-th th25">{{$filters.timeFormat(v.info.createTime)}}</div>
+                      <div class="list-th th25">{{$filters.timeFormatTime(v.info.expirationTime)}}</div>
                       <div class="list-th th25 purple" @click="goExplore(v.info.maker)">
                         {{$filters.ellipsisAddress(v.info.maker, 4)}}</div>
                       <div class="list-th th25 center">
-                        <el-button type="primary" class="btnAccept" v-if="isSelfMakeOffer(v.info)"
+                        <el-button type="primary" class="btnAccept" v-if="isSelfMakeOffer(v.info.maker)"
                                    :loading="cancelMakeOfferBtnLoading" @click="cancelMakeOffer(v.info)">Cancel</el-button>
                         <el-button type="primary" class="btnAccept" v-else :disabled="!isSelf"
                                    :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT(v.info)">Accept</el-button>
+                      </div>
+                    </template>
+                    <template v-else>
+                      <div class="list-th th25">
+                        <svg-icon class="platform-logo" icon-class="os-logo"/>
                       </div>
                     </template>
                   </div>
@@ -502,8 +547,8 @@ export default {
     }
   },
   methods: {
-    isSelf1155 (v) {
-      return v.maker.toLowerCase() === this.user.coinbase.toLowerCase()
+    isSelf1155 (maker) {
+      return maker.toLowerCase() === this.user.coinbase.toLowerCase()
     },
     isExpired (time) {
       return time !== null ? new Date().getTime() > time * 1000 : false
@@ -592,8 +637,8 @@ export default {
       return word.charAt(0).toUpperCase()
         + word.slice(1)
     },
-    isSelfMakeOffer (v) {
-      const isMakeOffer = v.maker.toLocaleLowerCase() === this.user.coinbase.toLocaleLowerCase()
+    isSelfMakeOffer (maker) {
+      const isMakeOffer = maker.toLocaleLowerCase() === this.user.coinbase.toLocaleLowerCase()
       if (isMakeOffer) {
         this.isMakeOffer = true
       }
