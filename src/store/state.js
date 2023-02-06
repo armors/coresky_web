@@ -39,9 +39,11 @@ export default {
     loginType: "",
     bannerUrl: "",
     id: "",
+    rewards: '',
   },
   payTokens: [],
   defalutPayToken: null,
   categorys: [],
   ...settings,
+  shoppingCartList: []
 };

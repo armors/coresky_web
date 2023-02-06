@@ -15,79 +15,83 @@
       </div>
 
       <div class="head-navs">
-        <router-link class="nav-link" to="/launchpads">
+        <!-- <router-link class="nav-link" to="/launchpads">
           {{ $t("navigation.launchpad") }}
-        </router-link>
+        </router-link> -->
         <router-link class="nav-link" to="/markterplace">
           {{ $t("navigation.marketplace") }}
         </router-link>
         <router-link class="nav-link" to="/allcollection">
           {{ $t("navigation.collection") }}
         </router-link>
-        <div class="nav-link" to="/erc721">
-          {{ $t("navigation.create") }}
-        </div>
-        <div class="nav-link" to="/erc721">
-          {{ $t("navigation.ETH") }}
-        </div>
-        <!--        <router-link class="nav-link header-margin-r"-->
-        <!--          :class="$route.name == 'Items' ? 'active' : ''"-->
-        <!--          :to="!connected ? '/connect' : '/items'"-->
-        <!--        >-->
-        <!--          {{ $t("navigation.myItems") }}-->
-        <!--        </router-link>-->
-
-        <!--        <router-link v-if="connected"-->
-        <!--          class="nav-link header-margin-r" to="/message?tab=unread"-->
-        <!--          :class="$route.name == 'Message' ? 'active' : ''"-->
-        <!--        >-->
-        <!--          {{$t('navigation.news')}}-->
-        <!--          <span v-if="message.unread" class="red-tip"></span>-->
-        <!--        </router-link>-->
-        <el-popover v-model:visible="languagePopover" placement="bottom" trigger="hover" :show-arrow="false"
-          popper-class="nav-popover" :offset="-8">
+        <el-popover placement="bottom" trigger="click" :show-arrow="false" width="200" popper-class="nav-popover"
+          :offset="15">
           <template #reference>
-            <el-button class="wallet-link">
-              <img src="../../assets/images/icons/icon_lang.svg" alt="">
-            </el-button>
-            <!--            <div class="nav-link header-margin-r">-->
-            <!--              &lt;!&ndash; {{$t('footer.language')}} &ndash;&gt;{{language}}-->
-            <!--              <span class="iconfont icon-arrow-down bfont"></span>-->
-            <!--            </div>-->
+            <div class="nav-link" to="/erc721">
+              <svg-icon class="head-icon mr8" icon-class="chain_eth" />
+              Ethereum
+            </div>
           </template>
-          <div class="popover-menu-item" @click="languageSelect('English')" :class="language =='English' ? 'active':''">
-            English</div>
-          <div class="popover-menu-item" @click="languageSelect('中文')" :class="language =='中文' ? 'active':''">中文</div>
+          <div>
+            <div class="chain-item active">
+              <svg-icon class="head-icon mr8" icon-class="chain_eth" />
+              <div class="item-txt">Ethereum</div>
+              <div class="item-dot"></div>
+            </div>
+            <!-- <div class="chain-item">
+              <svg-icon class="head-icon" icon-class="chain_bnb" />
+              <div class="item-txt">BNB Chain</div>
+              <div class="item-dot"></div>
+            </div> -->
+          </div>
         </el-popover>
+        <el-popover placement="bottom" trigger="click" :show-arrow="false" width="180" popper-class="nav-popover"
+          :offset="15">
+          <template #reference>
+            <div class="nav-link" to="/erc721">
+              <svg-icon class="head-icon" icon-class="yuyan" />
+            </div>
+          </template>
+          <div>
+            <div class="chain-item two" @click="languageSelect('English')" :class="{'active':language =='English'}">
+              <div class="item-txt">English</div>
+              <div class="item-dot"></div>
+            </div>
+            <div class="chain-item two" @click="languageSelect('中文')" :class="{'active':language =='中文'}">
+              <div class="item-txt">中文</div>
+              <div class="item-dot"></div>
+            </div>
+          </div>
+        </el-popover>
+        <div class="nav-link shopping-cart" @click="showShoppingCartDrawer=true">
+          <div class="notify-num" v-if="shoppingCartList&&shoppingCartList.length>0">{{ shoppingCartList.length }}</div>
+          <svg-icon class="head-icon" icon-class="gouwuche" />
+        </div>
+        <div class="head-connect display-flex box-center" v-if="!connected" @click="login">
+          {{ $t("navigation.connectWallet") }}
+        </div>
+        <div class="nav-link" @click="showUserDrawer=true" v-else>
+          <avatar class="avatar-img" :imageUrl="user.avatar || $filters.fullImageUrl(user.avatar)"
+            :address="user.coinbase" :imgWidth="32" :imgHeight="32" shape="circular">
+          </avatar>
+        </div>
       </div>
-      <div class="head-menus">
-        <el-button class="wallet-link" @click="toggleDark">
-          <img src="../../assets/images/icons/icon_sun.svg" alt="">
-          <!--          <el-icon v-if="isDark"><Sunny /></el-icon>-->
-          <!--          <el-icon v-else><Moon /></el-icon>-->
-        </el-button>
-        <!-- <router-link to="/erc721"> -->
-        <el-button class="wallet-link" @click="showShoppingCartDrawer=true" style="margin-left:0">
-          <img src="../../assets/images/icons/icon_cart.svg" alt="">
-        </el-button>
-        <!-- </router-link> -->
-
+      <!-- <div class="head-menus">
         <div class="head-connect display-flex box-center" v-if="!connected" @click="login">
           {{ $t("navigation.connectWallet") }}
         </div>
 
         <div class="user-link header-margin-l" v-else>
           <div class="user-popover">
-            <!-- <profile-popover></profile-popover> -->
+            <profile-popover></profile-popover>
             <div class="user-avatar" @click="showUserDrawer=true">
-              <avatar class="avatar-img" :imageUrl="user.avatar || $filters.fullImageUrl(user.avatar)" :address="user.coinbase"
-                :imgWidth="40" :imgHeight="40" shape="circular">
+              <avatar class="avatar-img" :imageUrl="user.avatar || $filters.fullImageUrl(user.avatar)"
+                :address="user.coinbase" :imgWidth="40" :imgHeight="40" shape="circular">
               </avatar>
             </div>
           </div>
         </div>
-
-      </div>
+      </div> -->
     </div>
 
     <follow-popup :show="showFollowing" ftype="following" @close="showFollowing = false" v-if="connected"
@@ -143,6 +147,9 @@ export default {
     },
     language () {
       return this.$store.state.language;
+    },
+    shoppingCartList () {
+      return this.$store.state.shoppingCartList;
     }
   },
   created () {
@@ -156,8 +163,12 @@ export default {
   },
   mounted () {
     // this.login()
+    this.getCartInfo()
   },
   methods: {
+    getCartInfo () {
+      this.$store.commit('initShoppingCart')
+    },
     async login (value = 'metamask') {
       console.log('header connectSign')
       this.$store.dispatch("connectAndSign", value).then(res => {
@@ -277,9 +288,9 @@ export default {
   top: 0;
   z-index: 100;
   background: $bg-white;
-  .avatar-img{
-    width: 40px;
-    height: 40px;
+  .avatar-img {
+    width: 32px;
+    height: 32px;
   }
   .header-container {
     max-width: $maxWidthRate;
@@ -336,8 +347,21 @@ export default {
   font-weight: 600;
   font-size: 16px;
   cursor: pointer;
-  margin-right: 20px;
-  &:hover{
+  margin: 0 10px;
+  display: flex;
+  align-items: center;
+  height: 40px;
+  .svg-icon {
+    font-size: 22px;
+    color: #000;
+    &:hover {
+      color: $bgPurple;
+    }
+  }
+  .mr8 {
+    margin-right: 8px;
+  }
+  &:hover {
     color: $bgPurple;
   }
   &.active {
@@ -418,5 +442,60 @@ export default {
   &.active {
     color: $primaryColor;
   }
+}
+
+.chain-item {
+  grid-column-gap: 8px;
+  background: #fff;
+  border-radius: 6px;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 22px 1fr 6px;
+  height: 48px;
+  padding: 12px;
+  place-items: center start;
+  font-weight: 600;
+  &.active,
+  &:hover {
+    background: #f4f7f9;
+  }
+  &.two {
+    grid-template-columns: 1fr 6px;
+  }
+  &.active {
+    .item-dot {
+      background: #00926f;
+    }
+  }
+  .svg-icon {
+    width: 22px;
+    height: 22px;
+  }
+  .item-dot {
+    background: #fff;
+    border-radius: 50%;
+    height: 6px;
+    width: 6px;
+  }
+}
+.notify-num {
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 500;
+  height: 15px;
+  left: 12px;
+  line-height: 10px;
+  padding: 2px 4px;
+  position: absolute;
+  text-align: center;
+  top: 3px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  background: #e25555;
+  border: 1px solid #fff;
+  color: #fff;
 }
 </style>

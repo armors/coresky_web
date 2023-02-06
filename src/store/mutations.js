@@ -8,19 +8,19 @@ import tools from "@/util/tools.js";
 import * as filters from "@/filters";
 
 export default {
-  WEB_LOADING(state) {
+  WEB_LOADING (state) {
     state.webLoading = true;
   },
-  CONFIG(state, payload) {
+  CONFIG (state, payload) {
     console.log(payload);
     state.config = Object.assign({}, payload);
     state.config.protocolFeeHan = filters.feeFormat(state.config.protocolFee)
   },
-  GAS_TRACKER(state,  payload){
-    if(!payload) return;
+  GAS_TRACKER (state, payload) {
+    if (!payload) return;
     state.gasTracker = payload;
   },
-  CONNECT(state, payload) {
+  CONNECT (state, payload) {
     if (payload.coinbase)
       payload.coinbase = payload.coinbase.toLocaleLowerCase();
 
@@ -36,13 +36,13 @@ export default {
       connected: true,
     });
   },
-  WEB3(state, payload) {
+  WEB3 (state, payload) {
     state.web3 = Object.assign({}, state.web3, {
       networkId: payload.networkId,
       walletType: payload.walletType,
     });
   },
-  LOGIN(state, payload) {
+  LOGIN (state, payload) {
     console.log(payload)
     state.token = payload.token;
     if (payload.user && payload.user.address) {
@@ -70,7 +70,7 @@ export default {
       connected: true,
     });
   },
-  LOGOUT(state) {
+  LOGOUT (state) {
     state.user = {
       coinbase: "",
       avatar: "",
@@ -102,12 +102,12 @@ export default {
       unread: 0,
     };
   },
-  RELOAD(state) {
+  RELOAD (state) {
     state.isLogin = true;
     var items = getLocalStorage("CoreskyAuthorization");
     state.token = items.CoreskyAuthorization;
   },
-  USERINFO(state, payload) {
+  USERINFO (state, payload) {
     if (payload.address) payload.address = payload.address.toLocaleLowerCase();
 
     state.user = Object.assign({}, state.user, {
@@ -120,25 +120,25 @@ export default {
       id: payload.id || "",
     });
   },
-  NOTICE_UNREAD(state, payload) {
+  NOTICE_UNREAD (state, payload) {
     state.notice_unread = payload;
   },
-  MESSAGE(state, payload) {
+  MESSAGE (state, payload) {
     state.message = {
       total: payload.totalCount,
       unread: payload.unreadCount,
     };
   },
-  HEARTBEAT(state, timer) {
+  HEARTBEAT (state, timer) {
     state.heartbeatTimer = timer;
   },
-  ETH_BALANCE(state, balance) {
+  ETH_BALANCE (state, balance) {
     state.ethBalance = balance;
   },
-  ERC20_BALANCE(state, payload) {
+  ERC20_BALANCE (state, payload) {
     state.erc20Balance = Object.assign({}, state.erc20Balance, payload);
   },
-  PAYTOKENS(state, payTokens) {
+  PAYTOKENS (state, payTokens) {
     let _paytokens = [];
     for (var i = 0; i < payTokens.length; i++) {
       let paytoken = payTokens[i];
@@ -154,7 +154,7 @@ export default {
     }
     state.payTokens = _paytokens;
   },
-  ADD_PAYTOKEN(state, payToken) {
+  ADD_PAYTOKEN (state, payToken) {
     let payTokens = state.payTokens;
     let existed = false;
     for (var i = 0; i < payTokens.length; i++) {
@@ -173,13 +173,43 @@ export default {
     }
     state.payTokens = [].concat(state.payTokens, payToken);
   },
-  CATEGORYS(state, categorys) {
+  CATEGORYS (state, categorys) {
     state.categorys = categorys;
   },
-  setCurrentView(state, newRoute) {
+  setCurrentView (state, newRoute) {
     state.currentView = newRoute.meta.view;
   },
-  changeCurrentRouteTo(state, newRoute) {
+  changeCurrentRouteTo (state, newRoute) {
     state.currentRoute = newRoute;
   },
+  setShoppingCart (state, list) {
+    state.shoppingCartList = list;
+  },
+  addShoppingCart (state, goods) {
+    let cartName = 'coresky_cart_' + state.user.coinbase
+    const local = getLocalStorage(cartName)
+    let coresky_cart = local[cartName]
+    if (local[cartName] !== null) {
+      coresky_cart = JSON.parse(coresky_cart)
+    } else {
+      coresky_cart = []
+    }
+    coresky_cart.push(goods)
+    const obj = {}
+    obj[cartName] = JSON.stringify(coresky_cart)
+    setLocalStorage(obj)
+    state.shoppingCartList = coresky_cart;
+  },
+  initShoppingCart (state) {
+    console.log(44444)
+    let cartName = 'coresky_cart_' + state.user.coinbase
+    const local = getLocalStorage(cartName)
+    let coresky_cart = local[cartName]
+    if (local[cartName] !== null) {
+      coresky_cart = JSON.parse(coresky_cart)
+    } else {
+      coresky_cart = []
+    }
+    state.shoppingCartList = coresky_cart;
+  }
 };
