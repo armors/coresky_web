@@ -32,8 +32,8 @@
 	const asset = {
 		// tokenAddress: "0x317a8fe0f1c7102e7674ab231441e485c64c178a", // CryptoKitties
 		// tokenId: "227856", // Token ID
-		tokenAddress: "0xe29f8038d1a3445ab22ad1373c65ec0a6e1161a4", // CryptoKitties
-		tokenId: "399", // Token ID
+		tokenAddress: "0xeb1e502410bb45e51907b88b0ea9a08fb575d3c2", // CryptoKitties
+		tokenId: "20", // Token ID
 		// schemaName: WyvernSchemaName.ERC721
 	}
 	export default {
@@ -186,6 +186,7 @@
 						}
 					}
 					console.log(order)
+					console.log(JSON.stringify(orders[0]))
 					const transactionHash = await openseaSDK.fulfillOrder({
 						order: orders[0],
 						accountAddress: this.user.coinbase

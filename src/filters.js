@@ -86,7 +86,7 @@ export function decimal (num, v) {
   return Math.round(num * vv) / vv;
 }
 export function feeFormat (fee) {
-  return fee ? (fee / 10000 + '%') : '--';
+  return fee ? (fee / 10000 * 100 + '%') : '--';
 }
 export function timeFormat (time) {
   var previous = new Date(time * 1000);
@@ -123,7 +123,9 @@ export function timeFormatTime (time) {
   var msPerYear = msPerDay * 365;
 
   var elapsed = previous - current;
-  if (elapsed < msPerMinute) {
+  if (elapsed < 1) {
+    return 'Expired'
+  } else if (elapsed < msPerMinute) {
     return Math.round(elapsed / 1000) + i18n.global.t("time.seconds");
   } else if (elapsed < msPerHour) {
     return Math.round(elapsed / msPerMinute) + i18n.global.t("time.minutes");

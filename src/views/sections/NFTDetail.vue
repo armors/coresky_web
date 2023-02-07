@@ -164,11 +164,12 @@
             </div>
             <div class="btn-box display-flex box-center-Y">
               <template v-if="isSelf">
-                <el-button type="primary" class="btnBuy" v-if="!tokenInfo.state || tokenInfo.contractType === 1"
-                  :loading="sellDialogBtnLoading" @click="showSellNft">Sell Now</el-button>
-                <el-button type="primary" class="btnBuy" v-if="tokenInfo.contractType === 0 && ckOrdersEntityList.length > 0" :loading="cancelBtnLoading"
-                  @click="cancelSell()">Cancel
-                  Sell</el-button>
+                <el-button type="primary" class="btnBuy" :loading="sellDialogBtnLoading" @click="showSellNft">Sell Now</el-button>
+<!--                <el-button type="primary" class="btnBuy" v-if="!tokenInfo.state || tokenInfo.contractType === 1"-->
+<!--                  :loading="sellDialogBtnLoading" @click="showSellNft">Sell Now</el-button>-->
+<!--                <el-button type="primary" class="btnBuy" v-if="tokenInfo.contractType === 0 && ckOrdersEntityList.length > 0" :loading="cancelBtnLoading"-->
+<!--                  @click="cancelSell()">Cancel-->
+<!--                  Sell</el-button>-->
               </template>
               <el-button type="primary" class="btnBuy"
                 v-else-if="tokenInfo.state && tokenInfo.contractType === 0 && tokenInfo.basePrice > 0"
@@ -241,17 +242,17 @@
                         {{nftPriceFun(v.info.basePrice)}}
                       </div>
                       <div class="list-th th25" v-if="tokenInfo.contractType === 1">{{$filters.milliFormat(v.info.amount)}}</div>
-                      <div class="list-th th25">{{$filters.timeFormatTime(v.info.expirationTime)}}</div>
+                      <div class="list-th th25" :class="isExpired(v.info.expirationTime) ? 'expired' : ''">{{$filters.timeFormatTime(v.info.expirationTime)}}</div>
                       <div class="list-th th25 purple" @click="goExplore(v.info.maker)">
                         {{$filters.ellipsisAddress(v.info.maker, 4)}}</div>
                       <div class="list-th th25 center">
-                        <el-button type="primary" class="btnAccept" v-if="isSelfMakeOffer(v.info.maker)"
+                        <el-button type="primary" :disabled="isExpired(v.info.expirationTime)" class="btnAccept" v-if="isSelfMakeOffer(v.info.maker)"
                                    :loading="cancelMakeOfferBtnLoading" @click="cancelSell(v.info)">Cancel</el-button>
-                        <el-button type="primary" class="btnAccept" v-else :disabled="isSelf1155(v.info.maker)"
-                                   :loading="acceptDialogBtnLoading" @click="showBuyNft(v.info)">Buy</el-button>
+                        <el-button type="primary" class="btnAccept" v-else
+                                   :loading="acceptDialogBtnLoading" :disabled="isExpired(v.info.expirationTime) || isSelf1155(v.info.maker)" @click="showBuyNft(v.info)">Buy</el-button>
                       </div>
                       <div class="list-th th25 center">
-                        <el-button type="primary" class="btnAccept" :disabled="isInCart1155(v.info.id) || isSelfSell(v.info.maker)"
+                        <el-button type="primary" class="btnAccept" :disabled="isInCart1155(v.info.id) || isSelfSell(v.info.maker) || isExpired(v.info.expirationTime)"
                                    @click="addCart1155(i)">Add</el-button>
                       </div>
                     </template>
@@ -264,17 +265,17 @@
                         {{nftPriceFun(v.info.current_price)}}
                       </div>
                       <div class="list-th th25" v-if="tokenInfo.contractType === 1">{{$filters.milliFormat(v.info.amount)}}</div>
-                      <div class="list-th th25">{{$filters.timeFormatTime(v.info.expiration_time)}}</div>
+                      <div class="list-th th25" :class="isExpired(v.info.expiration_time) ? 'expired' : ''">{{$filters.timeFormatTime(v.info.expiration_time)}}</div>
                       <div class="list-th th25 purple" @click="goExplore(v.info.maker.address)">
                         {{$filters.ellipsisAddress(v.info.maker.address, 4)}}</div>
                       <div class="list-th th25 center">
-                        <el-button type="primary" class="btnAccept" v-if="isSelfMakeOffer(v.info.maker.address)"
-                                   :loading="cancelMakeOfferBtnLoading" @click="cancelSell(v.info)">Cancel</el-button>
-                        <el-button type="primary" class="btnAccept" v-else :disabled="isSelf1155(v.info.maker.address)"
-                                   :loading="acceptDialogBtnLoading" @click="showBuyNft(v.info)">Buy</el-button>
+                        <el-button type="primary" class="btnAccept" :disabled="isExpired(v.info.expiration_time)" v-if="isSelfMakeOffer(v.info.maker.address)"
+                                   :loading="cancelMakeOfferBtnLoading" @click="cancelSell(v.info, true)">Cancel</el-button>
+                        <el-button type="primary" class="btnAccept" v-else :disabled="isSelf1155(v.info.maker.address) || isExpired(v.info.expiration_time)"
+                                   :loading="acceptDialogBtnLoading" @click="showBuyNft(v.info, true)">Buy</el-button>
                       </div>
                       <div class="list-th th25 center">
-                        <el-button type="primary" class="btnAccept" :disabled="isInCart1155(v.info.id) || isSelfSell(v.info.maker.address)"
+                        <el-button type="primary" class="btnAccept" :disabled="isInCart1155(v.info.id) || isSelfSell(v.info.maker.address) || isExpired(v.info.expiration_time)"
                                    @click="addCart1155(i)">Add</el-button>
                       </div>
                     </template>
@@ -330,19 +331,33 @@
                         {{nftPriceFun(v.info.basePrice)}}
                       </div>
                       <div class="list-th th25" v-if="tokenInfo.contractType === 1">{{$filters.milliFormat(v.info.amount)}}</div>
-                      <div class="list-th th25">{{$filters.timeFormatTime(v.info.expirationTime)}}</div>
+                      <div class="list-th th25" :class="isExpired(v.info.expirationTime) ? 'expired' : ''">{{$filters.timeFormatTime(v.info.expirationTime)}}</div>
                       <div class="list-th th25 purple" @click="goExplore(v.info.maker)">
                         {{$filters.ellipsisAddress(v.info.maker, 4)}}</div>
                       <div class="list-th th25 center">
-                        <el-button type="primary" class="btnAccept" v-if="isSelfMakeOffer(v.info.maker)"
+                        <el-button type="primary" :disabled="isExpired(v.info.expirationTime)" class="btnAccept" v-if="isSelfMakeOffer(v.info.maker)"
                                    :loading="cancelMakeOfferBtnLoading" @click="cancelMakeOffer(v.info)">Cancel</el-button>
-                        <el-button type="primary" class="btnAccept" v-else :disabled="!isSelf"
+                        <el-button type="primary" class="btnAccept" v-else :disabled="!isSelf || isExpired(v.info.expirationTime)"
                                    :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT(v.info)">Accept</el-button>
                       </div>
                     </template>
                     <template v-else>
                       <div class="list-th th25">
                         <svg-icon class="platform-logo" icon-class="os-logo"/>
+                      </div>
+                      <div class="list-th th25">
+                        <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
+                        {{nftPriceFun(v.info.current_price)}}
+                      </div>
+                      <div class="list-th th25" v-if="tokenInfo.contractType === 1">{{$filters.milliFormat(v.info.amount)}}</div>
+                      <div class="list-th th25" :class="isExpired(v.info.expiration_time) ? 'expired' : ''">{{$filters.timeFormatTime(v.info.expiration_time)}}</div>
+                      <div class="list-th th25 purple" @click="goExplore(v.info.maker.address)">
+                        {{$filters.ellipsisAddress(v.info.maker.address, 4)}}</div>
+                      <div class="list-th th25 center">
+                        <el-button type="primary" :disabled="isExpired(v.info.expiration_time)" class="btnAccept" v-if="isSelfMakeOffer(v.info.maker.address)"
+                                   :loading="cancelMakeOfferBtnLoading" @click="cancelMakeOffer(v.info, true)">Cancel</el-button>
+                        <el-button type="primary" class="btnAccept" v-else :disabled="!isSelf || isExpired(v.info.expiration_time)"
+                                   :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT(v.info, true)">Accept</el-button>
                       </div>
                     </template>
                   </div>
@@ -829,7 +844,14 @@ export default {
         this.cancelMakeOfferBtnLoading = false
       }
     },
-    async cancelSell (cancelItem = null) {
+    async cancelSell (cancelItem = null, isOpensea = false) {
+      if (isOpensea) {
+        this.cancelSellOpensea(cancelItem)
+      } else {
+        this.cancelSellCoresky(cancelItem)
+      }
+    },
+    async cancelSellCoresky (cancelItem) {
       this.cancelBtnLoading = true
       if (this.tokenInfo.contractType === 0 && cancelItem === null) {
         cancelItem = this.tokenInfo.ckOrdersEntityList[0]
@@ -861,8 +883,58 @@ export default {
         this.cancelBtnLoading = false
       }
     },
-    showBuyNft (v) {
-      this.$refs.NFTDialogBuy.showBuy(this.tokenInfo, v)
+    async cancelSellOpensea (cancelItem) {
+      console.log(cancelItem)
+      if (cancelItem === null) {
+        return
+      }
+      this.cancelBtnLoading = true
+      try {
+        const openseaSDK = await this.$sdk.initOpenSea()
+        console.log(openseaSDK)
+        const transactionHash = await openseaSDK.cancelOrder({
+          order: cancelItem,
+          accountAddress: this.user.coinbase
+        })
+        console.log(transactionHash)
+        this.cancelBtnLoading = false
+        this.$tools.message('已取消挂售', 'success');
+        this.getTokenInfo()
+      } catch (e) {
+        console.log(e)
+        this.cancelBtnLoading = false
+      }
+    },
+    async showBuyNft (v, isOpensea) {
+      if (isOpensea) {
+        console.log(v)
+        console.log(JSON.stringify(v))
+        try {
+          const openseaSDK = await this.$sdk.initOpenSea()
+          console.log(openseaSDK)
+          const transactionHash = await openseaSDK.fulfillOrder({
+            order: v,
+            accountAddress: this.user.coinbase
+          })
+          // {
+          // 	// order: order.data.order,
+          // 	order: orders,
+          // 		accountAddress: asset.tokenAddress
+          // }
+          console.log(transactionHash)
+          // const balance= await openseaSDK.createBuyOrder({
+          // 	asset,
+          // 	accountAddress: this.user.coinbase,
+          // 	// Value of the offer, in units of the payment token (or wrapped ETH if none is specified):
+          // 	startAmount: 1.2,
+          // })
+          // console.log(balance)
+        } catch (e) {
+          console.log(e)
+        }
+      } else {
+        this.$refs.NFTDialogBuy.showBuy(this.tokenInfo, v)
+      }
     },
     nftPriceFun (basePrice) {
       console.log(basePrice)
@@ -1289,6 +1361,7 @@ export default {
         font-size: 12px;
         background: $bg-white;
         font-weight: 600;
+        z-index: 10;
         &.top0 {
           top: 0;
         }
@@ -1308,7 +1381,7 @@ export default {
         &.gray {
           color: $color-black3;
         }
-        .expired {
+        .expired, &.expired {
           padding-left: 4px;
           color: $color-red;
           font-weight: 500;
