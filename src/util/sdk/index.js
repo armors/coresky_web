@@ -37,6 +37,13 @@ export default {
 	// self start
 
 	// opensea start
+	_sleep(time = 1100) {
+		return new Promise((resolve) => {
+			setTimeout(() => {
+				resolve()
+			}, time)
+		})
+	},
 	async initOpenSea () {
 		if (!window.openseaSDK) {
 			let web3 = await utils_web3.getWeb3();
@@ -55,6 +62,77 @@ export default {
 			})
 		}
 		return window.openseaSDK
+	},
+
+	async getOrdersOpensea (asset) {
+		try {
+			const openseaSDK = await this.initOpenSea()
+			const {orders} = await openseaSDK.api.getOrders({
+				side: 'ask',
+				...{
+					assetContractAddress: asset.assetContractAddress,
+					chain: "GOERLI",
+					tokenId: asset.tokenId
+				}
+			})
+			console.log(asset)
+			console.log(orders)
+			let orderN = []
+			for (let i = 0; i < orders.length; i++) {
+				orderN.push({
+					...orders[i],
+					...{
+						source: "opensea",
+					}
+				})
+			}
+			return {
+				data: orderN,
+				code: 200
+			}
+		} catch (e) {
+			return {
+				code: 500,
+				data: null,
+				message: e
+			}
+		}
+
+	},
+
+	async getOffersOpensea (asset) {
+		try {
+			const openseaSDK = await this.initOpenSea()
+			const {orders} = await openseaSDK.api.getOrders({
+				side: 'bid',
+				...{
+					assetContractAddress: asset.assetContractAddress,
+					chain: "GOERLI",
+					tokenId: asset.tokenId
+				}
+			})
+			console.log('bid', orders)
+			let orderN = []
+			for (let i = 0; i < orders.length; i++) {
+				orderN.push({
+					...orders[i],
+					...{
+						source: "opensea",
+					}
+				})
+			}
+			return {
+				data: orderN,
+				code: 200
+			}
+		} catch (e) {
+			return {
+				code: 500,
+				data: null,
+				message: e
+			}
+		}
+
 	},
 	// opensea end
 
