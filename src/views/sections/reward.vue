@@ -26,18 +26,27 @@
         <el-tab-pane label="Transaction mining" name="mining" :lazy="true">
           <el-table :data="dataList" style="width: 100%" class="mytable" v-loading="isLoading">
             <el-table-column prop="createTime" label="Time" width="325">
-              <!-- <template #default="props">
-                2022-10-30 09:32
-              </template> -->
+              <template #default="props">
+                {{ parseTime(props.row.createTime) }}
+              </template>
             </el-table-column>
             <el-table-column prop="event" label="Event" width="300">
+              <template #default="props">
+                <span v-if="props.row.type===0">挂单奖励</span>
+                <span v-if="props.row.type===1">购买</span>
+                <span v-if="props.row.type===3">积分发放</span>
+                <span v-if="props.row.type===4">购买彩票</span>
+              </template>
             </el-table-column>
-            <el-table-column prop="item" label="Item">
+            <el-table-column prop="itemName" label="Item">
               <!-- <template #default="props">
                 Lazy Cubs Official #1231
               </template> -->
             </el-table-column>
             <el-table-column prop="score" label="Rewards" width="140">
+              <template #default="props">
+                {{ props.row.score }} CT
+              </template>
             </el-table-column>
             <template #empty>
               <div class="empty-wrap">
@@ -63,6 +72,7 @@
 import BigNumber from "bignumber.js";
 import dayjs from 'dayjs';
 import config from '@/config/index'
+import { rowProps } from 'element-plus';
 export default {
   mixins: [],
   name: 'launchpads',
@@ -70,7 +80,8 @@ export default {
   data () {
     return {
       activeName: 'mining',
-      dataList: [],
+      dataList: [
+      ],
       queryParams: {
         page: 1,
         limit: 10,
@@ -94,8 +105,10 @@ export default {
     },
   },
   methods: {
+    parseTime (time) {
+      return dayjs(time * 1000).format('YYYY-MM-DD hh:mm')
+    },
     init () {
-      console.log(333, this.user)
       if (this.user && this.user.coinbase) {
         this.queryParams.address = this.user.coinbase
         this.queryParams.page = 1
