@@ -225,7 +225,7 @@ export default {
       }
     },
     async fulfillOrderOpensea () {
-      console.log( this.sellInfo)
+      console.log(JSON.stringify(this.sellInfo))
       try {
         const openseaSDK = await this.$sdk.initOpenSea()
         console.log(openseaSDK)
@@ -239,6 +239,7 @@ export default {
         this.buyBtnLoading = false
         this.$emit('buySuccess', transactionHash)
       } catch (e) {
+        this.$tools.message(e, 'warning');
         console.log(e)
         this.buyBtnLoading = false
       }

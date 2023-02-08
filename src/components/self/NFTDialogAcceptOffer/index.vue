@@ -474,6 +474,7 @@ export default {
         // })
         // console.log(balance)
       } catch (e) {
+        this.$tools.message(e, 'warning');
         this.acceptBtnLoading = false
         console.log(e)
       }

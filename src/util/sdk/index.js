@@ -38,11 +38,16 @@ export default {
 
 	// opensea start
 	_sleep(time = 1100) {
-		return new Promise((resolve, reject) => {
+		return new Promise((resolve) => {
 			setTimeout(() => {
-				resolve()
-			}, time)
-		})
+				resolve();
+			}, time);
+		});
+		// return new Promise((resolve, reject) => {
+		// 	setTimeout(() => {
+		// 		resolve()
+		// 	}, time)
+		// })
 	},
 	async initOpenSea () {
 		if (!window.openseaSDK) {
