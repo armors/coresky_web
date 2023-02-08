@@ -91,7 +91,7 @@
           Score:
         </div>
         <div class="price-box">
-          <div class="num">{{user&&user.rewards}}</div>
+          <div class="num">{{user&&user.score}}</div>
         </div>
       </div>
       <div class="wallet-item">

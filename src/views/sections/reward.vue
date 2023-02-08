@@ -7,14 +7,17 @@
         <div class="txt3">
           <el-button class="btn" @click="$router.push('/markterplace')" type="primary">Go to trade</el-button>
         </div>
+        <img class="image" src="@/assets/images/reward.png" alt="">
       </div>
     </div>
     <div class="page-center">
       <div class="title1">Hot activity</div>
       <div class="card-list">
-        <div class="card-item"></div>
-        <div class="card-item"></div>
-        <div class="card-item"></div>
+        <div class="card-item">
+          <img class="image" src="@/assets/images/reward01.jpg" alt="">
+        </div>
+        <!-- <div class="card-item"></div>
+        <div class="card-item"></div> -->
       </div>
     </div>
     <div class="page-center" style="margin-bottom:30px">
@@ -149,6 +152,8 @@ export default {
       width: 1200px;
       margin: 0 auto;
       overflow: hidden;
+      height: 100%;
+      position: relative;
       .txt1 {
         margin-top: 52px;
         height: 41px;
@@ -164,6 +169,13 @@ export default {
         font-size: 14px;
         color: rgba(46, 46, 46, 0.6);
         line-height: 18px;
+      }
+      .image {
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 408px;
+        height: 100%;
       }
     }
   }
@@ -193,6 +205,14 @@ export default {
       height: 248px;
       background: #ededed;
       border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      .image {
+        &:hover {
+          transform: scale(1.05);
+          transition: all 0.3s;
+        }
+      }
     }
   }
   .mytable {
