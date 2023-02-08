@@ -25,7 +25,7 @@
         </div>
         <div class="price-wrap">
           <span class="buy-price">
-            {{$filters.milliFormat(sellInfo.amount)}}
+            {{$filters.milliFormat(sellInfo.protocolData.parameters.offer[0].startAmount)}}
           </span>
         </div>
       </div>
@@ -225,6 +225,7 @@ export default {
       }
     },
     async fulfillOrderOpensea () {
+      console.log( this.sellInfo)
       try {
         const openseaSDK = await this.$sdk.initOpenSea()
         console.log(openseaSDK)
@@ -232,9 +233,11 @@ export default {
           order: this.sellInfo,
           accountAddress: this.user.coinbase
         })
+        console.log(transactionHash)
+        this.hash = transactionHash
+        this.isBuyOver = true // 展示交易hash值
         this.buyBtnLoading = false
         this.$emit('buySuccess', transactionHash)
-        console.log(transactionHash)
       } catch (e) {
         console.log(e)
         this.buyBtnLoading = false

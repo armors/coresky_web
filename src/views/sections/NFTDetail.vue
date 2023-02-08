@@ -264,7 +264,7 @@
                         <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
                         {{nftPriceFun(v.currentPrice)}}
                       </div>
-                      <div class="list-th th25" v-if="tokenInfo.contractType === 1">{{$filters.milliFormat(v.amount)}}</div>
+                      <div class="list-th th25" v-if="tokenInfo.contractType === 1">{{$filters.milliFormat(v.protocolData.parameters.offer[0].startAmount)}}</div>
                       <div class="list-th th25" :class="isExpired(v.expirationTime) ? 'expired' : ''">{{$filters.timeFormatTime(v.expirationTime)}}</div>
                       <div class="list-th th25 purple" @click="goExplore(v.maker.address)">
                         {{$filters.ellipsisAddress(v.maker.address, 4)}}</div>
@@ -349,7 +349,7 @@
                         <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
                         {{nftPriceFun(v.currentPrice)}}
                       </div>
-                      <div class="list-th th25" v-if="tokenInfo.contractType === 1">{{$filters.milliFormat(v.amount)}}</div>
+                      <div class="list-th th25" v-if="tokenInfo.contractType === 1">{{$filters.milliFormat(v.protocolData.parameters.consideration[0].startAmount)}}</div>
                       <div class="list-th th25" :class="isExpired(v.expirationTime) ? 'expired' : ''">{{$filters.timeFormatTime(v.expirationTime)}}</div>
                       <div class="list-th th25 purple" @click="goExplore(v.maker.address)">
                         {{$filters.ellipsisAddress(v.maker.address, 4)}}</div>

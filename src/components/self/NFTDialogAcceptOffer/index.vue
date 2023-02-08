@@ -41,7 +41,7 @@
         </div>
         <div class="box-item">
           <div class="left">Quantity</div>
-          <div class="right">{{$filters.milliFormat(acceptInfo.amount)}}</div>
+          <div class="right">{{$filters.milliFormat(acceptInfo.protocolData.parameters.consideration[0].startAmount)}}</div>
         </div>
         <div class="box-item">
           <div class="left">Maturity</div>
@@ -462,6 +462,8 @@ export default {
         // 		accountAddress: asset.tokenAddress
         // }
         console.log(transactionHash)
+        this.hash = transactionHash
+        this.isFinished = true
         this.acceptBtnLoading = false
         this.$emit('acceptOfferSuccess', transactionHash)
         // const balance= await openseaSDK.createBuyOrder({

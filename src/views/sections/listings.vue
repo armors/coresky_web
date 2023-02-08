@@ -10,10 +10,9 @@
 				<span class="title">Cross-Market Listing</span>
 			</div>
 			<div class="nft-box">
-				<image-box class="img-box" src="http://54.169.232.16:8083/nft/0x6c3dc05a3ee2f15e010d02a4a4daca8251cc7511/2.jpg">
-				</image-box>
+				<image-box class="img-box" :src="tokenInfo.oriImage"></image-box>
 				<div class="box-center">
-					<span class="tokenid">Bean #11566</span>
+					<span class="tokenid">{{tokenInfo.ckCollectionsInfoEntity.name || '--'}} #{{tokenInfo.tokenId}}</span>
 					<span class="collection-name">ENS: Ethereum Name Service
             <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
           </span>
@@ -146,8 +145,9 @@
 				</div>
 			</div>
 
-			<el-button type="primary" v-if="isApproved" class="btn-submit" :loading="sellBtnLoading" @click="getExchangeHashOrder">Confirm the price</el-button>
-			<el-button type="primary" v-else class="btn-submit" :loading="sellBtnLoading" @click="setApproveAll">Approve</el-button>
+			<el-button type="primary" class="btn-submit" :loading="sellBtnLoading" @click="getExchangeHashOrder">Confirm the price</el-button>
+<!--			<el-button type="primary" v-if="isApproved" class="btn-submit" :loading="sellBtnLoading" @click="getExchangeHashOrder">Confirm the price</el-button>-->
+<!--			<el-button type="primary" v-else class="btn-submit" :loading="sellBtnLoading" @click="setApproveAll">Approve</el-button>-->
 
 <!--			<div class="btn-submit">Confirm the price</div>-->
 		</div>
@@ -536,6 +536,9 @@ export default {
 			}
 			console.log(typeof this.tokenInfo.tokenId)
 			this.sellBtnLoading = true
+			if (!this.isApproved) {
+				await this.setApproveAll()
+			}
 			let seller = this.$sdk.makeOrder({
 				exchangeAddress: process.env.VUE_APP_MARKET_EXCHANGE,
 				sender: this.user.coinbase,
