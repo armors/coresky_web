@@ -11,6 +11,9 @@ export default {
   WEB_LOADING (state) {
     state.webLoading = true;
   },
+  ETH_PRICE (state, payload) {
+    state.ethPrice = payload
+  },
   CONFIG (state, payload) {
     console.log(payload);
     state.config = Object.assign({}, payload);

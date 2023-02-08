@@ -25,7 +25,10 @@ export function fullImageUrl (url) {
   var cdnUrl = store.state.config.cdnUrl;
   return cdnUrl ? cdnUrl + url : url;
 }
-
+export function ethToUsdt(ethNum = 0, point = 4){
+  const ethPrice = store.state.ethPrice
+  return ethNum > 0 ? keepPoint(new BigNumber(ethNum).multipliedBy(ethPrice), point) : 0
+}
 export function ellipsisAddress (address, start = 7, end = -4) {
   if (!address) return '--'
   return address.slice(0, start) + "..." + address.slice(end);

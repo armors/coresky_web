@@ -147,6 +147,10 @@ export default {
 		let abi = utils.contractAbi("MARKET_REGISTRY");
 		return await utils.contractAt({abi}, process.env.VUE_APP_MARKET_REGISTRY);
 	},
+	async getOracleContract () {
+		let abi = utils.contractAbi("ORACLE");
+		return await utils.contractAt({abi}, process.env.VUE_APP_ORACLE);
+	},
 	// nft交易合约
 	async getMarketExchangeContract() {
 		let abi = utils.contractAbi("MARKET_EXCHANGE");
@@ -167,6 +171,25 @@ export default {
 	async getLaunchpadContract() {
 		let abi = utils.contractAbi("LAUNCHPAD_WRAP");
 		return await utils.contractAt({abi}, process.env.VUE_APP_NFT_LAUNCHPAD_WRAP);
+	},
+	async getDecimals () {
+		let contract = await this.getOracleContract();
+		console.log(contract)
+		if (contract.error) return contract;
+		const decimals = await contract.decimals();
+		return decimals
+	},
+	async getLastAnswer () {
+		let contract = await this.getOracleContract();
+		console.log(contract)
+		if (contract.error) return contract;
+		const lastAnswer = await contract.latestAnswer();
+		return lastAnswer
+	},
+	async getEthPrice () {
+		const decimals = await this.getDecimals()
+		const lastAnswer = await this.getLastAnswer()
+		return this.getDecimalAmount(lastAnswer, -decimals).valueOf()
 	},
 	// 注册合约进行注册地址
 	async getOwnerProxy(address) {

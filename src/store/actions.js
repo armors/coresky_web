@@ -270,14 +270,18 @@ export default {
       };
       var items = getLocalStorage("CoreskyAuthorization");
       console.log('items.CoreskyAuthorization', items.CoreskyAuthorization)
+      const ethPrice = await sdk.getEthPrice()
+      await dispatch("updateEthPrice", ethPrice)
       if (!items.CoreskyAuthorization || items.CoreskyAuthorization === 'undefined') {
         result = await dispatch("signLogin", data);
         resolve(result);
       }else {
         await dispatch("authinfo");
       }
-
     });
+  },
+  updateEthPrice ({ state, commit }, payload) {
+    commit("ETH_PRICE", payload);
   },
   countNotices({ state, commit }) {
     return new Promise(function(resolve, reject) {

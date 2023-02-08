@@ -159,6 +159,8 @@ function contractAbi(type) {
 			break;
     case "LAUNCHPAD_WRAP":
       file = require('./abi/launchpad.json')
+		case "ORACLE":
+			file = require('./abi/ORACLE.json')
 	}
 	return file || {};
 }
@@ -281,6 +283,7 @@ function checkContractCode(code, address) {
 
 
 async function contractAt(abi, address, onlyRead) {
+	console.log(abi)
 	if (!store.state.connected) {
 		return {
 			error: "wallet not connected",

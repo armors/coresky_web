@@ -97,6 +97,7 @@ export default {
     },
     async connectWalletE () {
       let connected = this.$web3.checkWeb3();
+      console.log('connectWalletE', connected)
       if (!connected) {
         setTimeout(() => {
           this.connectWalletE()

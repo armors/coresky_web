@@ -9,6 +9,7 @@ export default {
   isLogin: false,
   heartbeatTimer: null,
   notice_unread: 0,
+  ethPrice: 0,
   message: {
     total: 0,
     unread: 0,

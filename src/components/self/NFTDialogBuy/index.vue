@@ -38,7 +38,7 @@
             <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
             {{nftPrice}}
           </span>
-          <!-- <div class="total">$ 45,332.02</div> -->
+           <div class="total">${{$filters.milliFormat($filters.ethToUsdt(nftPrice))}}</div>
         </div>
       </div>
       <el-button type="primary" class="btnBuy" :loading="buyBtnLoading" @click="buyNft">Buy</el-button>

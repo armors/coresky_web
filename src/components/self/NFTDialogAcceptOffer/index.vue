@@ -1,5 +1,8 @@
 <template>
-  <el-dialog :model-value="isShowAcceptDialog" :show-close="false" :close-on-click-modal="false" @closed="closed"
+  <el-dialog :model-value="isShowAcceptDialog"
+             :show-close="false"
+             :close-on-click-modal="false"
+             @closed="closed"
     custom-class="custom-dialog acceptOffer" destroy-on-close>
     <template #title>
       <div class="left">
@@ -23,7 +26,7 @@
         </div>
         <div class="box-right">
           <div class="price">{{nftPrice}} WETH</div>
-          <div class="price2">$4.79</div>
+          <div class="price2">${{$filters.milliFormat($filters.ethToUsdt(nftPrice))}}</div>
         </div>
       </div>
       <div class="info-box">
@@ -60,7 +63,7 @@
         <div class="title">Total Revenue</div>
         <div class="number">
           <span>{{totalRevenue}} WETH</span>
-          <span>$4.79</span>
+          <span>${{$filters.milliFormat($filters.ethToUsdt(totalRevenue))}}</span>
         </div>
       </div>
       <el-button type="primary" class="btnBuy" v-if="isApproved" :loading="acceptBtnLoading" @click="acceptOffer">Accept
@@ -175,25 +178,25 @@ export default {
         let serviceFee = basePrice.multipliedBy((fee) / 10000).div(100)
         console.log(basePrice.minus(creatorFee).minus(serviceFee).valueOf())
         this.totalRevenue = keepPoint(basePrice.minus(creatorFee).minus(serviceFee).valueOf(), 6)
-
-
       } catch (e) {
-
+        console.log(e)
       }
     },
     async show (tokenInfo, acceptInfo, makeOfferType = 1, isOpensea = false) {
       this.isOpensea = isOpensea
       this.isFinished = false
-      this.isShowAcceptDialog = true
       this.tokenInfo = tokenInfo
       this.acceptInfo = acceptInfo
       this.makeOfferType = makeOfferType
+      this.isShowAcceptDialog = true
+      this.loading = true
       console.log(acceptInfo)
       if (isOpensea) {
         await this.initAcceptTokenInfoOpensea()
       } else {
         await this.initAcceptTokenInfo()
       }
+      this.loading = false
     },
     // 挂单开始
     // 注册地址

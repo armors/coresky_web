@@ -142,9 +142,9 @@
                   <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
                   <span class="value">{{nftPrice}}</span>
                 </div>
-                <!--                <div class="row">-->
-                <!--                  $45,332,02-->
-                <!--                </div>-->
+                <div class="row">
+                  ${{$filters.milliFormat($filters.ethToUsdt(nftPrice))}}
+                </div>
               </div>
               <div class="box-right">
                 <div class="row-item">
@@ -1036,7 +1036,7 @@ export default {
       //   this.fulfillOrderOpensea(v)
       //   return
       // }
-      this.acceptDialogBtnLoading = true
+      // this.acceptDialogBtnLoading = false
       this.$refs.NFTDialogAcceptOffer.show(this.tokenInfo, v, v.tokenId === '0' ? 2 : 1, isOpensea)
     },
     followNft () {
