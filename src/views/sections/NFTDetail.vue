@@ -177,7 +177,7 @@
 <!--              </el-button>-->
               <!--              <el-button class="btnBlack" v-if="!isSelf && !isCart" :disabled="!(!isSelf && !isCart) || !tokenInfo.contract || !tokenInfo.state"-->
               <el-button class="btnBlack" v-if="tokenInfo.contractType === 0"
-                :disabled="isCart || !tokenInfo.contract || !tokenInfo.state" @click="addCart">Add to Cart</el-button>
+                :disabled="(isIncartInit || !tokenInfo.contract || !tokenInfo.state)" @click="addCart">Add to Cart</el-button>
               <el-button class="btnWhite" v-if="tokenInfo.contractType === 1 || (!isSelf && !this.isMakeOffer)"
                 :disabled="!tokenInfo.contract" @click="showMakeOfferNFT">Make Offer</el-button>
               <el-button class="btnWhite" v-if="tokenInfo.contractType === 1 || (!isSelf && !this.isMakeOffer)"
@@ -252,8 +252,8 @@
                                    :loading="acceptDialogBtnLoading" :disabled="isExpired(v.expirationTime) || isSelf1155(v.maker)" @click="showBuyNft(v)">Buy</el-button>
                       </div>
                       <div class="list-th th25 center">
-                        <el-button type="primary" class="btnAccept" :disabled="isInCart1155(v.id) || isSelfSell(v.maker) || isExpired(v.expirationTime)"
-                                   @click="addCart1155(i)">Add</el-button>
+                        <el-button type="primary" class="btnAccept" :disabled="isCartCoresky(v.id) || isSelfSell(v.maker) || isExpired(v.expirationTime)"
+                                   @click="addCartList(v.id)">Add</el-button>
                       </div>
                     </template>
                     <template v-else>
@@ -275,8 +275,8 @@
                                    :loading="acceptDialogBtnLoading" @click="showBuyNft(v, true)">Buy</el-button>
                       </div>
                       <div class="list-th th25 center">
-                        <el-button type="primary" class="btnAccept" :disabled="isInCart1155(v.id) || isSelfSell(v.maker.address) || isExpired(v.expirationTime)"
-                                   @click="addCart1155(i)">Add</el-button>
+                        <el-button type="primary" class="btnAccept" :disabled="isInCartOpensea(v.orderHash) || isSelfSell(v.maker.address) || isExpired(v.expirationTime)"
+                                   @click="addCartOpensea(v)">Add</el-button>
                       </div>
                     </template>
 
@@ -434,7 +434,7 @@ import NFTDialogAcceptOffer from '../../components/self/NFTDialogAcceptOffer'
 
 import NFTDialogBuy from '../../components/self/NFTDialogBuy'
 import { setLocalStorage, getLocalStorage, removeLocalStorage } from "@/util/local-storage";
-
+import BigNumber from 'bignumber.js'
 import * as echarts from "echarts";
 
 export default {
@@ -525,7 +525,7 @@ export default {
   mounted () {
     this.getTokenInfo()
     this.getTokenEvent()
-    this.getOrdersAndOffers()
+    // this.getOrdersAndOffers()
     // this.isInCart()
   },
   computed: {
@@ -535,6 +535,9 @@ export default {
     },
     cartName () {
       return `coresky_cart_${this.$store.state.user.coinbase}`
+    },
+    cartNameOpensea () {
+      return `coresky_cart_opensea_${this.$store.state.user.coinbase}`
     },
     isSelf () {
       console.log(this.tokenInfo)
@@ -550,19 +553,9 @@ export default {
         return false
       }
     },
-    isCart () {
-      let shoppingList = this.$store.state.shoppingCartList || []
-      if (shoppingList === null || shoppingList.length === 0) {
-        return false
-      }
-      const token = shoppingList.find(item => item.contract === this.tokenInfo.contract && item.tokenId === this.tokenInfo.tokenId)
-      if (token) {
-        return true
-      }
-      else {
-        return false
-      }
-    }
+    isIncartInit () {
+      return this.isCartCoresky() || this.isInCartOpensea()
+    },
   },
   destroyed () {
     if (that.countDownFn) {
@@ -742,10 +735,27 @@ export default {
       console.log()
       return maker === this.user.coinbase.toLowerCase()
     },
+    isCartCoresky (id = 0) {
+      if (this.tokenInfo.contractType === 0) {
+        console.log(this.isInCartCoresky721())
+        return this.isInCartCoresky721()
+      } else {
+        console.log(this.isInCart1155())
+        return this.isInCart1155(id)
+      }
+    },
+    isInCartCoresky721 () {
+      let shoppingList =  this.$store.state.shoppingCartList || []
+      if (shoppingList === null || shoppingList.length === 0) {
+        return false
+      }
+      console.log('shoppingList', shoppingList)
+      const token = shoppingList.find(item => item.contract === this.tokenInfo.contract && item.tokenId === this.tokenInfo.tokenId)
+      console.log(token)
+      return !!token;
+    },
     isInCart1155 (id) {
-      const local = getLocalStorage(this.cartName)
-      console.log(local[this.cartName])
-      let coresky_cart = local[this.cartName]
+      let coresky_cart = this.$store.state.shoppingCartList || []
       let isCart = false
       if (local[this.cartName] !== null) {
         coresky_cart = JSON.parse(coresky_cart)
@@ -764,6 +774,118 @@ export default {
         isCart = false
       }
       return isCart
+    },
+    // 添加购物车
+    addCart () {
+      // const local = getLocalStorage(this.cartName)
+      // console.log(local[this.cartName])
+      // let coresky_cart = local[this.cartName]
+      // if (local[this.cartName] !== null) {
+      //   coresky_cart = JSON.parse(coresky_cart)
+      // } else {
+      //   coresky_cart = []
+      // }
+      // console.log(coresky_cart)
+      // coresky_cart.push(this.tokenInfo)
+      // const obj = {}
+      // obj[this.cartName] = JSON.stringify(coresky_cart)
+      // setLocalStorage(obj)
+      // addShoppingCart(this.tokenInfo)
+      // this.isInCart()
+      console.log(this.ckOrdersEntityList)
+      if (this.ckOrdersEntityList.length > 1) {
+        const openseaSell = this.ckOrdersEntityList.filter(item => item.source === 'opensea')
+        const coreskySell = this.ckOrdersEntityList.find(item => item.source === 'coresky')
+        function compare (prop) {
+          return function (obj1, obj2) {
+            var val1 = obj1[prop];
+            var val2 = obj2[prop];
+            if (new BigNumber(val1).isLessThan(new BigNumber(val2))) {
+              return -1;
+            } else if (new BigNumber(val2).isLessThan(new BigNumber(val1))) {
+              return 1;
+            } else {
+              return 0;
+            }
+          }
+        }
+        openseaSell.sort(compare("currentPrice"))
+        if (openseaSell.length > 0 && coreskySell) {
+          console.log(coreskySell.basePrice, openseaSell[0].currentPrice, new BigNumber(coreskySell.basePrice).isLessThan(new BigNumber(openseaSell[0].currentPrice)))
+          if (new BigNumber(coreskySell.basePrice).isLessThan(new BigNumber(openseaSell[0].currentPrice))) {
+            this.$store.commit('addShoppingCart', this.tokenInfo)
+          } else {
+            // this.addCartOpensea(openseaSell[0])
+            this.$store.commit('addShoppingCartOpensea', openseaSell[0])
+          }
+        } else if (!coreskySell) {
+          // this.addCartOpensea(openseaSell[0])
+          this.$store.commit('addShoppingCartOpensea', openseaSell[0])
+        }
+      } else if (this.ckOrdersEntityList[0].source === 'coresky') {
+        this.$store.commit('addShoppingCart', this.tokenInfo)
+      } else if (this.ckOrdersEntityList[0].source === 'opensea') {
+        this.addCartOpensea(this.ckOrdersEntityList[0])
+      }
+    },
+    isInCartOpensea (orderHash = null) {
+      let coresky_cart = this.$store.state.shoppingOpenseaCartList || []
+      if (coresky_cart.length < 1) {
+        return false
+      }
+      let orders
+      console.log('coresky_cart', coresky_cart, this.tokenInfo.tokenId, this.tokenInfo.contract)
+      console.log('coresky_cart', coresky_cart, coresky_cart[0].makerAssetBundle.assets[0].tokenId === this.tokenInfo.tokenId, coresky_cart[0].makerAssetBundle.assets[0].tokenAddress === this.tokenInfo.contract)
+      console.log('coresky_cart', coresky_cart, coresky_cart[0].makerAssetBundle.assets[0].tokenId, coresky_cart[0].makerAssetBundle.assets[0].tokenAddress)
+      if (orderHash === null) {
+        orders = coresky_cart.filter(item =>
+          item.makerAssetBundle.assets[0].tokenId === this.tokenInfo.tokenId
+          && item.makerAssetBundle.assets[0].tokenAddress === this.tokenInfo.contract)
+      } else {
+        orders = coresky_cart.filter(item => item.orderHash === orderHash)
+      }
+      console.log(orders)
+      console.log(orders.length > 0)
+      return orders.length > 0
+    },
+    addCartOpensea(v) {
+      if (!v) {
+        return
+      }
+      this.$store.commit('addShoppingCartOpensea', v)
+      // let cartName = this.cartNameOpensea
+      // const local = getLocalStorage(cartName)
+      // let coresky_cart = local[cartName]
+      // if (local[cartName] !== null) {
+      //   coresky_cart = JSON.parse(coresky_cart)
+      // } else {
+      //   coresky_cart = []
+      // }
+      // const isInCart = coresky_cart.find(item => item.orderHash === v.orderHash)
+      // if (!isInCart) {
+      //   coresky_cart.push(v)
+      //   const obj = {}
+      //   obj[cartName] = JSON.stringify(coresky_cart)
+      //   setLocalStorage(obj)
+      // }
+    },
+    addCart1155 (id) {
+      this.tokenInfo.ckOrdersEntityList.map(item => {
+        if (this.isInCart1155(id)) {
+          item.isIncart = true
+        } else if (item.id === id) {
+          item.isIncart = true
+        }
+        return item
+      })
+      this.$store.commit('addShoppingCart', this.tokenInfo)
+    },
+    addCartList (id) {
+      if (this.tokenInfo.contractType === 0) {
+        this.$store.commit('addShoppingCart', this.tokenInfo)
+      } else {
+        this.addCart1155(id)
+      }
     },
     getTokenInfo () {
       this.$api("collect.tokenInfo", this.tokenInfoParams).then(async (res) => {
@@ -966,48 +1088,6 @@ export default {
     nftPriceFun (basePrice) {
       console.log(basePrice)
       return (basePrice !== null && basePrice !== undefined) ? this.$filters.keepMaxPoint(this.$Web3.utils.fromWei(basePrice.toString())) : '--'
-    },
-
-    // 添加购物车
-    addCart () {
-      // const local = getLocalStorage(this.cartName)
-      // console.log(local[this.cartName])
-      // let coresky_cart = local[this.cartName]
-      // if (local[this.cartName] !== null) {
-      //   coresky_cart = JSON.parse(coresky_cart)
-      // } else {
-      //   coresky_cart = []
-      // }
-      // console.log(coresky_cart)
-      // coresky_cart.push(this.tokenInfo)
-      // const obj = {}
-      // obj[this.cartName] = JSON.stringify(coresky_cart)
-      // setLocalStorage(obj)
-      this.$store.commit('addShoppingCart', this.tokenInfo)
-      // addShoppingCart(this.tokenInfo)
-      // this.isInCart()
-    },
-    addCart1155 (id) {
-      this.tokenInfo.ckOrdersEntityList.map(item => {
-        if (this.isInCart1155(id)) {
-          item.isIncart = true
-        } else if (item.id === id) {
-          item.isIncart = true
-        }
-        return item
-      })
-      const local = getLocalStorage(this.cartName)
-      let coresky_cart = local[this.cartName]
-      if (local[this.cartName] !== null) {
-        coresky_cart = JSON.parse(coresky_cart)
-      } else {
-        coresky_cart = []
-      }
-      console.log(coresky_cart)
-      coresky_cart.push(this.tokenInfo)
-      const obj = {}
-      obj[this.cartName] = JSON.stringify(coresky_cart)
-      setLocalStorage(obj)
     },
     showMakeOfferNFT () {
       this.$refs.NFTDialogMakeOffer.showMakeOffer(this.tokenInfo)

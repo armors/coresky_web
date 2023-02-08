@@ -205,8 +205,25 @@ export default {
     setLocalStorage(obj)
     state.shoppingCartList = coresky_cart;
   },
+  addShoppingCartOpensea (state, payload) {
+    let cartName = 'coresky_cart_opensea_' + state.user.coinbase
+    const local = getLocalStorage(cartName)
+    let coresky_cart = local[cartName]
+    if (local[cartName] !== null) {
+      coresky_cart = JSON.parse(coresky_cart)
+    } else {
+      coresky_cart = []
+    }
+    const isInCart = coresky_cart.find(item => item.orderHash === payload.orderHash)
+    if (!isInCart) {
+      coresky_cart.push(payload)
+      const obj = {}
+      obj[cartName] = JSON.stringify(coresky_cart)
+      setLocalStorage(obj)
+    }
+    state.shoppingOpenseaCartList = coresky_cart;
+  },
   initShoppingCart (state) {
-    console.log(44444)
     let cartName = 'coresky_cart_' + state.user.coinbase
     const local = getLocalStorage(cartName)
     let coresky_cart = local[cartName]
@@ -216,5 +233,15 @@ export default {
       coresky_cart = []
     }
     state.shoppingCartList = coresky_cart;
+
+    let cartNameOpnesea = 'coresky_cart_opensea_' + state.user.coinbase
+    const localOpensea = getLocalStorage(cartNameOpnesea)
+    let coresky_cart_opensea = localOpensea[cartNameOpnesea]
+    if (localOpensea[cartNameOpnesea] !== null) {
+      coresky_cart_opensea = JSON.parse(coresky_cart_opensea)
+    } else {
+      coresky_cart_opensea = []
+    }
+    state.shoppingOpenseaCartList = coresky_cart_opensea;
   }
 };

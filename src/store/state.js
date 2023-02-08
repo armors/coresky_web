@@ -47,5 +47,6 @@ export default {
   defalutPayToken: null,
   categorys: [],
   ...settings,
-  shoppingCartList: []
+  shoppingCartList: [],
+  shoppingOpenseaCartList: []
 };
