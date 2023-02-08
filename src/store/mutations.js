@@ -117,6 +117,8 @@ export default {
       nickname: payload.nickname || "",
       shortUrl: payload.shortUrl || "",
       bannerUrl: payload.bannerUrl || "",
+      rewards: payload.rewards || 0,
+      score: payload.score || 0,
       id: payload.id || "",
     });
   },

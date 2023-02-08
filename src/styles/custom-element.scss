@@ -1,64 +1,59 @@
 @import "variables";
-.el-button{
-  height: unset;
-  color: $primaryColor;
+// 调整主题色
+:root {
+  --el-color-primary: #7d47ff;
+  --el-color-primary-light-3: #a783ff;
+  --el-color-primary-light-5: #c2a8ff;
+  --el-color-primary-light-7: #dbcbff;
+  --el-color-primary-light-8: #e7deff;
+  --el-color-primary-light-9: #f3eeff;
+  --el-color-primary-dark-2: #7d47ff;
+  // rgba(125,71,255,1)
 }
-.el-message{
+
+.el-message {
   justify-content: center;
 }
-.el-message--error{
+.el-message--error {
   //background: none;
   //border: none;
 }
-.el-message-box--center{
+.el-message-box--center {
   padding-bottom: 10px;
 }
 
-.el-message-box__btns{
+.el-message-box__btns {
   padding-top: 10px;
   margin-top: 10px;
   border-top: 1px solid #f0f0f0;
 }
 
-.el-switch.is-checked .el-switch__core{
+.el-switch.is-checked .el-switch__core {
   background-color: $greenColor !important;
   border-color: $greenColor !important;
 }
-.el-switch__core{
+.el-switch__core {
   background-color: $borderBg !important;
 }
-.el-switch__label.is-active{
+.el-switch__label.is-active {
   color: $primaryColor;
 }
-.el-button:hover, .el-button:focus{
-  border-color: transparent;
-  background-color: transparent;
-}
-.is-disabled{
-  opacity: 0.5;
-}
 
-.el-button--primary:hover, .el-button--primary:focus, .el-button--primary:active{
-  color: $color-white;
-  background: $mainLiner !important;
-  border-color: $bgPurple !important;
+.el-collapse {
+  border: none !important;
 }
-
-.el-collapse{
-  border: none!important;
-}
-.el-collapse-item__header{
+.el-collapse-item__header {
   height: 56px;
   width: 100%;
   background: $bg-white !important;
-  border: none!important;
-  &.is-active{
+  border: none !important;
+  &.is-active {
     background: $elButtonHoverBg !important;
   }
 }
-.el-collapse-item__arrow{
+.el-collapse-item__arrow {
   margin-right: 28px;
 }
-.el-collapse-item__content{
+.el-collapse-item__content {
   padding-bottom: 0;
 }

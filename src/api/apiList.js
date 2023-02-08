@@ -116,6 +116,10 @@ export default {
       url: "/user/activity",
       method: "post",
     },
+    scoreDetail: {
+      url: "/user/score/detail",
+      method: "post",
+    },
   },
   collect: {
     tokenQuery: {

@@ -111,6 +111,11 @@ const routes = [
 		component: () => import(/* webpackChunkName: "connect" */ "../views/sections/Connect"),
 	},
 	{
+		path: "/reward",
+		name: "reward",
+		component: () => import(/* webpackChunkName: "reward" */ "../views/sections/reward"),
+	},
+	{
 		path: "/:pathMatch(.*)",
 		name: "NoFound",
 		redirect: "/404",

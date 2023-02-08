@@ -88,7 +88,7 @@ export default {
       margin-bottom: 0;
     }
     .el-tabs__item {
-      font-family: 'Plus Jakarta Display';
+      // font-family: 'Plus Jakarta Display';
       padding: 0 20px;
       font-weight: 600;
       font-size: 18px;

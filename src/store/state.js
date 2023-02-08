@@ -40,6 +40,7 @@ export default {
     bannerUrl: "",
     id: "",
     rewards: '',
+    score: ''
   },
   payTokens: [],
   defalutPayToken: null,
