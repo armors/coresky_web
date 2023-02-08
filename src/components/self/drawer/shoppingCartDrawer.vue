@@ -81,6 +81,7 @@ export default {
       totalPrice: 0,
       totalPriceShow: 0,
       coreskyCart: [],
+      openseaCart: [],
       items: 0,
       ids: [],
       checkOrderData: []
@@ -97,6 +98,9 @@ export default {
     cartName () {
       return `coresky_cart_${this.$store.state.user.coinbase}`
     },
+    cartNameOpensea() {
+      return `coresky_cart_opensea_${this.$store.state.user.coinbase}`
+    }
   },
   methods: {
     clearCart () {
