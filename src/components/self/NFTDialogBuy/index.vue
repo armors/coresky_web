@@ -19,7 +19,7 @@
           </span>
         </div>
       </div>
-      <div class="price-box">
+      <div class="price-box" v-if="tokenInfo.contractType === 1">
         <div class="label">
           Quantity
         </div>
@@ -65,6 +65,7 @@ export default {
   name: "index",
   data () {
     return {
+      isOpensea: false,
       isBuyOver: false,
       isShowBuyDialog: false,
       buyBtnLoading: false,
@@ -104,31 +105,38 @@ export default {
     }
   },
   methods: {
-    async showBuy (tokenInfo, v = null) {
+    async showBuy (tokenInfo, v = null, isOpensea = false) {
+      this.isOpensea = isOpensea
       this.isBuyOver = false
       this.tokenInfo = tokenInfo
-      if (this.tokenInfo.contractType ===0) {
+      if (this.tokenInfo.contractType === 0 && !isOpensea) {
         this.sellInfo = this.tokenInfo.ckOrdersEntityList[0]
       } else {
         console.log(v)
         this.sellInfo = v
       }
+      console.log(this.sellInfo)
+      const price = this.isOpensea ? this.sellInfo.currentPrice : this.sellInfo.basePrice
       const ethBalance = await this.$sdk.getBalance({
         address: this.$sdk.NULL_ADDRESS()
       }, this.user.coinbase)
       if (new BigNumber(ethBalance).isLessThan(
-        this.$sdk.fromWeiNum(this.sellInfo.basePrice)
+        this.$sdk.fromWeiNum(price)
       )) {
         this.$tools.message('No Enough Balance Of ETH');
         return
       }
       this.tokenInfo.tokenId = parseInt(this.tokenInfo.tokenId)
       this.isShowBuyDialog = true
-      this.nftPrice = this.$sdk.fromWeiNum(this.sellInfo.basePrice)
+      this.nftPrice = this.$sdk.fromWeiNum(price)
       console.log(this.tokenInfo)
     },
     async buyNft () {
       this.buyBtnLoading = true
+      if (this.isOpensea) {
+        this.fulfillOrderOpensea()
+        return
+      }
       let seller = this.$sdk.getAtomicMatchWrapOrder(this.sellInfo, false)
       seller = {
         ...seller,
@@ -215,7 +223,23 @@ export default {
         console.log(e)
         this.buyBtnLoading = false
       }
-    }
+    },
+    async fulfillOrderOpensea () {
+      try {
+        const openseaSDK = await this.$sdk.initOpenSea()
+        console.log(openseaSDK)
+        const transactionHash = await openseaSDK.fulfillOrder({
+          order: this.sellInfo,
+          accountAddress: this.user.coinbase
+        })
+        this.buyBtnLoading = false
+        this.$emit('buySuccess', transactionHash)
+        console.log(transactionHash)
+      } catch (e) {
+        console.log(e)
+        this.buyBtnLoading = false
+      }
+    },
   }
 }
 </script>

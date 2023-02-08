@@ -171,10 +171,10 @@
 <!--                  @click="cancelSell()">Cancel-->
 <!--                  Sell</el-button>-->
               </template>
-              <el-button type="primary" class="btnBuy"
-                v-else-if="tokenInfo.state && tokenInfo.contractType === 0 && tokenInfo.basePrice > 0"
-                @click="showBuyNft">Buy Now
-              </el-button>
+<!--              <el-button type="primary" class="btnBuy"-->
+<!--                v-else-if="tokenInfo.state && tokenInfo.contractType === 0 && tokenInfo.basePrice > 0"-->
+<!--                @click="showBuyNft">Buy Now-->
+<!--              </el-button>-->
               <!--              <el-button class="btnBlack" v-if="!isSelf && !isCart" :disabled="!(!isSelf && !isCart) || !tokenInfo.contract || !tokenInfo.state"-->
               <el-button class="btnBlack" v-if="tokenInfo.contractType === 0"
                 :disabled="isCart || !tokenInfo.contract || !tokenInfo.state" @click="addCart">Add to Cart</el-button>
@@ -802,7 +802,7 @@ export default {
         if (openseaListed.code === 200) {
           this.ckOrdersEntityList = [...this.ckOrdersEntityList, ...openseaListed.data]
         }
-        await this.$sdk._sleep()
+        await this.$sdk._sleep(2000)
         const openseaOffers = await this.$sdk.getOffersOpensea(this.asset)
         if (openseaOffers.code === 200) {
           this.ckAuctionEntityList = [...this.ckAuctionEntityList, ...openseaOffers.data]
@@ -826,13 +826,20 @@ export default {
       })
     },
     showSellNft () {
+      console.log(this.ckOrdersEntityList)
+      const sellOpenseaOrder = this.ckOrdersEntityList.filter(item => item.source === 'opensea')
+      const sellCoreskyOrder = this.ckOrdersEntityList.filter(item => item.source === 'coresky')
+      if (sellOpenseaOrder.length > 0 && sellCoreskyOrder.length > 0) {
+        this.$tools.message('每个平台仅支持一次报价，请取消挂单后重新挂售', 'warning');
+        return
+      }
       this.$router.push({
         path: `/listings/${this.tokenInfoParams.contract}/${this.tokenInfoParams.tokenId}`
       })
       // this.sellDialogBtnLoading = true
       // this.$refs.NFTDialogSell.showSell(this.tokenInfo)
     },
-    async cancelMakeOffer (v, isOpensea) {
+    async cancelMakeOffer (v, isOpensea = false) {
       if (isOpensea) {
         await this.cancelSellOpensea(v)
         return
@@ -925,12 +932,8 @@ export default {
         this.cancelBtnLoading = false
       }
     },
-    async showBuyNft (v, isOpensea) {
-      if (isOpensea) {
-       this.fulfillOrderOpensea(v)
-      } else {
-        this.$refs.NFTDialogBuy.showBuy(this.tokenInfo, v)
-      }
+    async showBuyNft (v, isOpensea = false) {
+      this.$refs.NFTDialogBuy.showBuy(this.tokenInfo, v, isOpensea)
     },
     async fulfillOrderOpensea (v) {
       console.log(v)
@@ -1028,13 +1031,13 @@ export default {
       console.log(v)
       this.getTokenInfo()
     },
-    showAcceptOfferNFT (v, isOpensea) {
-      if (isOpensea) {
-        this.fulfillOrderOpensea(v)
-        return
-      }
+    showAcceptOfferNFT (v, isOpensea = false) {
+      // if (isOpensea) {
+      //   this.fulfillOrderOpensea(v)
+      //   return
+      // }
       this.acceptDialogBtnLoading = true
-      this.$refs.NFTDialogAcceptOffer.show(this.tokenInfo, v, v.tokenId === '0' ? 2 : 1)
+      this.$refs.NFTDialogAcceptOffer.show(this.tokenInfo, v, v.tokenId === '0' ? 2 : 1, isOpensea)
     },
     followNft () {
       if (!this.tokenInfo.contract || !this.tokenInfo.tokenId) return
@@ -1455,6 +1458,9 @@ export default {
       cursor: pointer;
       color: $color-white;
       background: $mainLiner;
+      &.is-disabled{
+        opacity: 0.8;
+      }
     }
   }
   .activity-wrap {

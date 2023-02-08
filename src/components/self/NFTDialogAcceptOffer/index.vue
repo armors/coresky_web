@@ -49,11 +49,11 @@
         <div class="title">Cost</div>
         <div class="box-item">
           <div class="left">Service Charge</div>
-          <div class="right">{{config.protocolFeeHan}}</div>
+          <div class="right">{{isOpensea ? protocolFee : config.protocolFeeHan}}</div>
         </div>
         <div class="box-item">
           <div class="left">Creator Fee</div>
-          <div class="right">{{$filters.feeFormat(this.tokenInfo.ckCollectionsInfoEntity.royalty)}}</div>
+          <div class="right">{{isOpensea ? royaltyFee :  $filters.feeFormat(this.tokenInfo.ckCollectionsInfoEntity.royalty)}}</div>
         </div>
       </div>
       <div class="total-box">
@@ -90,6 +90,7 @@ export default {
   name: "NFTDialogAcceptOffer",
   data () {
     return {
+      isOpensea: false,
       isFinished: false,
       isShowAcceptDialog: false,
       acceptBtnLoading: false,
@@ -104,6 +105,7 @@ export default {
         time: '',
         symbol: ''
       },
+      protocolFee: '--',
       hash: '',
       floorDiff: '--',
       totalRevenue: '--',
@@ -119,12 +121,7 @@ export default {
     }
   },
   methods: {
-    async show (tokenInfo, acceptInfo, makeOfferType = 1) {
-      this.isFinished = false
-      this.isShowAcceptDialog = true
-      this.tokenInfo = tokenInfo
-      this.acceptInfo = acceptInfo
-      this.makeOfferType = makeOfferType
+    async initAcceptTokenInfo () {
       this.tokenInfo.tokenId = parseInt(this.tokenInfo.tokenId)
       console.log(this.tokenInfo)
       this.nftPrice = this.$sdk.fromWeiNum(this.acceptInfo.basePrice)
@@ -140,7 +137,6 @@ export default {
           this.user.coinbase,
           this.registryOwner,
         );
-        this.isShowAcceptDialog = true
         this.$parent.acceptDialogBtnLoading = false
       } catch (e) {
         console.log(e)
@@ -154,6 +150,50 @@ export default {
       let serviceFee = basePrice.multipliedBy((parseInt(this.config.protocolFee)) / 10000).div(100)
       console.log(basePrice.minus(creatorFee).minus(serviceFee).valueOf())
       this.totalRevenue = keepPoint(basePrice.minus(creatorFee).minus(serviceFee).valueOf(), 6)
+    },
+    async initAcceptTokenInfoOpensea () {
+      this.$parent.acceptDialogBtnLoading = false
+      this.nftPrice = this.$sdk.fromWeiNum(this.acceptInfo.currentPrice)
+      try {
+        const openseaSDK = await this.$sdk.initOpenSea()
+        console.log(openseaSDK)
+        const asset = {
+          tokenAddress: this.$route.params.contract, // CryptoKitties
+          tokenId: this.$route.params.tokenId
+        }
+        const assetInfo = await openseaSDK.api.getAsset(asset)
+
+        const royalty = assetInfo.assetContract.openseaSellerFeeBasisPoints
+        const fee = assetInfo.assetContract.sellerFeeBasisPoints
+        this.protocolFee = this.$filters.feeFormat(assetInfo.assetContract.sellerFeeBasisPoints)
+        this.royaltyFee = this.$filters.feeFormat(assetInfo.assetContract.openseaSellerFeeBasisPoints)
+        this.floorDiff = this.tokenInfo.ckCollectionsInfoEntity.foolPrice !== 0
+          ? (parseFloat(keepPoint(this.nftPrice * 100 / this.tokenInfo.ckCollectionsInfoEntity.foolPrice, 2)) + '%')
+          : '--'
+        let basePrice = new BigNumber(this.$sdk.fromWeiNumOrigin(this.acceptInfo.currentPrice))
+        let creatorFee = basePrice.multipliedBy(royalty / 10000).div(100)
+        let serviceFee = basePrice.multipliedBy((fee) / 10000).div(100)
+        console.log(basePrice.minus(creatorFee).minus(serviceFee).valueOf())
+        this.totalRevenue = keepPoint(basePrice.minus(creatorFee).minus(serviceFee).valueOf(), 6)
+
+
+      } catch (e) {
+
+      }
+    },
+    async show (tokenInfo, acceptInfo, makeOfferType = 1, isOpensea = false) {
+      this.isOpensea = isOpensea
+      this.isFinished = false
+      this.isShowAcceptDialog = true
+      this.tokenInfo = tokenInfo
+      this.acceptInfo = acceptInfo
+      this.makeOfferType = makeOfferType
+      console.log(acceptInfo)
+      if (isOpensea) {
+        await this.initAcceptTokenInfoOpensea()
+      } else {
+        await this.initAcceptTokenInfo()
+      }
     },
     // 挂单开始
     // 注册地址
@@ -211,6 +251,10 @@ export default {
     },
     async acceptOffer () {
       this.acceptBtnLoading = true
+      if (this.isOpensea) {
+        await this.fulfillOrderOpensea()
+        return
+      }
       let buyer = this.acceptInfo
       buyer.basePrice = buyer.basePrice.toString()
       buyer.tokenId = this.tokenInfo.tokenId
@@ -398,8 +442,38 @@ export default {
         console.log(e)
         this.acceptBtnLoading = false
       }
-
     },
+
+    async fulfillOrderOpensea () {
+      console.log(this.user.coinbase)
+      try {
+        const openseaSDK = await this.$sdk.initOpenSea()
+        console.log(openseaSDK)
+        const transactionHash = await openseaSDK.fulfillOrder({
+          order: this.acceptInfo,
+          accountAddress: this.user.coinbase
+        })
+        // {
+        // 	// order: order.data.order,
+        // 	order: orders,
+        // 		accountAddress: asset.tokenAddress
+        // }
+        console.log(transactionHash)
+        this.acceptBtnLoading = false
+        this.$emit('acceptOfferSuccess', transactionHash)
+        // const balance= await openseaSDK.createBuyOrder({
+        // 	asset,
+        // 	accountAddress: this.user.coinbase,
+        // 	// Value of the offer, in units of the payment token (or wrapped ETH if none is specified):
+        // 	startAmount: 1.2,
+        // })
+        // console.log(balance)
+      } catch (e) {
+        this.acceptBtnLoading = false
+        console.log(e)
+      }
+    },
+
   }
 }
 </script>

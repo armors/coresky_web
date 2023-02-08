@@ -276,11 +276,7 @@ export default {
 					label: '7days',
 				}
 			],
-			platformList: [
-				{
-					name: 'Coresky'
-				}
-			],
+			platformList: [],
 			dataList: [
 				{
 					name: 'Coresky',
@@ -325,6 +321,8 @@ export default {
 			nftAmount1155: 0,
 			isApproved: true,
 			registryOwner: '',
+			isSellCoresky: false,
+			isSellOpensea: false,
 			asset: {
 				tokenAddress: this.$route.params.contract, // CryptoKitties
 				tokenId: this.$route.params.tokenId
@@ -393,6 +391,7 @@ export default {
 				this.dataList[0].RoyaltiesFee = this.tokenInfo.ckCollectionsInfoEntity.royalty
 				this.dataList[0].protocolFee = store.state.config.protocolFee
 				this.dataList[1].listedPrice = this.$sdk.fromWeiNum(this.tokenInfo.listedPriceOs)
+				this.isSellCoresky = res.debug.ckOrdersEntityList.length > 0
 				if (this.user.coinbase) {
 					this.initSellInfo()
 				}
@@ -406,13 +405,20 @@ export default {
 				console.log(openseaSDK)
 				const assetInfo = await openseaSDK.api.getAsset(this.asset)
 				console.log(assetInfo)
-				this.isGetOSInfo = true
 				this.dataList[1].floorPrice = assetInfo.collection.stats.floor_price
 				this.dataList[1].Royalties = this.$filters.feeFormat(assetInfo.assetContract.openseaSellerFeeBasisPoints)
 				this.dataList[1].fee = this.$filters.feeFormat(assetInfo.assetContract.sellerFeeBasisPoints)
-
 				this.dataList[0].RoyaltiesFee = assetInfo.assetContract.openseaSellerFeeBasisPoints
 				this.dataList[0].protocolFee = assetInfo.assetContract.sellerFeeBasisPoints
+				await this.$sdk._sleep(2000)
+				const openseaListed = await this.$sdk.getOrdersOpensea({
+					assetContractAddress: this.asset.tokenAddress,
+					tokenId: this.asset.tokenId
+				})
+				if (openseaListed.code === 200) {
+					this.isSellOpensea = openseaListed.data.length > 0
+				}
+				this.isGetOSInfo = true
 			} catch (e) {
 				console.log(e)
 				this.dataList[1].floorPrice = 0
@@ -438,11 +444,18 @@ export default {
 			console.log(this.form.time)
 		},
 		togglePlatform(name) {
-			console.log(this.isGetOSInfo)
-			// if (!this.isGetOSInfo) {
-			// 	this.$tools.message('正在拉取opensea数据，请稍等', 'warning');
-			// 	return
-			// }
+			if (name === 'Opensea' && !this.isGetOSInfo) {
+				this.$tools.message('正在拉取opensea数据，请稍等', 'warning');
+				return
+			}
+			if (this.isSellOpensea && name === 'Opensea') {
+				this.$tools.message('每个平台仅支持一次报价，请取消Opensea平台挂单后重新挂售', 'warning');
+				return
+			}
+			if (this.isSellCoresky && name === 'Coresky') {
+				this.$tools.message('每个平台仅支持一次报价，请取消Coresky平台挂单后重新挂售', 'warning');
+				return
+			}
 			let obj = this.platformList.find(el => el.name === name)
 			if (obj) {
 				this.platformList = this.platformList.filter(el => el.name !== name)
@@ -643,13 +656,19 @@ export default {
 						amount: this.tokenInfo.contractType === 1 ? Number(this.quantity) : 1
 					}
 				}
-				if (this.platformList.find(el => el.name === 'Opensea')) {
+
+				const isSeleceOpensea = this.platformList.find(el => el.name === 'Opensea')
+				if (isSeleceOpensea) {
 					this.sellNftOS()
 				}
-				console.log(orderParams)
 				// this.nftToBuy = orderParams
 				this.$api("order.create", orderParams).then((res) => {
 					this.sellBtnLoading = false
+					if (!isSeleceOpensea) {
+						setTimeout(() => {
+							window.history.go(-1)
+						}, 500)
+					}
 					if (res.code === 200) {
 						this.isShowSellDialog = false
 						this.$tools.message('Coresky 挂售成功', 'success');
@@ -712,6 +731,9 @@ export default {
 				const listing = await openseaSDK.createSellOrder(sellOrderParams)
 				this.$tools.message('Opensea 挂售成功', 'success');
 				console.log(listing)
+				setTimeout(() => {
+					window.history.go(-1)
+				}, 1000)
 			} catch (e) {
 				this.$tools.message(e);
 				console.log(e)
