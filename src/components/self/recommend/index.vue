@@ -140,9 +140,8 @@
 						left: 12px;
 						bottom: 40px;
 						position: absolute;
-						font-family: 'Plus Jakarta Display';
 						font-style: normal;
-						font-weight: 700;
+						font-weight: 600;
 						font-size: 16px;
 						color: $color-white;
 					}

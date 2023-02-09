@@ -344,7 +344,7 @@ export default {
   position: relative;
   white-space: nowrap;
   color: $color-black4;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 16px;
   cursor: pointer;
   margin: 0 10px;
@@ -395,17 +395,18 @@ export default {
 }
 
 .head-connect {
-  cursor: pointer;
-  display: flex;
-  padding: 0 15px;
-  color: $color-white;
-  background: $primaryColor;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: bold;
-  width: 140px;
-  height: 48px;
+
   margin-left: 24px;
+  width: 140px;
+  height: 44px;
+  background: $color-black;
+  font-weight: 500;
+  font-size: 14px;
+  color: $color-white;
+  cursor: pointer;
+  &:hover {
+    background: #4136f5;
+  }
 }
 .wallet-link {
   border: none;

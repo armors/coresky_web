@@ -147,7 +147,6 @@
 						box-shadow:
 							-5px 5px 10px -4px $arrowBtnShadow,
 							5px 5px 10px -4px $arrowBtnShadow;
-						font-family: 'Plus Jakarta Display';
 						font-style: normal;
 						font-weight: 700;
 						font-size: 22px;

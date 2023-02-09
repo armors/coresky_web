@@ -9,20 +9,15 @@
               <div class="desc">{{$t('home.createAppDesc')}}</div>
 
               <div class="btn-list display-flex box-center-Y">
-                <div @click="goMarket" class="btn-more btn display-flex box-center">
-                  {{ $t("navigation.marketplace") }}
-                </div>
-                <router-link to="/" class="btn display-flex box-center">
-                  {{ $t("home.moreDetail") }}
+                <router-link to="/markterplace" class="btn display-flex box-center">
+                  Marketplace
                 </router-link>
               </div>
             </div>
             <div class="carousel-box">
               <el-carousel :autoplay="false" arrow="never" v-if="topCollection.length > 0" @change="changeTop">
-                <el-carousel-item v-for="(v, i) in topCollection" :key="`recommend-item-${i}`" @click="$router.push({
-				name: 'collection',
-				params: { contract: v.contract }
-				})">
+                <el-carousel-item v-for="(v, i) in topCollection" :key="`recommend-item-${i}`" @click="openURL(v.url)">
+                  <!-- {{ v }} -->
                   <image-box class="img-box" :src="v.image"></image-box>
                 </el-carousel-item>
               </el-carousel>
@@ -32,23 +27,8 @@
       </div>
 
       <div class="home-wrapper main-wrapper">
-
-        <!--      <div class="search-options justify-between">-->
-        <!--        <div class="home-title">{{ $t("home.saleList") }}</div>-->
-        <!--        <div class="nft-sorts">-->
-        <!--          <div class="nft-sorts-item" :class="sortKey == 'update_time' ? 'active' : ''" @click="seleteSort('update_time')">-->
-        <!--            <span class="text">{{ $t("hindex.time") }}</span>-->
-        <!--            <template v-if="sortKey == 'update_time'">-->
-        <!--              <img v-if="sortValue == 'desc'" class="sort-icon" src="@/assets/img/sort_desc.png" />-->
-        <!--              <img v-else class="sort-icon" src="@/assets/img/sort_asc.png" />-->
-        <!--            </template>-->
-        <!--            <img v-else class="sort-icon" src="@/assets/img/no_sort.png" alt="" />-->
-        <!--          </div>-->
-        <!--          <filter-and-sort :filters="filters" :filterId="filterId" @selectFilter="selectFilter">-->
-        <!--          </filter-and-sort>-->
-        <!--        </div>-->
-        <!--      </div>-->
         <nftRecommend :recommendCollection="recommendCollection"></nftRecommend>
+        <nftTrade :popularList="popularList"></nftTrade>
         <div class="home-title title-margin-top">{{$t('home.realTitle')}}</div>
         <div class="sort-box display-flex box-center-Y box-between">
           <div class="display-flex box-center-Y">
@@ -96,7 +76,7 @@
           <router-link to="/allcollection" class="see-more display-flex box-center">{{$t("home.seeMoreCollects")}}
           </router-link>
         </div>
-        <nftTrade :popularList="popularList"></nftTrade>
+
         <!-- <nftDrop :dropList="dropList"></nftDrop> -->
         <partners></partners>
 
@@ -282,6 +262,9 @@ export default {
     },
   },
   methods: {
+    openURL (url) {
+      window.open(url)
+    },
     changeTop (index) {
       this.topIndex = index
       console.log(index)
@@ -603,7 +586,6 @@ export default {
     .create-app-box {
       .title {
         width: 583px;
-        font-family: 'Plus Jakarta Display';
         font-style: normal;
         font-weight: 700;
         font-size: 50px;
@@ -614,7 +596,6 @@ export default {
         padding-top: 30px;
         width: 621px;
         /* Body_1_regular */
-        font-family: 'Plus Jakarta Display';
         font-style: normal;
         font-weight: 400;
         font-size: 20px;
@@ -627,19 +608,13 @@ export default {
         .btn {
           width: 180px;
           height: 48px;
-          /* 黑 */
-          background: $bg-white;
-          border-radius: 12px;
-          border: 1px solid $primaryColor;
+          background: $color-black;
           font-weight: 500;
           font-size: 16px;
-          color: $primaryColor;
+          color: $color-white;
           cursor: pointer;
-          &.btn-more {
-            background: $primaryColor;
-            border-color: transparent;
-            margin-right: 20px;
-            color: $color-white;
+          &:hover {
+            background: #4136f5;
           }
         }
       }
@@ -719,7 +694,7 @@ export default {
     }
     .text {
       padding-right: 12px;
-      font-weight: 400;
+      font-weight: 500;
       font-size: 14px;
       color: $primaryColor;
       margin-left: 20px;
@@ -786,15 +761,17 @@ export default {
     }
   }
   .see-more {
+    margin: 40px auto 0;
     width: 180px;
     height: 48px;
-    background-color: $primaryColor;
-    border-radius: 10px;
-    font-style: normal;
+    background: $color-black;
     font-weight: 500;
     font-size: 16px;
     color: $color-white;
-    margin: 40px auto 0;
+    cursor: pointer;
+    &:hover {
+      background: #4136f5;
+    }
   }
 }
 </style>

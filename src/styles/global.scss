@@ -1,12 +1,12 @@
 @import "variables";
 html, body{
-  font-family: Plus Jakarta Display;
+  font-family: 'Clash Display';
   margin: 0;
   font-size: 12px;
   //background: rgb(243,243,243);
 }
 *{
-  font-family: Plus Jakarta Display;
+  font-family: 'Clash Display';
 }
 html * {
   outline-color: transparent;
@@ -219,7 +219,7 @@ input{
 }
 
 .home-title {
-  font-weight: 700;
+  font-weight: 600;
   font-size: 32px;
   color: $primaryColor;
   line-height: 41px;

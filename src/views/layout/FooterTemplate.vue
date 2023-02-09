@@ -123,7 +123,6 @@ export default {
     margin: 0 auto;
     height: 100%;
     padding: 26px 0;
-    font-family: 'Plus Jakarta Display';
     font-style: normal;
     font-weight: 400;
     font-size: 14px;

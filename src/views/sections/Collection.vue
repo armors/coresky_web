@@ -452,9 +452,8 @@ export default {
   }
   ::v-deep {
     .el-tabs__item {
-      font-family: 'Plus Jakarta Display';
       padding: 0 30px;
-      font-weight: 700;
+      font-weight: 500;
       font-size: 18px;
       line-height: 24px;
       color: $color-black2;
