@@ -79,7 +79,7 @@
                         <template #content> The creator of this collection will receive a certain <br> percentage of
                           amout for every sale. </template>
                         <div class="display-flex box-center-Y">
-                          <div>0.5%</div>
+                          <div>{{config.protocolFeeHan}}</div>
                           <div class="tip-icon"><img src="../../assets/images/icons/icon_tip_black.svg" alt=""></div>
                         </div>
                       </el-tooltip>
@@ -95,25 +95,27 @@
       </div>
       <div class="page-right">
         <div class="detail-info">
-          <div class="collection-name"><span>{{tokenInfo.ckCollectionsInfoEntity.name}}</span> <img class="tag"
-              src="@/assets/images/icons/icon_tag.svg" alt=""></div>
-          <div class="globle-floor">
-            <span>Globle floor : </span>
-            <img class="token-icon" src="@/assets/images/icons/token/token_eth.svg" alt="" />
-            <span class="value">{{tokenInfo.ckCollectionsInfoEntity.floorPrice}}</span>
-          </div>
+          <router-link :to="`/collection/${$route.params.contract}`" tag="div" class="collection-name">
+            <span>{{tokenInfo.ckCollectionsInfoEntity.name}}</span>
+            <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
+          </router-link>
+<!--          <div class="globle-floor">-->
+<!--            <span>Globle floor : </span>-->
+<!--            <img class="token-icon" src="@/assets/images/icons/token/token_eth.svg" alt="" />-->
+<!--            <span class="value">{{tokenInfo.ckCollectionsInfoEntity.floorPrice}}</span>-->
+<!--          </div>-->
           <div class="nft-name">
             <span> {{tokenInfo.name?tokenInfo.name:('#'+tokenInfo.tokenId)}}</span>
             <div class="icon_shoucang" :class="{active: tokenInfo.followStatus}" alt="" @click="followNft" />
           </div>
           <div class="nft-address" v-if="tokenInfo.contractType === 0">
-            <div class="add-item">
-              <div class="creator">Creator</div>
-              <div class="creator-name">{{$filters.ellipsisAddress(tokenInfo.ckCollectionsInfoEntity.owner)}}</div>
-            </div>
+<!--            <div class="add-item">-->
+<!--              <div class="creator">Creator</div>-->
+<!--              <div class="creator-name">{{$filters.ellipsisAddress(tokenInfo.ckCollectionsInfoEntity.owner)}}</div>-->
+<!--            </div>-->
             <div>
               <div class="creator">Current owner</div>
-              <div class="creator-name">{{$filters.ellipsisAddress(tokenInfo.address)}}</div>
+              <router-link :to="`/account/${tokenInfo.address}`" tag="div" class="creator-name">{{$filters.ellipsisAddress(tokenInfo.address)}}</router-link>
             </div>
           </div>
           <div class="display-flex box-center-Y erc1155 nft-address" v-if="tokenInfo.contractType === 1">
@@ -176,12 +178,14 @@
 <!--                @click="showBuyNft">Buy Now-->
 <!--              </el-button>-->
               <!--              <el-button class="btnBlack" v-if="!isSelf && !isCart" :disabled="!(!isSelf && !isCart) || !tokenInfo.contract || !tokenInfo.state"-->
-              <el-button class="btnBlack" v-if="tokenInfo.contractType === 0"
-                :disabled="(isIncartInit || !tokenInfo.contract || !tokenInfo.state)" @click="addCart">Add to Cart</el-button>
+
+<!--              <el-button class="btnBlack" v-if="tokenInfo.contractType === 0"-->
+<!--                :disabled="(isIncartInit || !tokenInfo.contract || !tokenInfo.state)" @click="addCart">Add to Cart</el-button>-->
+
               <el-button class="btnWhite" v-if="tokenInfo.contractType === 1 || (!isSelf && !this.isMakeOffer)"
                 :disabled="!tokenInfo.contract" @click="showMakeOfferNFT">Make Offer</el-button>
-              <el-button class="btnWhite" v-if="tokenInfo.contractType === 1 || (!isSelf && !this.isMakeOffer)"
-                :disabled="!tokenInfo.contract" @click="showMakeOfferCollect">Make Offer Collect</el-button>
+<!--              <el-button class="btnWhite" v-if="tokenInfo.contractType === 1 || (!isSelf && !this.isMakeOffer)"-->
+<!--                :disabled="!tokenInfo.contract" @click="showMakeOfferCollect">Make Offer Collect</el-button>-->
             </div>
           </div>
         </div>
@@ -534,6 +538,9 @@ export default {
     // this.isInCart()
   },
   computed: {
+    config () {
+      return this.$store.state.config;
+    },
     user () {
       console.log(this.$store.state.user)
       return this.$store.state.user;
@@ -892,6 +899,33 @@ export default {
         this.addCart1155(id)
       }
     },
+    sortOrdersAndOffer (data, isOrder = false) {
+      function compare() { //这是比较函数
+        return function (m, n) {
+          let mmprice = m.source === 'coresky' ? m.basePrice : m.currentPrice
+          let mprice = new BigNumber(mmprice)
+          let nnprice = n.source === 'coresky' ? n.basePrice : n.currentPrice
+          let nprice = new BigNumber(nnprice)
+          if (mprice.isEqualTo(nprice)) {
+            if (m.expirationTime > n.expirationTime) {
+              return -1;
+            } else if (m.expirationTime < n.expirationTime) {
+              return 1;
+            } else {
+              return 0
+            }
+          }
+          if (nprice.isLessThan(mprice)) {
+            return isOrder ? 1 : -1;
+          } else if (mprice.isLessThan(nprice)) {
+            return isOrder ? -1 : 1;
+          } else {
+            return 0
+          }
+        }
+      }
+      return data.sort(compare())
+    },
     getTokenInfo () {
       this.$api("collect.tokenInfo", this.tokenInfoParams).then(async (res) => {
         this.tokenInfo = res.debug
@@ -915,8 +949,8 @@ export default {
           item.source = "coresky"
           return item
         })
-        this.ckAuctionEntityList = offer
-        this.ckOrdersEntityList = listed
+        this.ckAuctionEntityList = this.sortOrdersAndOffer(offer)
+        this.ckOrdersEntityList = this.sortOrdersAndOffer(listed, true)
         await this.getOrdersAndOffers()
         if (this.ckOrdersEntityList.length > 0) {
           this.countDown()
@@ -928,11 +962,13 @@ export default {
         const openseaListed = await this.$sdk.getOrdersOpensea(this.asset)
         if (openseaListed.code === 200) {
           this.ckOrdersEntityList = [...this.ckOrdersEntityList, ...openseaListed.data]
+          this.ckOrdersEntityList = this.sortOrdersAndOffer(this.ckOrdersEntityList, true)
         }
         await this.$sdk._sleep(2000)
         const openseaOffers = await this.$sdk.getOffersOpensea(this.asset)
         if (openseaOffers.code === 200) {
           this.ckAuctionEntityList = [...this.ckAuctionEntityList, ...openseaOffers.data]
+          this.ckAuctionEntityList = this.sortOrdersAndOffer(this.ckAuctionEntityList)
         }
         console.log(this.ckAuctionEntityList, this.ckOrdersEntityList)
     },
@@ -1175,6 +1211,7 @@ export default {
     flex-direction: column;
     /*justify-content: space-between;*/
     .collection-name {
+      cursor: pointer;
       font-weight: 600;
       font-size: 14px;
       line-height: 20px;
@@ -1237,6 +1274,7 @@ export default {
         margin-right: 24px;
       }
       .creator-name {
+        cursor: pointer;
         font-weight: 700;
         font-size: 14px;
         line-height: 21px;
