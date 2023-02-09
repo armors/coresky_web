@@ -247,9 +247,9 @@
                         {{$filters.ellipsisAddress(v.maker, 4)}}</div>
                       <div class="list-th th25 center">
                         <el-button type="primary" :disabled="isExpired(v.expirationTime)" class="btnAccept" v-if="isSelfMakeOffer(v.maker)"
-                                   :loading="cancelMakeOfferBtnLoading" @click="cancelSell(v)">Cancel</el-button>
+                                   :loading="cancelMakeOfferBtnLoading" @click="cancelSell(v, false)">Cancel</el-button>
                         <el-button type="primary" class="btnAccept" v-else
-                                   :loading="acceptDialogBtnLoading" :disabled="isExpired(v.expirationTime) || isSelf1155(v.maker)" @click="showBuyNft(v)">Buy</el-button>
+                                   :loading="acceptDialogBtnLoading" :disabled="isExpired(v.expirationTime) || isSelf1155(v.maker)" @click="showBuyNft(v, false)">Buy</el-button>
                       </div>
                       <div class="list-th th25 center">
                         <el-button type="primary" class="btnAccept" :disabled="isCartCoresky(v.id) || isSelfSell(v.maker) || isExpired(v.expirationTime)"
@@ -336,9 +336,9 @@
                         {{$filters.ellipsisAddress(v.maker, 4)}}</div>
                       <div class="list-th th25 center">
                         <el-button type="primary" :disabled="isExpired(v.expirationTime)" class="btnAccept" v-if="isSelfMakeOffer(v.maker)"
-                                   :loading="cancelMakeOfferBtnLoading" @click="cancelMakeOffer(v)">Cancel</el-button>
+                                   :loading="cancelMakeOfferBtnLoading" @click="cancelMakeOffer(v, false)">Cancel</el-button>
                         <el-button type="primary" class="btnAccept" v-else :disabled="!isSelf || isExpired(v.expirationTime)"
-                                   :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT(v)">Accept</el-button>
+                                   :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT(v, false)">Accept</el-button>
                       </div>
                     </template>
                     <template v-else>

@@ -89,6 +89,7 @@ export function decimal (num, v) {
   return Math.round(num * vv) / vv;
 }
 export function feeFormat (fee) {
+  console.log(fee)
   return fee ? (fee / 10000 * 100 + '%') : '--';
 }
 export function timeFormat (time) {
