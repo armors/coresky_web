@@ -165,6 +165,10 @@ export default {
     tokenEvent: {
       url: "/token/event",
       method: "post",
+    },
+    tokenActivity: {
+      url: "/token/activity",
+      method: "post",
     }
   },
   contract: {

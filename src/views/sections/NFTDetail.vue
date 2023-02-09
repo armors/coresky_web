@@ -389,6 +389,7 @@
             </div>
             <div class="offer-list">
               <div class="list-tr head">
+                <div class="list-th" style="width:20%">Market</div>
                 <div class="list-th" style="width:20%">Event</div>
                 <div class="list-th" style="width:20%">Price</div>
                 <div class="list-th" style="width:20%">From</div>
@@ -397,20 +398,24 @@
               </div>
               <div class="list-tr" v-for="(v, i) in tokenEventList" :key="`token-event-item-${i}`">
                 <div class="list-th display-flex box-center-Y" style="width:20%">
+                  <svg-icon class="platform-logo" icon-class="logo" v-if="!v.source"/>
+                  <svg-icon class="platform-logo" v-else icon-class="os-logo"/>
+                </div>
+                <div class="list-th display-flex box-center-Y" style="width:20%">
                   <div class="event-icon"><img :src="require(`../../assets/images/icons/icon_event_${v.type}.svg`)"
                       alt=""></div>
                   <div>{{v.typeUp}}</div>
-                  <div class="expired" v-if="isExpired(v.expirationTime)">Expired</div>
+                  <div class="expired" v-if="status === 3">Expired</div>
                 </div>
                 <div class="list-th" style="width:20%">
                   {{nftPriceFun(v.price) === '--' ? '--' : (nftPriceFun(v.price) + ' ETH')}}</div>
-                <div class="list-th" @click="goExplore(v.from)" :class="{purple: v.from!== null}" style="width:20%">
-                  {{$filters.ellipsisAddress(v.from, 4)}}</div>
-                <div class="list-th" @click="goExplore(v.to)" :class="{purple: v.to!== null}" style="width:20%">
-                  {{$filters.ellipsisAddress(v.to, 4)}}</div>
-                <div class="list-th display-flex box-center-Y" style="width:20%" :class="{gray: v.txHash === null}">
+                <div class="list-th" @click="goExplore(v.addressFrom)" :class="{purple: v.addressFrom!== null}" style="width:20%">
+                  {{$filters.ellipsisAddress(v.addressFrom, 4)}}</div>
+                <div class="list-th" @click="goExplore(v.addressTo)" :class="{purple: !!v.addressTo}" style="width:20%">
+                  {{$filters.ellipsisAddress(v.addressTo, 4)}}</div>
+                <div class="list-th display-flex box-center-Y" style="width:20%" :class="{gray: v.hash === null}">
                   <div>{{$filters.timeFormat(v.createTime)}}</div>
-                  <div class="share-icon" v-show="v.txHash !== null" @click="goExplore(v.txHash, true)"><img
+                  <div class="share-icon" v-show="v.hash !== null" @click="goExplore(v.hash, true)"><img
                       src="../../assets/images/icons/icon_share_purple.svg" alt=""></div>
                 </div>
               </div>
@@ -932,7 +937,7 @@ export default {
         console.log(this.ckAuctionEntityList, this.ckOrdersEntityList)
     },
     getTokenEvent () {
-      this.$api("collect.tokenEvent", this.tokenInfoParams).then((res) => {
+      this.$api("collect.tokenActivity", this.tokenInfoParams).then((res) => {
         this.tokenEventList = res.debug
         let tokenEventType = []
         this.tokenEventList.forEach(item => {
@@ -980,6 +985,10 @@ export default {
       try {
         const hash = await this.$sdk.cancelOrder_(seller, this.user.coinbase);
         console.log(hash)
+        if (typeof hash == "object" && hash.error) {
+          this.cancelMakeOfferBtnLoading = false
+          return
+        }
         this.$api("order.cancel", {
           id: v.id,
           type: this.$sdk.valueOrderType("MAKE_OFFER")
@@ -1019,6 +1028,10 @@ export default {
       try {
         const hash = await this.$sdk.cancelOrder_(seller, this.user.coinbase);
         console.log(hash)
+        if (typeof hash == "object" && hash.error) {
+          this.cancelMakeOfferBtnLoading = false
+          return
+        }
         this.$api("order.cancel", {
           id: cancelItem.id,
           type: this.$sdk.valueOrderType("SALE")
@@ -1497,6 +1510,10 @@ export default {
           color: $color-red;
           font-weight: 500;
         }
+      }
+      .platform-logo{
+        width: 24px;
+        height: 24px;
       }
     }
     .purple {
