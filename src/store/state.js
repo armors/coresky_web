@@ -10,6 +10,7 @@ export default {
   heartbeatTimer: null,
   notice_unread: 0,
   ethPrice: 0,
+  useAuthorization: undefined,
   message: {
     total: 0,
     unread: 0,

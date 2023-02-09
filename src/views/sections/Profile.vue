@@ -113,6 +113,7 @@
 <script>
 	import {onMounted, ref} from "vue";
 	import {getLocalStorage} from "../../util/local-storage";
+	import store from "@/store";
 
 	export default {
 		name: "Profile",
@@ -132,9 +133,7 @@
 				personalUrl: "",
 				submitBtnLoading: false,
 				headers: {
-					token: `${window.localStorage.getItem(
-						'CoreskyAuthorization'
-					) || ''}`
+					token: `${window.localStorage.getItem(`Coresky${this.user.coinbase}Authorization`) || ''}`
 				},
 				backgroundImage: '',
 				// uploadUrl: process.env.VUE_APP_API_URL,
@@ -172,7 +171,7 @@
 			getToken () {
 				this.headers = {
 					token: `${window.localStorage.getItem(
-						'CoreskyAuthorization'
+						`Coresky${this.user.coinbase}Authorization`
 					) || ''}`
 				}
 			},

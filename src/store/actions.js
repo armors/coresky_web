@@ -41,8 +41,8 @@ export default {
   },
   reload({ state, commit, dispatch }) {
     return new Promise(function(resolve, reject) {
-      var items = getLocalStorage("CoreskyAuthorization");
-      if (items.CoreskyAuthorization && items.CoreskyAuthorization !== 'undefined') {
+      var items = getLocalStorage(state.useAuthorization);
+      if (items[state.useAuthorization] && items[state.useAuthorization] !== 'undefined') {
         api("user.reload")
           .then(async function(response) {
             if (tools.checkResponse(response)) {
@@ -50,7 +50,7 @@ export default {
                 state.user.coinbase !=
                 response.data.user.address.toLocaleLowerCase()
               ) {
-                removeLocalStorage("CoreskyAuthorization");
+                removeLocalStorage(items[state.useAuthorization]);
                 resolve(response);
               } else {
                 commit("RELOAD");
@@ -58,12 +58,12 @@ export default {
                 dispatch("heartbeat");
               }
             } else {
-              removeLocalStorage("CoreskyAuthorization");
+              removeLocalStorage(state.useAuthorization);
             }
             resolve(response);
           })
           .catch((err) => {
-            removeLocalStorage("CoreskyAuthorization");
+            removeLocalStorage(state.useAuthorization);
             resolve(response);
           });
       } else {
@@ -207,9 +207,9 @@ export default {
       }
       commit("CONNECT", result);
       await dispatch("authinfo");
-      var items = getLocalStorage("CoreskyAuthorization");
-      console.log('items.CoreskyAuthorization', items.CoreskyAuthorization)
-      if (!items.CoreskyAuthorization || items.CoreskyAuthorization === 'undefined') {
+      var items = getLocalStorage(state.useAuthorization);
+      console.log('items.' + state.useAuthorization, items[state.useAuthorization])
+      if (!items[state.useAuthorization] || items[state.useAuthorization] === 'undefined' || items[state.useAuthorization] === undefined) {
         await dispatch("signLogin");
       }
       resolve(true);
@@ -268,11 +268,11 @@ export default {
         coinbase: result.coinbase,
         networkId: result.networkId,
       };
-      var items = getLocalStorage("CoreskyAuthorization");
-      console.log('items.CoreskyAuthorization', items.CoreskyAuthorization)
+      var items = getLocalStorage(state.useAuthorization);
+      console.log('items.'+ state.useAuthorization, items[state.useAuthorization])
       const ethPrice = await sdk.getEthPrice()
       await dispatch("updateEthPrice", ethPrice)
-      if (!items.CoreskyAuthorization || items.CoreskyAuthorization === 'undefined') {
+      if (!items[state.useAuthorization] || items[state.useAuthorization] === 'undefined' || items[state.useAuthorization] === undefined) {
         result = await dispatch("signLogin", data);
         resolve(result);
       }else {

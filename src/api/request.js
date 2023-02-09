@@ -14,9 +14,7 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     if (!config.headers['token']) {
-      config.headers['token'] = `${window.localStorage.getItem(
-        'CoreskyAuthorization'
-      ) || ''}`;
+      config.headers['token'] = `${window.localStorage.getItem(store.state.useAuthorization) || ''}`;
     }
 
     return config;

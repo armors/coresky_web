@@ -6,6 +6,7 @@ import {
 import sdk from "@/util/sdk/index.js";
 import tools from "@/util/tools.js";
 import * as filters from "@/filters";
+import store from "@/store/index";
 
 export default {
   WEB_LOADING (state) {
@@ -26,10 +27,10 @@ export default {
   CONNECT (state, payload) {
     if (payload.coinbase)
       payload.coinbase = payload.coinbase.toLocaleLowerCase();
-
     state.user = Object.assign({}, state.user, {
       coinbase: payload.coinbase,
     });
+    state.useAuthorization = `Coresky${state.user.coinbase}Authorization`
     state.web3 = Object.assign({}, state.web3, {
       networkId: payload.networkId,
       walletType: payload.walletType,
@@ -60,20 +61,23 @@ export default {
       bannerUrl: payload.user.bannerUrl || "",
       id: payload.user.id || "",
     });
+    state.useAuthorization = `Coresky${state.user.coinbase}Authorization`
     state.web3 = Object.assign({}, state.web3, {
       networkId: payload.networkId,
       walletType: payload.walletType,
     });
     state.isLogin = true;
     state.connected = true;
-    setLocalStorage({
-      CoreskyAuthorization: payload.token,
-    });
+    let auth = {}
+    auth[`Coresky${state.user.coinbase}Authorization`] = payload.token
+    setLocalStorage(auth);
     setLocalStorage({
       connected: true,
     });
   },
   LOGOUT (state) {
+    removeLocalStorage(state.useAuthorization);
+    removeLocalStorage("connected");
     state.user = {
       coinbase: "",
       avatar: "",
@@ -92,8 +96,7 @@ export default {
       walletType: "",
       networkId: null,
     };
-    removeLocalStorage("CoreskyAuthorization");
-    removeLocalStorage("connected");
+    state.useAuthorization = undefined
     state.ethBalance = "0";
     state.erc20Balance = {};
     state.token = null;
@@ -107,8 +110,8 @@ export default {
   },
   RELOAD (state) {
     state.isLogin = true;
-    var items = getLocalStorage("CoreskyAuthorization");
-    state.token = items.CoreskyAuthorization;
+    var items = getLocalStorage(state.useAuthorization);
+    state.token = items[state.useAuthorization];
   },
   USERINFO (state, payload) {
     if (payload.address) payload.address = payload.address.toLocaleLowerCase();
@@ -124,6 +127,7 @@ export default {
       score: payload.score || 0,
       id: payload.id || "",
     });
+    state.useAuthorization = `Coresky${state.user.coinbase}Authorization`
   },
   NOTICE_UNREAD (state, payload) {
     state.notice_unread = payload;

@@ -57,9 +57,11 @@ export default {
 	accountsChanged(accounts) {
 		console.log('accountsChanged', accounts)
 		if (!store.state.connected) return;
-		store.dispatch("logout");
+		// store.dispatch("logout");
 		if (accounts.length) {
 			store.dispatch("connect");
+		} else {
+			store.dispatch("logout");
 		}
 	},
 	chainChanged(channelId) {
