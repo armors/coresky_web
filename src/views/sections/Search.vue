@@ -162,7 +162,6 @@ export default {
   margin: 40px auto;
   ::v-deep {
     .el-tabs__item {
-      font-family: 'Plus Jakarta Display';
       padding: 0 40px;
       font-weight: 700;
       font-size: 32px;

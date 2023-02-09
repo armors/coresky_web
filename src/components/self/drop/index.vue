@@ -181,7 +181,6 @@
 					margin-right: 54px;
 				}
 				.nft-name{
-					font-family: 'Plus Jakarta Display';
 					font-style: normal;
 					font-weight: 700;
 					font-size: 22px;
@@ -190,7 +189,6 @@
 				.info-item {
 					margin-top: 36px;
 					/* Body_1_medium */
-					font-family: 'Plus Jakarta Display';
 					font-style: normal;
 					font-weight: 500;
 					font-size: 20px;
@@ -199,7 +197,6 @@
 
 					.label {
 						/* Body_2_bold */
-						font-family: 'Plus Jakarta Display';
 						font-style: normal;
 						font-weight: 500;
 						font-size: 16px;

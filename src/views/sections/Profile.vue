@@ -461,7 +461,6 @@
 					}
 				}
 				.el-form-item__label {
-					font-family: 'Plus Jakarta Display';
 					font-style: normal;
 					font-weight: 700;
 					font-size: 16px;
@@ -524,7 +523,6 @@
 			}
 		}
 		.tip-txt{
-			font-family: 'Plus Jakarta Display';
 			font-style: normal;
 			font-weight: 400;
 			font-size: 14px;
@@ -533,7 +531,6 @@
 		}
 	}
 	.avatar-box{
-		font-family: 'Plus Jakarta Display';
 		font-style: normal;
 		font-weight: 700;
 		font-size: 16px;
@@ -566,7 +563,6 @@
 		}
 	}
 	input.el-input__inner::placeholder {
-		font-family: 'Plus Jakarta Display';
 		font-style: normal;
 		font-weight: 400;
 		font-size: 14px;
