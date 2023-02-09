@@ -64,7 +64,7 @@
           </div>
         </el-popover>
         <div class="nav-link shopping-cart" @click="showShoppingCartDrawer=true">
-          <div class="notify-num" v-if="shoppingCartList&&shoppingCartList.length>0">{{ shoppingCartList.length }}</div>
+          <div class="notify-num" v-if="shoppingCartList&&shoppingCartList.length>0 || shoppingOpenseaCartList&&shoppingOpenseaCartList.length>0">{{ shoppingCartList.length + shoppingOpenseaCartList.length }}</div>
           <svg-icon class="head-icon" icon-class="gouwuche" />
         </div>
         <div class="head-connect display-flex box-center" v-if="!connected" @click="login">
@@ -150,6 +150,9 @@ export default {
     },
     shoppingCartList () {
       return this.$store.state.shoppingCartList;
+    },
+    shoppingOpenseaCartList () {
+      return this.$store.state.shoppingOpenseaCartList;
     }
   },
   created () {

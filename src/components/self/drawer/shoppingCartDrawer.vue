@@ -9,50 +9,104 @@
         <Close />
       </el-icon>
     </div>
-    <div class="shopping-cart-content-head">
-      <div class="left">
-        Items {{items}}
-      </div>
+    <div class="shopping-cart-content-head display-flex box-center-Y">
+
+      <el-menu
+        :default-active="activeIndex"
+        class="el-menu-cart box-flex1"
+        mode="horizontal"
+        @select="handleSelect"
+      >
+        <el-badge :value="items" class="item">
+          <el-menu-item index="1">CoreSky</el-menu-item>
+        </el-badge>
+        <el-badge :value="shoppingOpenseaCartList.length" class="item">
+          <el-menu-item index="2">Other</el-menu-item>
+        </el-badge>
+      </el-menu>
       <div class="right" @click="clearCart">
         <img src="@/assets/images/icons/icon_clearcart.svg" class="icon-clear" alt="">
         <span>Clear all</span>
       </div>
     </div>
-    <div class="hidden-scrol shopping-cart-content">
-      <template v-for="(v, i) in coreskyCart" :key="`cart-item-p-${i}`">
-        <div class="shopping-item" v-for="(vc, ic) in v.ckOrdersEntityList" :key="`cart-item-${i}`">
-          <div class="shopping-info">
-            <image-box :src="v.oriImage"></image-box>
-            <div class="info-txt">
-              <div class="txt1">{{v.name || '--'}}</div>
-              <div class="txt2">ENS :Ethereum Na…</div>
-              <div class="txt3">Creator Fee {{$filters.feeFormat(vc)}}</div>
+    <template v-if="activeIndex === '1'">
+      <div class="hidden-scrol shopping-cart-content">
+        <template v-for="(v, i) in coreskyCart" :key="`cart-item-p-${i}`">
+          <div class="shopping-item" v-for="(vc, ic) in v.ckOrdersEntityList" :key="`cart-item-${i}`">
+            <div class="shopping-info">
+              <image-box :src="v.oriImage"></image-box>
+              <div class="info-txt">
+                <div class="txt1">{{v.ckCollectionsInfoEntity.name || '--'}}</div>
+                <div class="txt2 display-flex box-center-Y">
+                  <div>ENS :Ethereum Na…</div>
+                  <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
+                </div>
+                <div class="txt3">Creator Fee {{$filters.feeFormat(vc.makerRelayerFee)}}</div>
+              </div>
             </div>
-          </div>
-          <div class="shopping-price">
+            <div class="shopping-price">
           <span class="price-value">
             <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
             {{getNftPrice(vc, true)}}
           </span>
-            <el-icon @click="deleteCart(v, vc.id)">
+              <el-icon @click="deleteCart(v, vc.id)">
+                <Delete />
+              </el-icon>
+            </div>
+          </div>
+        </template>
+      </div>
+      <div class="shopping-cart-footer">
+        <div class="total-box">
+          <div class="title">Total</div>
+          <div class="total">
+            <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
+            {{totalPriceShow}}
+          </div>
+        </div>
+        <div>
+          <el-button type="primary" :disabled="coreskyCart.length < 1" class="btnOption" :loading="buyBtnLoading" @click="cartBuy">Purchase</el-button>
+        </div>
+      </div>
+    </template>
+    <template v-if="activeIndex === '2'">
+      <div class="hidden-scrol shopping-cart-content">
+        <div class="shopping-item" v-for="(v, ic) in shoppingOpenseaCartList" :key="`cart-item-opensea-${i}`">
+          <div class="shopping-info">
+            <image-box :src="v.makerAssetBundle.assets[0].imageUrl"></image-box>
+            <div class="info-txt">
+              <div class="txt1">{{v.makerAssetBundle.assets[0].assetContract.name || '--'}}</div>
+              <div class="txt2 display-flex box-center-Y">
+                <div>ENS :Ethereum Na…</div>
+                <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
+              </div>
+              <div class="txt3">Creator Fee {{$filters.feeFormat(v.makerAssetBundle.assets[0].assetContract.openseaSellerFeeBasisPoints)}}</div>
+            </div>
+          </div>
+          <div class="shopping-price">
+          <span class="price-value">
+          <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
+          {{nftPriceFun(v.currentPrice, true)}}
+        </span>
+            <el-icon @click="deleteCartOpensea(v)">
               <Delete />
             </el-icon>
           </div>
         </div>
-      </template>
-    </div>
-    <div class="shopping-cart-footer">
-      <div class="total-box">
-        <div class="title">Total</div>
-        <div class="total">
-          <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-          {{totalPriceShow}}
+      </div>
+      <div class="shopping-cart-footer">
+        <div class="total-box">
+          <div class="title">Total</div>
+          <div class="total">
+            <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
+            {{totalOpenseaPriceShow}}
+          </div>
+        </div>
+        <div>
+          <el-button type="primary" :disabled="openseaCart.length < 1" class="btnOption" :loading="buyOpenseaBtnLoading" @click="cartBuyOpensea">Purchase</el-button>
         </div>
       </div>
-      <div>
-        <el-button type="primary" :disabled="coreskyCart.length < 1" class="btnOption" :loading="buyBtnLoading" @click="cartBuy">Buy</el-button>
-      </div>
-    </div>
+    </template>
   </el-drawer>
 </template>
 
@@ -77,14 +131,19 @@ export default {
   data () {
     return {
       buyBtnLoading: false,
+      buyOpenseaBtnLoading: false,
       visible: false,
       totalPrice: 0,
       totalPriceShow: 0,
+      totalOpenseaPrice: 0,
+      totalOpenseaPriceShow: 0,
       coreskyCart: [],
       openseaCart: [],
       items: 0,
+      itemsOpensea: 0,
       ids: [],
-      checkOrderData: []
+      checkOrderData: [],
+      activeIndex: '1'
     };
   },
   created () {
@@ -100,11 +159,19 @@ export default {
     },
     cartNameOpensea() {
       return `coresky_cart_opensea_${this.$store.state.user.coinbase}`
+    },
+    shoppingOpenseaCartList () {
+      return this.$store.state.shoppingOpenseaCartList;
     }
   },
   methods: {
+    handleSelect (index) {
+      console.log(this.activeIndex)
+      this.activeIndex = index
+    },
     clearCart () {
       removeLocalStorage([this.cartName])
+      removeLocalStorage([this.cartNameOpensea])
       this.$store.commit('initShoppingCart')
       this.getCartInfo()
     },
@@ -133,6 +200,17 @@ export default {
       this.$store.commit('initShoppingCart')
       this.getCartInfo()
     },
+    deleteCartOpensea (v) {
+      const shoppingOpenseaCartList = this.shoppingOpenseaCartList.filter(item => item.orderHash !== v.orderHash)
+      if (shoppingOpenseaCartList.length < 1) {
+        removeLocalStorage([this.cartNameOpensea])
+      } else {
+        let obj = []
+        obj[this.cartNameOpensea] = JSON.stringify(shoppingOpenseaCartList)
+        setLocalStorage(obj)
+      }
+      this.$store.commit('initShoppingCart')
+    },
     getCartInfo () {
       this.totalPrice = 0
       this.totalPriceShow = 0
@@ -141,7 +219,7 @@ export default {
       let coresky_cart = local[this.cartName]
       this.ids = []
       this.items = 0
-      if (local[this.cartName] !== null) {
+      if (coresky_cart !== null) {
         this.coreskyCart = JSON.parse(coresky_cart)
         this.coreskyCart.forEach(v => {
           this.items += v.ckOrdersEntityList.length
@@ -155,12 +233,34 @@ export default {
       } else {
         this.coreskyCart = []
       }
+
+      this.totalOpenseaPrice = 0
+      this.totalOpenseaPriceShow = 0
+
+      const localOpensea = getLocalStorage(this.cartNameOpensea)
+      console.log(localOpensea[this.cartNameOpensea])
+      let coresky_opensea_cart = localOpensea[this.cartNameOpensea]
+      if (coresky_opensea_cart !== null) {
+        this.openseaCart = JSON.parse(coresky_opensea_cart)
+        this.openseaCart.forEach(item => {
+          this.totalOpenseaPrice = new BigNumber(this.$sdk.fromWeiNumOrigin(item.currentPrice)).plus(new BigNumber(this.totalOpenseaPrice))
+        })
+        this.totalOpenseaPrice = this.totalOpenseaPrice.toString()
+        this.totalOpenseaPriceShow = this.$filters.keepPoint(this.totalOpenseaPrice)
+      } else {
+        this.openseaCart = []
+      }
+
     },
     handleClose () {
       this.$emit('update:show', false)
     },
     getNftPrice(v, isShow=false) {
       return isShow ? this.$filters.keepPoint(this.$Web3.utils.fromWei(v.basePrice.toString())) : this.$Web3.utils.fromWei(v.basePrice.toString())
+    },
+    nftPriceFun (basePrice) {
+      console.log(basePrice)
+      return (basePrice !== null && basePrice !== undefined) ? this.$filters.keepMaxPoint(this.$Web3.utils.fromWei(basePrice.toString())) : '--'
     },
     async checkOrder () {
       try {
@@ -393,6 +493,9 @@ export default {
         console.log(e)
         this.buyBtnLoading = false
       }
+    },
+    async cartBuyOpensea () {
+
     }
   },
 }
@@ -425,11 +528,8 @@ export default {
     }
   }
   .shopping-cart-content-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     width: 100%;
-    margin: 20px 0 10px;
+    padding: 20px 0 10px;
     font-weight: 500;
     font-size: 16px;
     color: $primaryColor;
@@ -469,7 +569,7 @@ export default {
       }
       .shopping-info {
         display: flex;
-        .info-img {
+        .cover-image {
           width: 64px;
           height: 64px;
           border-radius: 8px;
@@ -490,6 +590,12 @@ export default {
             font-size: 12px;
             line-height: 18px;
             color: $color-black3;
+            .tag{
+              margin-left: 5px;
+              display: block;
+              width: 16px;
+              height: 16px;
+            }
           }
           .txt3 {
             font-weight: 400;
