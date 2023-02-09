@@ -495,7 +495,30 @@ export default {
       }
     },
     async cartBuyOpensea () {
-
+      // isOrderFulfillable
+      console.log(this.openseaCart)
+      this.buyOpenseaBtnLoading= true
+      try {
+        const openseaSDK = await this.$sdk.initOpenSea()
+        console.log(openseaSDK)
+        // for (let i = 0; i < this.openseaCart.length; i++) {
+        //   const isOrder = await openseaSDK.isOrderFulfillable(this.openseaCart[i])
+        //   console.log(isOrder)
+        // }
+        this.buyOpenseaBtnLoading= false
+        const transactionHash = await openseaSDK.fulfillOrder({
+          order:this.openseaCart[0],
+          accountAddress: this.user.coinbase
+        })
+        // this.$tools.message('购买成功', 'success');
+        // this.buyOpenseaBtnLoading= false
+        // this.clearCart()
+      } catch (e) {
+        console.log(e)
+        this.$filters.filterMsgOpenseaErr(e)
+        this.$tools.message(this.$filters.filterMsgOpenseaErr(e), 'warning');
+        this.buyOpenseaBtnLoading= false
+      }
     }
   },
 }

@@ -190,3 +190,11 @@ export function ckCollectionsInfoEntity (v) {
   console.log(v, v.ckCollectionsInfoEntity, v.ckCollectionsInfoEntity.bannerImage)
   return v.ckCollectionsInfoEntity.bannerImage
 }
+
+
+export function filterMsgOpenseaErr(e) {
+  e = e.toString()
+  if (e.indexOf('user rejected transaction') > -1) {
+    return 'user rejected transaction'
+  }
+}
