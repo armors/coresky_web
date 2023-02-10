@@ -36,7 +36,7 @@
             <div class="shopping-info">
               <image-box :src="v.oriImage"></image-box>
               <div class="info-txt">
-                <div class="txt1">{{v.ckCollectionsInfoEntity.name || '--'}}</div>
+                <div class="txt1 ellipsis">{{v.ckCollectionsInfoEntity.name || '--'}}</div>
                 <div class="txt2 display-flex box-center-Y">
                   <div>ENS :Ethereum Na…</div>
                   <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
@@ -75,7 +75,7 @@
           <div class="shopping-info">
             <image-box :src="v.makerAssetBundle.assets[0].imageUrl"></image-box>
             <div class="info-txt">
-              <div class="txt1">{{v.makerAssetBundle.assets[0].assetContract.name || '--'}}</div>
+              <div class="txt1 ellipsis">{{v.makerAssetBundle.assets[0].assetContract.name || '--'}}</div>
               <div class="txt2 display-flex box-center-Y">
                 <div>ENS :Ethereum Na…</div>
                 <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
@@ -601,6 +601,7 @@ export default {
           display: flex;
           flex-direction: column;
           justify-content: space-around;
+          width: 160px;
           .txt1 {
             font-weight: 500;
             font-size: 16px;
