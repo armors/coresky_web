@@ -16,7 +16,7 @@
 
       <div class="head-navs">
         <router-link class="nav-link" to="/reward">
-          Rewards
+          {{ $t("navigation.rewards") }}
         </router-link>
         <router-link class="nav-link" to="/markterplace">
           {{ $t("navigation.marketplace") }}

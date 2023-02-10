@@ -1,6 +1,6 @@
 <template>
   <div class="partners-box">
-    <div class="home-title title-margin-top">{{$t("home.partnerTitle")}}</div>
+    <div class="home-title title-margin-top">{{$t("home.partners")}}</div>
     <div class="partner-list display-flex box-between box-nowrap">
       <div class="partner-item" v-for="(v, i) in 10" :key="`partners-item-${i}`">
         <img :src="require(`../../../assets/images/partners/partners${v}.png`)" alt="">

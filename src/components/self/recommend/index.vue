@@ -1,6 +1,6 @@
 <template>
 	<div class="recommend-list">
-		<div class="home-title">{{$t("home.exploreTitle")}}</div>
+		<div class="home-title">{{$t("home.topTitle1")}}</div>
 		<div class="recommend-banner-box">
 			<div class="arrow-prev arrow-icon" @click="arrowClick('prev')"></div>
 			<div class="arrow-next arrow-icon" @click="arrowClick('next')"></div>
