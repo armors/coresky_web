@@ -769,8 +769,7 @@ export default {
     isInCart1155 (id) {
       let coresky_cart = this.$store.state.shoppingCartList || []
       let isCart = false
-      if (local[this.cartName] !== null) {
-        coresky_cart = JSON.parse(coresky_cart)
+      if (coresky_cart.length > 0) {
         const token = coresky_cart.find(item => item.contract === this.tokenInfo.contract && item.tokenId === this.tokenInfo.tokenId)
         console.log(token)
         if (token !== undefined) {
