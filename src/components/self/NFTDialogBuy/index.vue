@@ -239,7 +239,7 @@ export default {
         this.buyBtnLoading = false
         this.$emit('buySuccess', transactionHash)
       } catch (e) {
-        this.$tools.message(e, 'warning');
+        this.$tools.message(this.$filters.filterMsgOpenseaErr(e), 'warning');
         console.log(e)
         this.buyBtnLoading = false
       }

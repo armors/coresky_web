@@ -39,11 +39,10 @@
 			<div class="flex-com" style="">
 				<div class="item">
 					<span class="mr10">Same price </span>
-					<el-switch v-model="isSamePrice" size="small" :active-value="true" :inactive-value="false"/>
+					<el-switch v-model="isSamePrice" @change="changeSamePrice" size="small" :active-value="true" :inactive-value="false"/>
 				</div>
 				<div class="item" v-if="isSamePrice">
-					<el-input v-model="samePrice" @change="samePriceChange" size="small" type="number" style="width:140px"
-					          class="input-with-select">
+					<el-input v-model="samePrice" @change="samePriceChange" size="small" type="number" style="width:140px" class="input-with-select">
 						<template #append>
 							<el-select model-value="eth" placeholder=" " size="small" style="width:60px" :teleported="false">
 								<el-option label="ETH" value="eth"/>
@@ -53,7 +52,7 @@
 				</div>
 				<div class="item">
 					<span class="mr10">Auto Adjust for Fees </span>
-					<el-switch v-model="isProceeds" size="small" :active-value="true" :inactive-value="false"/>
+					<el-switch v-model="isProceeds" size="small" @change="changeProceeds" :active-value="true" :inactive-value="false"/>
 				</div>
 				<div style="margin-left: auto;">
 					<div>
@@ -78,8 +77,12 @@
 				</el-table-column>
 				<el-table-column prop="Item" label="List Price" width="200" :show-overflow-tooltip="true">
 					<template #default="props">
-						<el-input v-model="props.row.listPrice" size="small" type="number" style="width:140px"
-						          class="input-with-select" :teleported="false">
+						<el-input v-model="props.row.listPrice"
+						          :disabled="isProceeds ||
+						(props.row.name === 'Opensea' && !(platformList.find(el => el.name === 'Opensea'))) ||
+						(props.row.name === 'Coresky' && !(platformList.find(el => el.name === 'Coresky')))"
+						          size="small" type="number" style="width:140px"
+						          class="input-with-select" :teleported="false" @change="changePrice(props.row.name)">
 							<template #append>
 								<el-select model-value="eth" placeholder=" " size="small" style="width:60px">
 									<el-option label="ETH" value="eth"/>
@@ -111,8 +114,11 @@
 				</el-table-column>
 				<el-table-column prop="address" label="Proceeds">
 					<template #default="props">
-						<el-input v-model="props.row.proceeds" size="small" type="number" style="width:140px"
-						          class="input-with-select" :teleported="false">
+						<el-input v-model="props.row.proceeds" :disabled="!isProceeds ||
+						(props.row.name === 'Opensea' && !(platformList.find(el => el.name === 'Opensea'))) ||
+						(props.row.name === 'Coresky' && !(platformList.find(el => el.name === 'Coresky')))
+" size="small" type="number" style="width:140px"
+						          class="input-with-select" :teleported="false" @change="changeProceedsPrice(props.row.name)">
 							<template #append>
 								<el-select model-value="eth" placeholder=" " size="small" style="width:60px">
 									<el-option label="ETH" value="eth"/>
@@ -128,22 +134,23 @@
 					</div>
 				</template>
 			</el-table>
-			<div class="title3">
-				Coupons:
-			</div>
-			<div class="coupons-wrap">
-				<div class="txt1">
-					Coupon rewadrds:
-				</div>
-				<div>
-					<div class="txt2">
-						1 coupon / 0.5eth
-					</div>
-					<div class="txt2 mt5">
-						1 coupon / listing / day
-					</div>
-				</div>
-			</div>
+
+<!--			<div class="title3">-->
+<!--				Coupons:-->
+<!--			</div>-->
+<!--			<div class="coupons-wrap">-->
+<!--				<div class="txt1">-->
+<!--					Coupon rewadrds:-->
+<!--				</div>-->
+<!--				<div>-->
+<!--					<div class="txt2">-->
+<!--						1 coupon / 0.5eth-->
+<!--					</div>-->
+<!--					<div class="txt2 mt5">-->
+<!--						1 coupon / listing / day-->
+<!--					</div>-->
+<!--				</div>-->
+<!--			</div>-->
 
 			<el-button type="primary" class="btn-submit" :loading="sellBtnLoading" @click="getExchangeHashOrder">Confirm the price</el-button>
 <!--			<el-button type="primary" v-if="isApproved" class="btn-submit" :loading="sellBtnLoading" @click="getExchangeHashOrder">Confirm the price</el-button>-->
@@ -250,6 +257,7 @@ import BigNumber from "bignumber.js";
 import dayjs from 'dayjs';
 import store from "@/store";
 import {WyvernSchemaName} from "opensea-js/lib/types";
+import {keepPoint} from "@/filters";
 
 export default {
 	mixins: [],
@@ -286,7 +294,8 @@ export default {
 					fee: '--',
 					Royalties: '--',
 					floorPrice: '--',
-					lastSale: '--'
+					lastSale: '--',
+					proceeds: ''
 				},
 				{
 					name: 'Opensea',
@@ -296,7 +305,8 @@ export default {
 					fee: '--',
 					Royalties: '--',
 					floorPrice: '--',
-					lastSale: '--'
+					lastSale: '--',
+					proceeds: ''
 				}
 			],
 			isSamePrice: false,
@@ -351,6 +361,75 @@ export default {
 		},
 	},
 	methods: {
+		changePrice (type, listPrice, isReturn = false) {
+			if (this.isProceeds) {
+				return
+			}
+			if (type === 'Opnesea') {
+				let listPrice1 = isReturn ? listPrice : this.dataList[1].listPrice
+				let basePrice = new BigNumber(listPrice1)
+				let creatorFee = basePrice.multipliedBy(this.dataList[1].protocolFee / 10000)
+				let serviceFee = basePrice.multipliedBy(this.dataList[1].RoyaltiesFee / 10000)
+				console.log(basePrice.minus(creatorFee).minus(serviceFee).valueOf())
+				let proceeds = parseFloat(keepPoint(basePrice.minus(creatorFee).minus(serviceFee).valueOf(), 4))
+				if (isReturn) {
+					return proceeds
+				} else {
+					this.dataList[1].proceeds = proceeds
+				}
+			} else if (type === 'Coresky') {
+				let listPrice1 = isReturn ? listPrice : this.dataList[0].listPrice
+				let basePrice = new BigNumber(listPrice1)
+				let creatorFee = basePrice.multipliedBy(this.dataList[0].protocolFee / 10000)
+				let serviceFee = basePrice.multipliedBy(this.dataList[0].RoyaltiesFee / 10000)
+				console.log(basePrice.minus(creatorFee).minus(serviceFee).valueOf())
+				let proceeds = parseFloat(keepPoint(basePrice.minus(creatorFee).minus(serviceFee).valueOf(), 4))
+				if (isReturn) {
+					return proceeds
+				} else {
+					this.dataList[0].proceeds = proceeds
+				}
+			}
+		},
+		changeProceedsPrice (type, proceeds,  isReturn = false) {
+			if (!this.isProceeds) {
+				return
+			}
+			console.log(type)
+			if (type === 'Opnesea') {
+				let proceeds1 = isReturn ? proceeds : this.dataList[1].proceeds
+				let basePrice = new BigNumber(proceeds1)
+				let creatorFee = basePrice.multipliedBy(this.dataList[1].protocolFee / 10000)
+				let serviceFee = basePrice.multipliedBy(this.dataList[1].RoyaltiesFee / 10000)
+				console.log(basePrice.plus(creatorFee).plus(serviceFee).valueOf())
+				let listPrice = parseFloat(keepPoint(basePrice.plus(creatorFee).plus(serviceFee).valueOf(), 4))
+				if (isReturn) {
+					return listPrice
+				} else {
+					this.dataList[1].listPrice = listPrice
+				}
+			} else if (type === 'Coresky') {
+				let proceeds1 = isReturn ? proceeds : this.dataList[0].proceeds
+				let basePrice = new BigNumber(proceeds1)
+				let creatorFee = basePrice.multipliedBy(this.dataList[0].protocolFee / 10000)
+				let serviceFee = basePrice.multipliedBy(this.dataList[0].RoyaltiesFee / 10000)
+				console.log(basePrice.plus(creatorFee).plus(serviceFee).valueOf())
+				let listPrice = parseFloat(keepPoint(basePrice.plus(creatorFee).plus(serviceFee).valueOf(), 4))
+				console.log(listPrice)
+				if (isReturn) {
+					return listPrice
+				} else {
+					this.dataList[0].listPrice = listPrice
+				}
+			}
+		},
+		changeProceeds () {
+			this.samePrice = ''
+			this.dataList[0].listPrice = ''
+			this.dataList[1].listPrice = ''
+			this.dataList[0].proceeds = ''
+			this.dataList[1].proceeds = ''
+		},
 		async initSellInfo () {
 			this.tokenInfo.tokenId = parseInt(this.tokenInfo.tokenId)
 			try {
@@ -386,6 +465,7 @@ export default {
 				this.tokenInfo = res.debug
 				this.dataList[0].listedPrice = this.$sdk.fromWeiNum(this.tokenInfo.listedPriceCs)
 				this.dataList[0].floorPrice = parseFloat(this.tokenInfo.ckCollectionsInfoEntity.foolPrice)
+				console.log('this.tokenInfo.ckCollectionsInfoEntity.royalty', this.tokenInfo.ckCollectionsInfoEntity.royalty)
 				this.dataList[0].Royalties = this.$filters.feeFormat(this.tokenInfo.ckCollectionsInfoEntity.royalty)
 				this.dataList[0].fee = this.$filters.feeFormat(store.state.config.protocolFee)
 				this.dataList[0].RoyaltiesFee = this.tokenInfo.ckCollectionsInfoEntity.royalty
@@ -408,8 +488,8 @@ export default {
 				this.dataList[1].floorPrice = assetInfo.collection.stats.floor_price
 				this.dataList[1].Royalties = this.$filters.feeFormat(assetInfo.assetContract.openseaSellerFeeBasisPoints)
 				this.dataList[1].fee = this.$filters.feeFormat(assetInfo.assetContract.sellerFeeBasisPoints)
-				this.dataList[0].RoyaltiesFee = assetInfo.assetContract.openseaSellerFeeBasisPoints
-				this.dataList[0].protocolFee = assetInfo.assetContract.sellerFeeBasisPoints
+				this.dataList[1].RoyaltiesFee = assetInfo.assetContract.openseaSellerFeeBasisPoints
+				this.dataList[1].protocolFee = assetInfo.assetContract.sellerFeeBasisPoints
 				await this.$sdk._sleep(2000)
 				const openseaListed = await this.$sdk.getOrdersOpensea({
 					assetContractAddress: this.asset.tokenAddress,
@@ -430,11 +510,25 @@ export default {
 			window.history.go(-1)
 		},
 		samePriceChange() {
-
+			console.log(this.dataList)
 			this.dataList.map(el => {
-				console.log()
-				el.listPrice = this.samePrice
+				if (this.platformList.find(item => item.name === el.name)) {
+					if (this.isProceeds) {
+						el.proceeds = this.samePrice
+						console.log(this.changeProceedsPrice(el.name, el.proceeds,  true))
+						el.listPrice = this.changeProceedsPrice(el.name, el.proceeds,  true)
+					} else {
+						el.listPrice = this.samePrice
+						console.log(this.changePrice(el.name, el.listPrice, true))
+						el.proceeds = this.changePrice(el.name, el.listPrice, true)
+					}
+				}
+				return el
 			})
+			console.log(this.dataList)
+		},
+		changeSamePrice () {
+			this.changeProceeds()
 		},
 		disabledDate(time) {
 			return time.getTime() < Date.now()
@@ -738,7 +832,7 @@ export default {
 					window.history.go(-1)
 				}, 1000)
 			} catch (e) {
-				this.$tools.message(e);
+				this.$tools.message(this.$filters.filterMsgOpenseaErr(e), 'warning');
 				console.log(e)
 			}
 		},
@@ -942,7 +1036,6 @@ export default {
 		background: $elButtonHoverBg;
 		border-radius: 10px;
 		border: 1px solid $borderBg;
-		margin-bottom: 30px;
 
 		.txt1 {
 			height: 18px;
@@ -961,6 +1054,7 @@ export default {
 	}
 
 	.btn-submit {
+		margin-top: 30px;
 		width: 320px;
 		height: 44px;
 		line-height: 44px;

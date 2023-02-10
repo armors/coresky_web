@@ -515,7 +515,6 @@ export default {
         // this.clearCart()
       } catch (e) {
         console.log(e)
-        this.$filters.filterMsgOpenseaErr(e)
         this.$tools.message(this.$filters.filterMsgOpenseaErr(e), 'warning');
         this.buyOpenseaBtnLoading= false
       }
