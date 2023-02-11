@@ -36,8 +36,6 @@
     "normalize.css": "^8.0.1",
     "npm": "^9.1.2",
     "opensea-js": "^4.0.13",
-    "postcss-loader": "^7.0.1",
-    "postcss-pxtorem": "^6.0.0",
     "qrcode.vue": "^3.3.3",
     "swiper": "^8.4.4",
     "unocss": "^0.46.2",
@@ -97,17 +95,6 @@
       "parser": "@babel/eslint-parser"
     },
     "rules": {}
-  },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {},
-      "postcss-pxtorem": {
-        "rootValue": 75,
-        "propList": [
-          "*"
-        ]
-      }
-    }
   },
   "browser": {
     "fs": false,

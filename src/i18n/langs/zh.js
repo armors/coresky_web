@@ -24,7 +24,7 @@ module.exports = {
     sortFloor: "地板价",
     seeMoreCollects: "查看更多合集",
     minPlaceholder: "最小",
-    maxPlaceholder: "Max",
+    maxPlaceholder: "最大",
 
 
     tip1: "开源的去中心化NFT市场",
