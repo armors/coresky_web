@@ -37,11 +37,11 @@
         </div>
         <div class="item">
           <span class="lable">Created:</span>
-          <span class="value">{{$filters.timeToUTC(collectInfo.createTime)}}</span>
+          <span class="value">{{$filters.timeToUTC(collectInfo.deployTime)}}</span>
         </div>
         <div class="item">
           <span class="lable">Creator fee:</span>
-          <span class="value">10%</span>
+          <span class="value">{{$filters.feeFormat(collectInfo.royalty)}}</span>
         </div>
         <div class="item">
           <span class="lable">Chain:</span>
@@ -70,7 +70,7 @@
           </div>
         </div>
         <div class="item">
-          <div class="lable">Best Offier</div>
+          <div class="lable">Best Offer</div>
           <div class="value">
             <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
             <span>{{$filters.keepMaxPoint(collectInfo.bestPriceFrom)}}</span>
@@ -92,7 +92,7 @@
           </div>
         </div>
         <div class="item">
-          <div class="lable">total volume</div>
+          <div class="lable">Total Volume</div>
           <div class="value">
             <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
             <span>{{$filters.keepMaxPoint(collectInfo.volume)}}</span>

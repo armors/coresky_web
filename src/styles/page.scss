@@ -28,6 +28,9 @@
       cursor: pointer;
       .el-icon {
         margin-right: 2px;
+        &.down {
+          transform: rotate(180deg);
+        }
       }
     }
     .right {
@@ -53,6 +56,11 @@
       cursor: pointer;
       display: flex;
       align-items: center;
+    }
+    .el-icon {
+      &.down {
+        transform: rotate(180deg);
+      }
     }
   }
   .el-select {
@@ -567,6 +575,9 @@
     .el-icon {
       cursor: pointer;
       font-size: 20px;
+      &.down {
+        transform: rotate(180deg);
+      }
     }
   }
   .el-dialog__body {

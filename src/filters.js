@@ -63,7 +63,7 @@ export function milliFormat (num, isK = true) {
     if (num > 10000) {
       num = keepPoint(num / 10000, 1)
       return num && num.toString()
-        .replace(/\d+/, (s) => s.replace(/(\d)(?=(\d{3})+$)/g, '$1,'))
+        .replace(/\d+/, (s) => s.replace(/(\d)(?=(\d{3})+$)/g, '$1,')) + 'K'
     } else {
       return num && num.toString()
         .replace(/\d+/, (s) => s.replace(/(\d)(?=(\d{3})+$)/g, '$1,'))
@@ -90,7 +90,7 @@ export function decimal (num, v) {
 }
 export function feeFormat (fee) {
   console.log(fee)
-  return fee ? (fee / 10000 * 100 + '%') : '--';
+  return (fee || fee === 0) ? (fee / 10000 * 100 + '%') : '--';
 }
 export function timeFormat (time) {
   var previous = new Date(time * 1000);

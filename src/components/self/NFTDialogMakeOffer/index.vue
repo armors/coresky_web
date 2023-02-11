@@ -44,23 +44,23 @@
           </el-select>
         </div>
       </el-form-item>
-      <el-form-item label="Fee and coupons">
-        <div class="describe-box">
-          <div class="describe-item">
-            <span class="lable">Coeesky service fee: </span>
-            <span class="value">{{serviceFee}}</span>
-          </div>
-          <div class="describe-item mt15">
-            <span class="lable">coupon rewards:</span>
-            <div class="value">
-              <p>
-                1 coupon / 0.5 ETH
-              </p>
-              <p>1 coupon / listing / day</p>
-            </div>
-          </div>
-        </div>
-      </el-form-item>
+<!--      <el-form-item label="Fee and coupons">-->
+<!--        <div class="describe-box">-->
+<!--          <div class="describe-item">-->
+<!--            <span class="lable">Coeesky service fee: </span>-->
+<!--            <span class="value">{{serviceFee}}</span>-->
+<!--          </div>-->
+<!--          <div class="describe-item mt15">-->
+<!--            <span class="lable">coupon rewards:</span>-->
+<!--            <div class="value">-->
+<!--              <p>-->
+<!--                1 coupon / 0.5 ETH-->
+<!--              </p>-->
+<!--              <p>1 coupon / listing / day</p>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </el-form-item>-->
     </el-form>
     <el-button type="primary" class="btnBuy" :loading="btnMakeOfferLoading" @click="makerBuyer">Make Offer</el-button>
   </el-dialog>
@@ -135,6 +135,13 @@ export default {
     },
     async showMakeOffer (tokenInfo, makeOfferType = 1) {
       this.tokenInfo = tokenInfo
+      this.form = {
+        price: '',
+        date: '',
+        time: '',
+        symbol: 'WETH',
+        quantity: ''
+      }
       this.rules = this.tokenInfo.contractType === 0 ? {
         price: [
           { required: true, message: 'Please input price', trigger: 'blur' },
