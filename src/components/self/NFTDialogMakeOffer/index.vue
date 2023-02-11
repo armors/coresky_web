@@ -10,7 +10,7 @@
       </el-icon>
     </template>
     <div class="nft-box">
-      <image-box class="img-box" :src="tokenInfo.oriImage"></image-box>
+      <image-box class="img-box" :src="makeOfferType === 1 ? tokenInfo.oriImage : tokenInfo.image"></image-box>
       <div class="box-center">
         <span class="tokenid">#{{tokenInfo.tokenId}}</span>
         <span class="collection-name">{{tokenInfo.name || '--'}}
@@ -169,9 +169,11 @@ export default {
         return
       }
       this.makeOfferType = makeOfferType
-      this.tokenInfo.tokenId = parseInt(this.tokenInfo.tokenId)
+      if (makeOfferType === 1) {
+        this.tokenInfo.tokenId = parseInt(this.tokenInfo.tokenId)
+      }
       this.isShowMakeOfferDialog = true
-      this.serviceFee = this.$filters.feeFormat(this.tokenInfo.ckCollectionsInfoEntity.royalty)
+      this.serviceFee = this.$filters.feeFormat(makeOfferType === 1 ? this.tokenInfo.ckCollectionsInfoEntity.royalty :this.tokenInfo.royalty)
       console.log(this.tokenInfo)
     },
     async makerBuyer () {
@@ -209,12 +211,12 @@ export default {
         buyer = this.$sdk.makeOrder({
           exchangeAddress: process.env.VUE_APP_MARKET_EXCHANGE,
           sender: this.user.coinbase,
-          nftAddress:  this.tokenInfo.contract,
+          nftAddress: this.tokenInfo.contract,
           side: 0,
           tokenId: 0,
           isMaker: true,
-          feeRecipient: this.tokenInfo.ckCollectionsInfoEntity.feeContract,
-          RelayerFee: this.tokenInfo.ckCollectionsInfoEntity.royalty,
+          feeRecipient: this.tokenInfo.feeContract,
+          RelayerFee: this.tokenInfo.royalty,
           feeType: 2,
           contractType: this.tokenInfo.contractType,
           value: Number(this.form.quantity)
