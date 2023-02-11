@@ -1,5 +1,5 @@
 <template>
-	<div class="main-wrapper">
+	<div class="main-wrapper listings-box">
 		<div>
 			<div class="listings-head">
 				<el-button class="btn-back" plain @click="goBack">
@@ -41,14 +41,11 @@
 					<span class="mr10">Same price </span>
 					<el-switch v-model="isSamePrice" @change="changeSamePrice" size="small" :active-value="true" :inactive-value="false"/>
 				</div>
-				<div class="item" v-if="isSamePrice">
-					<el-input v-model="samePrice" @change="samePriceChange" size="small" type="number" style="width:140px" class="input-with-select">
-						<template #append>
-							<el-select model-value="eth" placeholder=" " size="small" style="width:60px" :teleported="false">
-								<el-option label="ETH" value="eth"/>
-							</el-select>
-						</template>
-					</el-input>
+				<div class="item display-flex box-center-Y" v-if="isSamePrice">
+					<el-input-number v-model="samePrice" @change="samePriceChange" :controls="false" :precision="4" :min="0.0001" class="input-with-select" :max="100000000000000" size="small" style="width:120px;text-align: left" />
+					<el-select model-value="eth" placeholder=" " size="small" style="width:60px" :teleported="false">
+						<el-option label="ETH" value="eth"/>
+					</el-select>
 				</div>
 				<div class="item">
 					<span class="mr10">Auto Adjust for Fees </span>
@@ -77,18 +74,36 @@
 				</el-table-column>
 				<el-table-column prop="Item" label="List Price" width="200" :show-overflow-tooltip="true">
 					<template #default="props">
-						<el-input v-model="props.row.listPrice"
-						          :disabled="isProceeds ||
+
+						<el-input-number v-model="props.row.listPrice"
+						                 @change="changePrice(props.row.name)"
+						                 :controls="false"
+						                 :precision="4"
+						                 :min="0.0001"
+						                 class="input-with-select"
+						                 :max="100000000000000"
+						                 size="small"
+						                 :teleported="false"
+						                 :disabled="isProceeds ||
 						(props.row.name === 'Opensea' && !(platformList.find(el => el.name === 'Opensea'))) ||
 						(props.row.name === 'Coresky' && !(platformList.find(el => el.name === 'Coresky')))"
-						          size="small" type="number" style="width:140px"
-						          class="input-with-select" :teleported="false" @change="changePrice(props.row.name)">
-							<template #append>
-								<el-select model-value="eth" placeholder=" " size="small" style="width:60px">
-									<el-option label="ETH" value="eth"/>
-								</el-select>
-							</template>
-						</el-input>
+						                 style="width:100px;text-align: left" />
+
+						<el-select model-value="eth" placeholder=" " size="small" style="width:60px">
+							<el-option label="ETH" value="eth"/>
+						</el-select>
+<!--						<el-input v-model="props.row.listPrice"-->
+<!--						          :disabled="isProceeds ||-->
+<!--						(props.row.name === 'Opensea' && !(platformList.find(el => el.name === 'Opensea'))) ||-->
+<!--						(props.row.name === 'Coresky' && !(platformList.find(el => el.name === 'Coresky')))"-->
+<!--						          size="small" type="number" style="width:140px"-->
+<!--						          class="input-with-select" :teleported="false" @change="changePrice(props.row.name)">-->
+<!--							<template #append>-->
+<!--								<el-select model-value="eth" placeholder=" " size="small" style="width:60px">-->
+<!--									<el-option label="ETH" value="eth"/>-->
+<!--								</el-select>-->
+<!--							</template>-->
+<!--						</el-input>-->
 						<div class="txt1">
 							<span>Floor:</span>
 							<svg-icon class="token" icon-class="token_eth2"/>
@@ -114,17 +129,37 @@
 				</el-table-column>
 				<el-table-column prop="address" label="Proceeds">
 					<template #default="props">
-						<el-input v-model="props.row.proceeds" :disabled="!isProceeds ||
+
+						<el-input-number v-model="props.row.proceeds"
+						                 @change="changeProceedsPrice(props.row.name)"
+						                 :controls="false"
+						                 :precision="4"
+						                 :min="0.0001"
+						                 :max="100000000000000"
+						                 class="input-with-select"
+						                 size="small"
+						                 :teleported="false"
+						                 :disabled="!isProceeds ||
 						(props.row.name === 'Opensea' && !(platformList.find(el => el.name === 'Opensea'))) ||
-						(props.row.name === 'Coresky' && !(platformList.find(el => el.name === 'Coresky')))
-" size="small" type="number" style="width:140px"
-						          class="input-with-select" :teleported="false" @change="changeProceedsPrice(props.row.name)">
-							<template #append>
-								<el-select model-value="eth" placeholder=" " size="small" style="width:60px">
-									<el-option label="ETH" value="eth"/>
-								</el-select>
-							</template>
-						</el-input>
+						(props.row.name === 'Coresky' && !(platformList.find(el => el.name === 'Coresky')))"
+						                 style="width:100px;text-align: left" />
+
+						<el-select model-value="eth" placeholder=" " size="small" style="width:60px">
+							<el-option label="ETH" value="eth"/>
+						</el-select>
+
+
+<!--						<el-input v-model="props.row.proceeds" :disabled="!isProceeds ||-->
+<!--						(props.row.name === 'Opensea' && !(platformList.find(el => el.name === 'Opensea'))) ||-->
+<!--						(props.row.name === 'Coresky' && !(platformList.find(el => el.name === 'Coresky')))-->
+<!--" size="small" type="number" style="width:140px"-->
+<!--						          class="input-with-select" :teleported="false" @change="changeProceedsPrice(props.row.name)">-->
+<!--							<template #append>-->
+<!--								<el-select model-value="eth" placeholder=" " size="small" style="width:60px">-->
+<!--									<el-option label="ETH" value="eth"/>-->
+<!--								</el-select>-->
+<!--							</template>-->
+<!--						</el-input>-->
 					</template>
 				</el-table-column>
 				<template #empty>
@@ -290,27 +325,27 @@ export default {
 					name: 'Coresky',
 					logo: 'logo',
 					coin: 'eth',
-					listPrice: '',
+					listPrice: undefined,
 					fee: '--',
 					Royalties: '--',
 					floorPrice: '--',
 					lastSale: '--',
-					proceeds: ''
+					proceeds: undefined
 				},
 				{
 					name: 'Opensea',
 					logo: 'os-logo',
 					coin: 'eth',
-					listPrice: '',
+					listPrice: undefined,
 					fee: '--',
 					Royalties: '--',
 					floorPrice: '--',
 					lastSale: '--',
-					proceeds: ''
+					proceeds: undefined
 				}
 			],
 			isSamePrice: false,
-			samePrice: '',
+			samePrice: undefined,
 			isProceeds: false,
 			defaultTime: new Date(),
 			quantity: 1,
@@ -425,11 +460,11 @@ export default {
 			}
 		},
 		changeProceeds () {
-			this.samePrice = ''
-			this.dataList[0].listPrice = ''
-			this.dataList[1].listPrice = ''
-			this.dataList[0].proceeds = ''
-			this.dataList[1].proceeds = ''
+			this.samePrice = undefined
+			this.dataList[0].listPrice = undefined
+			this.dataList[1].listPrice = undefined
+			this.dataList[0].proceeds = undefined
+			this.dataList[1].proceeds = undefined
 		},
 		async initSellInfo () {
 			this.tokenInfo.tokenId = parseInt(this.tokenInfo.tokenId)
@@ -1163,6 +1198,19 @@ export default {
 			transform: rotate(1turn);
 		}
 	}
+</style>
+<style lang="scss">
+	.listings-box{
+		.el-input-number .el-input__inner{
+			text-align: left;
+		}
+		.nft-box{
+			.el-input-number .el-input__inner{
+				text-align: center;
+			}
+		}
+	}
+
 </style>
 
 

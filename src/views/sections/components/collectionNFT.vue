@@ -34,11 +34,27 @@
             <el-option value="ETH">ETH</el-option>
           </el-select>
           <div class="price-range" style="margin-top:15px">
-            <el-input type="number" class="input-number" :controls="false" v-model="queryParams.minPrice"
-              :placeholder="$t('home.minPlaceholder')" />
+            <el-input-number
+              v-model="queryParams.minPrice"
+              :placeholder="$t('home.minPlaceholder')"
+              :controls="false"
+              :precision="4"
+              :min="0.0001"
+              :max="100000000000000"
+              class="input-number"/>
+<!--            <el-input type="number" class="input-number" :controls="false" v-model="queryParams.minPrice"-->
+<!--              :placeholder="$t('home.minPlaceholder')" />-->
             <div class="line"></div>
-            <el-input type="number" class="input-number" :controls="false" v-model="queryParams.maxPrice"
-              :placeholder="$t('home.maxPlaceholder')" />
+<!--            <el-input type="number" class="input-number" :controls="false" v-model="queryParams.maxPrice"-->
+<!--              :placeholder="$t('home.maxPlaceholder')" />-->
+            <el-input-number
+              v-model="queryParams.maxPrice"
+              :placeholder="$t('home.maxPlaceholder')"
+              :controls="false"
+              :precision="4"
+              :min="0.0001"
+              :max="100000000000000"
+              class="input-number"/>
           </div>
           <div class="btn-apply" @click="searchClick">Application</div>
         </template>
@@ -168,8 +184,8 @@ export default {
         limit: 20,
         keyword: "",
         buyNow: false,
-        minPrice: '',
-        maxPrice: '',
+        minPrice: undefined,
+        maxPrice: undefined,
         order: 1,
       },
       showFilterBox: true,

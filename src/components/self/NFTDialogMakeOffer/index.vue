@@ -21,7 +21,7 @@
     <el-form label-position="top" class="custom-form" :rules="rules" :model="form" style="margin-top:40px">
       <el-form-item label="Price" prop="price">
         <div class="flex-content">
-          <el-input v-model="form.price" size="large" style="width:100%;" />
+          <el-input-number v-model="form.price" :controls="false" :precision="4" :min="0.0001" :max="100000000000000" size="large" style="width:100%;text-align: left" />
           <el-select v-model="form.symbol" size="large" class="ml20" placeholder="Select"
             style="width:180px;flex-shrink: 0;">
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
@@ -77,7 +77,7 @@ export default {
       isShowMakeOfferDialog: false,
       btnMakeOfferLoading: false,
       form: {
-        price: '',
+        price: undefined,
         date: '',
         time: '',
         symbol: 'WETH',
@@ -136,7 +136,7 @@ export default {
     async showMakeOffer (tokenInfo, makeOfferType = 1) {
       this.tokenInfo = tokenInfo
       this.form = {
-        price: '',
+        price: undefined,
         date: '',
         time: '',
         symbol: 'WETH',
@@ -181,13 +181,13 @@ export default {
         this.$tools.message('请输入正确的价格');
         return
       }
-      const wethBalance = await this.$sdk.getBalance({
-        address: process.env.VUE_APP_WETH
-      }, this.user.coinbase)
-      if (new BigNumber(this.$sdk.fromWeiNum(wethBalance)).isLessThan(this.form.price)) {
-        this.$tools.message('No Enough Balance Of WETH');
-        return
-      }
+      // const wethBalance = await this.$sdk.getBalance({
+      //   address: process.env.VUE_APP_WETH
+      // }, this.user.coinbase)
+      // if (new BigNumber(this.$sdk.fromWeiNum(wethBalance)).isLessThan(this.form.price)) {
+      //   this.$tools.message('No Enough Balance Of WETH');
+      //   return
+      // }
       if (!this.form.time) {
         this.$tools.message('请选择过期时间');
         return
@@ -233,7 +233,7 @@ export default {
           // expirationTime: 0,
           paymentToken: process.env.VUE_APP_WETH,
           listingTime: Date.parse(new Date().toString()) / 1000 - 600,
-          basePrice: this.$Web3.utils.toWei(this.form.price)
+          basePrice: this.$Web3.utils.toWei(this.form.price.toString())
         }
       }
       const sigBuyer = await this.$sdk.signature(buyer, this.user.coinbase)
@@ -373,6 +373,9 @@ export default {
   }
   .el-input__wrapper {
     border-radius: 12px;
+  }
+  .el-input-number .el-input__inner{
+    text-align: left;
   }
   .el-input__inner {
     padding: 0;
