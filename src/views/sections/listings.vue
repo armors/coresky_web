@@ -365,7 +365,7 @@ export default {
 			if (this.isProceeds) {
 				return
 			}
-			if (type === 'Opnesea') {
+			if (type === 'Opensea') {
 				let listPrice1 = isReturn ? listPrice : this.dataList[1].listPrice
 				let basePrice = new BigNumber(listPrice1)
 				let creatorFee = basePrice.multipliedBy(this.dataList[1].protocolFee / 10000)
@@ -392,11 +392,12 @@ export default {
 			}
 		},
 		changeProceedsPrice (type, proceeds,  isReturn = false) {
+			console.log(type, proceeds,  isReturn)
 			if (!this.isProceeds) {
 				return
 			}
 			console.log(type)
-			if (type === 'Opnesea') {
+			if (type === 'Opensea') {
 				let proceeds1 = isReturn ? proceeds : this.dataList[1].proceeds
 				let basePrice = new BigNumber(proceeds1)
 				let creatorFee = basePrice.multipliedBy(this.dataList[1].protocolFee / 10000)
@@ -472,6 +473,13 @@ export default {
 				this.dataList[0].protocolFee = store.state.config.protocolFee
 				this.dataList[1].listedPrice = this.$sdk.fromWeiNum(this.tokenInfo.listedPriceOs)
 				this.isSellCoresky = res.debug.ckOrdersEntityList.length > 0
+				if (!this.isSellCoresky) {
+					this.platformList = [
+						{
+							name: "Coresky"
+						}
+					]
+				}
 				if (this.user.coinbase) {
 					this.initSellInfo()
 				}

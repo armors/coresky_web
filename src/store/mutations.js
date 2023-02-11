@@ -27,10 +27,12 @@ export default {
   CONNECT (state, payload) {
     if (payload.coinbase)
       payload.coinbase = payload.coinbase.toLocaleLowerCase();
+
     state.user = Object.assign({}, state.user, {
       coinbase: payload.coinbase,
     });
     state.useAuthorization = `Coresky${state.user.coinbase}Authorization`
+    state.useAuthorizationTime = `Coresky${state.user.coinbase}AuthorizationTime`
     state.web3 = Object.assign({}, state.web3, {
       networkId: payload.networkId,
       walletType: payload.walletType,
@@ -62,6 +64,7 @@ export default {
       id: payload.user.id || "",
     });
     state.useAuthorization = `Coresky${state.user.coinbase}Authorization`
+    state.useAuthorizationTime = `Coresky${state.user.coinbase}AuthorizationTime`
     state.web3 = Object.assign({}, state.web3, {
       networkId: payload.networkId,
       walletType: payload.walletType,
@@ -69,7 +72,8 @@ export default {
     state.isLogin = true;
     state.connected = true;
     let auth = {}
-    auth[`Coresky${state.user.coinbase}Authorization`] = payload.token
+    auth[state.useAuthorization] = payload.token
+    auth[state.useAuthorizationTime] = new Date().getTime()
     setLocalStorage(auth);
     setLocalStorage({
       connected: true,
@@ -77,6 +81,7 @@ export default {
   },
   LOGOUT (state) {
     removeLocalStorage(state.useAuthorization);
+    removeLocalStorage(state.useAuthorizationTime);
     removeLocalStorage("connected");
     state.user = {
       coinbase: "",
@@ -97,6 +102,7 @@ export default {
       networkId: null,
     };
     state.useAuthorization = undefined
+    state.useAuthorizationTime = '0'
     state.ethBalance = "0";
     state.erc20Balance = {};
     state.token = null;

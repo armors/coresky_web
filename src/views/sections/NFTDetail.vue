@@ -27,7 +27,7 @@
                       <span class="attr-num">{{$filters.milliFormat(v.count)}}({{v.percent}}%)</span>
                       <div class="attr-price">
                         <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-                        <span class="value">{{v.price}}</span>
+                        <span class="value">{{nftPriceFun(v.price)}}</span>
                       </div>
                     </div>
                   </div>

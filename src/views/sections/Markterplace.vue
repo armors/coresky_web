@@ -80,7 +80,7 @@
           <img src="../../assets/images/icons/icon_filter.svg" alt="">
           Filter
         </div>
-        <el-input class="search-input-wrap" style="width:400px" placeholder="Search by name or attribute"
+        <el-input class="search-input-wrap" style="width:400px" placeholder="Search by name"
           v-model="queryParams.keyword" @keyup.enter="searchClick">
           <template #prefix>
             <div class="img-search"><img src="../../assets/images/icons/icon_search.svg" alt=""></div>

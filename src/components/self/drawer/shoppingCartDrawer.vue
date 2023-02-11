@@ -45,10 +45,25 @@
               </div>
             </div>
             <div class="shopping-price">
-          <span class="price-value">
-            <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-            {{getNftPrice(vc, true)}}
-          </span>
+              <el-popover
+                placement="top-start"
+                title=""
+                :width="200"
+                trigger="hover"
+              >
+                <template #reference>
+                  <div class="price-value ellipsis">
+                    <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
+                    {{$filters.milliFormat(getNftPrice(vc, true))}}
+                  </div>
+                </template>
+                <template #default>
+                  <div class="price-value">
+                    <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
+                    {{$filters.milliFormat(getNftPrice(vc, true), false)}}
+                  </div>
+                </template>
+              </el-popover>
               <el-icon @click="deleteCart(v, vc.id)">
                 <Delete />
               </el-icon>
@@ -84,10 +99,26 @@
             </div>
           </div>
           <div class="shopping-price">
-          <span class="price-value">
-          <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-          {{nftPriceFun(v.currentPrice, true)}}
-        </span>
+
+            <el-popover
+              placement="top-start"
+              title=""
+              :width="200"
+              trigger="hover"
+            >
+              <template #reference>
+                <div class="price-value ellipsis">
+                  <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
+                  {{$filters.milliFormat(nftPriceFun(v.currentPrice, true))}}
+                </div>
+              </template>
+              <template #default>
+                <div class="price-value">
+                  <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
+                  {{$filters.milliFormat(nftPriceFun(v.currentPrice, true), false)}}
+                </div>
+              </template>
+            </el-popover>
             <el-icon @click="deleteCartOpensea(v)">
               <Delete />
             </el-icon>
@@ -229,7 +260,7 @@ export default {
           })
         })
         this.totalPrice = this.totalPrice.toString()
-        this.totalPriceShow = this.$filters.keepPoint(this.totalPrice)
+        this.totalPriceShow = parseFloat(this.$filters.keepPoint(this.totalPrice))
       } else {
         this.coreskyCart = []
       }
@@ -246,7 +277,7 @@ export default {
           this.totalOpenseaPrice = new BigNumber(this.$sdk.fromWeiNumOrigin(item.currentPrice)).plus(new BigNumber(this.totalOpenseaPrice))
         })
         this.totalOpenseaPrice = this.totalOpenseaPrice.toString()
-        this.totalOpenseaPriceShow = this.$filters.keepPoint(this.totalOpenseaPrice)
+        this.totalOpenseaPriceShow = parseFloat(this.$filters.keepPoint(this.totalOpenseaPrice))
       } else {
         this.openseaCart = []
       }
@@ -256,7 +287,7 @@ export default {
       this.$emit('update:show', false)
     },
     getNftPrice(v, isShow=false) {
-      return isShow ? this.$filters.keepPoint(this.$Web3.utils.fromWei(v.basePrice.toString())) : this.$Web3.utils.fromWei(v.basePrice.toString())
+      return isShow ? parseFloat(this.$filters.keepPoint(this.$Web3.utils.fromWei(v.basePrice.toString()))) : this.$Web3.utils.fromWei(v.basePrice.toString())
     },
     nftPriceFun (basePrice) {
       console.log(basePrice)
@@ -524,6 +555,22 @@ export default {
 </script>
 
 <style lang="scss">
+  .el-popper{
+    .price-value {
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 21px;
+      color: $primaryColor;
+
+      .token-icon {
+        display: inline-block;
+        width: 10px;
+        height: 16px;
+        margin-right: 8px;
+        vertical-align: text-bottom;
+      }
+    }
+  }
 .coresky-drawer {
   width: 406px;
   height: calc(100% - $headerHeight) !important;
@@ -635,6 +682,7 @@ export default {
         align-items: self-end;
         margin-right: 5px;
         .price-value {
+          width: 120px;
           font-weight: 500;
           font-size: 14px;
           line-height: 21px;

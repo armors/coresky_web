@@ -181,7 +181,9 @@ body {
 .widClass {
   width: 100%;
   padding-top: $headerHeight;
-  /*min-height: 100vh;*/
+  >div{
+    min-height: calc(100vh - 180px);
+  }
 }
 </style>
 <style lang="scss" scoped>
