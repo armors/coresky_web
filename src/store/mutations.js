@@ -113,6 +113,8 @@ export default {
       total: 0,
       unread: 0,
     };
+    state.shoppingCartList = []
+    state.shoppingOpenseaCartList = []
   },
   RELOAD (state) {
     state.isLogin = true;
@@ -234,6 +236,11 @@ export default {
     state.shoppingOpenseaCartList = coresky_cart;
   },
   initShoppingCart (state) {
+    if (!state.user.coinbase) {
+      state.shoppingCartList = []
+      state.shoppingOpenseaCartList = []
+      return
+    }
     let cartName = 'coresky_cart_' + state.user.coinbase
     const local = getLocalStorage(cartName)
     let coresky_cart = local[cartName]

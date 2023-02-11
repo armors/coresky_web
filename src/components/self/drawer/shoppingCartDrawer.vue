@@ -242,7 +242,7 @@ export default {
       }
       this.$store.commit('initShoppingCart')
     },
-    getCartInfo () {
+    async getCartInfo (isCheckOrder) {
       this.totalPrice = 0
       this.totalPriceShow = 0
       const local = getLocalStorage(this.cartName)
@@ -261,16 +261,18 @@ export default {
         })
         this.totalPrice = this.totalPrice.toString()
         this.totalPriceShow = parseFloat(this.$filters.keepPoint(this.totalPrice))
+        if (!isCheckOrder) {
+          await this.checkOrder(true)
+        }
       } else {
         this.coreskyCart = []
       }
-
       this.totalOpenseaPrice = 0
       this.totalOpenseaPriceShow = 0
-
       const localOpensea = getLocalStorage(this.cartNameOpensea)
       console.log(localOpensea[this.cartNameOpensea])
       let coresky_opensea_cart = localOpensea[this.cartNameOpensea]
+      coresky_opensea_cart = coresky_opensea_cart.filter(item=> item.expirationTime > (new Date().getTime()/ 1000))
       if (coresky_opensea_cart !== null) {
         this.openseaCart = JSON.parse(coresky_opensea_cart)
         this.openseaCart.forEach(item => {
@@ -278,10 +280,13 @@ export default {
         })
         this.totalOpenseaPrice = this.totalOpenseaPrice.toString()
         this.totalOpenseaPriceShow = parseFloat(this.$filters.keepPoint(this.totalOpenseaPrice))
+        let obj = {}
+        obj[this.cartNameOpensea] = JSON.stringify(coresky_opensea_cart)
+        setLocalStorage(obj)
+        this.$store.commit('initShoppingCart')
       } else {
         this.openseaCart = []
       }
-
     },
     handleClose () {
       this.$emit('update:show', false)
@@ -293,7 +298,7 @@ export default {
       console.log(basePrice)
       return (basePrice !== null && basePrice !== undefined) ? this.$filters.keepMaxPoint(this.$Web3.utils.fromWei(basePrice.toString())) : '--'
     },
-    async checkOrder () {
+    async checkOrder (isInitCart) {
       try {
         const res = await this.$api('order.check', {
           ids: this.ids
@@ -305,9 +310,11 @@ export default {
         console.log(res)
         this.checkOrderData = res.debug
         if (this.items !== this.checkOrderData.length){
-          this.$tools.message('已过滤掉无效订单，请重新确认购买');
+          if (!isInitCart) {
+            this.$tools.message('已过滤掉无效订单，请重新确认购买');
+          }
           if (this.checkOrderData.length < 1) {
-            this.clearCart()
+            removeLocalStorage([this.cartName])
           } else {
             const ids = []
             this.checkOrderData.forEach(item => {
@@ -329,7 +336,7 @@ export default {
             let obj = []
             obj[this.cartName] = JSON.stringify(coreskyCart)
             setLocalStorage(obj)
-            this.getCartInfo()
+            this.getCartInfo(true)
           }
           return {
             error: e.error,
@@ -423,7 +430,7 @@ export default {
           this.buyBtnLoading = false
           this.$tools.message(atomicMatchWrap.error, 'error');
         } else {
-          this.clearCart()
+          removeLocalStorage([this.cartName])
           this.buyBtnLoading = false
           this.$tools.message('购买成功', 'success');
           let batchFinish = []
@@ -513,7 +520,7 @@ export default {
         }
         this.$tools.message('购买成功', 'success');
         this.buyBtnLoading = false
-        this.clearCart()
+        removeLocalStorage([this.cartName])
         const res = await this.$api("order.finish", {
           "orderId": sellerToken.id,
           "txHash": hashAtomicMatch.transactionHash,
@@ -543,7 +550,7 @@ export default {
         })
         // this.$tools.message('购买成功', 'success');
         // this.buyOpenseaBtnLoading= false
-        // this.clearCart()
+        removeLocalStorage([this.cartNameOpensea])
       } catch (e) {
         console.log(e)
         this.$tools.message(this.$filters.filterMsgOpenseaErr(e), 'warning');

@@ -264,6 +264,7 @@ export default {
       }
       commit("WEB3", result);
       commit("CONNECT", result);
+      commit("initShoppingCart");
       let data = {
         coinbase: result.coinbase,
         networkId: result.networkId,
