@@ -5,12 +5,12 @@
         <div class="max-width">
           <div class="display-flex box-between banner-box">
             <div class="create-app-box">
-              <div class="title">{{$t('home.createApp')}}</div>
-              <div class="desc">{{$t('home.createAppDesc')}}</div>
+              <div class="title">{{$t('home.topTitle')}}</div>
+              <div class="desc">{{$t('home.topSubTitle')}}</div>
 
               <div class="btn-list display-flex box-center-Y">
                 <router-link to="/markterplace" class="btn display-flex box-center">
-                  Marketplace
+                  {{$t('home.topBtn')}}
                 </router-link>
               </div>
             </div>
@@ -29,7 +29,7 @@
       <div class="home-wrapper main-wrapper">
         <nftRecommend :recommendCollection="recommendCollection"></nftRecommend>
         <nftTrade :popularList="popularList"></nftTrade>
-        <div class="home-title title-margin-top">{{$t('home.realTitle')}}</div>
+        <div class="home-title title-margin-top">{{$t('home.rank')}}</div>
         <div class="sort-box display-flex box-center-Y box-between">
           <div class="display-flex box-center-Y">
             <el-button class="filter display-flex box-center" :class="{active: collectionQuery.order === 1}"

@@ -1,6 +1,6 @@
 <template>
 	<div class="trading-list">
-		<div class="home-title title-margin-top">{{$t("home.tradeTitle")}}</div>
+		<div class="home-title title-margin-top">{{$t("home.trendingNow")}}</div>
 		<div class="trading-banner-box">
 			<div class="arrow-prev arrow-icon" @click="arrowClick('prev')"></div>
 			<div class="arrow-next arrow-icon" @click="arrowClick('next')"></div>

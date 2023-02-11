@@ -16,7 +16,7 @@
 
       <div class="head-navs">
         <router-link class="nav-link" to="/reward">
-          Rewards
+          {{ $t("navigation.rewards") }}
         </router-link>
         <router-link class="nav-link" to="/markterplace">
           {{ $t("navigation.marketplace") }}
@@ -459,7 +459,7 @@ export default {
   height: 48px;
   padding: 12px;
   place-items: center start;
-  font-weight: 600;
+  font-weight: 500;
   &.active,
   &:hover {
     background: #f4f7f9;
