@@ -5,7 +5,7 @@
         <span class="left" @click="showFilterBox=!showFilterBox">
           <el-icon>
             <ArrowLeft />
-          </el-icon>Filter
+          </el-icon>{{ $t('common.Filter') }}
         </span>
         <span class="right">
           <el-icon>
@@ -14,14 +14,14 @@
         </span>
       </div>
       <div class="filter-item flex border">
-        <span class="left">Buy Now</span>
+        <span class="left">{{ $t('common.BuyNow') }}</span>
         <span class="right">
           <el-switch v-model="queryParams.buyNow" @change="searchClick" class="ml-2" />
         </span>
       </div>
       <div class="filter-item border">
         <div class="flex">
-          <span class="left">Price</span>
+          <span class="left">{{ $t('common.Price') }}</span>
           <span class="right" @click="isOpenPriceFilter=!isOpenPriceFilter">
             <el-icon style="font-size:16px">
               <ArrowUp />
@@ -35,17 +35,17 @@
           </el-select>
           <div class="price-range" style="margin-top:15px">
             <el-input type="number" class="input-number" :controls="false" v-model="queryParams.minPrice"
-              :placeholder="$t('home.minPlaceholder')" />
+              :placeholder="$t('common.Min')" />
             <div class="line"></div>
             <el-input type="number" class="input-number" :controls="false" v-model="queryParams.maxPrice"
-              :placeholder="$t('home.maxPlaceholder')" />
+              :placeholder="$t('common.Max')" />
           </div>
-          <div class="btn-apply" @click="searchClick">Application</div>
+          <div class="btn-apply" @click="searchClick">{{$t('common.Confirm')  }}</div>
         </template>
       </div>
       <div class="filter-item">
         <div class="flex">
-          <span class="left">Collection</span>
+          <span class="left">{{$t('common.Collection')  }}</span>
           <span class="right" @click="isOpenSearchCollection=!isOpenSearchCollection">
             <el-icon style="font-size:16px">
               <ArrowUp />
@@ -53,8 +53,8 @@
           </span>
         </div>
         <template v-if="isOpenSearchCollection">
-          <el-input class="search-input-wrap" placeholder="Search" v-model="keyword2" @keyup.enter="searchCollection"
-            style="margin-top:15px;">
+          <el-input class="search-input-wrap" :placeholder="$t('common.Search')" v-model="keyword2"
+            @keyup.enter="searchCollection" style="margin-top:15px;">
             <template #prefix>
               <div class="img-search"><img src="../../assets/images/icons/icon_search.svg" alt=""></div>
             </template>
@@ -78,9 +78,9 @@
       <div class="list-search-wrap">
         <div class="btnfilter" @click="showFilterBox=!showFilterBox">
           <img src="../../assets/images/icons/icon_filter.svg" alt="">
-          Filter
+          {{ $t('common.Filter') }}
         </div>
-        <el-input class="search-input-wrap" style="width:400px" placeholder="Search by name or attribute"
+        <el-input class="search-input-wrap" style="width:400px" :placeholder="$t('common.SearchPlaceholder')"
           v-model="queryParams.keyword" @keyup.enter="searchClick">
           <template #prefix>
             <div class="img-search"><img src="../../assets/images/icons/icon_search.svg" alt=""></div>
@@ -88,11 +88,11 @@
         </el-input>
         <el-select v-model="queryParams.order" placeholder="Recently listed" @change="searchClick" :teleported="false"
           popper-class="select-popper" class="select-sort">
-          <el-option :value="1" label="Price low to high" />
-          <el-option :value="2" label="Price high to low" />
-          <el-option :value="3" label="Recently listed" />
-          <el-option :value="4" label="Recently sold" />
-          <el-option :value="5" label="Ending soon" />
+          <el-option :value="1" :label="$t('common.PriceLowToHigh')" />
+          <el-option :value="2" :label="$t('common.PriceHighToLow')" />
+          <el-option :value="3" :label="$t('common.RecentlyListed')" />
+          <el-option :value="4" :label="$t('common.RecentlySold')" />
+          <el-option :value="5" :label="$t('common.EndingSoon')" />
         </el-select>
         <div class="sort-wrap">
           <span class="icon-wrap icon_filter01" :class="{'active':viewType===1}" @click="viewType=1">

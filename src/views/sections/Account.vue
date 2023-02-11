@@ -3,19 +3,19 @@
     <accountHead :address="address" />
     <div class="account-page">
       <el-tabs v-model="activeName" class="demo-tabs" @tab-change="handleClick">
-        <el-tab-pane label="Collected" name="Collected" :lazy="true">
+        <el-tab-pane :label="$t('accountCenter.MyCollection')" name="Collected" :lazy="true">
           <accountNFTs :address="address" />
         </el-tab-pane>
-        <el-tab-pane label="Created" name="Created" :lazy="true">
+        <!-- <el-tab-pane :label="$t('accountCenter.MyCollection')" name="Created" :lazy="true">
           <accountCollection :address="address" />
-        </el-tab-pane>
-        <el-tab-pane label="Favorited" name="Favorited" :lazy="true">
+        </el-tab-pane> -->
+        <el-tab-pane :label="$t('accountCenter.Favorite')" name="Favorited" :lazy="true">
           <accountFavorited :address="address" />
         </el-tab-pane>
-        <el-tab-pane label="Watchlist" name="Watchlist" :lazy="true">
+        <el-tab-pane :label="$t('accountCenter.Watchlist')" name="Watchlist" :lazy="true">
           <accountWatchlist :address="address" />
         </el-tab-pane>
-        <el-tab-pane label="Activities" name="Activities" :lazy="true">
+        <el-tab-pane :label="$t('accountCenter.Activities')" name="Activities" :lazy="true">
           <accountActivities :address="address" />
         </el-tab-pane>
       </el-tabs>

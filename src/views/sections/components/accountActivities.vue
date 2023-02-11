@@ -3,31 +3,18 @@
     <div class="filter-wrap">
       <div class="filter-head">
         <span class="left">
-          <!-- <el-icon>
-            <ArrowLeft />
-          </el-icon> -->
-          Filter
+          {{ $t('common.Filter') }}
         </span>
         <span class="right">
-          <!-- <svg-icon icon-class="discord" />
-          <svg-icon icon-class="telegram" />
-          <svg-icon icon-class="twitter" />
-          <svg-icon icon-class="websit" />
-          <svg-icon icon-class="zip" /> -->
-          <!-- <el-icon>
-            <Refresh />
-          </el-icon> -->
         </span>
       </div>
-
       <div class="filter-item">
         <div class="gruop-wrap">
           <div class="type-item">
             <div class="attr-content">
               <el-checkbox-group v-model="checkList" @change="changeChecked">
-
                 <div class="attr-item">
-                  <span>Sale</span>
+                  <span> {{ $t('activities.Sale') }}</span>
                   <div class="attr-num">
                     <el-checkbox label="Sale">
                       <template #default>
@@ -36,7 +23,7 @@
                   </div>
                 </div>
                 <div class="attr-item">
-                  <span>Listings</span>
+                  <span> {{ $t('activities.Listings') }}</span>
                   <div class="attr-num">
                     <el-checkbox label="Listings">
                       <template #default>
@@ -45,7 +32,7 @@
                   </div>
                 </div>
                 <div class="attr-item">
-                  <span>Make offer</span>
+                  <span>{{ $t('activities.MakeAnOffer') }}</span>
                   <div class="attr-num">
                     <el-checkbox label="Make offer">
                       <template #default>
@@ -54,7 +41,7 @@
                   </div>
                 </div>
                 <div class="attr-item">
-                  <span>Receive offer</span>
+                  <span>{{ $t('activities.ReceiveAnOffer') }}</span>
                   <div class="attr-num">
                     <el-checkbox label="Receive offer">
                       <template #default>
@@ -63,7 +50,7 @@
                   </div>
                 </div>
                 <div class="attr-item">
-                  <span>Transfer</span>
+                  <span>{{ $t('activities.Transfer') }}</span>
                   <div class="attr-num">
                     <el-checkbox label="Transfer">
                       <template #default>
@@ -72,7 +59,7 @@
                   </div>
                 </div>
                 <div class="attr-item">
-                  <span>Collection offer</span>
+                  <span>{{ $t('activities.CollectionOffer') }}</span>
                   <div class="attr-num">
                     <el-checkbox label="Collection offer">
                       <template #default>
@@ -88,7 +75,7 @@
     </div>
     <div class="right-content">
       <el-table :data="dataList" style="width: 100%">
-        <el-table-column prop="date" label="Activitiy" width="180">
+        <el-table-column prop="date" :label="$t('activities.Activities')" width="180">
           <template #default="props">
             <div class="activity-wrap" style="min-height:67px;line-height: 67px;">
               <img :src="require(`@/assets/images/icons/activities/${props.row.activity}.svg`)" alt="">
@@ -96,13 +83,13 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="Item" label="Item" width="200" :show-overflow-tooltip="true">
+        <el-table-column prop="Item" :label="$t('activities.Items')" width="200" :show-overflow-tooltip="true">
           <template #default="props">
             <image-box v-if="props.row.itemImage!=null" :src="props.row.itemImage" />
             <span class="item-name">{{ props.row.itemName||'--' }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="Price">
+        <el-table-column prop="address" :label="$t('activities.Price')">
           <template #default="props">
             <div class="flex-center" v-if="props.row.price">
               <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="">
@@ -113,17 +100,17 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="Item" label="From" width="140">
+        <el-table-column prop="Item" :label="$t('activities.From')" width="140">
           <template #default="props">
             <a class="link">{{$filters.ellipsisAddress(props.row.from, 4)}}</a>
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="To" width="140">
+        <el-table-column prop="address" :label="$t('activities.To')" width="140">
           <template #default="props">
             <a class="link">{{$filters.ellipsisAddress(props.row.to, 4)}}</a>
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="Date">
+        <el-table-column prop="address" :label="$t('activities.Date')">
           <template #default="props">
             <div>{{$filters.timeFormat(props.row.date)}}</div>
           </template>

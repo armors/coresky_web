@@ -1,8 +1,8 @@
 <template>
   <div class="main-wrapper">
     <div class="page-top">
-      <div class="page-title">Werfen Sie einen Blick！</div>
-      <div class="page-title-sub">Kaufen und gehen，Zögern Sie nicht！Bitte wählen Sie die gewünschte Kategorie aus!</div>
+      <div class="page-title">Explore Categories!</div>
+      <div class="page-title-sub">Choose collections whatever you like!</div>
     </div>
     <div class="top-nav">
       <div class="item-nav" :class="{'active':item.id===query.cid}" @click="changeCategory(item)"

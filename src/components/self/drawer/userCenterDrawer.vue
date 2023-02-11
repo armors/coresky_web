@@ -21,7 +21,7 @@
     <div class="drawer-nav">
       <div class="nav-item" @click="goView('/account/'+ user.coinbase+'?tag=Collected')">
         <img class="icon" src="@/assets/images/icons/icon_nft.svg" alt="">
-        <span>Collect</span>
+        <span>{{$t('userCenter.myCollection')}}</span>
       </div>
       <!-- <div class="nav-item" @click="goView('/account/'+ user.coinbase+'?tag=Created')">
         <img class="icon" src="@/assets/images/icons/icon_collection.svg" alt="">
@@ -29,7 +29,7 @@
       </div> -->
       <div class="nav-item" @click="goView('/account/'+ user.coinbase+'?tag=Favorited')">
         <img class="icon" src="@/assets/images/icons/icon_watchlist2.svg" alt="">
-        <span>Favorites</span>
+        <span>{{$t('userCenter.favorites')}}</span>
       </div>
       <!-- <div class="nav-item">
         <img class="icon" src="@/assets/images/icons/icon_quotation.svg" alt="">
@@ -49,11 +49,11 @@
       </div> -->
       <div class="nav-item" @click="goProfile">
         <svg-icon class="icon" icon-class="setting" />
-        Setting
+        {{$t('userCenter.setting')}}
       </div>
       <div class="nav-item" @click="logout">
         <svg-icon class="icon" icon-class="tuichu" />
-        Quit
+        {{$t('userCenter.quit')}}
       </div>
       <div class="nav-item line" style="margin:25px 0"></div>
     </div>
@@ -88,14 +88,14 @@
         <!-- <div class="coin-box">
         </div> -->
         <div class="coin-name">
-          Score:
+          {{$t('userCenter.score')}}:
         </div>
         <div class="price-box">
           <div class="num">{{user&&user.score}}</div>
         </div>
       </div>
       <div class="wallet-item">
-        <el-link :underline="false" type="primary" @click="goView('/reward')" class="btnDetail">Details</el-link>
+        <el-link :underline="false" type="primary" @click="goView('/reward')" class="btnDetail"> {{$t('userCenter.details')}}</el-link>
       </div>
     </div>
   </el-drawer>

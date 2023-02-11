@@ -2,9 +2,9 @@
   <div class="main-wrapper">
     <div class="account-page">
       <el-tabs v-model="activeName">
-        <el-tab-pane label="Collection results" name="collection" :lazy="true">
+        <el-tab-pane :label="$t('common.Collection')" name="collection" :lazy="true">
           <div class="list-search-wrap" style="margin-top:10px">
-            <el-input class="search-input-wrap" v-model="collectionQuery.keyword" @keyup.enter="searchCollection">
+            <el-input class="search-input-wrap" :placeholder="$t('common.SearchPlaceholder2')" v-model="collectionQuery.keyword" @keyup.enter="searchCollection">
               <template #prefix>
                 <div class="img-search"><img src="../../assets/images/icons/icon_search.svg" alt=""></div>
               </template>
@@ -53,11 +53,8 @@
             </div>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="NFT results" name="nft" :lazy="true">
+        <el-tab-pane label="NFT" name="nft" :lazy="true">
           <markterplace ref="markterplaceRef" :searchKeyword="$route.query.keyword" style="padding-top:10px" />
-        </el-tab-pane>
-        <el-tab-pane label="User results" name="user" :lazy="true" :disabled="true">
-          User results
         </el-tab-pane>
       </el-tabs>
     </div>
