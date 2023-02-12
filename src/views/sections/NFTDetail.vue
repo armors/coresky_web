@@ -194,7 +194,7 @@
 <!--                :disabled="(isIncartInit || !tokenInfo.contract || !tokenInfo.state)" @click="addCart">Add to Cart</el-button>-->
 
               <el-button class="btnWhite" v-if="tokenInfo.contractType === 1 || (!isSelf && !this.isMakeOffer)"
-                :disabled="!tokenInfo.contract" @click="showMakeOfferNFT">Make Offer</el-button>
+                :disabled="!tokenInfo.contract || ckAuctionEntityList.filter(item => item.source === 'coresky').length > 0" @click="showMakeOfferNFT">Make Offer</el-button>
 <!--              <el-button class="btnWhite" v-if="tokenInfo.contractType === 1 || (!isSelf && !this.isMakeOffer)"-->
 <!--                :disabled="!tokenInfo.contract" @click="showMakeOfferCollect">Make Offer Collect</el-button>-->
             </div>
@@ -253,7 +253,7 @@
                         {{$filters.ellipsisAddress(v.maker, 4)}}</div>
                       <div class="list-th th25 center">
                         <el-button type="primary" :disabled="isExpired(v.expirationTime)" class="btnAccept" v-if="isSelfMakeOffer(v.maker)"
-                                   :loading="cancelMakeOfferBtnLoading" @click="cancelSell(v, false)">Cancel</el-button>
+                                   :loading="v.id === cancelIdOrHash" @click="cancelSell(v, false)">Cancel</el-button>
                         <el-button type="primary" class="btnAccept" v-else
                                    :loading="acceptDialogBtnLoading" :disabled="isExpired(v.expirationTime) || isSelf1155(v.maker)" @click="showBuyNft(v, false)">Buy</el-button>
                       </div>
@@ -286,7 +286,7 @@
                         {{$filters.ellipsisAddress(v.maker.address, 4)}}</div>
                       <div class="list-th th25 center">
                         <el-button type="primary" class="btnAccept" :disabled="isExpired(v.expirationTime)" v-if="isSelfMakeOffer(v.maker.address)"
-                                   :loading="cancelMakeOfferBtnLoading" @click="cancelSell(v, true)">Cancel</el-button>
+                                   :loading="v.orderHash === cancelIdOrHash" @click="cancelSell(v, true)">Cancel</el-button>
                         <el-button type="primary" class="btnAccept" v-else :disabled="isSelf1155(v.maker.address) || isExpired(v.expirationTime)"
                                    :loading="acceptDialogBtnLoading" @click="showBuyNft(v, true)">Buy</el-button>
                       </div>
@@ -362,7 +362,7 @@
                         {{$filters.ellipsisAddress(v.maker, 4)}}</div>
                       <div class="list-th th25 center">
                         <el-button type="primary" :disabled="isExpired(v.expirationTime)" class="btnAccept" v-if="isSelfMakeOffer(v.maker)"
-                                   :loading="cancelMakeOfferBtnLoading" @click="cancelMakeOffer(v, false)">Cancel</el-button>
+                                   :loading="v.id === cancelIdOrHash" @click="cancelMakeOffer(v, false)">Cancel</el-button>
                         <el-button type="primary" class="btnAccept" v-else :disabled="!isSelf || isExpired(v.expirationTime)"
                                    :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT(v, false)">Accept</el-button>
                       </div>
@@ -391,7 +391,7 @@
                         {{$filters.ellipsisAddress(v.maker.address, 4)}}</div>
                       <div class="list-th th25 center">
                         <el-button type="primary" :disabled="isExpired(v.expirationTime)" class="btnAccept" v-if="isSelfMakeOffer(v.maker.address)"
-                                   :loading="cancelMakeOfferBtnLoading" @click="cancelMakeOffer(v, true)">Cancel</el-button>
+                                   :loading="v.orderHash === cancelIdOrHash" @click="cancelMakeOffer(v, true)">Cancel</el-button>
                         <el-button type="primary" class="btnAccept" v-else :disabled="!isSelf || isExpired(v.expirationTime)"
                                    :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT(v, true)">Accept</el-button>
                       </div>
@@ -520,6 +520,7 @@ export default {
       cancelBtnLoading: false,
       sellDialogBtnLoading: false,
       acceptDialogBtnLoading: false,
+      cancelIdOrHash: undefined,
       checkList: ['Chain'],
       form: {
         price: '',
@@ -1090,6 +1091,7 @@ export default {
       // this.$refs.NFTDialogSell.showSell(this.tokenInfo)
     },
     async cancelMakeOffer (v, isOpensea = false) {
+      this.cancelIdOrHash = isOpensea ? v.orderHash : v.id
       if (isOpensea) {
         await this.cancelSellOpensea(v)
         return
@@ -1109,6 +1111,7 @@ export default {
         const hash = await this.$sdk.cancelOrder_(seller, this.user.coinbase);
         console.log(hash)
         if (typeof hash == "object" && hash.error) {
+          this.cancelIdOrHash = undefined
           this.cancelMakeOfferBtnLoading = false
           return
         }
@@ -1116,16 +1119,19 @@ export default {
           id: v.id,
           type: this.$sdk.valueOrderType("MAKE_OFFER")
         }).then((res) => {
+          this.cancelIdOrHash = undefined
           this.cancelMakeOfferBtnLoading = false
           this.$tools.message('已取消报价', 'success');
           this.getTokenInfo()
         })
       } catch (e) {
         console.log(e)
+        this.cancelIdOrHash = undefined
         this.cancelMakeOfferBtnLoading = false
       }
     },
     async cancelSell (cancelItem = null, isOpensea = false) {
+      this.cancelIdOrHash = isOpensea ? cancelItem.orderHash : cancelItem.id
       if (isOpensea) {
         this.cancelSellOpensea(cancelItem)
       } else {
@@ -1133,7 +1139,6 @@ export default {
       }
     },
     async cancelSellCoresky (cancelItem) {
-      this.cancelBtnLoading = true
       if (this.tokenInfo.contractType === 0 && cancelItem === null) {
         cancelItem = this.tokenInfo.ckOrdersEntityList[0]
       }
@@ -1153,24 +1158,28 @@ export default {
         console.log(hash)
         if (typeof hash == "object" && hash.error) {
           this.cancelMakeOfferBtnLoading = false
+          this.cancelIdOrHash = undefined
           return
         }
         this.$api("order.cancel", {
           id: cancelItem.id,
           type: this.$sdk.valueOrderType("SALE")
         }).then((res) => {
+          this.cancelIdOrHash = undefined
           this.cancelBtnLoading = false
           this.$tools.message('已取消挂售', 'success');
           this.getTokenInfo()
         })
       } catch (e) {
         console.log(e)
+        this.cancelIdOrHash = undefined
         this.cancelBtnLoading = false
       }
     },
     async cancelSellOpensea (cancelItem) {
       console.log(cancelItem)
       if (cancelItem === null) {
+        this.cancelIdOrHash = undefined
         return
       }
       this.cancelBtnLoading = true
@@ -1185,8 +1194,10 @@ export default {
         this.cancelBtnLoading = false
         this.$tools.message('已取消挂售', 'success');
         this.getTokenInfo()
+        this.cancelIdOrHash = undefined
       } catch (e) {
         console.log(e)
+        this.cancelIdOrHash = undefined
         this.cancelBtnLoading = false
       }
     },
