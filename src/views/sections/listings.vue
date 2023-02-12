@@ -749,7 +749,7 @@ export default {
 						s: sig.s,
 						hash: hashToSign,
 						sign: JSON.stringify(sig),
-						basePrice: this.$Web3.utils.toWei(price),
+						basePrice: this.$Web3.utils.toWei(price.toString()),
 						amount: this.tokenInfo.contractType === 1 ? Number(this.quantity) : 1
 					}
 				}
