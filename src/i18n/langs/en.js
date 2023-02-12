@@ -83,6 +83,14 @@ module.exports = {
     From: 'From',
     to: 'to',
     Date: 'Date',
+    listType: {
+      'Sale': 'Sale',
+      'Listing': 'Listings',
+      'Make offer': 'Make an offer',
+      'Receive offer': 'Make an offer',
+      'Transfer': 'Transfer',
+      'Make collection offer': 'Collection offer'
+    }
   },
   global: {
     notConnect: "Not connected Wallet",

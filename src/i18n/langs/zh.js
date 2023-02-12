@@ -82,6 +82,14 @@ module.exports = {
     From: '从',
     To: '到',
     Date: '时间',
+    listType: {
+      'Sale': '交易',
+      'Listing': '挂单',
+      'Make offer': '报价',
+      'Receive offer': '收到报价',
+      'Transfer': '转移',
+      'Make collection offer': '合集报价'
+    }
   },
 
   global: {

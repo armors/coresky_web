@@ -79,7 +79,7 @@
           <template #default="props">
             <div class="activity-wrap" style="min-height:67px;line-height: 67px;">
               <img :src="require(`@/assets/images/icons/activities/${props.row.activity}.svg`)" alt="">
-              <span>{{ props.row.activity }}</span>
+              <span>{{ $t(`activities.listType.${props.row.activity}`) }}</span>
             </div>
           </template>
         </el-table-column>
