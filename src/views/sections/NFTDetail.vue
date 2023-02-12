@@ -177,7 +177,7 @@
             </div>
             <div class="btn-box display-flex box-center-Y">
               <template v-if="isSelf">
-                <el-button type="primary" :disabled="youSellAmount === youOwnAmount || (isSellCoresky === true && isSellOpensea === true)" class="btnBuy" :loading="sellDialogBtnLoading" @click="showSellNft">Sell Now</el-button>
+                <el-button type="primary" :disabled="youSellAmount >= youOwnAmount || (isSellCoresky === true && isSellOpensea === true)" class="btnBuy" :loading="sellDialogBtnLoading" @click="showSellNft">Sell Now</el-button>
 <!--                <el-button type="primary" class="btnBuy" v-if="!tokenInfo.state || tokenInfo.contractType === 1"-->
 <!--                  :loading="sellDialogBtnLoading" @click="showSellNft">Sell Now</el-button>-->
 <!--                <el-button type="primary" class="btnBuy" v-if="tokenInfo.contractType === 0 && ckOrdersEntityList.length > 0" :loading="cancelBtnLoading"-->
@@ -1007,13 +1007,14 @@ export default {
           listed = listed.filter(item => item.expirationTime > (new Date().getTime() / 1000))
           listed = listed.map(item => {
             item.source = "coresky"
-            if (this.tokenInfo.contractType === 1) {
+            if (this.tokenInfo.contractType === 1 && item.maker === this.user.coinbase) {
               this.youSellAmount += item.amount
             }
             return item
           })
         }
-        this.isSellCoresky =listed.length > 0
+        const sellSelf = listed.filter(item => item.maker === this.user.coinbase)
+        this.isSellCoresky =sellSelf.length > 0
 
         this.ckAuctionEntityList = this.sortOrdersAndOffer(offer)
         this.ckOrdersEntityList = this.sortOrdersAndOffer(listed, true)
@@ -1023,18 +1024,21 @@ export default {
         this.loading = false
         if (this.ckOrdersEntityList.length > 0) {
           this.countDown()
+        } else {
+          this.countDownTime = '--'
         }
         // this.isInCart()
       })
     },
     async getOrdersAndOffers () {
 
-      const openseaListed = await this.$sdk.getOrdersOpensea(this.asset, this.tokenInfo.contractType)
+      const openseaListed = await this.$sdk.getOrdersOpensea(this.asset, this.user.coinbase, this.tokenInfo.contractType)
         if (openseaListed.code === 200) {
           if (this.tokenInfo.contractType === 1) {
             this.youSellAmount += openseaListed.sellAmount
           }
-          this.isSellOpensea = openseaListed.data.length > 0
+          const sellSelf = openseaListed.data.filter(item => item.maker.address === this.user.coinbase)
+          this.isSellOpensea = sellSelf.length > 0
           this.ckOrdersEntityList = [...this.ckOrdersEntityList, ...openseaListed.data]
           this.ckOrdersEntityList = this.sortOrdersAndOffer(this.ckOrdersEntityList, true)
           console.log(this.ckOrdersEntityList)
@@ -1045,6 +1049,7 @@ export default {
         } else {
           this.isSellOpensea = false
         }
+        console.log('this.youSellAmount', this.youSellAmount)
         await this.$sdk._sleep(2000)
         const openseaOffers = await this.$sdk.getOffersOpensea(this.asset)
         if (openseaOffers.code === 200) {
@@ -1077,10 +1082,7 @@ export default {
       })
     },
     showSellNft () {
-      console.log(this.ckOrdersEntityList)
-      const sellOpenseaOrder = this.ckOrdersEntityList.filter(item => item.source === 'opensea')
-      const sellCoreskyOrder = this.ckOrdersEntityList.filter(item => item.source === 'coresky')
-      if (sellOpenseaOrder.length > 0 && sellCoreskyOrder.length > 0) {
+      if (this.isSellCoresky && this.isSellOpensea) {
         this.$tools.message('每个平台仅支持一次报价，请取消挂单后重新挂售', 'warning');
         return
       }
@@ -1197,6 +1199,7 @@ export default {
         this.cancelIdOrHash = undefined
       } catch (e) {
         console.log(e)
+        this.$tools.message(this.$filters.filterMsgOpenseaErr(e), 'warning');
         this.cancelIdOrHash = undefined
         this.cancelBtnLoading = false
       }
@@ -1230,6 +1233,7 @@ export default {
         // console.log(balance)
       } catch (e) {
         console.log(e)
+        this.$tools.message(this.$filters.filterMsgOpenseaErr(e), 'warning');
       }
     },
     nftPriceFun (basePrice) {

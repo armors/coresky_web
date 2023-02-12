@@ -195,7 +195,13 @@ export function ckCollectionsInfoEntity (v) {
 
 export function filterMsgOpenseaErr(e) {
   e = e.toString()
-  if (e.indexOf('user rejected transaction') > -1) {
-    return 'user rejected transaction'
+  if (e.indexOf('user rejected') > -1) {
+    return 'user rejected signature'
+  } else if (e.indexOf('API Error') > -1) {
+    return 'Error: API Error 500: Internal server error'
+  } else if (e.indexOf('cannot estimate') > -1) {
+    return 'Error: cannot estimate gas; transaction may fail or may require manual gas limit '
+  } else {
+    return 'Error: Opensea Inner Error'
   }
 }
