@@ -235,9 +235,11 @@ export default {
         })
         console.log(transactionHash)
         this.hash = transactionHash
-        this.isBuyOver = true // 展示交易hash值
-        this.buyBtnLoading = false
-        this.$emit('buySuccess', transactionHash)
+        setTimeout(() => {
+          this.isBuyOver = true // 展示交易hash值
+          this.buyBtnLoading = false
+          this.$emit('buySuccess', transactionHash)
+        }, 2000)
       } catch (e) {
         this.$tools.message(this.$filters.filterMsgOpenseaErr(e), 'warning');
         console.log(e)

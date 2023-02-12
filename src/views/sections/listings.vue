@@ -12,9 +12,9 @@
 			<div class="nft-box">
 				<image-box class="img-box" :src="tokenInfo.oriImage"></image-box>
 				<div class="box-center">
-					<span class="tokenid">{{tokenInfo.ckCollectionsInfoEntity.name || '--'}} #{{tokenInfo.tokenId}}</span>
-					<span class="collection-name">ENS: Ethereum Name Service
-            <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
+					<span class="tokenid">{{tokenInfo.name || '--'}} #{{tokenInfo.tokenId}}</span>
+					<span class="collection-name">{{tokenInfo.ckCollectionsInfoEntity.name || '--'}}
+            <img v-if="tokenInfo.ckCollectionsInfoEntity.isCertification === '1'" class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
           </span>
 				</div>
 				<div style="margin-right: 30px;" v-if="tokenInfo.contractType === 1">
@@ -62,7 +62,7 @@
 					</div>
 				</div>
 			</div>
-			<el-table :data="dataList" style="width: 100%" class="mytable" header-row-class-name="head-row">
+			<el-table :data="dataList" style="width: 100%;" class="mytable" header-row-class-name="head-row">
 				<el-table-column prop="date" label="Market" width="180">
 					<template #default="props">
 						<div class="flex-m">
@@ -506,6 +506,7 @@ export default {
 				this.dataList[0].fee = this.$filters.feeFormat(store.state.config.protocolFee)
 				this.dataList[0].RoyaltiesFee = this.tokenInfo.ckCollectionsInfoEntity.royalty
 				this.dataList[0].protocolFee = store.state.config.protocolFee
+				this.dataList[0].lastSale = this.tokenInfo.historyPrice.length > 0 ? this.$sdk.fromWeiNum(this.tokenInfo.historyPrice[this.tokenInfo.historyPrice.length - 1].price) : "--"
 				this.dataList[1].listedPrice = this.$sdk.fromWeiNum(this.tokenInfo.listedPriceOs)
 				this.isSellCoresky = res.debug.ckOrdersEntityList.length > 0
 				if (!this.isSellCoresky) {
@@ -676,6 +677,7 @@ export default {
 			if (!this.isApproved) {
 				await this.setApproveAll()
 			}
+			this.sellBtnLoading = true
 			let seller = this.$sdk.makeOrder({
 				exchangeAddress: process.env.VUE_APP_MARKET_EXCHANGE,
 				sender: this.user.coinbase,
@@ -803,8 +805,8 @@ export default {
 				}
 				// this.nftToBuy = orderParams
 				this.$api("order.create", orderParams).then((res) => {
-					this.sellBtnLoading = false
 					if (!isSeleceOpensea) {
+						this.sellBtnLoading = false
 						setTimeout(() => {
 							window.history.go(-1)
 						}, 500)
@@ -830,13 +832,16 @@ export default {
 			// 	this.$tools.message('正在拉取opensea数据，请稍等', 'warning');
 			// 	await this.getOsTokenInfo()
 			// }
+			this.sellBtnLoading = true
 			const price = this.dataList[1].listPrice
 			if (!price || new BigNumber(price).isLessThan(0)) {
 				this.$tools.message('请输入正确的价格', 'warning');
+				this.sellBtnLoading = false
 				return
 			}
 			if (!this.form.time) {
 				this.$tools.message('请选择过期时间', 'warning');
+				this.sellBtnLoading = false
 				return
 			}
 			try {
@@ -871,10 +876,12 @@ export default {
 				const listing = await openseaSDK.createSellOrder(sellOrderParams)
 				this.$tools.message('Opensea 挂售成功', 'success');
 				console.log(listing)
+				this.sellBtnLoading = false
 				setTimeout(() => {
 					window.history.go(-1)
 				}, 1000)
 			} catch (e) {
+				this.sellBtnLoading = false
 				this.$tools.message(this.$filters.filterMsgOpenseaErr(e), 'warning');
 				console.log(e)
 			}
@@ -1208,6 +1215,10 @@ export default {
 			.el-input-number .el-input__inner{
 				text-align: center;
 			}
+		}
+		.el-table .cell{
+			padding-left: 16px !important;
+			padding-right: 16px !important;
 		}
 	}
 

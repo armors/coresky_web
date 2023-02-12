@@ -76,7 +76,6 @@ export default {
 				side: 'ask',
 				...{
 					assetContractAddress: asset.assetContractAddress,
-					chain: "GOERLI",
 					tokenId: asset.tokenId
 				}
 			})

@@ -36,7 +36,7 @@ export default {
     // await this.$store.dispatch("categorys");
     // await this.$store.dispatch("payTokens");
     // this.$store.dispatch("countNotices");
-    this.$store.commit("WEB_LOADING");
+    this.$store.commit("WEB_LOADING", true);
   },
   data () {
     return {

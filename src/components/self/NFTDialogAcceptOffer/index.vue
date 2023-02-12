@@ -29,36 +29,36 @@
           <div class="price2">${{$filters.milliFormat($filters.ethToUsdt(nftPrice))}}</div>
         </div>
       </div>
-      <div class="info-box">
-        <div class="title">Price</div>
-        <div class="box-item">
-          <div class="left">Floor Price Difference</div>
-          <div class="right">{{floorDiff}} above</div>
-        </div>
-        <div class="box-item">
-          <div class="left">Seller</div>
-          <div class="right">{{tokenInfo.ckCollectionsInfoEntity.sellReward}}</div>
-        </div>
-        <div class="box-item">
-          <div class="left">Quantity</div>
-          <div class="right">{{$filters.milliFormat(isOpensea ? acceptInfo.protocolData.parameters.consideration[0].startAmount : acceptInfo.amount)}}</div>
-        </div>
-        <div class="box-item">
-          <div class="left">Maturity</div>
-          <div class="right">{{$filters.timeFormatTime(acceptInfo.expirationTime)}}</div>
-        </div>
-      </div>
-      <div class="info-box">
-        <div class="title">Cost</div>
-        <div class="box-item">
-          <div class="left">Service Charge</div>
-          <div class="right">{{isOpensea ? protocolFee : config.protocolFeeHan}}</div>
-        </div>
-        <div class="box-item">
-          <div class="left">Creator Fee</div>
-          <div class="right">{{isOpensea ? royaltyFee :  $filters.feeFormat(this.tokenInfo.ckCollectionsInfoEntity.royalty)}}</div>
-        </div>
-      </div>
+<!--      <div class="info-box">-->
+<!--        <div class="title">Price</div>-->
+<!--        <div class="box-item">-->
+<!--          <div class="left">Floor Price Difference</div>-->
+<!--          <div class="right">{{floorDiff}} above</div>-->
+<!--        </div>-->
+<!--        <div class="box-item">-->
+<!--          <div class="left">Seller</div>-->
+<!--          <div class="right">{{tokenInfo.ckCollectionsInfoEntity.sellReward}}</div>-->
+<!--        </div>-->
+<!--        <div class="box-item">-->
+<!--          <div class="left">Quantity</div>-->
+<!--          <div class="right">{{$filters.milliFormat(isOpensea ? acceptInfo.protocolData.parameters.consideration[0].startAmount : acceptInfo.amount)}}</div>-->
+<!--        </div>-->
+<!--        <div class="box-item">-->
+<!--          <div class="left">Maturity</div>-->
+<!--          <div class="right">{{$filters.timeFormatTime(acceptInfo.expirationTime)}}</div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="info-box">-->
+<!--        <div class="title">Cost</div>-->
+<!--        <div class="box-item">-->
+<!--          <div class="left">Service Charge</div>-->
+<!--          <div class="right">{{isOpensea ? protocolFee : config.protocolFeeHan}}</div>-->
+<!--        </div>-->
+<!--        <div class="box-item">-->
+<!--          <div class="left">Creator Fee</div>-->
+<!--          <div class="right">{{isOpensea ? royaltyFee :  $filters.feeFormat(this.tokenInfo.ckCollectionsInfoEntity.royalty)}}</div>-->
+<!--        </div>-->
+<!--      </div>-->
       <div class="total-box">
         <div class="title">Total Revenue</div>
         <div class="number">

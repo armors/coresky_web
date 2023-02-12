@@ -119,9 +119,9 @@
                   {{item.name?item.name:('#'+item.tokenId)}}
                 </div>
                 <div class="nft-price"
-                  v-if="item && item.ckOrdersEntityList !== null && item.ckOrdersEntityList.length > 0">
+                  v-if="item && item.state !== 0">
                   <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="">
-                  <span class="price">{{nftPrice(item.ckOrdersEntityList[0].basePrice)}} ETH</span>
+                  <span class="price">{{nftPrice(item.basePrice)}} ETH</span>
                 </div>
               </div>
             </div>
@@ -152,6 +152,12 @@ export default {
     address: {
       type: String,
       default: ''
+    },
+  },
+  watch: {
+    $route (to, from) {
+      this.init();
+      this.searchCollection()
     },
   },
   data () {

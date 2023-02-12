@@ -97,7 +97,7 @@
         <div class="detail-info">
           <router-link :to="`/collection/${$route.params.contract}`" tag="div" class="collection-name">
             <span>{{tokenInfo.ckCollectionsInfoEntity.name}}</span>
-            <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
+            <img class="tag" v-if="tokenInfo.ckCollectionsInfoEntity.isCertification === '1'" src="@/assets/images/icons/icon_tag.svg" alt="">
           </router-link>
 <!--          <div class="globle-floor">-->
 <!--            <span>Globle floor : </span>-->
@@ -137,7 +137,7 @@
             </div>
           </div>
           <div class="nft-bid-box">
-            <div class="box-flex" v-if="!(ckAuctionEntityList.length < 1 && ckAuctionEntityList.length < 1)">
+            <div class="box-flex" v-if="!(ckAuctionEntityList.length < 1 && ckOrdersEntityList.length < 1)">
               <div class="box-left">
                 <div>Current Price</div>
                 <div class="row">
@@ -483,7 +483,7 @@
     <NFTDialogSell ref="NFTDialogSell" @sellCreateSuccess="sellCreateSuccess"></NFTDialogSell>
     <NFTDialogMakeOffer ref="NFTDialogMakeOffer" @makeOfferSuccess="makeOfferSuccess"></NFTDialogMakeOffer>
     <NFTDialogAcceptOffer ref="NFTDialogAcceptOffer" @acceptOfferSuccess="acceptOfferSuccess" />
-
+    <div class="web-loading" v-if="loading" v-loading.fullscreen.lock="loading"></div>
   </div>
 </template>
 
@@ -508,6 +508,7 @@ export default {
   mixins: [],
   data () {
     return {
+      loading: true,
       activeName: '1',
       activeName1: '1',
       activeName2: '1',
@@ -587,7 +588,6 @@ export default {
   },
   mounted () {
     this.getTokenInfo()
-    this.getTokenEvent()
     // this.getOrdersAndOffers()
     // this.isInCart()
   },
@@ -982,6 +982,8 @@ export default {
     getTokenInfo () {
       this.isSellCoresky = false
       this.isSellOpensea = false
+      this.getTokenEvent()
+      this.loading = true
       this.$api("collect.tokenInfo", this.tokenInfoParams).then(async (res) => {
         this.tokenInfo = res.debug
         this.nftPrice = this.nftPriceFun(this.tokenInfo.basePrice)
@@ -1017,6 +1019,7 @@ export default {
         this.bestPrice = this.ckAuctionEntityList.length > 0 ? this.nftPriceFun(this.ckAuctionEntityList[0].basePrice) : '--'
         this.nftPrice = this.ckOrdersEntityList.length > 0 ? this.nftPriceFun(this.ckOrdersEntityList[0].basePrice) : '--'
         await this.getOrdersAndOffers()
+        this.loading = false
         if (this.ckOrdersEntityList.length > 0) {
           this.countDown()
         }
