@@ -5,7 +5,7 @@
         <span class="left" @click="showFilterBox=!showFilterBox">
           <el-icon>
             <ArrowLeft />
-          </el-icon>Filter
+          </el-icon>{{ $t('common.Filter') }}
         </span>
         <span class="right">
           <el-icon>
@@ -14,14 +14,14 @@
         </span>
       </div>
       <div class="filter-item flex border">
-        <span class="left">Buy Now</span>
+        <span class="left">{{ $t('common.BuyNow') }}</span>
         <span class="right">
           <el-switch v-model="queryParams.buyNow" @change="searchClick" class="ml-2" />
         </span>
       </div>
       <div class="filter-item border">
         <div class="flex">
-          <span class="left">Price</span>
+          <span class="left">{{ $t('common.Price') }}</span>
           <span class="right" @click="isOpenPriceFilter=!isOpenPriceFilter">
             <el-icon style="font-size:16px" :class="{'down': isOpenPriceFilter}">
               <ArrowUp />
@@ -34,37 +34,21 @@
             <el-option value="ETH">ETH</el-option>
           </el-select>
           <div class="price-range" style="margin-top:15px">
-            <el-input-number
-              v-model="queryParams.minPrice"
-              :placeholder="$t('home.minPlaceholder')"
-              :controls="false"
-              :precision="4"
-              :min="0.0001"
-              :max="100000000000000"
-              class="input-number"/>
-<!--            <el-input type="number" class="input-number" :controls="false" v-model="queryParams.minPrice"-->
-<!--              :placeholder="$t('home.minPlaceholder')" />-->
+            <el-input-number v-model="queryParams.minPrice" :placeholder="$t('common.Min')" :controls="false"
+              :precision="4" :min="0.0001" :max="100000000000000" class="input-number" />
             <div class="line"></div>
-<!--            <el-input type="number" class="input-number" :controls="false" v-model="queryParams.maxPrice"-->
-<!--              :placeholder="$t('home.maxPlaceholder')" />-->
-            <el-input-number
-              v-model="queryParams.maxPrice"
-              :placeholder="$t('home.maxPlaceholder')"
-              :controls="false"
-              :precision="4"
-              :min="0.0001"
-              :max="100000000000000"
-              class="input-number"/>
+            <el-input-number v-model="queryParams.maxPrice" :placeholder="$t('common.Max')" :controls="false"
+              :precision="4" :min="0.0001" :max="100000000000000" class="input-number" />
           </div>
-          <div class="btn-apply" @click="searchClick">Application</div>
+          <div class="btn-apply" @click="searchClick">{{$t('common.Application')}}</div>
         </template>
       </div>
       <div class="filter-item">
         <div class="flex">
-          <span class="left">Attributes</span>
+          <span class="left">{{$t('common.Properties')}}</span>
           <span class="right" @click="isOpenAttrFilter = !isOpenAttrFilter">
             <el-icon style="font-size:16px" :class="{'down': isOpenAttrFilter}">
-<!--            <el-icon style="font-size:16px">-->
+              <!--            <el-icon style="font-size:16px">-->
               <ArrowUp />
             </el-icon>
           </span>
@@ -97,9 +81,9 @@
       <div class="list-search-wrap">
         <div class="btnfilter" @click="showFilterBox=!showFilterBox">
           <img src="../../../assets/images/icons/icon_filter.svg" alt="">
-          Filter
+          {{ $t('common.Filter') }}
         </div>
-        <el-input class="search-input-wrap" style="width:400px" placeholder="Search by name or attribute"
+        <el-input class="search-input-wrap" style="width:400px" :placeholder="$t('common.SearchPlaceholder')"
           v-model="queryParams.keyword" @keyup.enter="searchClick">
           <template #prefix>
             <div class="img-search"><img src="../../../assets/images/icons/icon_search.svg" alt=""></div>
@@ -107,11 +91,11 @@
         </el-input>
         <el-select v-model="queryParams.order" placeholder="Recently listed" @change="searchClick" :teleported="false"
           popper-class="select-popper" class="select-sort">
-          <el-option :value="1" label="Price low to high" />
-          <el-option :value="2" label="Price high to low" />
-          <el-option :value="3" label="Recently listed" />
-          <el-option :value="4" label="Recently sold" />
-          <el-option :value="5" label="Ending soon" />
+          <el-option :value="1" :label="$t('common.PriceLowToHigh')" />
+          <el-option :value="2" :label="$t('common.PriceHighToLow')" />
+          <el-option :value="3" :label="$t('common.RecentlyListed')" />
+          <el-option :value="4" :label="$t('common.RecentlySold')" />
+          <el-option :value="5" :label="$t('common.EndingSoon')" />
         </el-select>
         <div class="sort-wrap">
           <span class="icon-wrap icon_filter01" :class="{'active':viewType===1}" @click="viewType=1">
@@ -260,15 +244,15 @@ export default {
       this.attrList.map(el => {
         let vals = el.dataList.filter(el2 => el2.isChecked)
         if (vals.length > 0) {
-          let filter = { name: el.attrNm, value: vals.map(el3 => el3.name).join(',') }
+          let filter = { name: el.attrNm, value: vals.map(el3 => el3.name) }
           listFilter.push(filter)
         }
       })
       if (listFilter.length > 0) {
-        this.queryParams.filter = listFilter[0]
+        this.queryParams.filterList = listFilter
       }
       else {
-        this.queryParams.filter = null
+        this.queryParams.filterList = null
       }
     }
   },

@@ -40,7 +40,7 @@
             <el-input-number v-model="queryParams.maxPrice" :placeholder="$t('common.Max')" :controls="false"
               :precision="4" :min="0.0001" :max="100000000000000" class="input-number" />
           </div>
-          <div class="btn-apply" @click="searchClick">{{$t('common.Confirm')  }}</div>
+          <div class="btn-apply" @click="searchClick">{{$t('common.Application')  }}</div>
         </template>
       </div>
       <div class="filter-item">

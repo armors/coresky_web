@@ -2,16 +2,17 @@
   <div class="reward-wrapper">
     <div class="banner-wrap">
       <div class="banner-txt">
-        <div class="txt1">Trade to get CoreToken </div>
-        <div class="txt2">X2Y2 will share 100% of the proceeds with X2Y2 token holders.</div>
+        <div class="txt1">{{$t('rewards.title')}} </div>
+        <div class="txt2">{{$t('rewards.subTitle')}}</div>
         <div class="txt3">
-          <el-button class="btn" @click="$router.push('/markterplace')" type="primary">Go to trade</el-button>
+          <el-button class="btn" @click="$router.push('/markterplace')" type="primary">{{$t('rewards.goTrade')}}
+          </el-button>
         </div>
         <img class="image" src="@/assets/images/reward.png" alt="">
       </div>
     </div>
     <div class="page-center">
-      <div class="title1">Hot activity</div>
+      <div class="title1">{{$t('rewards.HotActivities')}}</div>
       <div class="card-list">
         <div class="card-item">
           <img class="image" src="@/assets/images/reward01.jpg" alt="">
@@ -21,19 +22,19 @@
       </div>
     </div>
     <div class="page-center" style="margin-bottom:30px">
-      <div class="title1">My rewards
-        <span class="sub-title"> ({{ score }} CoreToken)</span>
+      <div class="title1">{{$t('rewards.MyRewards')}}
+        <span class="sub-title"> ({{ score }} {{$t('rewards.CTScore')}})</span>
       </div>
 
       <el-tabs v-model="activeName" class="demo-tabs">
         <el-tab-pane label="Transaction mining" name="mining" :lazy="true">
           <el-table :data="dataList" style="width: 100%" class="mytable" v-loading="isLoading">
-            <el-table-column prop="createTime" label="Time" width="325">
+            <el-table-column prop="createTime" :label="$t('rewards.Time')" width="325">
               <template #default="props">
                 {{ parseTime(props.row.createTime) }}
               </template>
             </el-table-column>
-            <el-table-column prop="event" label="Event" width="300">
+            <el-table-column prop="event" :label="$t('rewards.Event')" width="300">
               <template #default="props">
                 <span v-if="props.row.type===0">挂单奖励</span>
                 <span v-if="props.row.type===1">购买</span>
@@ -41,12 +42,12 @@
                 <span v-if="props.row.type===4">购买彩票</span>
               </template>
             </el-table-column>
-            <el-table-column prop="itemName" label="Item">
+            <el-table-column prop="itemName" :label="$t('rewards.Item')">
               <!-- <template #default="props">
                 Lazy Cubs Official #1231
               </template> -->
             </el-table-column>
-            <el-table-column prop="score" label="Rewards" width="140">
+            <el-table-column prop="score" :label="$t('rewards.Rewards')" width="140">
               <template #default="props">
                 {{ props.row.score }} CT
               </template>

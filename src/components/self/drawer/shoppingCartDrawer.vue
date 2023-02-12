@@ -3,7 +3,7 @@
     custom-class="coresky-drawer" :withHeader="false">
     <div class="shopping-cart-header">
       <div class="txt">
-        Shopping cart
+        {{$t('shoppingCart.title')}}
       </div>
       <el-icon @click="visible=false">
         <Close />
@@ -11,22 +11,17 @@
     </div>
     <div class="shopping-cart-content-head display-flex box-center-Y">
 
-      <el-menu
-        :default-active="activeIndex"
-        class="el-menu-cart box-flex1"
-        mode="horizontal"
-        @select="handleSelect"
-      >
+      <el-menu :default-active="activeIndex" class="el-menu-cart box-flex1" mode="horizontal" @select="handleSelect">
         <el-badge :value="items" class="item">
           <el-menu-item index="1">CoreSky</el-menu-item>
         </el-badge>
         <el-badge :value="shoppingOpenseaCartList.length" class="item">
-          <el-menu-item index="2">Other</el-menu-item>
+          <el-menu-item index="2"> {{$t('shoppingCart.other')}}</el-menu-item>
         </el-badge>
       </el-menu>
       <div class="right" @click="clearCart">
         <img src="@/assets/images/icons/icon_clearcart.svg" class="icon-clear" alt="">
-        <span>Clear all</span>
+        <span>{{$t('shoppingCart.clearAll')}}</span>
       </div>
     </div>
     <template v-if="activeIndex === '1'">
@@ -41,16 +36,11 @@
                   <div>ENS :Ethereum Na…</div>
                   <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
                 </div>
-                <div class="txt3">Creator Fee {{$filters.feeFormat(vc.makerRelayerFee)}}</div>
+                <div class="txt3">{{$t('shoppingCart.creatorFees')}} {{$filters.feeFormat(vc.makerRelayerFee)}}</div>
               </div>
             </div>
             <div class="shopping-price">
-              <el-popover
-                placement="top-start"
-                title=""
-                :width="200"
-                trigger="hover"
-              >
+              <el-popover placement="top-start" title="" :width="200" trigger="hover">
                 <template #reference>
                   <div class="price-value ellipsis">
                     <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
@@ -73,14 +63,15 @@
       </div>
       <div class="shopping-cart-footer">
         <div class="total-box">
-          <div class="title">Total</div>
+          <div class="title">{{$t('shoppingCart.total')}}</div>
           <div class="total">
             <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
             {{totalPriceShow}}
           </div>
         </div>
         <div>
-          <el-button type="primary" :disabled="coreskyCart.length < 1" class="btnOption" :loading="buyBtnLoading" @click="cartBuy">Purchase</el-button>
+          <el-button type="primary" :disabled="coreskyCart.length < 1" class="btnOption" :loading="buyBtnLoading"
+            @click="cartBuy">{{$t('shoppingCart.purchase')}}</el-button>
         </div>
       </div>
     </template>
@@ -95,17 +86,13 @@
                 <div>ENS :Ethereum Na…</div>
                 <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
               </div>
-              <div class="txt3">Creator Fee {{$filters.feeFormat(v.makerAssetBundle.assets[0].assetContract.openseaSellerFeeBasisPoints)}}</div>
+              <div class="txt3">{{$t('shoppingCart.creatorFees')}}
+                {{$filters.feeFormat(v.makerAssetBundle.assets[0].assetContract.openseaSellerFeeBasisPoints)}}</div>
             </div>
           </div>
           <div class="shopping-price">
 
-            <el-popover
-              placement="top-start"
-              title=""
-              :width="200"
-              trigger="hover"
-            >
+            <el-popover placement="top-start" title="" :width="200" trigger="hover">
               <template #reference>
                 <div class="price-value ellipsis">
                   <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
@@ -127,14 +114,15 @@
       </div>
       <div class="shopping-cart-footer">
         <div class="total-box">
-          <div class="title">Total</div>
+          <div class="title">{{$t('shoppingCart.total')}}</div>
           <div class="total">
             <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
             {{totalOpenseaPriceShow}}
           </div>
         </div>
         <div>
-          <el-button type="primary" :disabled="openseaCart.length < 1" class="btnOption" :loading="buyOpenseaBtnLoading" @click="cartBuyOpensea">Purchase</el-button>
+          <el-button type="primary" :disabled="openseaCart.length < 1" class="btnOption" :loading="buyOpenseaBtnLoading"
+            @click="cartBuyOpensea">{{$t('shoppingCart.purchase')}}</el-button>
         </div>
       </div>
     </template>
@@ -142,7 +130,7 @@
 </template>
 
 <script>
-import {getLocalStorage, removeLocalStorage, setLocalStorage} from "@/util/local-storage";
+import { getLocalStorage, removeLocalStorage, setLocalStorage } from "@/util/local-storage";
 import BigNumber from "bignumber.js";
 
 export default {
@@ -188,7 +176,7 @@ export default {
     cartName () {
       return `coresky_cart_${this.$store.state.user.coinbase}`
     },
-    cartNameOpensea() {
+    cartNameOpensea () {
       return `coresky_cart_opensea_${this.$store.state.user.coinbase}`
     },
     shoppingOpenseaCartList () {
@@ -209,7 +197,7 @@ export default {
     deleteCart (v, id) {
       const coreskyCartLength = this.coreskyCart.length
       let cart = []
-      for (let i = 0;i < coreskyCartLength; i++) {
+      for (let i = 0; i < coreskyCartLength; i++) {
         let item = this.coreskyCart[i]
         if (item.contract === v.contract && item.tokenId === v.tokenId) {
           let ckOrdersEntityList = item.ckOrdersEntityList.filter(vc => vc.id !== id)
@@ -272,7 +260,7 @@ export default {
       const localOpensea = getLocalStorage(this.cartNameOpensea)
       console.log(localOpensea[this.cartNameOpensea])
       let coresky_opensea_cart = localOpensea[this.cartNameOpensea]
-      coresky_opensea_cart = coresky_opensea_cart.filter(item=> item.expirationTime > (new Date().getTime()/ 1000))
+      coresky_opensea_cart = coresky_opensea_cart.filter(item => item.expirationTime > (new Date().getTime() / 1000))
       if (coresky_opensea_cart !== null) {
         this.openseaCart = JSON.parse(coresky_opensea_cart)
         this.openseaCart.forEach(item => {
@@ -291,7 +279,7 @@ export default {
     handleClose () {
       this.$emit('update:show', false)
     },
-    getNftPrice(v, isShow=false) {
+    getNftPrice (v, isShow = false) {
       return isShow ? parseFloat(this.$filters.keepPoint(this.$Web3.utils.fromWei(v.basePrice.toString()))) : this.$Web3.utils.fromWei(v.basePrice.toString())
     },
     nftPriceFun (basePrice) {
@@ -309,9 +297,9 @@ export default {
         }
         console.log(res)
         this.checkOrderData = res.debug
-        if (this.items !== this.checkOrderData.length){
+        if (this.items !== this.checkOrderData.length) {
           if (!isInitCart) {
-            this.$tools.message('已过滤掉无效订单，请重新确认购买');
+            this.$tools.message(this.$t('messageTip.ReconfirmPurchase'));
           }
           if (this.checkOrderData.length < 1) {
             removeLocalStorage([this.cartName])
@@ -376,7 +364,7 @@ export default {
         await this.buyNft()
       }
     },
-    async manyBuy() {
+    async manyBuy () {
       let sellers = []
       this.checkOrderData.forEach(item => {
         item.basePrice = item.basePrice.toString()
@@ -426,13 +414,13 @@ export default {
         const atomicMatchWrap = await this.$sdk._atomicMatchWrap(buyers, sellers, this.user.coinbase, this.totalPrice)
         console.log(atomicMatchWrap)
         // const atomicMatchWrap = await this.$sdk._atomicMatchWrap(buyers, sellers, this.user.coinbase, this.totalPrice)
-        if (typeof atomicMatchWrap === 'object' && atomicMatchWrap.error)  {
+        if (typeof atomicMatchWrap === 'object' && atomicMatchWrap.error) {
           this.buyBtnLoading = false
           this.$tools.message(atomicMatchWrap.error, 'error');
         } else {
           removeLocalStorage([this.cartName])
           this.buyBtnLoading = false
-          this.$tools.message('购买成功', 'success');
+          this.$tools.message(this.$t('messageTip.PurchaseComplete'), 'success');
           let batchFinish = []
           sellers.forEach((item => {
             batchFinish.push({
@@ -510,8 +498,8 @@ export default {
         console.log(JSON.stringify(buyer), JSON.stringify(seller))
         console.log('orderCanMatch', await this.$sdk.orderCanMatch(buyer, seller))
         console.log('orderCalldataCanMatch', await this.$sdk.orderCalldataCanMatch(buyer, seller))
-        console.log('buy validateOrder_',await this.$sdk.validateOrder_(buyer))
-        console.log('sell validateOrder_',await this.$sdk.validateOrder_(seller))
+        console.log('buy validateOrder_', await this.$sdk.validateOrder_(buyer))
+        console.log('sell validateOrder_', await this.$sdk.validateOrder_(seller))
         const hashAtomicMatch = await this.$sdk.atomicMatch(seller, buyer, this.user.coinbase, this.user.coinbase);
         console.log(hashAtomicMatch)
         if (typeof hashAtomicMatch === 'object' && hashAtomicMatch.error) {
@@ -535,7 +523,7 @@ export default {
     async cartBuyOpensea () {
       // isOrderFulfillable
       console.log(this.openseaCart)
-      this.buyOpenseaBtnLoading= true
+      this.buyOpenseaBtnLoading = true
       try {
         const openseaSDK = await this.$sdk.initOpenSea()
         console.log(openseaSDK)
@@ -543,9 +531,9 @@ export default {
         //   const isOrder = await openseaSDK.isOrderFulfillable(this.openseaCart[i])
         //   console.log(isOrder)
         // }
-        this.buyOpenseaBtnLoading= false
+        this.buyOpenseaBtnLoading = false
         const transactionHash = await openseaSDK.fulfillOrder({
-          order:this.openseaCart[0],
+          order: this.openseaCart[0],
           accountAddress: this.user.coinbase
         })
         // this.$tools.message('购买成功', 'success');
@@ -554,7 +542,7 @@ export default {
       } catch (e) {
         console.log(e)
         this.$tools.message(this.$filters.filterMsgOpenseaErr(e), 'warning');
-        this.buyOpenseaBtnLoading= false
+        this.buyOpenseaBtnLoading = false
       }
     }
   },
@@ -562,22 +550,22 @@ export default {
 </script>
 
 <style lang="scss">
-  .el-popper{
-    .price-value {
-      font-weight: 500;
-      font-size: 14px;
-      line-height: 21px;
-      color: $primaryColor;
+.el-popper {
+  .price-value {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 21px;
+    color: $primaryColor;
 
-      .token-icon {
-        display: inline-block;
-        width: 10px;
-        height: 16px;
-        margin-right: 8px;
-        vertical-align: text-bottom;
-      }
+    .token-icon {
+      display: inline-block;
+      width: 10px;
+      height: 16px;
+      margin-right: 8px;
+      vertical-align: text-bottom;
     }
   }
+}
 .coresky-drawer {
   width: 406px;
   height: calc(100% - $headerHeight) !important;
@@ -667,7 +655,7 @@ export default {
             font-size: 12px;
             line-height: 18px;
             color: $color-black3;
-            .tag{
+            .tag {
               margin-left: 5px;
               display: block;
               width: 16px;

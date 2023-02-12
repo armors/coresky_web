@@ -32,23 +32,23 @@
       </div>
       <div class="info-val">
         <div class="item">
-          <span class="lable">Items:</span>
+          <span class="lable">{{ $t('collection.items') }}:</span>
           <span class="value">{{$filters.milliFormat(collectInfo.total)}}</span>
         </div>
         <div class="item">
-          <span class="lable">Created:</span>
+          <span class="lable">{{ $t('collection.created') }}:</span>
           <span class="value">{{$filters.timeToUTC(collectInfo.deployTime)}}</span>
         </div>
         <div class="item">
-          <span class="lable">Creator fee:</span>
+          <span class="lable">{{ $t('collection.creatorFee') }}:</span>
           <span class="value">{{$filters.feeFormat(collectInfo.royalty)}}</span>
         </div>
         <div class="item">
-          <span class="lable">Chain:</span>
+          <span class="lable">{{ $t('collection.chain') }}:</span>
           <span class="value">Ethereum</span>
         </div>
         <div class="item">
-          <span class="lable">Contract ADD:</span>
+          <span class="lable">{{ $t('collection.contractADD') }}:</span>
           <span class="value">{{$filters.ellipsisAddress(collectInfo.contract)}}</span>
           <el-icon v-clipboard:copy="collectInfo.contract" v-clipboard:success="onSuccessCopy"
             v-clipboard:error="onErrorCopy">
@@ -59,7 +59,7 @@
       <div class="info-rem">{{collectInfo.info}}</div>
       <div class="info-card">
         <div class="item">
-          <div class="lable">Floor Price</div>
+          <div class="lable">{{ $t('collection.floorPrice') }}</div>
           <div class="value">
             <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
             <span>{{$filters.keepMaxPoint(collectInfo.foolPrice)}}</span>
@@ -70,7 +70,7 @@
           </div>
         </div>
         <div class="item">
-          <div class="lable">Best Offer</div>
+          <div class="lable">{{ $t('collection.bestOffer') }}</div>
           <div class="value">
             <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
             <span>{{$filters.keepMaxPoint(collectInfo.bestPriceFrom)}}</span>
@@ -81,7 +81,7 @@
           </div>
         </div>
         <div class="item">
-          <div class="lable">24h Volume</div>
+          <div class="lable">{{ $t('collection.hrVolume') }}</div>
           <div class="value">
             <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
             <span>{{$filters.keepMaxPoint(collectInfo.dayVol)}}</span>
@@ -92,7 +92,7 @@
           </div>
         </div>
         <div class="item">
-          <div class="lable">Total Volume</div>
+          <div class="lable">{{ $t('collection.totalVolume') }}</div>
           <div class="value">
             <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
             <span>{{$filters.keepMaxPoint(collectInfo.volume)}}</span>
@@ -103,7 +103,7 @@
           </div>
         </div>
         <div class="item">
-          <div class="lable">Owers</div>
+          <div class="lable">{{ $t('collection.owers') }}</div>
           <div class="value">
             <span>{{$filters.milliFormat(collectInfo.holder)}}</span>
           </div>
@@ -113,7 +113,7 @@
           </div>
         </div>
         <div class="item">
-          <div class="lable">Items</div>
+          <div class="lable">{{ $t('collection.items') }}</div>
           <div class="value">
             <span>{{$filters.milliFormat(collectInfo.total)}}</span>
           </div>
@@ -125,7 +125,7 @@
       </div>
       <div class="tab-box-self">
         <el-tabs v-model="activeName">
-          <el-tab-pane label="Collected" name="collected" >
+          <el-tab-pane label="NFT" name="collected">
             <collectionNFT :contract="contract" />
           </el-tab-pane>
           <!-- <el-tab-pane label="Transaction dynamics" name="transaction" :lazy="true" :disabled="true">
@@ -135,9 +135,9 @@
 						Data analysis
 					</el-tab-pane> -->
         </el-tabs>
-<!--        <div class="btn-box">-->
-<!--          <el-button class="btnWhite"  @click="showMakeOfferCollect">Make Offer Collect</el-button>-->
-<!--        </div>-->
+        <!--        <div class="btn-box">-->
+        <!--          <el-button class="btnWhite"  @click="showMakeOfferCollect">Make Offer Collect</el-button>-->
+        <!--        </div>-->
       </div>
     </div>
     <NFTDialogMakeOffer ref="NFTDialogMakeOffer" @makeOfferSuccess="makeOfferSuccess"></NFTDialogMakeOffer>
@@ -483,7 +483,7 @@ export default {
       height: 4px;
     }
   }
-  .tab-box-self{
+  .tab-box-self {
     position: relative;
     .btn-box {
       top: -16px;
@@ -513,7 +513,7 @@ export default {
       }
     }
 
-    .btnWhite{
+    .btnWhite {
     }
   }
 }
