@@ -11,6 +11,7 @@ export default {
   notice_unread: 0,
   ethPrice: 0,
   useAuthorization: undefined,
+  useAuthorizationTime: '0',
   message: {
     total: 0,
     unread: 0,

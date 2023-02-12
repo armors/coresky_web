@@ -264,10 +264,25 @@ export default {
       }
       commit("WEB3", result);
       commit("CONNECT", result);
+      commit("initShoppingCart");
       let data = {
         coinbase: result.coinbase,
         networkId: result.networkId,
       };
+      var itemsLo = getLocalStorage(state.useAuthorizationTime);
+      console.log(itemsLo)
+      if (!itemsLo[state.useAuthorizationTime] || itemsLo[state.useAuthorizationTime] === 'undefined' || itemsLo[state.useAuthorizationTime] === undefined) {
+        removeLocalStorage(state.useAuthorization);
+        removeLocalStorage(state.useAuthorizationTime);
+      } else {
+        console.log(new Date().getTime(), parseFloat(itemsLo[state.useAuthorizationTime]))
+        console.log((new Date().getTime() - parseFloat(itemsLo[state.useAuthorizationTime])))
+        console.log((new Date().getTime() - parseFloat(itemsLo[state.useAuthorizationTime])) > 24 * 60 * 60 * 1000)
+        if ((new Date().getTime() - parseFloat(itemsLo[state.useAuthorizationTime])) > 24 * 60 * 60 * 1000) {
+          removeLocalStorage(state.useAuthorization);
+          removeLocalStorage(state.useAuthorizationTime);
+        }
+      }
       var items = getLocalStorage(state.useAuthorization);
       console.log('items.'+ state.useAuthorization, items[state.useAuthorization])
       const ethPrice = await sdk.getEthPrice()

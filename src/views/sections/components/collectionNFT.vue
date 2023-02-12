@@ -23,7 +23,7 @@
         <div class="flex">
           <span class="left">Price</span>
           <span class="right" @click="isOpenPriceFilter=!isOpenPriceFilter">
-            <el-icon style="font-size:16px">
+            <el-icon style="font-size:16px" :class="{'down': isOpenPriceFilter}">
               <ArrowUp />
             </el-icon>
           </span>
@@ -34,11 +34,27 @@
             <el-option value="ETH">ETH</el-option>
           </el-select>
           <div class="price-range" style="margin-top:15px">
-            <el-input type="number" class="input-number" :controls="false" v-model="queryParams.minPrice"
-              :placeholder="$t('home.minPlaceholder')" />
+            <el-input-number
+              v-model="queryParams.minPrice"
+              :placeholder="$t('home.minPlaceholder')"
+              :controls="false"
+              :precision="4"
+              :min="0.0001"
+              :max="100000000000000"
+              class="input-number"/>
+<!--            <el-input type="number" class="input-number" :controls="false" v-model="queryParams.minPrice"-->
+<!--              :placeholder="$t('home.minPlaceholder')" />-->
             <div class="line"></div>
-            <el-input type="number" class="input-number" :controls="false" v-model="queryParams.maxPrice"
-              :placeholder="$t('home.maxPlaceholder')" />
+<!--            <el-input type="number" class="input-number" :controls="false" v-model="queryParams.maxPrice"-->
+<!--              :placeholder="$t('home.maxPlaceholder')" />-->
+            <el-input-number
+              v-model="queryParams.maxPrice"
+              :placeholder="$t('home.maxPlaceholder')"
+              :controls="false"
+              :precision="4"
+              :min="0.0001"
+              :max="100000000000000"
+              class="input-number"/>
           </div>
           <div class="btn-apply" @click="searchClick">Application</div>
         </template>
@@ -46,13 +62,14 @@
       <div class="filter-item">
         <div class="flex">
           <span class="left">Attributes</span>
-          <span class="right">
-            <el-icon style="font-size:16px">
+          <span class="right" @click="isOpenAttrFilter = !isOpenAttrFilter">
+            <el-icon style="font-size:16px" :class="{'down': isOpenAttrFilter}">
+<!--            <el-icon style="font-size:16px">-->
               <ArrowUp />
             </el-icon>
           </span>
         </div>
-        <div class="gruop-wrap">
+        <div class="gruop-wrap" v-if="isOpenAttrFilter">
           <div class="type-item" v-for="(item,index) in attrList" :key="index">
             <div class="type-head">
               <span class="type-name">{{item.attrNm}}</span>
@@ -167,12 +184,13 @@ export default {
         limit: 20,
         keyword: "",
         buyNow: false,
-        minPrice: '',
-        maxPrice: '',
+        minPrice: undefined,
+        maxPrice: undefined,
         order: 1,
       },
       showFilterBox: true,
       isOpenPriceFilter: true,
+      isOpenAttrFilter: true,
       isOpenSearchCollection: true,
       viewType: 1,
       listCount: 0,

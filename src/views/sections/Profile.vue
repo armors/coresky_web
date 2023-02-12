@@ -133,7 +133,7 @@
 				personalUrl: "",
 				submitBtnLoading: false,
 				headers: {
-					token: `${window.localStorage.getItem(`Coresky${this.user.coinbase}Authorization`) || ''}`
+					token: ''
 				},
 				backgroundImage: '',
 				// uploadUrl: process.env.VUE_APP_API_URL,
@@ -163,7 +163,7 @@
 			this.getUserInfo()
 		},
 		computed: {
-			user: function () {
+			user () {
 				return this.$store.state.user;
 			},
 		},

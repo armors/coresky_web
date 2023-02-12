@@ -27,7 +27,7 @@
                       <span class="attr-num">{{$filters.milliFormat(v.count)}}({{v.percent}}%)</span>
                       <div class="attr-price">
                         <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-                        <span class="value">{{v.price}}</span>
+                        <span class="value">{{nftPriceFun(v.price)}}</span>
                       </div>
                     </div>
                   </div>
@@ -79,7 +79,7 @@
                         <template #content> The creator of this collection will receive a certain <br> percentage of
                           amout for every sale. </template>
                         <div class="display-flex box-center-Y">
-                          <div>{{config.protocolFeeHan}}</div>
+                          <div>{{$filters.feeFormat(tokenInfo.ckCollectionsInfoEntity.royalty)}}</div>
                           <div class="tip-icon"><img src="../../assets/images/icons/icon_tip_black.svg" alt=""></div>
                         </div>
                       </el-tooltip>
@@ -115,7 +115,7 @@
 <!--            </div>-->
             <div>
               <div class="creator">Current owner</div>
-              <router-link :to="`/account/${tokenInfo.address}`" tag="div" class="creator-name">{{$filters.ellipsisAddress(tokenInfo.address)}}</router-link>
+              <router-link :to="`/account/${(tokenInfo.ownersEntityList !== null && tokenInfo.ownersEntityList.length > 0) ? tokenInfo.ownersEntityList[0].address : ''}`" tag="div" class="creator-name">{{$filters.ellipsisAddress((tokenInfo.ownersEntityList !== null && tokenInfo.ownersEntityList.length > 0) ? tokenInfo.ownersEntityList[0].address : '')}}</router-link>
             </div>
           </div>
           <div class="display-flex box-center-Y erc1155 nft-address" v-if="tokenInfo.contractType === 1">
@@ -137,7 +137,7 @@
             </div>
           </div>
           <div class="nft-bid-box">
-            <div class="box-flex">
+            <div class="box-flex" v-if="!(ckAuctionEntityList.length < 1 && ckAuctionEntityList.length < 1)">
               <div class="box-left">
                 <div>Current Price</div>
                 <div class="row">
@@ -157,16 +157,27 @@
                 <div class="row-item">
                   <img class="icon" src="@/assets/images/icons/icon_frame.svg" alt="">
                   <span>Best offer</span>
-                  <span class="item-value">
+                  <span class="item-value ellipsis" v-if="ckAuctionEntityList.length > 0">
                     <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-                    {{bestPrice}}
+                    <el-popover
+                      placement="top-start"
+                      title=""
+                      :width="200"
+                      trigger="hover"
+                      :content="bestPrice"
+                    >
+                    <template #reference>
+                      {{bestPrice}}
+                    </template>
+                  </el-popover>
                   </span>
+                  <span class="item-value" v-else>--</span>
                 </div>
               </div>
             </div>
             <div class="btn-box display-flex box-center-Y">
               <template v-if="isSelf">
-                <el-button type="primary" class="btnBuy" :loading="sellDialogBtnLoading" @click="showSellNft">Sell Now</el-button>
+                <el-button type="primary" :disabled="youSellAmount === youOwnAmount || (isSellCoresky === true && isSellOpensea === true)" class="btnBuy" :loading="sellDialogBtnLoading" @click="showSellNft">Sell Now</el-button>
 <!--                <el-button type="primary" class="btnBuy" v-if="!tokenInfo.state || tokenInfo.contractType === 1"-->
 <!--                  :loading="sellDialogBtnLoading" @click="showSellNft">Sell Now</el-button>-->
 <!--                <el-button type="primary" class="btnBuy" v-if="tokenInfo.contractType === 0 && ckOrdersEntityList.length > 0" :loading="cancelBtnLoading"-->
@@ -188,25 +199,6 @@
 <!--                :disabled="!tokenInfo.contract" @click="showMakeOfferCollect">Make Offer Collect</el-button>-->
             </div>
           </div>
-        </div>
-        <div class="card-wrap mt30">
-          <el-collapse v-model="activeName2" accordion>
-            <el-collapse-item title="Consistency" name="1">
-              <template #title>
-                <div class="card-head">
-                  <img class="icon" src="@/assets/images/icons/icon_pricehistory.svg" alt="">
-                  <span class="card-title">Price History</span>
-                  <!--                  <el-icon>-->
-                  <!--                    <ArrowUp />-->
-                  <!--                  </el-icon>-->
-                </div>
-              </template>
-              <div class="card-body price-history" style="height:177px">
-                <div id="priceHistory"></div>
-              </div>
-            </el-collapse-item>
-          </el-collapse>
-
         </div>
 <!--        <div class="card-wrap mt30" v-if="tokenInfo.contractType === 1">-->
         <div class="card-wrap mt30">
@@ -241,9 +233,19 @@
                       <div class="list-th th25">
                         <svg-icon class="platform-logo" icon-class="logo"/>
                       </div>
-                      <div class="list-th th25">
+                      <div class="list-th th25 ellipsis">
                         <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-                        {{nftPriceFun(v.basePrice)}}
+                        <el-popover
+                          placement="top-start"
+                          title=""
+                          :width="200"
+                          trigger="hover"
+                          :content="nftPriceFun(v.basePrice)"
+                        >
+                          <template #reference>
+                            {{nftPriceFun(v.basePrice)}}
+                          </template>
+                        </el-popover>
                       </div>
                       <div class="list-th th25" v-if="tokenInfo.contractType === 1">{{$filters.milliFormat(v.amount)}}</div>
                       <div class="list-th th25" :class="isExpired(v.expirationTime) ? 'expired' : ''">{{$filters.timeFormatTime(v.expirationTime)}}</div>
@@ -264,9 +266,19 @@
                       <div class="list-th th25">
                         <svg-icon class="platform-logo" icon-class="os-logo"/>
                       </div>
-                      <div class="list-th th25">
+                      <div class="list-th th25 ellipsis">
                         <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-                        {{nftPriceFun(v.currentPrice)}}
+                        <el-popover
+                          placement="top-start"
+                          title=""
+                          :width="200"
+                          trigger="hover"
+                          :content="nftPriceFun(v.currentPrice)"
+                        >
+                          <template #reference>
+                              {{nftPriceFun(v.currentPrice)}}
+                          </template>
+                        </el-popover>
                       </div>
                       <div class="list-th th25" v-if="tokenInfo.contractType === 1">{{$filters.milliFormat(v.protocolData.parameters.offer[0].startAmount)}}</div>
                       <div class="list-th th25" :class="isExpired(v.expirationTime) ? 'expired' : ''">{{$filters.timeFormatTime(v.expirationTime)}}</div>
@@ -330,9 +342,19 @@
                       <div class="list-th th25">
                         <svg-icon class="platform-logo" icon-class="logo"/>
                       </div>
-                      <div class="list-th th25">
+                      <div class="list-th th25 ellipsis">
                         <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-                        {{nftPriceFun(v.basePrice)}}
+                        <el-popover
+                          placement="top-start"
+                          title=""
+                          :width="200"
+                          trigger="hover"
+                          :content="nftPriceFun(v.basePrice)"
+                        >
+                          <template #reference>
+                            {{nftPriceFun(v.basePrice)}}
+                          </template>
+                        </el-popover>
                       </div>
                       <div class="list-th th25" v-if="tokenInfo.contractType === 1">{{$filters.milliFormat(v.amount)}}</div>
                       <div class="list-th th25" :class="isExpired(v.expirationTime) ? 'expired' : ''">{{$filters.timeFormatTime(v.expirationTime)}}</div>
@@ -349,9 +371,19 @@
                       <div class="list-th th25">
                         <svg-icon class="platform-logo" icon-class="os-logo"/>
                       </div>
-                      <div class="list-th th25">
+                      <div class="list-th th25 ellipsis">
                         <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-                        {{nftPriceFun(v.currentPrice)}}
+                        <el-popover
+                          placement="top-start"
+                          title=""
+                          :width="200"
+                          trigger="hover"
+                          :content="nftPriceFun(v.currentPrice)"
+                        >
+                          <template #reference>
+                            {{nftPriceFun(v.currentPrice)}}
+                          </template>
+                        </el-popover>
                       </div>
                       <div class="list-th th25" v-if="tokenInfo.contractType === 1">{{$filters.milliFormat(v.protocolData.parameters.consideration[0].startAmount)}}</div>
                       <div class="list-th th25" :class="isExpired(v.expirationTime) ? 'expired' : ''">{{$filters.timeFormatTime(v.expirationTime)}}</div>
@@ -369,6 +401,25 @@
               </div>
             </el-collapse-item>
           </el-collapse>
+        </div>
+        <div class="card-wrap mt30">
+          <el-collapse v-model="activeName2" accordion>
+            <el-collapse-item title="Consistency" name="1">
+              <template #title>
+                <div class="card-head">
+                  <img class="icon" src="@/assets/images/icons/icon_pricehistory.svg" alt="">
+                  <span class="card-title">Price History</span>
+                  <!--                  <el-icon>-->
+                  <!--                    <ArrowUp />-->
+                  <!--                  </el-icon>-->
+                </div>
+              </template>
+              <div class="card-body price-history" style="height:177px">
+                <div id="priceHistory"></div>
+              </div>
+            </el-collapse-item>
+          </el-collapse>
+
         </div>
       </div>
     </div>
@@ -490,6 +541,9 @@ export default {
         }
       ],
       youOwnAmount: '--',
+      youSellAmount: 0,
+      isSellCoresky: false,
+      isSellOpensea: false,
       tokenInfo: {
         contract: '',
         tokenId: '',
@@ -926,6 +980,8 @@ export default {
       return data.sort(compare())
     },
     getTokenInfo () {
+      this.isSellCoresky = false
+      this.isSellOpensea = false
       this.$api("collect.tokenInfo", this.tokenInfoParams).then(async (res) => {
         this.tokenInfo = res.debug
         this.nftPrice = this.nftPriceFun(this.tokenInfo.basePrice)
@@ -937,19 +993,29 @@ export default {
         this.bestPrice = this.nftPriceFun(this.tokenInfo.bestPrice)
         this.historyPrice = this.tokenInfo.historyPrice
         this.initPriceHistory()
-
         let offer = res.debug.ckAuctionEntityList || []
         let listed = res.debug.ckOrdersEntityList || []
         offer = offer.map(item => {
           item.source = "coresky"
           return item
         })
-        listed = listed.map(item => {
-          item.source = "coresky"
-          return item
-        })
+        this.youSellAmount = 0
+        if (listed.length > 0) {
+          listed = listed.filter(item => item.expirationTime > (new Date().getTime() / 1000))
+          listed = listed.map(item => {
+            item.source = "coresky"
+            if (this.tokenInfo.contractType === 1) {
+              this.youSellAmount += item.amount
+            }
+            return item
+          })
+        }
+        this.isSellCoresky =listed.length > 0
+
         this.ckAuctionEntityList = this.sortOrdersAndOffer(offer)
         this.ckOrdersEntityList = this.sortOrdersAndOffer(listed, true)
+        this.bestPrice = this.ckAuctionEntityList.length > 0 ? this.nftPriceFun(this.ckAuctionEntityList[0].basePrice) : '--'
+        this.nftPrice = this.ckOrdersEntityList.length > 0 ? this.nftPriceFun(this.ckOrdersEntityList[0].basePrice) : '--'
         await this.getOrdersAndOffers()
         if (this.ckOrdersEntityList.length > 0) {
           this.countDown()
@@ -958,16 +1024,32 @@ export default {
       })
     },
     async getOrdersAndOffers () {
-        const openseaListed = await this.$sdk.getOrdersOpensea(this.asset)
+
+      const openseaListed = await this.$sdk.getOrdersOpensea(this.asset, this.tokenInfo.contractType)
         if (openseaListed.code === 200) {
+          if (this.tokenInfo.contractType === 1) {
+            this.youSellAmount += openseaListed.sellAmount
+          }
+          this.isSellOpensea = openseaListed.data.length > 0
           this.ckOrdersEntityList = [...this.ckOrdersEntityList, ...openseaListed.data]
           this.ckOrdersEntityList = this.sortOrdersAndOffer(this.ckOrdersEntityList, true)
+          console.log(this.ckOrdersEntityList)
+          if (openseaListed.data.length > 0) {
+            this.nftPrice = this.nftPriceFun(this.ckOrdersEntityList[0].source === 'opensea' ? this.ckOrdersEntityList[0].currentPrice : this.ckOrdersEntityList[0].basePrice)
+          }
+          console.log(this.nftPrice)
+        } else {
+          this.isSellOpensea = false
         }
         await this.$sdk._sleep(2000)
         const openseaOffers = await this.$sdk.getOffersOpensea(this.asset)
         if (openseaOffers.code === 200) {
           this.ckAuctionEntityList = [...this.ckAuctionEntityList, ...openseaOffers.data]
           this.ckAuctionEntityList = this.sortOrdersAndOffer(this.ckAuctionEntityList)
+          console.log('openseaOffers.data', openseaOffers.data)
+          if (openseaOffers.data.length > 0) {
+            this.bestPrice = this.nftPriceFun(this.ckAuctionEntityList[0].source === 'opensea' ? this.ckAuctionEntityList[0].currentPrice : this.ckOrdersEntityList[0].basePrice)
+          }
         }
         console.log(this.ckAuctionEntityList, this.ckOrdersEntityList)
     },
@@ -981,6 +1063,9 @@ export default {
             tokenEventType.push(item.typeUp)
           }
         })
+        this.tokenEventList.sort((function (a, b) {
+          return b.createTime - a.createTime
+        }))
         this.tokenEventType = tokenEventType
         this.checkList = tokenEventType
         this.tokenEventListOrigin = this.tokenEventList
@@ -1361,6 +1446,7 @@ export default {
             font-weight: 700;
             font-size: 14px;
             color: $primaryColor;
+            width: 160px;
             .token-icon {
               width: 10px;
               height: 16px;
@@ -1532,6 +1618,7 @@ export default {
       }
       .list-th {
         cursor: pointer;
+        padding-right: 8px;
         .event-icon {
           width: 24px;
           height: 24px;

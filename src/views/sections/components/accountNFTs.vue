@@ -34,11 +34,11 @@
             <el-option value="ETH">ETH</el-option>
           </el-select>
           <div class="price-range" style="margin-top:15px">
-            <el-input type="number" class="input-number" :controls="false" v-model="queryParams.minPrice"
-              :placeholder="$t('common.Min')" />
+            <el-input-number v-model="queryParams.minPrice" :placeholder="$t('common.Min')" :controls="false"
+              :precision="4" :min="0.0001" :max="100000000000000" class="input-number" />
             <div class="line"></div>
-            <el-input type="number" class="input-number" :controls="false" v-model="queryParams.maxPrice"
-              :placeholder="$t('common.Max')" />
+            <el-input-number v-model="queryParams.maxPrice" :placeholder="$t('home.common')" :controls="false"
+              :precision="4" :min="0.0001" :max="100000000000000" class="input-number" />
           </div>
           <div class="btn-apply" @click="searchClick">{{$t('common.Confirm')  }}</div>
         </template>
@@ -118,9 +118,10 @@
                 <div class="nft-txt">
                   {{item.name?item.name:('#'+item.tokenId)}}
                 </div>
-                <div class="nft-price" v-if="item.basePrice">
+                <div class="nft-price"
+                  v-if="item && item.ckOrdersEntityList !== null && item.ckOrdersEntityList.length > 0">
                   <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="">
-                  <span class="price">{{!!item.basePrice?nftPrice(item.basePrice):'-- '}} ETH</span>
+                  <span class="price">{{nftPrice(item.ckOrdersEntityList[0].basePrice)}} ETH</span>
                 </div>
               </div>
             </div>
@@ -163,8 +164,8 @@ export default {
         limit: 20,
         keyword: '',
         contract: '',
-        minPrice: '',
-        maxPrice: '',
+        minPrice: undefined,
+        maxPrice: undefined,
         order: 1,
         address: ''
       },

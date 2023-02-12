@@ -10,7 +10,7 @@
       </el-icon>
     </template>
     <div class="nft-box">
-      <image-box class="img-box" :src="tokenInfo.oriImage"></image-box>
+      <image-box class="img-box" :src="makeOfferType === 1 ? tokenInfo.oriImage : tokenInfo.image"></image-box>
       <div class="box-center">
         <span class="tokenid">#{{tokenInfo.tokenId}}</span>
         <span class="collection-name">{{tokenInfo.name || '--'}}
@@ -21,7 +21,7 @@
     <el-form label-position="top" class="custom-form" :rules="rules" :model="form" style="margin-top:40px">
       <el-form-item label="Price" prop="price">
         <div class="flex-content">
-          <el-input v-model="form.price" size="large" style="width:100%;" />
+          <el-input-number v-model="form.price" :controls="false" :precision="4" :min="0.0001" :max="100000000000000" size="large" style="width:100%;text-align: left" />
           <el-select v-model="form.symbol" size="large" class="ml20" placeholder="Select"
             style="width:180px;flex-shrink: 0;">
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
@@ -44,23 +44,23 @@
           </el-select>
         </div>
       </el-form-item>
-      <el-form-item label="Fee and coupons">
-        <div class="describe-box">
-          <div class="describe-item">
-            <span class="lable">Coeesky service fee: </span>
-            <span class="value">{{serviceFee}}</span>
-          </div>
-          <div class="describe-item mt15">
-            <span class="lable">coupon rewards:</span>
-            <div class="value">
-              <p>
-                1 coupon / 0.5 ETH
-              </p>
-              <p>1 coupon / listing / day</p>
-            </div>
-          </div>
-        </div>
-      </el-form-item>
+<!--      <el-form-item label="Fee and coupons">-->
+<!--        <div class="describe-box">-->
+<!--          <div class="describe-item">-->
+<!--            <span class="lable">Coeesky service fee: </span>-->
+<!--            <span class="value">{{serviceFee}}</span>-->
+<!--          </div>-->
+<!--          <div class="describe-item mt15">-->
+<!--            <span class="lable">coupon rewards:</span>-->
+<!--            <div class="value">-->
+<!--              <p>-->
+<!--                1 coupon / 0.5 ETH-->
+<!--              </p>-->
+<!--              <p>1 coupon / listing / day</p>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </el-form-item>-->
     </el-form>
     <el-button type="primary" class="btnBuy" :loading="btnMakeOfferLoading" @click="makerBuyer">Make Offer</el-button>
   </el-dialog>
@@ -77,7 +77,7 @@ export default {
       isShowMakeOfferDialog: false,
       btnMakeOfferLoading: false,
       form: {
-        price: '',
+        price: undefined,
         date: '',
         time: '',
         symbol: 'WETH',
@@ -135,6 +135,13 @@ export default {
     },
     async showMakeOffer (tokenInfo, makeOfferType = 1) {
       this.tokenInfo = tokenInfo
+      this.form = {
+        price: undefined,
+        date: '',
+        time: '',
+        symbol: 'WETH',
+        quantity: ''
+      }
       this.rules = this.tokenInfo.contractType === 0 ? {
         price: [
           { required: true, message: 'Please input price', trigger: 'blur' },
@@ -162,9 +169,11 @@ export default {
         return
       }
       this.makeOfferType = makeOfferType
-      this.tokenInfo.tokenId = parseInt(this.tokenInfo.tokenId)
+      if (makeOfferType === 1) {
+        this.tokenInfo.tokenId = parseInt(this.tokenInfo.tokenId)
+      }
       this.isShowMakeOfferDialog = true
-      this.serviceFee = this.$filters.feeFormat(this.tokenInfo.ckCollectionsInfoEntity.royalty)
+      this.serviceFee = this.$filters.feeFormat(makeOfferType === 1 ? this.tokenInfo.ckCollectionsInfoEntity.royalty :this.tokenInfo.royalty)
       console.log(this.tokenInfo)
     },
     async makerBuyer () {
@@ -172,13 +181,13 @@ export default {
         this.$tools.message('请输入正确的价格');
         return
       }
-      const wethBalance = await this.$sdk.getBalance({
-        address: process.env.VUE_APP_WETH
-      }, this.user.coinbase)
-      if (new BigNumber(this.$sdk.fromWeiNum(wethBalance)).isLessThan(this.form.price)) {
-        this.$tools.message('No Enough Balance Of WETH');
-        return
-      }
+      // const wethBalance = await this.$sdk.getBalance({
+      //   address: process.env.VUE_APP_WETH
+      // }, this.user.coinbase)
+      // if (new BigNumber(this.$sdk.fromWeiNum(wethBalance)).isLessThan(this.form.price)) {
+      //   this.$tools.message('No Enough Balance Of WETH');
+      //   return
+      // }
       if (!this.form.time) {
         this.$tools.message('请选择过期时间');
         return
@@ -202,12 +211,12 @@ export default {
         buyer = this.$sdk.makeOrder({
           exchangeAddress: process.env.VUE_APP_MARKET_EXCHANGE,
           sender: this.user.coinbase,
-          nftAddress:  this.tokenInfo.contract,
+          nftAddress: this.tokenInfo.contract,
           side: 0,
           tokenId: 0,
           isMaker: true,
-          feeRecipient: this.tokenInfo.ckCollectionsInfoEntity.feeContract,
-          RelayerFee: this.tokenInfo.ckCollectionsInfoEntity.royalty,
+          feeRecipient: this.tokenInfo.feeContract,
+          RelayerFee: this.tokenInfo.royalty,
           feeType: 2,
           contractType: this.tokenInfo.contractType,
           value: Number(this.form.quantity)
@@ -224,7 +233,7 @@ export default {
           // expirationTime: 0,
           paymentToken: process.env.VUE_APP_WETH,
           listingTime: Date.parse(new Date().toString()) / 1000 - 600,
-          basePrice: this.$Web3.utils.toWei(this.form.price)
+          basePrice: this.$Web3.utils.toWei(this.form.price.toString())
         }
       }
       const sigBuyer = await this.$sdk.signature(buyer, this.user.coinbase)
@@ -364,6 +373,9 @@ export default {
   }
   .el-input__wrapper {
     border-radius: 12px;
+  }
+  .el-input-number .el-input__inner{
+    text-align: left;
   }
   .el-input__inner {
     padding: 0;

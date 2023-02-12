@@ -63,14 +63,14 @@
             </div>
           </div>
         </el-popover>
-        <div class="nav-link shopping-cart" @click="showShoppingCartDrawer=true">
+        <div class="nav-link shopping-cart" @click="showShoppingCartDrawer=true;showUserDrawer = false">
           <div class="notify-num" v-if="shoppingCartList&&shoppingCartList.length>0 || shoppingOpenseaCartList&&shoppingOpenseaCartList.length>0">{{ shoppingCartList.length + shoppingOpenseaCartList.length }}</div>
           <svg-icon class="head-icon" icon-class="gouwuche" />
         </div>
         <div class="head-connect display-flex box-center" v-if="!connected" @click="login">
           {{ $t("navigation.connectWallet") }}
         </div>
-        <div class="nav-link" @click="showUserDrawer=true" v-else>
+        <div class="nav-link" @click="showUserDrawer=true;showShoppingCartDrawer = false" v-else>
           <avatar class="avatar-img" :imageUrl="user.avatar || $filters.fullImageUrl(user.avatar)"
             :address="user.coinbase" :imgWidth="32" :imgHeight="32" shape="circular">
           </avatar>

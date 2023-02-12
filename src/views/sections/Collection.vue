@@ -37,11 +37,11 @@
         </div>
         <div class="item">
           <span class="lable">Created:</span>
-          <span class="value">{{$filters.timeToUTC(collectInfo.createTime)}}</span>
+          <span class="value">{{$filters.timeToUTC(collectInfo.deployTime)}}</span>
         </div>
         <div class="item">
           <span class="lable">Creator fee:</span>
-          <span class="value">10%</span>
+          <span class="value">{{$filters.feeFormat(collectInfo.royalty)}}</span>
         </div>
         <div class="item">
           <span class="lable">Chain:</span>
@@ -70,7 +70,7 @@
           </div>
         </div>
         <div class="item">
-          <div class="lable">Best Offier</div>
+          <div class="lable">Best Offer</div>
           <div class="value">
             <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
             <span>{{$filters.keepMaxPoint(collectInfo.bestPriceFrom)}}</span>
@@ -92,7 +92,7 @@
           </div>
         </div>
         <div class="item">
-          <div class="lable">total volume</div>
+          <div class="lable">Total Volume</div>
           <div class="value">
             <img class="token-icon" src="../../assets/images/icons/token/token_eth.svg" alt="" />
             <span>{{$filters.keepMaxPoint(collectInfo.volume)}}</span>
@@ -123,29 +123,35 @@
           </div>
         </div>
       </div>
-      <el-tabs v-model="activeName">
-        <el-tab-pane label="Collected" name="collected" >
-          <collectionNFT :contract="contract" />
-        </el-tab-pane>
-        <!-- <el-tab-pane label="Transaction dynamics" name="transaction" :lazy="true" :disabled="true">
-          Transaction dynamics
-        </el-tab-pane>
-        <el-tab-pane label="Data analysis" name="analysis" :lazy="true" :disabled="true">
-          Data analysis
-        </el-tab-pane> -->
-      </el-tabs>
-
+      <div class="tab-box-self">
+        <el-tabs v-model="activeName">
+          <el-tab-pane label="Collected" name="collected" >
+            <collectionNFT :contract="contract" />
+          </el-tab-pane>
+          <!-- <el-tab-pane label="Transaction dynamics" name="transaction" :lazy="true" :disabled="true">
+						Transaction dynamics
+					</el-tab-pane>
+					<el-tab-pane label="Data analysis" name="analysis" :lazy="true" :disabled="true">
+						Data analysis
+					</el-tab-pane> -->
+        </el-tabs>
+<!--        <div class="btn-box">-->
+<!--          <el-button class="btnWhite"  @click="showMakeOfferCollect">Make Offer Collect</el-button>-->
+<!--        </div>-->
+      </div>
     </div>
-
+    <NFTDialogMakeOffer ref="NFTDialogMakeOffer" @makeOfferSuccess="makeOfferSuccess"></NFTDialogMakeOffer>
   </div>
 </template>
 <script>
 import collectionNFT from './components/collectionNFT'
+import NFTDialogMakeOffer from '../../components/self/NFTDialogMakeOffer'
 
 export default {
   name: "Collection",
   components: {
     collectionNFT,
+    NFTDialogMakeOffer
   },
   mixins: [],
   data () {
@@ -267,6 +273,12 @@ export default {
   },
 
   methods: {
+    showMakeOfferCollect () {
+      this.$refs.NFTDialogMakeOffer.showMakeOffer(this.collectInfo, 2)
+    },
+    makeOfferSuccess (v) {
+      console.log(v)
+    },
     onSuccessCopy () {
       this.$tools.message(this.$t("request.copySuccess"), "success");
     },
@@ -469,6 +481,39 @@ export default {
     .el-tabs__active-bar {
       background-color: $bgPurple;
       height: 4px;
+    }
+  }
+  .tab-box-self{
+    position: relative;
+    .btn-box {
+      top: -16px;
+      position: absolute;
+      right: 0;
+      button {
+        width: 210px;
+        height: 48px;
+        padding: 10px 0;
+        border-radius: 12px;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        &.btnBuy {
+          color: $color-white;
+          background: $mainLiner;
+        }
+        &.btnBlack {
+          color: $color-white;
+          background: $primaryColor;
+        }
+        &.btnWhite {
+          color: $primaryColor;
+          background: $color-white;
+          border: 1px solid $primaryColor;
+        }
+      }
+    }
+
+    .btnWhite{
     }
   }
 }

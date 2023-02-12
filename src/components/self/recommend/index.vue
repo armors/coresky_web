@@ -16,6 +16,10 @@
 								<div>{{ v.name }}</div>
 								<div class="icon-tag"><img src="../../../assets/images/icons/icon_tag.svg" alt=""></div>
 							</div>
+							<div class="nft-price display-flex box-center-Y">
+								<div class="token-icon"><img class="" src="@/assets/images/icons/token/token_eth2.svg" alt=""></div>
+								<div class="price">{{$filters.milliFormat(parseFloat(v.price),false)}} ETH</div>
+							</div>
 						</div>
 					</div>
 				</el-carousel-item>
@@ -144,6 +148,23 @@
 						font-weight: 600;
 						font-size: 16px;
 						color: $color-white;
+					}
+					.nft-price{
+						position: absolute;
+						bottom: 6px;
+						left: 12px;
+						display: flex;
+						.token-icon {
+							width: 10px;
+							height: 15px;
+							margin-right: 5px;
+						}
+						.price {
+							font-weight: 700;
+							font-size: 14px;
+							line-height: 22px;
+							color: $color-white;
+						}
 					}
 					& + .recommend-item{
 						margin-left: 18px;

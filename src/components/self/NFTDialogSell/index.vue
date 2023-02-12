@@ -44,23 +44,23 @@
           </el-select>
         </div>
       </el-form-item>
-      <el-form-item label="Fee and coupons">
-        <div class="describe-box">
-          <div class="describe-item">
-            <span class="lable">Coeesky service fee: </span>
-            <span class="value">0.5%</span>
-          </div>
-          <div class="describe-item mt15">
-            <span class="lable">coupon rewards:</span>
-            <div class="value">
-              <p>
-                1 coupon / 0.5 ETH
-              </p>
-              <p>1 coupon / listing / day</p>
-            </div>
-          </div>
-        </div>
-      </el-form-item>
+<!--      <el-form-item label="Fee and coupons">-->
+<!--        <div class="describe-box">-->
+<!--          <div class="describe-item">-->
+<!--            <span class="lable">Coeesky service fee: </span>-->
+<!--            <span class="value">0.5%</span>-->
+<!--          </div>-->
+<!--          <div class="describe-item mt15">-->
+<!--            <span class="lable">coupon rewards:</span>-->
+<!--            <div class="value">-->
+<!--              <p>-->
+<!--                1 coupon / 0.5 ETH-->
+<!--              </p>-->
+<!--              <p>1 coupon / listing / day</p>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </el-form-item>-->
     </el-form>
     <el-button type="primary" class="btnBuy" :loading="sellBtnLoading" v-if="isApproved" @click="getExchangeHashOrder">
       Sell NFT</el-button>

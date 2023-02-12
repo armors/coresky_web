@@ -34,11 +34,11 @@
             <el-option value="ETH">ETH</el-option>
           </el-select>
           <div class="price-range" style="margin-top:15px">
-            <el-input type="number" class="input-number" :controls="false" v-model="queryParams.minPrice"
-              :placeholder="$t('common.Min')" />
+            <el-input-number v-model="queryParams.minPrice" :placeholder="$t('common.Min')" :controls="false"
+              :precision="4" :min="0.0001" :max="100000000000000" class="input-number" />
             <div class="line"></div>
-            <el-input type="number" class="input-number" :controls="false" v-model="queryParams.maxPrice"
-              :placeholder="$t('common.Max')" />
+            <el-input-number v-model="queryParams.maxPrice" :placeholder="$t('common.Max')" :controls="false"
+              :precision="4" :min="0.0001" :max="100000000000000" class="input-number" />
           </div>
           <div class="btn-apply" @click="searchClick">{{$t('common.Confirm')  }}</div>
         </template>
@@ -159,8 +159,8 @@ export default {
         limit: 20,
         keyword: "",
         buyNow: false,
-        minPrice: '',
-        maxPrice: '',
+        minPrice: undefined,
+        maxPrice: undefined,
         order: 1,
       },
       showFilterBox: true,

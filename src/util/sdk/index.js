@@ -69,7 +69,7 @@ export default {
 		return window.openseaSDK
 	},
 
-	async getOrdersOpensea (asset) {
+	async getOrdersOpensea (asset, contractType = 0) {
 		try {
 			const openseaSDK = await this.initOpenSea()
 			const {orders} = await openseaSDK.api.getOrders({
@@ -83,16 +83,23 @@ export default {
 			console.log(asset)
 			console.log(orders)
 			let orderN = []
+			let openseaSellamount = 0
 			for (let i = 0; i < orders.length; i++) {
-				orderN.push({
-					...orders[i],
-					...{
-						source: "opensea",
+				if (orders[i].expirationTime > (new Date().getTime() / 1000)) {
+					orderN.push({
+						...orders[i],
+						...{
+							source: "opensea",
+						}
+					})
+					if (contractType === 1) {
+						openseaSellamount += orders[i].protocolData.parameters.offer[0].startAmount
 					}
-				})
+				}
 			}
 			return {
 				data: orderN,
+				sellAmount: openseaSellamount,
 				code: 200
 			}
 		} catch (e) {

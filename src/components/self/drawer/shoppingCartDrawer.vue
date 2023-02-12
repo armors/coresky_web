@@ -45,10 +45,25 @@
               </div>
             </div>
             <div class="shopping-price">
-          <span class="price-value">
-            <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-            {{getNftPrice(vc, true)}}
-          </span>
+              <el-popover
+                placement="top-start"
+                title=""
+                :width="200"
+                trigger="hover"
+              >
+                <template #reference>
+                  <div class="price-value ellipsis">
+                    <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
+                    {{$filters.milliFormat(getNftPrice(vc, true))}}
+                  </div>
+                </template>
+                <template #default>
+                  <div class="price-value">
+                    <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
+                    {{$filters.milliFormat(getNftPrice(vc, true), false)}}
+                  </div>
+                </template>
+              </el-popover>
               <el-icon @click="deleteCart(v, vc.id)">
                 <Delete />
               </el-icon>
@@ -84,10 +99,26 @@
             </div>
           </div>
           <div class="shopping-price">
-          <span class="price-value">
-          <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-          {{nftPriceFun(v.currentPrice, true)}}
-        </span>
+
+            <el-popover
+              placement="top-start"
+              title=""
+              :width="200"
+              trigger="hover"
+            >
+              <template #reference>
+                <div class="price-value ellipsis">
+                  <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
+                  {{$filters.milliFormat(nftPriceFun(v.currentPrice, true))}}
+                </div>
+              </template>
+              <template #default>
+                <div class="price-value">
+                  <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
+                  {{$filters.milliFormat(nftPriceFun(v.currentPrice, true), false)}}
+                </div>
+              </template>
+            </el-popover>
             <el-icon @click="deleteCartOpensea(v)">
               <Delete />
             </el-icon>
@@ -211,7 +242,7 @@ export default {
       }
       this.$store.commit('initShoppingCart')
     },
-    getCartInfo () {
+    async getCartInfo (isCheckOrder) {
       this.totalPrice = 0
       this.totalPriceShow = 0
       const local = getLocalStorage(this.cartName)
@@ -229,40 +260,45 @@ export default {
           })
         })
         this.totalPrice = this.totalPrice.toString()
-        this.totalPriceShow = this.$filters.keepPoint(this.totalPrice)
+        this.totalPriceShow = parseFloat(this.$filters.keepPoint(this.totalPrice))
+        if (!isCheckOrder) {
+          await this.checkOrder(true)
+        }
       } else {
         this.coreskyCart = []
       }
-
       this.totalOpenseaPrice = 0
       this.totalOpenseaPriceShow = 0
-
       const localOpensea = getLocalStorage(this.cartNameOpensea)
       console.log(localOpensea[this.cartNameOpensea])
       let coresky_opensea_cart = localOpensea[this.cartNameOpensea]
+      coresky_opensea_cart = coresky_opensea_cart.filter(item=> item.expirationTime > (new Date().getTime()/ 1000))
       if (coresky_opensea_cart !== null) {
         this.openseaCart = JSON.parse(coresky_opensea_cart)
         this.openseaCart.forEach(item => {
           this.totalOpenseaPrice = new BigNumber(this.$sdk.fromWeiNumOrigin(item.currentPrice)).plus(new BigNumber(this.totalOpenseaPrice))
         })
         this.totalOpenseaPrice = this.totalOpenseaPrice.toString()
-        this.totalOpenseaPriceShow = this.$filters.keepPoint(this.totalOpenseaPrice)
+        this.totalOpenseaPriceShow = parseFloat(this.$filters.keepPoint(this.totalOpenseaPrice))
+        let obj = {}
+        obj[this.cartNameOpensea] = JSON.stringify(coresky_opensea_cart)
+        setLocalStorage(obj)
+        this.$store.commit('initShoppingCart')
       } else {
         this.openseaCart = []
       }
-
     },
     handleClose () {
       this.$emit('update:show', false)
     },
     getNftPrice(v, isShow=false) {
-      return isShow ? this.$filters.keepPoint(this.$Web3.utils.fromWei(v.basePrice.toString())) : this.$Web3.utils.fromWei(v.basePrice.toString())
+      return isShow ? parseFloat(this.$filters.keepPoint(this.$Web3.utils.fromWei(v.basePrice.toString()))) : this.$Web3.utils.fromWei(v.basePrice.toString())
     },
     nftPriceFun (basePrice) {
       console.log(basePrice)
       return (basePrice !== null && basePrice !== undefined) ? this.$filters.keepMaxPoint(this.$Web3.utils.fromWei(basePrice.toString())) : '--'
     },
-    async checkOrder () {
+    async checkOrder (isInitCart) {
       try {
         const res = await this.$api('order.check', {
           ids: this.ids
@@ -274,9 +310,11 @@ export default {
         console.log(res)
         this.checkOrderData = res.debug
         if (this.items !== this.checkOrderData.length){
-          this.$tools.message('已过滤掉无效订单，请重新确认购买');
+          if (!isInitCart) {
+            this.$tools.message('已过滤掉无效订单，请重新确认购买');
+          }
           if (this.checkOrderData.length < 1) {
-            this.clearCart()
+            removeLocalStorage([this.cartName])
           } else {
             const ids = []
             this.checkOrderData.forEach(item => {
@@ -298,7 +336,7 @@ export default {
             let obj = []
             obj[this.cartName] = JSON.stringify(coreskyCart)
             setLocalStorage(obj)
-            this.getCartInfo()
+            this.getCartInfo(true)
           }
           return {
             error: e.error,
@@ -392,7 +430,7 @@ export default {
           this.buyBtnLoading = false
           this.$tools.message(atomicMatchWrap.error, 'error');
         } else {
-          this.clearCart()
+          removeLocalStorage([this.cartName])
           this.buyBtnLoading = false
           this.$tools.message('购买成功', 'success');
           let batchFinish = []
@@ -482,7 +520,7 @@ export default {
         }
         this.$tools.message('购买成功', 'success');
         this.buyBtnLoading = false
-        this.clearCart()
+        removeLocalStorage([this.cartName])
         const res = await this.$api("order.finish", {
           "orderId": sellerToken.id,
           "txHash": hashAtomicMatch.transactionHash,
@@ -512,7 +550,7 @@ export default {
         })
         // this.$tools.message('购买成功', 'success');
         // this.buyOpenseaBtnLoading= false
-        // this.clearCart()
+        removeLocalStorage([this.cartNameOpensea])
       } catch (e) {
         console.log(e)
         this.$tools.message(this.$filters.filterMsgOpenseaErr(e), 'warning');
@@ -524,6 +562,22 @@ export default {
 </script>
 
 <style lang="scss">
+  .el-popper{
+    .price-value {
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 21px;
+      color: $primaryColor;
+
+      .token-icon {
+        display: inline-block;
+        width: 10px;
+        height: 16px;
+        margin-right: 8px;
+        vertical-align: text-bottom;
+      }
+    }
+  }
 .coresky-drawer {
   width: 406px;
   height: calc(100% - $headerHeight) !important;
@@ -635,6 +689,7 @@ export default {
         align-items: self-end;
         margin-right: 5px;
         .price-value {
+          width: 120px;
           font-weight: 500;
           font-size: 14px;
           line-height: 21px;
