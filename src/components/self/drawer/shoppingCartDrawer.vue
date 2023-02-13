@@ -531,7 +531,9 @@ export default {
         this.buyBtnLoading = false
         removeLocalStorage([this.cartName])
         let openseaCart = this.openseaCart
-        let hasOpensea = openseaCart.filter(v => !(v.makerAssetBundle.assets[0].tokenAddress === seller.target && v.makerAssetBundle.assets[0].tokenId === seller.tokenId))
+        console.log(seller, openseaCart)
+        let hasOpensea = openseaCart.filter(v => !(v.makerAssetBundle.assets[0].tokenAddress === sellerToken.contract && v.makerAssetBundle.assets[0].tokenId === sellerToken.tokenId))
+        console.log(hasOpensea)
         if (hasOpensea.length !== openseaCart.length) {
           openseaCart = hasOpensea
         }
