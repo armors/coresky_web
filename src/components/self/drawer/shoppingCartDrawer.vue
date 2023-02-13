@@ -31,10 +31,10 @@
             <div class="shopping-info">
               <image-box :src="v.oriImage"></image-box>
               <div class="info-txt">
-                <div class="txt1 ellipsis">{{v.ckCollectionsInfoEntity.name || '--'}}</div>
+                <div class="txt1 ellipsis">{{v.name || '--'}}</div>
                 <div class="txt2 display-flex box-center-Y">
-                  <div>ENS :Ethereum Na…</div>
-                  <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
+                  <div>{{v.ckCollectionsInfoEntity.name || '--'}}</div>
+                  <img class="tag" v-if="v.ckCollectionsInfoEntity.isCertification === '1'" src="@/assets/images/icons/icon_tag.svg" alt="">
                 </div>
 <!--                <div class="txt3">{{$t('shoppingCart.creatorFees')}} {{$filters.feeFormat(vc.makerRelayerFee)}}</div>-->
               </div>
@@ -81,11 +81,19 @@
           <div class="shopping-info">
             <image-box :src="v.makerAssetBundle.assets[0].imageUrl"></image-box>
             <div class="info-txt">
-              <div class="txt1 ellipsis">{{v.makerAssetBundle.assets[0].assetContract.name || '--'}}</div>
+              <div class="txt1 ellipsis">{{v.makerAssetBundle.assets[0].name || '--'}}</div>
               <div class="txt2 display-flex box-center-Y">
-                <div>ENS :Ethereum Na…</div>
+                <div>{{v.makerAssetBundle.assets[0].collection.name || '--'}}</div>
                 <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
               </div>
+
+<!--              <div class="txt1 ellipsis">{{v.name || '&#45;&#45;'}}</div>-->
+<!--              <div class="txt2 display-flex box-center-Y">-->
+<!--                <div>{{v.ckCollectionsInfoEntity.name || '&#45;&#45;'}}</div>-->
+<!--&lt;!&ndash;                <img class="tag" v-if="v.ckCollectionsInfoEntity.isCertification === '1'" src="@/assets/images/icons/icon_tag.svg" alt="">&ndash;&gt;-->
+<!--              </div>-->
+
+
 <!--              <div class="txt3">{{$t('shoppingCart.creatorFees')}}-->
 <!--                {{$filters.feeFormat(v.makerAssetBundle.assets[0].assetContract.openseaSellerFeeBasisPoints)}}</div>-->
             </div>
@@ -260,22 +268,22 @@ export default {
       const localOpensea = getLocalStorage(this.cartNameOpensea)
       console.log(localOpensea[this.cartNameOpensea])
       let coresky_opensea_cart = localOpensea[this.cartNameOpensea] || []
-      coresky_opensea_cart = coresky_opensea_cart.filter(item=> item.expirationTime > (new Date().getTime()/ 1000))
       if (coresky_opensea_cart !== null && coresky_opensea_cart.length > 0) {
         this.openseaCart = JSON.parse(coresky_opensea_cart)
+        this.openseaCart = this.openseaCart.filter(item=> item.expirationTime > (new Date().getTime()/ 1000))
         this.openseaCart.forEach(item => {
           this.totalOpenseaPrice = new BigNumber(this.$sdk.fromWeiNumOrigin(item.currentPrice)).plus(new BigNumber(this.totalOpenseaPrice))
         })
         this.totalOpenseaPrice = this.totalOpenseaPrice.toString()
         this.totalOpenseaPriceShow = parseFloat(this.$filters.keepPoint(this.totalOpenseaPrice))
         let obj = {}
-        obj[this.cartNameOpensea] = JSON.stringify(coresky_opensea_cart)
+        obj[this.cartNameOpensea] = JSON.stringify(this.openseaCart)
         setLocalStorage(obj)
         this.$store.commit('initShoppingCart')
       } else {
         this.openseaCart = []
+        this.$store.commit('initShoppingCart')
       }
-      this.$store.commit('initShoppingCart')
     },
     handleClose () {
       this.$emit('update:show', false)
@@ -425,13 +433,22 @@ export default {
           this.buyBtnLoading = false
           this.$tools.message(this.$t('messageTip.PurchaseComplete'), 'success');
           let batchFinish = []
+          let openseaCart = this.openseaCart
           sellers.forEach((item => {
+            let hasOpensea = openseaCart.filter(v => !(v.makerAssetBundle.assets[0].tokenAddress === item.contract && v.makerAssetBundle.assets[0].tokenId === item.tokenId))
+            if (hasOpensea.length !== openseaCart.length) {
+              openseaCart = hasOpensea
+            }
             batchFinish.push({
               "orderId": item.id,
               "txHash": atomicMatchWrap.transactionHash,
               "taker": item.maker,
             })
           }))
+          let obj = {}
+          obj[this.cartNameOpensea] = JSON.stringify(openseaCart)
+          setLocalStorage(obj)
+          this.$store.commit('initShoppingCart')
           const res = await this.$api("order.batchFinish", batchFinish)
           console.log(res)
         }
@@ -512,6 +529,14 @@ export default {
         this.$tools.message('购买成功', 'success');
         this.buyBtnLoading = false
         removeLocalStorage([this.cartName])
+        let openseaCart = this.openseaCart
+        let hasOpensea = openseaCart.filter(v => !(v.makerAssetBundle.assets[0].tokenAddress === seller.target && v.makerAssetBundle.assets[0].tokenId === item.tokenId))
+        if (hasOpensea.length !== openseaCart.length) {
+          openseaCart = hasOpensea
+        }
+        let obj = {}
+        obj[this.cartNameOpensea] = JSON.stringify(openseaCart)
+        setLocalStorage(obj)
         this.$store.commit('initShoppingCart')
         const res = await this.$api("order.finish", {
           "orderId": sellerToken.id,
