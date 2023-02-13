@@ -771,7 +771,7 @@ export default {
       let that = this;
       that.countDownFn = setInterval(() => {
         //  console.log(that.countDownFun(item.endTime))
-        if (that.countDownFun(that.countDownTime) === "倒计时结束") {
+        if (that.countDownFun(that.countDownTime) === "倒计时结束" || that.ckOrdersEntityList.length < 1) {
           clearInterval(that.countDownFn); //清除定时器
         } else {
           that.countDownTime = that.countDownFun(that.ckOrdersEntityList[0].expirationTime);

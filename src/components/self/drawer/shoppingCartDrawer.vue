@@ -189,6 +189,9 @@ export default {
     },
     shoppingOpenseaCartList () {
       return this.$store.state.shoppingOpenseaCartList;
+    },
+    shoppingCartList () {
+      return this.$store.state.shoppingCartList;
     }
   },
   methods: {
@@ -260,8 +263,10 @@ export default {
         if (!isCheckOrder) {
           await this.checkOrder(true)
         }
+        this.$store.commit('initShoppingCart')
       } else {
         this.coreskyCart = []
+        this.$store.commit('initShoppingCart')
       }
       this.totalOpenseaPrice = 0
       this.totalOpenseaPriceShow = 0
