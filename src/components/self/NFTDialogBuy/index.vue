@@ -60,6 +60,7 @@
 
 <script>
 import BigNumber from "bignumber.js";
+import {setLocalStorage} from "@/util/local-storage";
 
 export default {
   name: "index",
@@ -102,6 +103,18 @@ export default {
   computed: {
     user () {
       return this.$store.state.user;
+    },
+    cartName () {
+      return `coresky_cart_${this.$store.state.user.coinbase}`
+    },
+    cartNameOpensea () {
+      return `coresky_cart_opensea_${this.$store.state.user.coinbase}`
+    },
+    shoppingOpenseaCartList () {
+      return this.$store.state.shoppingOpenseaCartList;
+    },
+    shoppingCartList () {
+      return this.$store.state.shoppingCartList;
     }
   },
   methods: {
@@ -207,6 +220,44 @@ export default {
           }
           this.hash = hashAtomicMatch.transactionHash
           console.log(hashAtomicMatch)
+
+          let openseaCart = this.shoppingOpenseaCartList
+          console.log(this.tokenInfo.contract, this.tokenInfo.tokenId)
+          let hasOpensea = openseaCart.filter(v => !(v.makerAssetBundle.assets[0].tokenAddress === this.tokenInfo.contract && v.makerAssetBundle.assets[0].tokenId === this.tokenInfo.tokenId.toString()))
+          console.log(hasOpensea)
+          if (hasOpensea.length !== openseaCart.length) {
+            openseaCart = hasOpensea
+          }
+          console.log(openseaCart)
+          let obj = {}
+          obj[this.cartNameOpensea] = JSON.stringify(openseaCart)
+          setLocalStorage(obj)
+
+          let coreskyCart = this.shoppingCartList
+          // let hasCoresky = coreskyCart.filter(v => !(v.contract === this.tokenInfo.contract && v.makerAssetBundle.assets[0].tokenId === v.tokenId))
+          // console.log(hasCoresky)
+          // if (hasCoresky.length !== coreskyCart.length) {
+          //   coreskyCart = hasCoresky
+          // }
+          coreskyCart.forEach(item => {
+            let ckOrdersEntityList = []
+            item.ckOrdersEntityList.forEach(v => {
+              if (v.id !== this.sellInfo.id) {
+                ckOrdersEntityList.push(v)
+              }
+            })
+            if (ckOrdersEntityList.length > 1) {
+              item.ckOrdersEntityList = ckOrdersEntityList
+              coreskyCart.push(item)
+            }
+          })
+
+          let objCoresky = {}
+          objCoresky[this.cartName] = JSON.stringify(coreskyCart)
+          setLocalStorage(objCoresky)
+
+          this.$store.commit('initShoppingCart')
+
           const res = await this.$api("order.finish", {
             "orderId": this.sellInfo.id,
             "txHash": hashAtomicMatch.transactionHash,
