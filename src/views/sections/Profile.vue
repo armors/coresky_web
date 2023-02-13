@@ -13,8 +13,8 @@
               <el-input v-model="userFrom.nickname" :placeholder="$t('profile.placeholderName')" />
             </el-form-item>
             <el-form-item :label="$t('profile.UploadCover')">
-              <el-upload class="upload-background" drag :show-file-list="false" :action="uploadUrl" :headers="headers"
-                :before-upload="beforeBackgroundUpload" :on-success="handleBackgroundSuccess" :style="{
+              <el-upload class="upload-background" drag :show-file-list="false" :action="OSS_URL" :data="OSS_PARAM"
+                :before-upload="oss_beforeUpload" :on-success="oss_uploadSuccess" :style="{
 									backgroundImage: 'url('+ backgroundImage +')'
 								}">
                 <el-button type="primary" class="sub-btn upload">{{$t('profile.chooseFile')}}</el-button>
@@ -60,7 +60,7 @@
 
             <el-form-item>
               <el-button type="primary" class="sub-btn" :loading="submitBtnLoading" @click="submitForm">
-								{{ $t('common.Submit') }}
+                {{ $t('common.Submit') }}
               </el-button>
             </el-form-item>
           </el-form>
@@ -71,15 +71,15 @@
             <el-tooltip placement="top">
               <div class="tip-icon"><img src="../../assets/images/icons/icon_tips.svg" alt=""></div>
               <template #content>
-								{{$t('profile.tip2')}}
+                {{$t('profile.tip2')}}
               </template>
             </el-tooltip>
           </div>
 
           <div class="avatar-img">
             <img :src="imgSrc" alt="">
-            <el-upload class="upload-avatar display-flex box-center" :action="uploadUrl" :headers="headers"
-              :show-file-list="false" :before-upload="beforeAvatarUpload" :on-success="handleAvatarSuccess">
+            <el-upload class="upload-avatar display-flex box-center" :action="OSS_URL" :data="OSS_PARAM"
+              :before-upload="oss_beforeUpload" :on-success="handleAvatarSuccess" :show-file-list="false">
               <div class="edit-icon"><img src="../../assets/images/icons/icon_edit_profile.svg" alt=""></div>
             </el-upload>
           </div>
@@ -134,7 +134,18 @@ export default {
           { required: true, message: this.$t('profile.placeholderName'), trigger: 'blur' },
           { min: 4, max: 60, message: '4-60字符，支持English、中文', trigger: 'blur' },
         ],
-      }
+      },
+      OSS_URL: '',
+      OSS_DIR: '',
+      OSS_IMAGE_URL: '',
+      OSS_PARAM: {
+        OSSAccessKeyId: '',
+        key: '',
+        policy: '',
+        success_action_status: '200',
+        signature: ''
+      },
+      fullscreenLoading: undefined
     };
   },
   created () {
@@ -147,6 +158,58 @@ export default {
     },
   },
   methods: {
+    oss_beforeUpload (file) {
+      this.OSS_IMAGE_URL = ''
+      this.fullscreenLoading = this.$loading({
+        lock: true,
+        text: "loading...",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      return new Promise((resolve, reject) => {
+        this.$api('oss').then(res => {
+          this.OSS_PARAM.OSSAccessKeyId = res.accessid
+          this.OSS_PARAM.signature = res.signature
+          this.OSS_PARAM.policy = res.policy
+          this.OSS_PARAM.key = ''
+          this.OSS_DIR = res.dir
+          this.OSS_URL = res.host
+          this.oss_setKey(file.name)
+          resolve()
+        }).catch(err => {
+          reject()
+        })
+      })
+    },
+    oss_uploadSuccess () {
+      if (this.fullscreenLoading) {
+        this.fullscreenLoading.close();
+      }
+      // console.log()
+      this.backgroundImage = this.OSS_URL + '/' + this.OSS_PARAM.key;
+    },
+    oss_setKey (filename) {
+      let suffix = this.oss_fileSuffix(filename)
+      this.OSS_PARAM.key = this.OSS_DIR + this.oss_random_string(10) + suffix
+    },
+    oss_fileSuffix (filename) {
+      let pos = filename.lastIndexOf('.')
+      let suffix = ''
+      if (pos != -1) {
+        suffix = filename.substring(pos)
+      }
+      return suffix;
+    },
+    oss_random_string (length) {
+      let len = length || 10;
+      let chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';
+      let maxPos = chars.length;
+      let pwd = '';
+      for (let i = 0; i < len; i++) {
+        pwd += chars.charAt(Math.floor(Math.random() * maxPos));
+      }
+      return pwd;
+    },
     getToken () {
       this.headers = {
         token: `${window.localStorage.getItem(
@@ -163,7 +226,12 @@ export default {
       return true
     },
     handleAvatarSuccess (response) {
-      this.imgSrc = response.debug
+      if (this.fullscreenLoading) {
+        this.fullscreenLoading.close();
+      }
+      // console.log()
+      this.imgSrc = this.OSS_URL + '/' + this.OSS_PARAM.key;
+      // this.imgSrc = response.debug
     },
     beforeBackgroundUpload (rawFile) {
       if (rawFile.size / 1024 / 1024 > 8) {

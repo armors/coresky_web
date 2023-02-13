@@ -450,5 +450,10 @@ export default {
       url: "/launchpad/result",
       method: "post",
     }
-  }
+  },
+  oss: {
+    url: "/oss",
+    method: "get",
+  },
+
 };

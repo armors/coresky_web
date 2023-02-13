@@ -3,7 +3,7 @@ import apiList from "@/api/apiList";
 // import qs from "qs";
 // import store from "@/store";
 
-function getApiObj(url, data = {}) {
+function getApiObj (url, data = {}) {
   let apiArray = url.split(".");
   let api = apiList;
   apiArray.forEach((v) => {
@@ -13,13 +13,16 @@ function getApiObj(url, data = {}) {
 }
 
 const URL_PREFIX = "/api";
-export default function api(url, data = {}) {
+export default function api (url, data = {}) {
   var api = getApiObj(url);
 
   var post = {
     url: URL_PREFIX + api.url,
     method: api.method,
   };
+  if (api.url === '/oss') {
+    post.url = api.url
+  }
   if (url == "storage.upload" || url === "storage.multiupload") {
     post.headers = { "Content-Type": "multipart/form-data" };
     post.data = data;

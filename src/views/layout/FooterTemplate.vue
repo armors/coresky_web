@@ -4,15 +4,15 @@
       <div class="box-flex1">
         <div class="display-flex box-center-Y">
           <div class="logo-white"><img src="../../assets/images/logo_white.svg" alt=""></div>
-          <div class="project-desc">{{$t('footer.projectDesc')}}</div>
+          <!-- <div class="project-desc">{{$t('footer.projectDesc')}}</div> -->
         </div>
         <div class="display-flex box-center-Y item-list">
           <div class="item-box">{{$t('footer.itemDocs')}}</div>
           <div class="item-box">{{$t('footer.itemAuditReport')}}</div>
-          <div class="item-box">{{$t('footer.itemJobs')}}</div>
-          <div class="item-box">{{$t('footer.itemDeveloper')}}</div>
-          <div class="item-box">{{$t('footer.itemAPI')}}</div>
-          <div class="item-box">{{$t('footer.itemCommunity')}}</div>
+          <!-- <div class="item-box">{{$t('footer.itemJobs')}}</div> -->
+          <!-- <div class="item-box">{{$t('footer.itemDeveloper')}}</div> -->
+          <!-- <div class="item-box">{{$t('footer.itemAPI')}}</div> -->
+          <!-- <div class="item-box">{{$t('footer.itemCommunity')}}</div> -->
           <div class="item-box">{{$t('footer.itemPrivacyStatement')}}</div>
           <div class="item-box">{{$t('footer.itemTermsService')}}</div>
         </div>
@@ -21,7 +21,7 @@
         <div>{{$t('footer.joinCommunity')}}</div>
         <div class="media-list display-flex box-center-Y">
           <div class="media-item" v-for="(v, i) in mediaList" :key="`media-item-${i}`">
-            <img :src="require(`../../assets/images/icons/media/media_${v}_white.svg`)" alt="">
+            <img :src="require(`../../assets/images/icons/media/media_${v.name}_white.svg`)" alt="">
           </div>
         </div>
       </div>
@@ -37,34 +37,43 @@ export default {
       languagePopover: false,
       searchKey: this.$route.query.keyword,
       mediaList: [
-        'twitter',
-        'ins',
-        'discord',
-        'reddit',
-        'youtube',
-        'tiktok',
-        'email',
+        {
+          url: '',
+          name: 'twitter',
+        },
+        {
+          url: '',
+          name: 'discord',
+        },
+        {
+          url: '',
+          name: 'email',
+        },
+        // 'ins',
+        // 'reddit',
+        // 'youtube',
+        // 'tiktok',
       ]
     };
   },
   computed: {
-    share(){
+    share () {
       return this.$store.state.share;
     },
-    connected() {
+    connected () {
       return this.$store.state.connected;
     },
-    user() {
+    user () {
       return this.$store.state.user;
     },
-    locale(){
+    locale () {
       return this.$i18n.locale;
     },
-    language() {
+    language () {
       return this.$store.state.language;
     }
   },
-  created() {
+  created () {
     if (localStorage.getItem("locale") == "zh") {
       this.$store.state.language = "中文";
     } else {
@@ -72,7 +81,7 @@ export default {
     }
   },
   methods: {
-    send() {
+    send () {
       var site_name = this.$store.state.name;
       location =
         "mailto:?cc=" +
@@ -81,7 +90,7 @@ export default {
         site_name +
         "&body=email content";
     },
-    open(name) {
+    open (name) {
       switch (name) {
         case "twitter":
           window.open(this.share.twitter.url);
@@ -94,10 +103,10 @@ export default {
           break;
       }
     },
-    async searchClick() {
+    async searchClick () {
       this.$router.push({ name: "Search", query: { keyword: this.searchKey } });
     },
-    languageSelect(parameter) {
+    languageSelect (parameter) {
       this.$store.state.language = parameter;
       if (parameter == "English") {
         localStorage.setItem("locale", "en");
@@ -118,7 +127,7 @@ export default {
   backdrop-filter: blur(28px);
   background-color: $primaryColor;
   height: 111px;
-  .footer-box{
+  .footer-box {
     max-width: $maxWidth;
     margin: 0 auto;
     height: 100%;
@@ -127,41 +136,38 @@ export default {
     font-weight: 400;
     font-size: 14px;
     color: $color-white3;
-    .logo-white{
+    .logo-white {
       width: 110px;
       height: 28.55px;
     }
-    .project-desc{
+    .project-desc {
       margin-left: 20px;
       /* Body_3_regular */
       color: $color-white4;
     }
-    .item-list{
+    .item-list {
       margin-top: 10px;
-      .item-box{
+      .item-box {
         cursor: pointer;
         line-height: 1.5;
       }
-      .item-box + .item-box{
+      .item-box + .item-box {
         margin-left: 30px;
       }
     }
-    .footer-right{
-      .media-list{
+    .footer-right {
+      .media-list {
         margin-top: 12px;
-        .media-item{
+        .media-item {
           cursor: pointer;
           width: 24px;
           height: 24px;
         }
-        .media-item + .media-item{
+        .media-item + .media-item {
           margin-left: 12px;
         }
       }
-
     }
   }
 }
-
-
 </style>

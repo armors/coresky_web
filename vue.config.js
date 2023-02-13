@@ -45,6 +45,9 @@ module.exports = defineConfig({
     proxy: {
       "/api": {
         target: process.env.VUE_APP_API_URL,
+      },
+      "/oss": {
+        target: 'http://54.169.232.16:8090',
       }
     },
   },
