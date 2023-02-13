@@ -69,14 +69,13 @@ export default {
 		return window.openseaSDK
 	},
 
-	async getOrdersOpensea (asset, contractType = 0) {
+	async getOrdersOpensea (asset, coinbase, contractType = 0) {
 		try {
 			const openseaSDK = await this.initOpenSea()
 			const {orders} = await openseaSDK.api.getOrders({
 				side: 'ask',
 				...{
 					assetContractAddress: asset.assetContractAddress,
-					chain: "GOERLI",
 					tokenId: asset.tokenId
 				}
 			})
@@ -92,7 +91,9 @@ export default {
 							source: "opensea",
 						}
 					})
-					if (contractType === 1) {
+					console.log(orders[i].maker.address === coinbase)
+					console.log(orders[i].maker.address, coinbase)
+					if (contractType === 1 && orders[i].maker.address === coinbase) {
 						openseaSellamount += orders[i].protocolData.parameters.offer[0].startAmount
 					}
 				}
@@ -422,6 +423,8 @@ export default {
 		}
 	},
 
+	getOpenseaTypeData(){},
+
 	/** sign 签名订单信息
 	 * @returns
 	 * @param order
@@ -433,7 +436,7 @@ export default {
 		const eip712Domain = {
 			name: 'Core Sky Exchange Contract',
 			version: '1.0',
-			chainId: 5,
+			chainId: Number(process.env.VUE_APP_CHAINID),
 			verifyingContract: process.env.VUE_APP_MARKET_EXCHANGE,
 		};
 		let contract = await this.getMarketExchangeContract();

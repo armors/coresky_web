@@ -56,10 +56,14 @@
           <div class="display-flex box-center-Y">
             <el-switch v-model="collectionQuery.valueRewards" :inactive-text="$t('home.reward')" class="ml-2" />
             <div class="text">{{ $t("home.sortFloor") }}</div>
-            <el-input-number class="input-number" @blur="blurPrice" :controls="false" v-model="collectionQuery.minPrice"
+            <el-input-number class="input-number" :precision="4"
+                             :min="0.0001"
+                             :max="100000000000000" @blur="blurPrice" :controls="false" v-model="collectionQuery.minFloorPrice"
               :placeholder="$t('home.minPlaceholder')" />
             <div class="line"></div>
-            <el-input-number class="input-number" @blur="blurPrice" :controls="false" v-model="collectionQuery.maxPrice"
+            <el-input-number class="input-number" :precision="4"
+                             :min="0.0001"
+                             :max="100000000000000" @blur="blurPrice" :controls="false" v-model="collectionQuery.maxFloorPrice"
               :placeholder="$t('home.maxPlaceholder')" />
             <el-select v-model="collectionQuery.valueChain" placeholder="Select" class="select-chain">
               <el-option v-for="item in optionsChain" :key="item.value" :label="item.label" :value="item.value" />
@@ -78,7 +82,7 @@
         </div>
 
         <!-- <nftDrop :dropList="dropList"></nftDrop> -->
-        <partners></partners>
+<!--        <partners></partners>-->
 
         <!--      <nft-item-load :loadStatus="loadStatus"></nft-item-load>-->
       </div>
@@ -171,8 +175,8 @@ export default {
         "contract": "",
         "buyNow": false,
         valueRewards: true,
-        "minPrice": undefined,
-        "maxPrice": undefined,
+        "minFloorPrice": undefined,
+        "maxFloorPrice": undefined,
         "order": 0,
         "filter": {
           "name": "",
