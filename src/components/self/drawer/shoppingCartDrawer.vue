@@ -449,6 +449,7 @@ export default {
           obj[this.cartNameOpensea] = JSON.stringify(openseaCart)
           setLocalStorage(obj)
           this.$store.commit('initShoppingCart')
+          this.getCartInfo()
           const res = await this.$api("order.batchFinish", batchFinish)
           console.log(res)
         }
@@ -538,6 +539,7 @@ export default {
         obj[this.cartNameOpensea] = JSON.stringify(openseaCart)
         setLocalStorage(obj)
         this.$store.commit('initShoppingCart')
+        this.getCartInfo()
         const res = await this.$api("order.finish", {
           "orderId": sellerToken.id,
           "txHash": hashAtomicMatch.transactionHash,
@@ -578,6 +580,7 @@ export default {
         setLocalStorage(obj)
         this.deleteCartOpensea(this.openseaCart[0])
         this.$store.commit('initShoppingCart')
+        this.getCartInfo()
       } catch (e) {
         console.log(e)
         this.$tools.message(this.$filters.filterMsgOpenseaErr(e), 'warning');
