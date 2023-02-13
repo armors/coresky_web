@@ -1029,34 +1029,34 @@ export default {
     async getOrdersAndOffers () {
 
       const openseaListed = await this.$sdk.getOrdersOpensea(this.asset, this.user.coinbase, this.tokenInfo.contractType)
-        if (openseaListed.code === 200) {
-          if (this.tokenInfo.contractType === 1) {
-            this.youSellAmount += openseaListed.sellAmount
-          }
-          const sellSelf = openseaListed.data.filter(item => item.maker.address === this.user.coinbase)
-          this.isSellOpensea = sellSelf.length > 0
-          this.ckOrdersEntityList = [...this.ckOrdersEntityList, ...openseaListed.data]
-          this.ckOrdersEntityList = this.sortOrdersAndOffer(this.ckOrdersEntityList, true)
-          console.log(this.ckOrdersEntityList)
-          if (openseaListed.data.length > 0) {
-            this.nftPrice = this.nftPriceFun(this.ckOrdersEntityList[0].source === 'opensea' ? this.ckOrdersEntityList[0].currentPrice : this.ckOrdersEntityList[0].basePrice)
-          }
-          console.log(this.nftPrice)
-        } else {
-          this.isSellOpensea = false
+      if (openseaListed.code === 200) {
+        if (this.tokenInfo.contractType === 1) {
+          this.youSellAmount += openseaListed.sellAmount
         }
-        console.log('this.youSellAmount', this.youSellAmount)
-        await this.$sdk._sleep(2000)
-        const openseaOffers = await this.$sdk.getOffersOpensea(this.asset)
-        if (openseaOffers.code === 200) {
-          this.ckAuctionEntityList = [...this.ckAuctionEntityList, ...openseaOffers.data]
-          this.ckAuctionEntityList = this.sortOrdersAndOffer(this.ckAuctionEntityList)
-          console.log('openseaOffers.data', openseaOffers.data)
-          if (openseaOffers.data.length > 0) {
-            this.bestPrice = this.nftPriceFun(this.ckAuctionEntityList[0].source === 'opensea' ? this.ckAuctionEntityList[0].currentPrice : this.ckOrdersEntityList[0].basePrice)
-          }
+        const sellSelf = openseaListed.data.filter(item => item.maker.address === this.user.coinbase)
+        this.isSellOpensea = sellSelf.length > 0
+        this.ckOrdersEntityList = [...this.ckOrdersEntityList, ...openseaListed.data]
+        this.ckOrdersEntityList = this.sortOrdersAndOffer(this.ckOrdersEntityList, true)
+        console.log(this.ckOrdersEntityList)
+        if (openseaListed.data.length > 0) {
+          this.nftPrice = this.nftPriceFun(this.ckOrdersEntityList[0].source === 'opensea' ? this.ckOrdersEntityList[0].currentPrice : this.ckOrdersEntityList[0].basePrice)
         }
-        console.log(this.ckAuctionEntityList, this.ckOrdersEntityList)
+        console.log(this.nftPrice)
+      } else {
+        this.isSellOpensea = false
+      }
+      console.log('this.youSellAmount', this.youSellAmount)
+      await this.$sdk._sleep(2000)
+      const openseaOffers = await this.$sdk.getOffersOpensea(this.asset)
+      if (openseaOffers.code === 200) {
+        this.ckAuctionEntityList = [...this.ckAuctionEntityList, ...openseaOffers.data]
+        this.ckAuctionEntityList = this.sortOrdersAndOffer(this.ckAuctionEntityList)
+        console.log('openseaOffers.data', openseaOffers.data)
+        if (openseaOffers.data.length > 0) {
+          this.bestPrice = this.nftPriceFun(this.ckAuctionEntityList[0].source === 'opensea' ? this.ckAuctionEntityList[0].currentPrice : this.ckOrdersEntityList[0].basePrice)
+        }
+      }
+      console.log(this.ckAuctionEntityList, this.ckOrdersEntityList)
     },
     getTokenEvent () {
       this.$api("collect.tokenActivity", this.tokenInfoParams).then((res) => {

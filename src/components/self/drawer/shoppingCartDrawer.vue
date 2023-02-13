@@ -530,7 +530,7 @@ export default {
         this.buyBtnLoading = false
         removeLocalStorage([this.cartName])
         let openseaCart = this.openseaCart
-        let hasOpensea = openseaCart.filter(v => !(v.makerAssetBundle.assets[0].tokenAddress === seller.target && v.makerAssetBundle.assets[0].tokenId === item.tokenId))
+        let hasOpensea = openseaCart.filter(v => !(v.makerAssetBundle.assets[0].tokenAddress === seller.target && v.makerAssetBundle.assets[0].tokenId === seller.tokenId))
         if (hasOpensea.length !== openseaCart.length) {
           openseaCart = hasOpensea
         }
@@ -567,7 +567,16 @@ export default {
         })
         // this.$tools.message('购买成功', 'success');
         // this.buyOpenseaBtnLoading= false
-        removeLocalStorage([this.cartNameOpensea])
+
+        let coreskyCart = this.coreskyCart
+        let hasCoresky = coreskyCart.filter(v => !(this.openseaCart[0].makerAssetBundle.assets[0].tokenAddress === v.contract && this.openseaCart[0].makerAssetBundle.assets[0].tokenId === v.tokenId))
+        if (hasCoresky.length !== coreskyCart.length) {
+          coreskyCart = hasCoresky
+        }
+        let obj = {}
+        obj[this.cartName] = JSON.stringify(coreskyCart)
+        setLocalStorage(obj)
+        this.deleteCartOpensea(this.openseaCart[0])
         this.$store.commit('initShoppingCart')
       } catch (e) {
         console.log(e)
