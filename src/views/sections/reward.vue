@@ -36,10 +36,10 @@
             </el-table-column>
             <el-table-column prop="event" :label="$t('rewards.Event')" width="300">
               <template #default="props">
-                <span v-if="props.row.type===0">挂单奖励</span>
-                <span v-if="props.row.type===1">购买</span>
-                <span v-if="props.row.type===3">积分发放</span>
-                <span v-if="props.row.type===4">购买彩票</span>
+                <span v-if="props.row.type===0">{{$t('rewards.Event')}}</span>
+                <span v-if="props.row.type===1">{{$t('rewards.Sale')}}</span>
+                <span v-if="props.row.type===3">{{$t('rewards.Rewards')}}</span>
+                <span v-if="props.row.type===4">{{$t('rewards.ConvertTickets')}}</span>
               </template>
             </el-table-column>
             <el-table-column prop="itemName" :label="$t('rewards.Item')">

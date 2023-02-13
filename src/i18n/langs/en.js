@@ -147,7 +147,11 @@ module.exports = {
     Event: 'Event',
     Item: 'Item',
     Rewards: 'Rewards',
-    goTrade: 'Go to trade'
+    goTrade: 'Go to trade',
+    RewardsListing: 'Rewards by Listing',
+    Sale: 'Sale',
+    Rewards: 'Rewards',
+    ConvertTickets: 'Convert to Tickets'
   },
   shoppingCart: {
     title: 'Shopping cart',

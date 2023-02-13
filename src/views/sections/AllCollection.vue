@@ -146,8 +146,10 @@ export default {
     letter-spacing: 0.05em;
   }
   .top-nav {
-    margin: 60px 0 30px;
+    margin: 30px 0 20px;
     display: flex;
+    flex-wrap: wrap;
+    grid-gap: 10px;
     .item-nav {
       height: 40px;
       margin-right: 20px;

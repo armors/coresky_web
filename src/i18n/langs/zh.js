@@ -147,7 +147,11 @@ module.exports = {
     Event: '事件',
     Item: '物品',
     Rewards: '奖励',
-    goTrade: '去交易'
+    goTrade: '去交易',
+    RewardsListing: '挂单奖励',
+    Sale: '交易',
+    Rewards: '积分奖励',
+    ConvertTickets: '兑换彩票'
   },
   shoppingCart: {
     title: '购物车',
