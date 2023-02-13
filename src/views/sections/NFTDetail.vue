@@ -201,7 +201,7 @@
               <!--                :disabled="(isIncartInit || !tokenInfo.contract || !tokenInfo.state)" @click="addCart">Add to Cart</el-button>-->
 
               <el-button class="btnWhite" v-if="tokenInfo.contractType === 1 || (!isSelf && !this.isMakeOffer)"
-                :disabled="!tokenInfo.contract || ckAuctionEntityList.filter(item => item.source === 'coresky').length > 0" @click="showMakeOfferNFT">{{$t('nftDetail.MakeOffer')}}</el-button>
+                :disabled="!tokenInfo.contract || ckAuctionEntityList.filter(item => item.source === 'coresky' && item.maker === user.coinbase).length > 0" @click="showMakeOfferNFT">{{$t('nftDetail.MakeOffer')}}</el-button>
 <!--              <el-button class="btnWhite" v-if="tokenInfo.contractType === 1 || (!isSelf && !this.isMakeOffer)"-->
 <!--                :disabled="!tokenInfo.contract" @click="showMakeOfferCollect">Make Offer Collect</el-button>-->
             </div>
@@ -774,7 +774,7 @@ export default {
         if (that.countDownFun(that.countDownTime) === "倒计时结束") {
           clearInterval(that.countDownFn); //清除定时器
         } else {
-          that.countDownTime = that.countDownFun(that.tokenInfo.expirationTime);
+          that.countDownTime = that.countDownFun(that.ckOrdersEntityList[0].expirationTime);
         }
       }, 1000);
     },
@@ -1014,8 +1014,10 @@ export default {
         this.ckOrdersEntityList = this.sortOrdersAndOffer(listed, true)
         this.bestPrice = this.ckAuctionEntityList.length > 0 ? this.nftPriceFun(this.ckAuctionEntityList[0].basePrice) : '--'
         this.nftPrice = this.ckOrdersEntityList.length > 0 ? this.nftPriceFun(this.ckOrdersEntityList[0].basePrice) : '--'
+        setTimeout(() => {
+          this.loading = false
+        }, 3000)
         await this.getOrdersAndOffers()
-        this.loading = false
         if (this.ckOrdersEntityList.length > 0) {
           this.countDown()
         } else {
