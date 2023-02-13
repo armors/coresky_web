@@ -241,7 +241,7 @@ export default {
       }
       this.$store.commit('initShoppingCart')
     },
-    async getCartInfo (isCheckOrder) {
+    async getCartInfo (isCheckOrder = false) {
       this.totalPrice = 0
       this.totalPriceShow = 0
       const local = getLocalStorage(this.cartName)
@@ -331,12 +331,13 @@ export default {
                   ckOrdersEntityList.push(v)
                 }
               })
-              if (ckOrdersEntityList.length > 1) {
+              if (ckOrdersEntityList.length > 0) {
                 item.ckOrdersEntityList = ckOrdersEntityList
                 coreskyCart.push(item)
               }
             })
             let obj = []
+            this.coreskyCart = coreskyCart
             obj[this.cartName] = JSON.stringify(coreskyCart)
             setLocalStorage(obj)
             this.getCartInfo(true)

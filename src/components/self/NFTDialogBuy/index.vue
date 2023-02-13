@@ -150,6 +150,7 @@ export default {
         this.fulfillOrderOpensea()
         return
       }
+      console.log(this.sellInfo)
       let seller = this.$sdk.getAtomicMatchWrapOrder(this.sellInfo, false)
       seller = {
         ...seller,
@@ -233,29 +234,33 @@ export default {
           obj[this.cartNameOpensea] = JSON.stringify(openseaCart)
           setLocalStorage(obj)
 
+
           let coreskyCart = this.shoppingCartList
           // let hasCoresky = coreskyCart.filter(v => !(v.contract === this.tokenInfo.contract && v.makerAssetBundle.assets[0].tokenId === v.tokenId))
           // console.log(hasCoresky)
           // if (hasCoresky.length !== coreskyCart.length) {
           //   coreskyCart = hasCoresky
           // }
+          let newCoresky = []
           coreskyCart.forEach(item => {
             let ckOrdersEntityList = []
-            item.ckOrdersEntityList.forEach(v => {
-              if (v.id !== this.sellInfo.id) {
-                ckOrdersEntityList.push(v)
+            if (item.contract !== this.tokenInfo.contract || item.tokenId !== this.tokenInfo.tokenId) {
+              newCoresky.push(item)
+            } else {
+              item.ckOrdersEntityList.forEach(v => {
+                if (v.id !== this.sellInfo.id) {
+                  ckOrdersEntityList.push(v)
+                }
+              })
+              if (ckOrdersEntityList.length > 0) {
+                item.ckOrdersEntityList = ckOrdersEntityList
+                newCoresky.push(item)
               }
-            })
-            if (ckOrdersEntityList.length > 1) {
-              item.ckOrdersEntityList = ckOrdersEntityList
-              coreskyCart.push(item)
             }
           })
-
           let objCoresky = {}
-          objCoresky[this.cartName] = JSON.stringify(coreskyCart)
+          objCoresky[this.cartName] = JSON.stringify(newCoresky)
           setLocalStorage(objCoresky)
-
           this.$store.commit('initShoppingCart')
 
           const res = await this.$api("order.finish", {
