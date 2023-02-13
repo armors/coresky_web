@@ -201,7 +201,7 @@
               <!--                :disabled="(isIncartInit || !tokenInfo.contract || !tokenInfo.state)" @click="addCart">Add to Cart</el-button>-->
 
               <el-button class="btnWhite" v-if="tokenInfo.contractType === 1 || (!isSelf && !this.isMakeOffer)"
-                :disabled="!tokenInfo.contract || ckAuctionEntityList.filter(item => item.source === 'coresky').length > 0" @click="showMakeOfferNFT">{{$t('nftDetail.MakeOffer')}}</el-button>
+                :disabled="!tokenInfo.contract || ckAuctionEntityList.filter(item => item.source === 'coresky' && item.maker === user.coinbase).length > 0" @click="showMakeOfferNFT">{{$t('nftDetail.MakeOffer')}}</el-button>
 <!--              <el-button class="btnWhite" v-if="tokenInfo.contractType === 1 || (!isSelf && !this.isMakeOffer)"-->
 <!--                :disabled="!tokenInfo.contract" @click="showMakeOfferCollect">Make Offer Collect</el-button>-->
             </div>
@@ -772,7 +772,7 @@ export default {
         if (that.countDownFun(that.countDownTime) === "倒计时结束") {
           clearInterval(that.countDownFn); //清除定时器
         } else {
-          that.countDownTime = that.countDownFun(that.tokenInfo.expirationTime);
+          that.countDownTime = that.countDownFun(that.ckOrdersEntityList[0].expirationTime);
         }
       }, 1000);
     },
