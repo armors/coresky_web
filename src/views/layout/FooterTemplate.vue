@@ -74,11 +74,11 @@ export default {
     }
   },
   created () {
-    if (localStorage.getItem("locale") == "zh") {
-      this.$store.state.language = "中文";
-    } else {
-      this.$store.state.language = "English";
-    }
+    // if (localStorage.getItem("locale") == "zh") {
+    //   this.$store.state.language = "中文";
+    // } else {
+    //   this.$store.state.language = "English";
+    // }
   },
   methods: {
     send () {
@@ -105,18 +105,7 @@ export default {
     },
     async searchClick () {
       this.$router.push({ name: "Search", query: { keyword: this.searchKey } });
-    },
-    languageSelect (parameter) {
-      this.$store.state.language = parameter;
-      if (parameter == "English") {
-        localStorage.setItem("locale", "en");
-        this.$i18n.locale = localStorage.getItem("locale");
-      } else if (parameter == "中文") {
-        localStorage.setItem("locale", "zh");
-        this.$i18n.locale = localStorage.getItem("locale");
-      }
-      this.languagePopover = false;
-    },
+    }
   },
 };
 </script>

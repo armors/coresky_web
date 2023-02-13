@@ -5,7 +5,7 @@ export default {
   currentView: null,
   token: null,
   connected: false,
-  language: "English",
+  language: localStorage.getItem('locale') || 'en',
   isLogin: false,
   heartbeatTimer: null,
   notice_unread: 0,
