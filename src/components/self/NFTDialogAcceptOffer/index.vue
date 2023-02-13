@@ -6,7 +6,7 @@
     custom-class="custom-dialog acceptOffer" destroy-on-close>
     <template #title>
       <div class="left">
-        <span>Accept the offer</span>
+        <span>{{$t('AcceptOffer.title')}}</span>
       </div>
       <el-icon @click="isShowAcceptDialog=false">
         <Close />
@@ -60,15 +60,16 @@
 <!--        </div>-->
 <!--      </div>-->
       <div class="total-box">
-        <div class="title">Total Revenue</div>
+        <div class="title">{{$t('AcceptOffer.TotalRevenue')}}</div>
         <div class="number">
           <span>{{totalRevenue}} WETH</span>
           <span>${{$filters.milliFormat($filters.ethToUsdt(totalRevenue))}}</span>
         </div>
       </div>
-      <el-button type="primary" class="btnBuy" v-if="isApproved" :loading="acceptBtnLoading" @click="acceptOffer">Accept
-        Offer</el-button>
-      <el-button type="primary" class="btnBuy" :loading="acceptBtnLoading" v-else @click="setApproveAll">Approve NFT
+      <el-button type="primary" class="btnBuy" v-if="isApproved" :loading="acceptBtnLoading" @click="acceptOffer">
+        {{ $t('AcceptOffer.btn1') }}
+      </el-button>
+      <el-button type="primary" class="btnBuy" :loading="acceptBtnLoading" v-else @click="setApproveAll">{{$t('AcceptOffer.Approve')}}
       </el-button>
     </div>
     <div v-else>

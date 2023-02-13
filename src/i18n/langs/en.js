@@ -27,6 +27,7 @@ module.exports = {
     OfferSucceeded: 'Offer succeeded',
     OfferFailed: 'Offer failed',
     OfferCanceled: 'Your offer has been canceled!',
+    SellCanceled: 'Your sell has been canceled',
     OfferFailed: 'Failed to cancel offer',
     ReconfirmPurchase: 'Invalid orders have been filtered out, please reconfirm the purchase',
     ChooseMarket: 'Choose Market for sale',
@@ -226,6 +227,12 @@ module.exports = {
     PleasePrice: 'Please input price',
     PleaseQuantity: 'Please input quantity',
     PleaseDate: 'Please pick a date',
+  },
+  AcceptOffer: {
+    title: 'Accept the Offer',
+    TotalRevenue: 'Total Revenue',
+    btn1: 'Accept Offer',
+    Approve: 'Approve NFT'
   },
   global: {
     notConnect: "Not connected Wallet",

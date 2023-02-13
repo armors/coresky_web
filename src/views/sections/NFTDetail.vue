@@ -1117,7 +1117,7 @@ export default {
         }).then((res) => {
           this.cancelIdOrHash = undefined
           this.cancelMakeOfferBtnLoading = false
-          this.$tools.message('已取消报价', 'success');
+          this.$tools.message(this.$t('messageTip.OfferCanceled'), 'success');
           this.getTokenInfo()
         })
       } catch (e) {
@@ -1163,7 +1163,7 @@ export default {
         }).then((res) => {
           this.cancelIdOrHash = undefined
           this.cancelBtnLoading = false
-          this.$tools.message('已取消挂售', 'success');
+          this.$tools.message(this.$t('messageTip.SellCanceled'), 'success');
           this.getTokenInfo()
         })
       } catch (e) {
@@ -1188,7 +1188,7 @@ export default {
         })
         console.log(transactionHash)
         this.cancelBtnLoading = false
-        this.$tools.message('已取消挂售', 'success');
+        this.$tools.message(this.$t('messageTip.SellCanceled'), 'success');
         this.getTokenInfo()
         this.cancelIdOrHash = undefined
       } catch (e) {

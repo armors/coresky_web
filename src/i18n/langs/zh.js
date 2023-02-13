@@ -26,7 +26,8 @@ module.exports = {
     ListingSucceeded: '挂单成功',
     OfferSucceeded: '报价成功',
     OfferFailed: '报价失败',
-    OfferCanceled: 'Your offer has been canceled!',
+    OfferCanceled: '取消报价成功',
+    SellCanceled: '取消挂售成功',
     OfferFailed: 'Failed to cancel offer',
     ReconfirmPurchase: '已过滤掉无效订单，请重新确认购买',
     ChooseMarket: '请选择挂单平台',
@@ -225,6 +226,12 @@ module.exports = {
     PleasePrice: '请输入价格',
     PleaseQuantity: '请输入数量',
     PleaseDate: '请选择时间',
+  },
+  AcceptOffer: {
+    title: '接受报价',
+    TotalRevenue: '总收入',
+    btn1: '接受报价',
+    Approve: '授权NFT'
   },
   global: {
     notConnect: "钱包未连接",
