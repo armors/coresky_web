@@ -177,7 +177,7 @@
               <template v-if="isSelf">
                 <el-button type="primary"
                   :disabled="youSellAmount === youOwnAmount || (isSellCoresky === true && isSellOpensea === true)"
-                  class="btnBuy" :loading="sellDialogBtnLoading" @click="showSellNft">{{ $t('nftDetail.Buy') }}
+                  class="btnBuy" :loading="sellDialogBtnLoading" @click="showSellNft">{{ $t('nftDetail.Sell') }}
                 </el-button>
                 <!--                <el-button type="primary" class="btnBuy" v-if="!tokenInfo.state || tokenInfo.contractType === 1"-->
                 <!--                  :loading="sellDialogBtnLoading" @click="showSellNft">Sell Now</el-button>-->
@@ -222,7 +222,8 @@
                   <div class="list-tr head top0">
                     <div class="list-th th25">{{$t('nftDetail.ListingTb.Market')}}</div>
                     <div class="list-th th25">{{$t('nftDetail.ListingTb.Price')}}</div>
-                    <div class="list-th th25" v-if="tokenInfo.contractType === 1">{{$t('nftDetail.ListingTb.Quantity')}}</div>
+                    <div class="list-th th25" v-if="tokenInfo.contractType === 1">{{$t('nftDetail.ListingTb.Quantity')}}
+                    </div>
                     <div class="list-th th25">{{$t('nftDetail.ListingTb.Expiration')}}</div>
                     <div class="list-th th25">{{$t('nftDetail.ListingTb.From')}}</div>
                     <div class="list-th th25 center">{{$t('nftDetail.ListingTb.Status')}}</div>
@@ -324,7 +325,8 @@
                   <div class="list-tr head top0">
                     <div class="list-th th25">{{$t('nftDetail.ListingTb.Market')}}</div>
                     <div class="list-th th25">{{$t('nftDetail.ListingTb.Price')}}</div>
-                    <div class="list-th th25" v-if="tokenInfo.contractType === 1">{{$t('nftDetail.ListingTb.Quantity')}}</div>
+                    <div class="list-th th25" v-if="tokenInfo.contractType === 1">{{$t('nftDetail.ListingTb.Quantity')}}
+                    </div>
                     <div class="list-th th25">{{$t('nftDetail.ListingTb.Expiration')}}</div>
                     <div class="list-th th25">{{$t('nftDetail.ListingTb.From')}}</div>
                     <div class="list-th th25 center">{{$t('nftDetail.ListingTb.Status')}}</div>
@@ -362,10 +364,10 @@
                       <div class="list-th th25 center">
                         <el-button type="primary" :disabled="isExpired(v.expirationTime)" class="btnAccept"
                           v-if="isSelfMakeOffer(v.maker)" :loading="cancelMakeOfferBtnLoading"
-                          @click="cancelMakeOffer(v, false)">Cancel</el-button>
+                          @click="cancelMakeOffer(v, false)">{{$t('nftDetail.Cancel')}}</el-button>
                         <el-button type="primary" class="btnAccept" v-else
                           :disabled="!isSelf || isExpired(v.expirationTime)" :loading="acceptDialogBtnLoading"
-                          @click="showAcceptOfferNFT(v, false)">Accept</el-button>
+                          @click="showAcceptOfferNFT(v, false)">{{$t('nftDetail.Accept')}}</el-button>
                       </div>
                     </template>
                     <template v-else>
@@ -390,10 +392,10 @@
                       <div class="list-th th25 center">
                         <el-button type="primary" :disabled="isExpired(v.expirationTime)" class="btnAccept"
                           v-if="isSelfMakeOffer(v.maker.address)" :loading="cancelMakeOfferBtnLoading"
-                          @click="cancelMakeOffer(v, true)">Cancel</el-button>
+                          @click="cancelMakeOffer(v, true)">{{$t('nftDetail.Cancel')}}</el-button>
                         <el-button type="primary" class="btnAccept" v-else
                           :disabled="!isSelf || isExpired(v.expirationTime)" :loading="acceptDialogBtnLoading"
-                          @click="showAcceptOfferNFT(v, true)">Accept</el-button>
+                          @click="showAcceptOfferNFT(v, true)">{{$t('nftDetail.Accept')}}</el-button>
                       </div>
                     </template>
                   </div>
@@ -1078,7 +1080,7 @@ export default {
       const sellOpenseaOrder = this.ckOrdersEntityList.filter(item => item.source === 'opensea')
       const sellCoreskyOrder = this.ckOrdersEntityList.filter(item => item.source === 'coresky')
       if (sellOpenseaOrder.length > 0 && sellCoreskyOrder.length > 0) {
-        this.$tools.message('每个平台仅支持一次报价，请取消挂单后重新挂售', 'warning');
+        this.$tools.message(this.$t('messageTip.platformOneQuotation'), 'warning');
         return
       }
       this.$router.push({

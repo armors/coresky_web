@@ -3,7 +3,7 @@
     custom-class="custom-dialog" destroy-on-close>
     <template #title>
       <div class="left">
-        <span>Make an offer</span>
+        <span>{{ $t('makeAnOffer.title') }}</span>
       </div>
       <el-icon @click="isShowMakeOfferDialog=false">
         <Close />
@@ -19,50 +19,52 @@
       </div>
     </div>
     <el-form label-position="top" class="custom-form" :rules="rules" :model="form" style="margin-top:40px">
-      <el-form-item label="Price" prop="price">
+      <el-form-item :label="$t('common.Price')" prop="price">
         <div class="flex-content">
-          <el-input-number v-model="form.price" :controls="false" :precision="4" :min="0.0001" :max="100000000000000" size="large" style="width:100%;text-align: left" />
+          <el-input-number v-model="form.price" :controls="false" :precision="4" :min="0.0001" :max="100000000000000"
+            size="large" style="width:100%;text-align: left" />
           <el-select v-model="form.symbol" size="large" class="ml20" placeholder="Select"
             style="width:180px;flex-shrink: 0;">
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </div>
       </el-form-item>
-      <el-form-item :label="`Quantity`" prop="quantity" v-if="tokenInfo.contractType === 1">
+      <el-form-item :label="$t('makeAnOffer.Quantity')" prop="quantity" v-if="tokenInfo.contractType === 1">
         <div class="flex-content">
           <el-input v-model="form.quantity" size="large" style="width:100%;" />
-<!--          <el-button @click="form.quantity = nftAmount1155" type="primary" class="btnBuy ml20" style="width:180px;flex-shrink: 0;margin-top: 0" >MAX</el-button>-->
+          <!--          <el-button @click="form.quantity = nftAmount1155" type="primary" class="btnBuy ml20" style="width:180px;flex-shrink: 0;margin-top: 0" >MAX</el-button>-->
         </div>
       </el-form-item>
-      <el-form-item label="Expiration date" prop="time">
+      <el-form-item :label="$t('makeAnOffer.ExpirationDate')" prop="time">
         <div class="flex-content">
-          <el-date-picker v-model="form.time" size="large" type="datetime" placeholder="Pick a Date" style=""
-            format="YYYY-MM-DD HH:mm" :default-time="defaultTime" :disabled-date="disabledDate" />
-          <el-select v-model="form.date" class="ml20" size="large" placeholder="Select" @change="dateChange"
-            style="width:180px;flex-shrink: 0;">
+          <el-date-picker v-model="form.time" size="large" type="datetime" :placeholder="$t('makeAnOffer.SelectDate')"
+            style="" format="YYYY-MM-DD HH:mm" :default-time="defaultTime" :disabled-date="disabledDate" />
+          <el-select v-model="form.date" class="ml20" size="large" :placeholder="$t('makeAnOffer.Select')"
+            @change="dateChange" style="width:180px;flex-shrink: 0;">
             <el-option v-for="item in optionsDays" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </div>
       </el-form-item>
-<!--      <el-form-item label="Fee and coupons">-->
-<!--        <div class="describe-box">-->
-<!--          <div class="describe-item">-->
-<!--            <span class="lable">Coeesky service fee: </span>-->
-<!--            <span class="value">{{serviceFee}}</span>-->
-<!--          </div>-->
-<!--          <div class="describe-item mt15">-->
-<!--            <span class="lable">coupon rewards:</span>-->
-<!--            <div class="value">-->
-<!--              <p>-->
-<!--                1 coupon / 0.5 ETH-->
-<!--              </p>-->
-<!--              <p>1 coupon / listing / day</p>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item label="Fee and coupons">-->
+      <!--        <div class="describe-box">-->
+      <!--          <div class="describe-item">-->
+      <!--            <span class="lable">Coeesky service fee: </span>-->
+      <!--            <span class="value">{{serviceFee}}</span>-->
+      <!--          </div>-->
+      <!--          <div class="describe-item mt15">-->
+      <!--            <span class="lable">coupon rewards:</span>-->
+      <!--            <div class="value">-->
+      <!--              <p>-->
+      <!--                1 coupon / 0.5 ETH-->
+      <!--              </p>-->
+      <!--              <p>1 coupon / listing / day</p>-->
+      <!--            </div>-->
+      <!--          </div>-->
+      <!--        </div>-->
+      <!--      </el-form-item>-->
     </el-form>
-    <el-button type="primary" class="btnBuy" :loading="btnMakeOfferLoading" @click="makerBuyer">Make Offer</el-button>
+    <el-button type="primary" class="btnBuy" :loading="btnMakeOfferLoading" @click="makerBuyer">
+      {{ $t('makeAnOffer.title') }}</el-button>
   </el-dialog>
 </template>
 
@@ -144,20 +146,20 @@ export default {
       }
       this.rules = this.tokenInfo.contractType === 0 ? {
         price: [
-          { required: true, message: 'Please input price', trigger: 'blur' },
+          { required: true, message: this.$t('makeAnOffer.PleasePrice'), trigger: 'blur' },
         ],
         time: [
-          { required: true, message: 'Please Pick a Date', trigger: 'change' },
+          { required: true, message: this.$t('makeAnOffer.PleaseDate'), trigger: 'change' },
         ],
       } : {
         price: [
-          { required: true, message: 'Please input price', trigger: 'blur' },
+          { required: true, message: this.$t('makeAnOffer.PleasePrice'), trigger: 'blur' },
         ],
         quantity: [
-          { required: true, message: 'Please input quantity', trigger: 'blur' },
+          { required: true, message: this.$t('makeAnOffer.PleaseQuantity'), trigger: 'blur' },
         ],
         time: [
-          { required: true, message: 'Please Pick a Date', trigger: 'change' },
+          { required: true, message: this.$t('makeAnOffer.PleaseDate'), trigger: 'change' },
         ],
       }
       const wethBalance = await this.$sdk.getBalance({
@@ -173,12 +175,12 @@ export default {
         this.tokenInfo.tokenId = parseInt(this.tokenInfo.tokenId)
       }
       this.isShowMakeOfferDialog = true
-      this.serviceFee = this.$filters.feeFormat(makeOfferType === 1 ? this.tokenInfo.ckCollectionsInfoEntity.royalty :this.tokenInfo.royalty)
+      this.serviceFee = this.$filters.feeFormat(makeOfferType === 1 ? this.tokenInfo.ckCollectionsInfoEntity.royalty : this.tokenInfo.royalty)
       console.log(this.tokenInfo)
     },
     async makerBuyer () {
       if (!this.form.price || new BigNumber(this.form.price).isLessThan(0)) {
-        this.$tools.message('请输入正确的价格');
+        this.$tools.message(this.$t('makeAnOffer.PleasePrice'));
         return
       }
       // const wethBalance = await this.$sdk.getBalance({
@@ -189,7 +191,7 @@ export default {
       //   return
       // }
       if (!this.form.time) {
-        this.$tools.message('请选择过期时间');
+        this.$tools.message(this.$t('makeAnOffer.PleaseDate'));
         return
       }
       this.btnMakeOfferLoading = true
@@ -198,7 +200,7 @@ export default {
         buyer = this.$sdk.makeOrder({
           exchangeAddress: process.env.VUE_APP_MARKET_EXCHANGE,
           sender: this.user.coinbase,
-          nftAddress:  this.tokenInfo.contract,
+          nftAddress: this.tokenInfo.contract,
           side: 0,
           tokenId: this.tokenInfo.tokenId,
           feeRecipient: this.tokenInfo.ckCollectionsInfoEntity.feeContract,
@@ -286,7 +288,7 @@ export default {
         this.btnMakeOfferLoading = false
         if (res.code === 200) {
           this.isShowMakeOfferDialog = false
-          this.$tools.message(this.makeOfferType === 1 ? '报价成功' : '集合报价成功', 'success');
+          this.$tools.message(this.makeOfferType === 1 ? this.$t('messageTip.OfferSucceeded') : this.$t('messageTip.OfferSucceeded'), 'success');
           this.$emit('makeOfferSuccess', res)
         } else {
           this.$tools.message(res.message);
@@ -374,7 +376,7 @@ export default {
   .el-input__wrapper {
     border-radius: 12px;
   }
-  .el-input-number .el-input__inner{
+  .el-input-number .el-input__inner {
     text-align: left;
   }
   .el-input__inner {
