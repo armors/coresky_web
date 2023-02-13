@@ -97,22 +97,22 @@
         <div class="detail-info">
           <router-link :to="`/collection/${$route.params.contract}`" tag="div" class="collection-name">
             <span>{{tokenInfo.ckCollectionsInfoEntity.name}}</span>
-            <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
+            <img class="tag" v-if="tokenInfo.ckCollectionsInfoEntity.isCertification === '1'" src="@/assets/images/icons/icon_tag.svg" alt="">
           </router-link>
-          <!--          <div class="globle-floor">-->
-          <!--            <span>Globle floor : </span>-->
-          <!--            <img class="token-icon" src="@/assets/images/icons/token/token_eth.svg" alt="" />-->
-          <!--            <span class="value">{{tokenInfo.ckCollectionsInfoEntity.floorPrice}}</span>-->
-          <!--          </div>-->
+<!--          <div class="globle-floor">-->
+<!--            <span>Globle floor : </span>-->
+<!--            <img class="token-icon" src="@/assets/images/icons/token/token_eth.svg" alt="" />-->
+<!--            <span class="value">{{tokenInfo.ckCollectionsInfoEntity.floorPrice}}</span>-->
+<!--          </div>-->
           <div class="nft-name">
             <span> {{tokenInfo.name?tokenInfo.name:('#'+tokenInfo.tokenId)}}</span>
             <div class="icon_shoucang" :class="{active: tokenInfo.followStatus}" alt="" @click="followNft" />
           </div>
           <div class="nft-address" v-if="tokenInfo.contractType === 0">
-            <!--            <div class="add-item">-->
-            <!--              <div class="creator">Creator</div>-->
-            <!--              <div class="creator-name">{{$filters.ellipsisAddress(tokenInfo.ckCollectionsInfoEntity.owner)}}</div>-->
-            <!--            </div>-->
+<!--            <div class="add-item">-->
+<!--              <div class="creator">Creator</div>-->
+<!--              <div class="creator-name">{{$filters.ellipsisAddress(tokenInfo.ckCollectionsInfoEntity.owner)}}</div>-->
+<!--            </div>-->
             <div>
               <div class="creator">{{ $t('nftDetail.CurrentOwner') }}</div>
               <router-link
@@ -141,7 +141,7 @@
             </div>
           </div>
           <div class="nft-bid-box">
-            <div class="box-flex" v-if="!(ckAuctionEntityList.length < 1 && ckAuctionEntityList.length < 1)">
+            <div class="box-flex" v-if="!(ckAuctionEntityList.length < 1 && ckOrdersEntityList.length < 1)">
               <div class="box-left">
                 <div>{{ $t('nftDetail.CurrentPrice') }}</div>
                 <div class="row">
@@ -175,6 +175,7 @@
             </div>
             <div class="btn-box display-flex box-center-Y">
               <template v-if="isSelf">
+<!--                <el-button type="primary" :disabled="youSellAmount >= youOwnAmount || (isSellCoresky === true && isSellOpensea === true)" class="btnBuy" :loading="sellDialogBtnLoading" @click="showSellNft">Sell Now</el-button>-->
                 <el-button type="primary"
                   :disabled="youSellAmount === youOwnAmount || (isSellCoresky === true && isSellOpensea === true)"
                   class="btnBuy" :loading="sellDialogBtnLoading" @click="showSellNft">{{ $t('nftDetail.Sell') }}
@@ -184,6 +185,11 @@
                 <!--                <el-button type="primary" class="btnBuy" v-if="tokenInfo.contractType === 0 && ckOrdersEntityList.length > 0" :loading="cancelBtnLoading"-->
                 <!--                  @click="cancelSell()">Cancel-->
                 <!--                  Sell</el-button>-->
+<!--                <el-button type="primary" class="btnBuy" v-if="!tokenInfo.state || tokenInfo.contractType === 1"-->
+<!--                  :loading="sellDialogBtnLoading" @click="showSellNft">Sell Now</el-button>-->
+<!--                <el-button type="primary" class="btnBuy" v-if="tokenInfo.contractType === 0 && ckOrdersEntityList.length > 0" :loading="cancelBtnLoading"-->
+<!--                  @click="cancelSell()">Cancel-->
+<!--                  Sell</el-button>-->
               </template>
               <!--              <el-button type="primary" class="btnBuy"-->
               <!--                v-else-if="tokenInfo.state && tokenInfo.contractType === 0 && tokenInfo.basePrice > 0"-->
@@ -195,13 +201,13 @@
               <!--                :disabled="(isIncartInit || !tokenInfo.contract || !tokenInfo.state)" @click="addCart">Add to Cart</el-button>-->
 
               <el-button class="btnWhite" v-if="tokenInfo.contractType === 1 || (!isSelf && !this.isMakeOffer)"
-                :disabled="!tokenInfo.contract" @click="showMakeOfferNFT">{{$t('nftDetail.MakeOffer')}}</el-button>
-              <!--              <el-button class="btnWhite" v-if="tokenInfo.contractType === 1 || (!isSelf && !this.isMakeOffer)"-->
-              <!--                :disabled="!tokenInfo.contract" @click="showMakeOfferCollect">Make Offer Collect</el-button>-->
+                :disabled="!tokenInfo.contract || ckAuctionEntityList.filter(item => item.source === 'coresky').length > 0" @click="showMakeOfferNFT">{{$t('nftDetail.MakeOffer')}}</el-button>
+<!--              <el-button class="btnWhite" v-if="tokenInfo.contractType === 1 || (!isSelf && !this.isMakeOffer)"-->
+<!--                :disabled="!tokenInfo.contract" @click="showMakeOfferCollect">Make Offer Collect</el-button>-->
             </div>
           </div>
         </div>
-        <!--        <div class="card-wrap mt30" v-if="tokenInfo.contractType === 1">-->
+<!--        <div class="card-wrap mt30" v-if="tokenInfo.contractType === 1">-->
         <div class="card-wrap mt30">
           <el-collapse v-model="activeName3" accordion>
             <el-collapse-item title="Consistency" name="1">
@@ -244,24 +250,19 @@
                           </template>
                         </el-popover>
                       </div>
-                      <div class="list-th th25" v-if="tokenInfo.contractType === 1">{{$filters.milliFormat(v.amount)}}
-                      </div>
-                      <div class="list-th th25" :class="isExpired(v.expirationTime) ? 'expired' : ''">
-                        {{$filters.timeFormatTime(v.expirationTime)}}</div>
+                      <div class="list-th th25" v-if="tokenInfo.contractType === 1">{{$filters.milliFormat(v.amount)}}</div>
+                      <div class="list-th th25" :class="isExpired(v.expirationTime) ? 'expired' : ''">{{$filters.timeFormatTime(v.expirationTime)}}</div>
                       <div class="list-th th25 purple" @click="goExplore(v.maker)">
                         {{$filters.ellipsisAddress(v.maker, 4)}}</div>
                       <div class="list-th th25 center">
-                        <el-button type="primary" :disabled="isExpired(v.expirationTime)" class="btnAccept"
-                          v-if="isSelfMakeOffer(v.maker)" :loading="cancelMakeOfferBtnLoading"
-                          @click="cancelSell(v, false)">{{$t('nftDetail.Cancel')}}</el-button>
-                        <el-button type="primary" class="btnAccept" v-else :loading="acceptDialogBtnLoading"
-                          :disabled="isExpired(v.expirationTime) || isSelf1155(v.maker)" @click="showBuyNft(v, false)">
-                          {{$t('nftDetail.Buy')}}</el-button>
+                        <el-button type="primary" :disabled="isExpired(v.expirationTime)" class="btnAccept" v-if="isSelfMakeOffer(v.maker)"
+                                   :loading="v.id === cancelIdOrHash" @click="cancelSell(v, false)">{{$t('nftDetail.Cancel')}}</el-button>
+                        <el-button type="primary" class="btnAccept" v-else
+                                   :loading="acceptDialogBtnLoading" :disabled="isExpired(v.expirationTime) || isSelf1155(v.maker)" @click="showBuyNft(v, false)">{{$t('nftDetail.Buy')}}</el-button>
                       </div>
                       <div class="list-th th25 center">
-                        <el-button type="primary" class="btnAccept"
-                          :disabled="isCartCoresky(v.id) || isSelfSell(v.maker) || isExpired(v.expirationTime)"
-                          @click="addCartList(v.id)"> {{$t('nftDetail.Add')}}</el-button>
+                        <el-button type="primary" class="btnAccept" :disabled="isCartCoresky(v.id) || isSelfSell(v.maker) || isExpired(v.expirationTime)"
+                                   @click="addCartList(v.id)">{{$t('nftDetail.Add')}}</el-button>
                       </div>
                     </template>
                     <template v-else>
@@ -284,18 +285,14 @@
                       <div class="list-th th25 purple" @click="goExplore(v.maker.address)">
                         {{$filters.ellipsisAddress(v.maker.address, 4)}}</div>
                       <div class="list-th th25 center">
-                        <el-button type="primary" class="btnAccept" :disabled="isExpired(v.expirationTime)"
-                          v-if="isSelfMakeOffer(v.maker.address)" :loading="cancelMakeOfferBtnLoading"
-                          @click="cancelSell(v, true)">{{$t('nftDetail.Cancel')}}</el-button>
-                        <el-button type="primary" class="btnAccept" v-else
-                          :disabled="isSelf1155(v.maker.address) || isExpired(v.expirationTime)"
-                          :loading="acceptDialogBtnLoading" @click="showBuyNft(v, true)"> {{$t('nftDetail.Buy')}}
-                        </el-button>
+                        <el-button type="primary" class="btnAccept" :disabled="isExpired(v.expirationTime)" v-if="isSelfMakeOffer(v.maker.address)"
+                                   :loading="v.orderHash === cancelIdOrHash" @click="cancelSell(v, true)">{{$t('nftDetail.Cancel')}}</el-button>
+                        <el-button type="primary" class="btnAccept" v-else :disabled="isSelf1155(v.maker.address) || isExpired(v.expirationTime)"
+                                   :loading="acceptDialogBtnLoading" @click="showBuyNft(v, true)">Buy</el-button>
                       </div>
                       <div class="list-th th25 center">
-                        <el-button type="primary" class="btnAccept"
-                          :disabled="isInCartOpensea(v.orderHash) || isSelfSell(v.maker.address) || isExpired(v.expirationTime)"
-                          @click="addCartOpensea(v)"> {{$t('nftDetail.Add')}}</el-button>
+                        <el-button type="primary" class="btnAccept" :disabled="isInCartOpensea(v.orderHash) || isSelfSell(v.maker.address) || isExpired(v.expirationTime)"
+                                   @click="addCartOpensea(v)">{{$t('nftDetail.Add')}}</el-button>
                       </div>
                     </template>
 
@@ -362,12 +359,10 @@
                       <div class="list-th th25 purple" @click="goExplore(v.maker)">
                         {{$filters.ellipsisAddress(v.maker, 4)}}</div>
                       <div class="list-th th25 center">
-                        <el-button type="primary" :disabled="isExpired(v.expirationTime)" class="btnAccept"
-                          v-if="isSelfMakeOffer(v.maker)" :loading="cancelMakeOfferBtnLoading"
-                          @click="cancelMakeOffer(v, false)">{{$t('nftDetail.Cancel')}}</el-button>
-                        <el-button type="primary" class="btnAccept" v-else
-                          :disabled="!isSelf || isExpired(v.expirationTime)" :loading="acceptDialogBtnLoading"
-                          @click="showAcceptOfferNFT(v, false)">{{$t('nftDetail.Accept')}}</el-button>
+                        <el-button type="primary" :disabled="isExpired(v.expirationTime)" class="btnAccept" v-if="isSelfMakeOffer(v.maker)"
+                                   :loading="v.id === cancelIdOrHash" @click="cancelMakeOffer(v, false)">{{$t('nftDetail.Cancel')}}</el-button>
+                        <el-button type="primary" class="btnAccept" v-else :disabled="!isSelf || isExpired(v.expirationTime)"
+                                   :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT(v, false)">{{$t('nftDetail.Accept')}}</el-button>
                       </div>
                     </template>
                     <template v-else>
@@ -383,19 +378,15 @@
                           </template>
                         </el-popover>
                       </div>
-                      <div class="list-th th25" v-if="tokenInfo.contractType === 1">
-                        {{$filters.milliFormat(v.protocolData.parameters.consideration[0].startAmount)}}</div>
-                      <div class="list-th th25" :class="isExpired(v.expirationTime) ? 'expired' : ''">
-                        {{$filters.timeFormatTime(v.expirationTime)}}</div>
+                      <div class="list-th th25" v-if="tokenInfo.contractType === 1">{{$filters.milliFormat(v.protocolData.parameters.consideration[0].startAmount)}}</div>
+                      <div class="list-th th25" :class="isExpired(v.expirationTime) ? 'expired' : ''">{{$filters.timeFormatTime(v.expirationTime)}}</div>
                       <div class="list-th th25 purple" @click="goExplore(v.maker.address)">
                         {{$filters.ellipsisAddress(v.maker.address, 4)}}</div>
                       <div class="list-th th25 center">
-                        <el-button type="primary" :disabled="isExpired(v.expirationTime)" class="btnAccept"
-                          v-if="isSelfMakeOffer(v.maker.address)" :loading="cancelMakeOfferBtnLoading"
-                          @click="cancelMakeOffer(v, true)">{{$t('nftDetail.Cancel')}}</el-button>
-                        <el-button type="primary" class="btnAccept" v-else
-                          :disabled="!isSelf || isExpired(v.expirationTime)" :loading="acceptDialogBtnLoading"
-                          @click="showAcceptOfferNFT(v, true)">{{$t('nftDetail.Accept')}}</el-button>
+                        <el-button type="primary" :disabled="isExpired(v.expirationTime)" class="btnAccept" v-if="isSelfMakeOffer(v.maker.address)"
+                                   :loading="v.orderHash === cancelIdOrHash" @click="cancelMakeOffer(v, true)">{{$t('nftDetail.Cancel')}}</el-button>
+                        <el-button type="primary" class="btnAccept" v-else :disabled="!isSelf || isExpired(v.expirationTime)"
+                                   :loading="acceptDialogBtnLoading" @click="showAcceptOfferNFT(v, true)">{{$t('nftDetail.Accept')}}</el-button>
                       </div>
                     </template>
                   </div>
@@ -486,7 +477,7 @@
     <NFTDialogSell ref="NFTDialogSell" @sellCreateSuccess="sellCreateSuccess"></NFTDialogSell>
     <NFTDialogMakeOffer ref="NFTDialogMakeOffer" @makeOfferSuccess="makeOfferSuccess"></NFTDialogMakeOffer>
     <NFTDialogAcceptOffer ref="NFTDialogAcceptOffer" @acceptOfferSuccess="acceptOfferSuccess" />
-
+    <div class="web-loading" v-if="loading" v-loading.fullscreen.lock="loading"></div>
   </div>
 </template>
 
@@ -511,6 +502,7 @@ export default {
   mixins: [],
   data () {
     return {
+      loading: true,
       activeName: '1',
       activeName1: '1',
       activeName2: '1',
@@ -522,6 +514,7 @@ export default {
       cancelBtnLoading: false,
       sellDialogBtnLoading: false,
       acceptDialogBtnLoading: false,
+      cancelIdOrHash: undefined,
       checkList: ['Chain'],
       form: {
         price: '',
@@ -590,7 +583,6 @@ export default {
   },
   mounted () {
     this.getTokenInfo()
-    this.getTokenEvent()
     // this.getOrdersAndOffers()
     // this.isInCart()
   },
@@ -814,7 +806,7 @@ export default {
       }
     },
     isInCartCoresky721 () {
-      let shoppingList = this.$store.state.shoppingCartList || []
+      let shoppingList =  this.$store.state.shoppingCartList || []
       if (shoppingList === null || shoppingList.length === 0) {
         return false
       }
@@ -916,7 +908,7 @@ export default {
       console.log(orders.length > 0)
       return orders.length > 0
     },
-    addCartOpensea (v) {
+    addCartOpensea(v) {
       if (!v) {
         return
       }
@@ -985,6 +977,8 @@ export default {
     getTokenInfo () {
       this.isSellCoresky = false
       this.isSellOpensea = false
+      this.getTokenEvent()
+      this.loading = true
       this.$api("collect.tokenInfo", this.tokenInfoParams).then(async (res) => {
         this.tokenInfo = res.debug
         this.nftPrice = this.nftPriceFun(this.tokenInfo.basePrice)
@@ -1007,54 +1001,60 @@ export default {
           listed = listed.filter(item => item.expirationTime > (new Date().getTime() / 1000))
           listed = listed.map(item => {
             item.source = "coresky"
-            if (this.tokenInfo.contractType === 1) {
+            if (this.tokenInfo.contractType === 1 && item.maker === this.user.coinbase) {
               this.youSellAmount += item.amount
             }
             return item
           })
         }
-        this.isSellCoresky = listed.length > 0
+        const sellSelf = listed.filter(item => item.maker === this.user.coinbase)
+        this.isSellCoresky =sellSelf.length > 0
 
         this.ckAuctionEntityList = this.sortOrdersAndOffer(offer)
         this.ckOrdersEntityList = this.sortOrdersAndOffer(listed, true)
         this.bestPrice = this.ckAuctionEntityList.length > 0 ? this.nftPriceFun(this.ckAuctionEntityList[0].basePrice) : '--'
         this.nftPrice = this.ckOrdersEntityList.length > 0 ? this.nftPriceFun(this.ckOrdersEntityList[0].basePrice) : '--'
         await this.getOrdersAndOffers()
+        this.loading = false
         if (this.ckOrdersEntityList.length > 0) {
           this.countDown()
+        } else {
+          this.countDownTime = '--'
         }
         // this.isInCart()
       })
     },
     async getOrdersAndOffers () {
 
-      const openseaListed = await this.$sdk.getOrdersOpensea(this.asset, this.tokenInfo.contractType)
-      if (openseaListed.code === 200) {
-        if (this.tokenInfo.contractType === 1) {
-          this.youSellAmount += openseaListed.sellAmount
+      const openseaListed = await this.$sdk.getOrdersOpensea(this.asset, this.user.coinbase, this.tokenInfo.contractType)
+        if (openseaListed.code === 200) {
+          if (this.tokenInfo.contractType === 1) {
+            this.youSellAmount += openseaListed.sellAmount
+          }
+          const sellSelf = openseaListed.data.filter(item => item.maker.address === this.user.coinbase)
+          this.isSellOpensea = sellSelf.length > 0
+          this.ckOrdersEntityList = [...this.ckOrdersEntityList, ...openseaListed.data]
+          this.ckOrdersEntityList = this.sortOrdersAndOffer(this.ckOrdersEntityList, true)
+          console.log(this.ckOrdersEntityList)
+          if (openseaListed.data.length > 0) {
+            this.nftPrice = this.nftPriceFun(this.ckOrdersEntityList[0].source === 'opensea' ? this.ckOrdersEntityList[0].currentPrice : this.ckOrdersEntityList[0].basePrice)
+          }
+          console.log(this.nftPrice)
+        } else {
+          this.isSellOpensea = false
         }
-        this.isSellOpensea = openseaListed.data.length > 0
-        this.ckOrdersEntityList = [...this.ckOrdersEntityList, ...openseaListed.data]
-        this.ckOrdersEntityList = this.sortOrdersAndOffer(this.ckOrdersEntityList, true)
-        console.log(this.ckOrdersEntityList)
-        if (openseaListed.data.length > 0) {
-          this.nftPrice = this.nftPriceFun(this.ckOrdersEntityList[0].source === 'opensea' ? this.ckOrdersEntityList[0].currentPrice : this.ckOrdersEntityList[0].basePrice)
+        console.log('this.youSellAmount', this.youSellAmount)
+        await this.$sdk._sleep(2000)
+        const openseaOffers = await this.$sdk.getOffersOpensea(this.asset)
+        if (openseaOffers.code === 200) {
+          this.ckAuctionEntityList = [...this.ckAuctionEntityList, ...openseaOffers.data]
+          this.ckAuctionEntityList = this.sortOrdersAndOffer(this.ckAuctionEntityList)
+          console.log('openseaOffers.data', openseaOffers.data)
+          if (openseaOffers.data.length > 0) {
+            this.bestPrice = this.nftPriceFun(this.ckAuctionEntityList[0].source === 'opensea' ? this.ckAuctionEntityList[0].currentPrice : this.ckOrdersEntityList[0].basePrice)
+          }
         }
-        console.log(this.nftPrice)
-      } else {
-        this.isSellOpensea = false
-      }
-      await this.$sdk._sleep(2000)
-      const openseaOffers = await this.$sdk.getOffersOpensea(this.asset)
-      if (openseaOffers.code === 200) {
-        this.ckAuctionEntityList = [...this.ckAuctionEntityList, ...openseaOffers.data]
-        this.ckAuctionEntityList = this.sortOrdersAndOffer(this.ckAuctionEntityList)
-        console.log('openseaOffers.data', openseaOffers.data)
-        if (openseaOffers.data.length > 0) {
-          this.bestPrice = this.nftPriceFun(this.ckAuctionEntityList[0].source === 'opensea' ? this.ckAuctionEntityList[0].currentPrice : this.ckOrdersEntityList[0].basePrice)
-        }
-      }
-      console.log(this.ckAuctionEntityList, this.ckOrdersEntityList)
+        console.log(this.ckAuctionEntityList, this.ckOrdersEntityList)
     },
     getTokenEvent () {
       this.$api("collect.tokenActivity", this.tokenInfoParams).then((res) => {
@@ -1076,10 +1076,7 @@ export default {
       })
     },
     showSellNft () {
-      console.log(this.ckOrdersEntityList)
-      const sellOpenseaOrder = this.ckOrdersEntityList.filter(item => item.source === 'opensea')
-      const sellCoreskyOrder = this.ckOrdersEntityList.filter(item => item.source === 'coresky')
-      if (sellOpenseaOrder.length > 0 && sellCoreskyOrder.length > 0) {
+      if (this.isSellCoresky && this.isSellOpensea) {
         this.$tools.message(this.$t('messageTip.platformOneQuotation'), 'warning');
         return
       }
@@ -1090,6 +1087,7 @@ export default {
       // this.$refs.NFTDialogSell.showSell(this.tokenInfo)
     },
     async cancelMakeOffer (v, isOpensea = false) {
+      this.cancelIdOrHash = isOpensea ? v.orderHash : v.id
       if (isOpensea) {
         await this.cancelSellOpensea(v)
         return
@@ -1109,6 +1107,7 @@ export default {
         const hash = await this.$sdk.cancelOrder_(seller, this.user.coinbase);
         console.log(hash)
         if (typeof hash == "object" && hash.error) {
+          this.cancelIdOrHash = undefined
           this.cancelMakeOfferBtnLoading = false
           return
         }
@@ -1116,16 +1115,19 @@ export default {
           id: v.id,
           type: this.$sdk.valueOrderType("MAKE_OFFER")
         }).then((res) => {
+          this.cancelIdOrHash = undefined
           this.cancelMakeOfferBtnLoading = false
           this.$tools.message('已取消报价', 'success');
           this.getTokenInfo()
         })
       } catch (e) {
         console.log(e)
+        this.cancelIdOrHash = undefined
         this.cancelMakeOfferBtnLoading = false
       }
     },
     async cancelSell (cancelItem = null, isOpensea = false) {
+      this.cancelIdOrHash = isOpensea ? cancelItem.orderHash : cancelItem.id
       if (isOpensea) {
         this.cancelSellOpensea(cancelItem)
       } else {
@@ -1133,7 +1135,6 @@ export default {
       }
     },
     async cancelSellCoresky (cancelItem) {
-      this.cancelBtnLoading = true
       if (this.tokenInfo.contractType === 0 && cancelItem === null) {
         cancelItem = this.tokenInfo.ckOrdersEntityList[0]
       }
@@ -1153,24 +1154,28 @@ export default {
         console.log(hash)
         if (typeof hash == "object" && hash.error) {
           this.cancelMakeOfferBtnLoading = false
+          this.cancelIdOrHash = undefined
           return
         }
         this.$api("order.cancel", {
           id: cancelItem.id,
           type: this.$sdk.valueOrderType("SALE")
         }).then((res) => {
+          this.cancelIdOrHash = undefined
           this.cancelBtnLoading = false
           this.$tools.message('已取消挂售', 'success');
           this.getTokenInfo()
         })
       } catch (e) {
         console.log(e)
+        this.cancelIdOrHash = undefined
         this.cancelBtnLoading = false
       }
     },
     async cancelSellOpensea (cancelItem) {
       console.log(cancelItem)
       if (cancelItem === null) {
+        this.cancelIdOrHash = undefined
         return
       }
       this.cancelBtnLoading = true
@@ -1185,8 +1190,11 @@ export default {
         this.cancelBtnLoading = false
         this.$tools.message('已取消挂售', 'success');
         this.getTokenInfo()
+        this.cancelIdOrHash = undefined
       } catch (e) {
         console.log(e)
+        this.$tools.message(this.$filters.filterMsgOpenseaErr(e), 'warning');
+        this.cancelIdOrHash = undefined
         this.cancelBtnLoading = false
       }
     },
@@ -1219,6 +1227,7 @@ export default {
         // console.log(balance)
       } catch (e) {
         console.log(e)
+        this.$tools.message(this.$filters.filterMsgOpenseaErr(e), 'warning');
       }
     },
     nftPriceFun (basePrice) {

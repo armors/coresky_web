@@ -9,8 +9,8 @@ import * as filters from "@/filters";
 import store from "@/store/index";
 
 export default {
-  WEB_LOADING (state) {
-    state.webLoading = true;
+  WEB_LOADING (state, payload) {
+    state.webLoading = payload;
   },
   ETH_PRICE (state, payload) {
     state.ethPrice = payload

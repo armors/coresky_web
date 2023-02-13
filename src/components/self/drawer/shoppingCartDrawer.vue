@@ -36,7 +36,7 @@
                   <div>ENS :Ethereum Na…</div>
                   <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
                 </div>
-                <div class="txt3">{{$t('shoppingCart.creatorFees')}} {{$filters.feeFormat(vc.makerRelayerFee)}}</div>
+<!--                <div class="txt3">{{$t('shoppingCart.creatorFees')}} {{$filters.feeFormat(vc.makerRelayerFee)}}</div>-->
               </div>
             </div>
             <div class="shopping-price">
@@ -86,8 +86,8 @@
                 <div>ENS :Ethereum Na…</div>
                 <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
               </div>
-              <div class="txt3">{{$t('shoppingCart.creatorFees')}}
-                {{$filters.feeFormat(v.makerAssetBundle.assets[0].assetContract.openseaSellerFeeBasisPoints)}}</div>
+<!--              <div class="txt3">{{$t('shoppingCart.creatorFees')}}-->
+<!--                {{$filters.feeFormat(v.makerAssetBundle.assets[0].assetContract.openseaSellerFeeBasisPoints)}}</div>-->
             </div>
           </div>
           <div class="shopping-price">
@@ -259,9 +259,9 @@ export default {
       this.totalOpenseaPriceShow = 0
       const localOpensea = getLocalStorage(this.cartNameOpensea)
       console.log(localOpensea[this.cartNameOpensea])
-      let coresky_opensea_cart = localOpensea[this.cartNameOpensea]
-      coresky_opensea_cart = coresky_opensea_cart.filter(item => item.expirationTime > (new Date().getTime() / 1000))
-      if (coresky_opensea_cart !== null) {
+      let coresky_opensea_cart = localOpensea[this.cartNameOpensea] || []
+      coresky_opensea_cart = coresky_opensea_cart.filter(item=> item.expirationTime > (new Date().getTime()/ 1000))
+      if (coresky_opensea_cart !== null && coresky_opensea_cart.length > 0) {
         this.openseaCart = JSON.parse(coresky_opensea_cart)
         this.openseaCart.forEach(item => {
           this.totalOpenseaPrice = new BigNumber(this.$sdk.fromWeiNumOrigin(item.currentPrice)).plus(new BigNumber(this.totalOpenseaPrice))
@@ -275,6 +275,7 @@ export default {
       } else {
         this.openseaCart = []
       }
+      this.$store.commit('initShoppingCart')
     },
     handleClose () {
       this.$emit('update:show', false)
@@ -303,6 +304,7 @@ export default {
           }
           if (this.checkOrderData.length < 1) {
             removeLocalStorage([this.cartName])
+            this.$store.commit('initShoppingCart')
           } else {
             const ids = []
             this.checkOrderData.forEach(item => {
@@ -419,6 +421,7 @@ export default {
           this.$tools.message(atomicMatchWrap.error, 'error');
         } else {
           removeLocalStorage([this.cartName])
+          this.$store.commit('initShoppingCart')
           this.buyBtnLoading = false
           this.$tools.message(this.$t('messageTip.PurchaseComplete'), 'success');
           let batchFinish = []
@@ -509,6 +512,7 @@ export default {
         this.$tools.message('购买成功', 'success');
         this.buyBtnLoading = false
         removeLocalStorage([this.cartName])
+        this.$store.commit('initShoppingCart')
         const res = await this.$api("order.finish", {
           "orderId": sellerToken.id,
           "txHash": hashAtomicMatch.transactionHash,
@@ -539,6 +543,7 @@ export default {
         // this.$tools.message('购买成功', 'success');
         // this.buyOpenseaBtnLoading= false
         removeLocalStorage([this.cartNameOpensea])
+        this.$store.commit('initShoppingCart')
       } catch (e) {
         console.log(e)
         this.$tools.message(this.$filters.filterMsgOpenseaErr(e), 'warning');
