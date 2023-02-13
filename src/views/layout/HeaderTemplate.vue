@@ -53,18 +53,24 @@
             </div>
           </template>
           <div>
-            <div class="chain-item two" @click="languageSelect('English')" :class="{'active':language =='English'}">
+            <div class="chain-item two" @click="languageSelect('en')" :class="{'active':language =='en'}">
               <div class="item-txt">English</div>
               <div class="item-dot"></div>
             </div>
-            <div class="chain-item two" @click="languageSelect('中文')" :class="{'active':language =='中文'}">
+            <div class="chain-item two" @click="languageSelect('tw')" :class="{'active':language =='tw'}">
+              <div class="item-txt">繁体</div>
+              <div class="item-dot"></div>
+            </div>
+            <div class="chain-item two" @click="languageSelect('zh')" :class="{'active':language =='zh'}">
               <div class="item-txt">中文</div>
               <div class="item-dot"></div>
             </div>
           </div>
         </el-popover>
         <div class="nav-link shopping-cart" @click="showShoppingCartDrawer=true;showUserDrawer = false">
-          <div class="notify-num" v-if="shoppingCartList&&shoppingCartList.length>0 || shoppingOpenseaCartList&&shoppingOpenseaCartList.length>0">{{ shoppingCartList.length + shoppingOpenseaCartList.length }}</div>
+          <div class="notify-num"
+            v-if="shoppingCartList&&shoppingCartList.length>0 || shoppingOpenseaCartList&&shoppingOpenseaCartList.length>0">
+            {{ shoppingCartList.length + shoppingOpenseaCartList.length }}</div>
           <svg-icon class="head-icon" icon-class="gouwuche" />
         </div>
         <div class="head-connect display-flex box-center" v-if="!connected" @click="login">
@@ -146,6 +152,7 @@ export default {
       return this.$store.state.message;
     },
     language () {
+      console.log(this.$store.state.language)
       return this.$store.state.language;
     },
     shoppingCartList () {
@@ -157,11 +164,11 @@ export default {
   },
   created () {
     this.isDark = useDark()
-    if (localStorage.getItem("locale") == "zh") {
-      this.$store.state.language = "中文";
-    } else {
-      this.$store.state.language = "English";
-    }
+    // if (localStorage.getItem("locale") == "zh") {
+    //   this.$store.state.language = "中文";
+    // } else {
+    //   this.$store.state.language = "English";
+    // }
     window.addEventListener("scroll", this.handleScroll);
   },
   mounted () {
@@ -221,11 +228,14 @@ export default {
     },
     languageSelect (parameter) {
       this.$store.state.language = parameter;
-      if (parameter == "English") {
+      if (parameter == "en") {
         localStorage.setItem("locale", "en");
         this.$i18n.locale = localStorage.getItem("locale");
-      } else if (parameter == "中文") {
+      } else if (parameter == "zh") {
         localStorage.setItem("locale", "zh");
+        this.$i18n.locale = localStorage.getItem("locale");
+      } else if (parameter == "tw") {
+        localStorage.setItem("locale", "tw");
         this.$i18n.locale = localStorage.getItem("locale");
       }
       this.languagePopover = false;
@@ -398,7 +408,6 @@ export default {
 }
 
 .head-connect {
-
   margin-left: 24px;
   width: 140px;
   height: 44px;
