@@ -55,13 +55,14 @@ export default {
 			const gasPrice = await web3.eth.getGasPrice()
 			console.log(gasPrice)
 			console.log({
-				networkName: Network.Goerli,
+				networkName: process.env.VUE_APP_CHAINID === '1' ? Network.Main : Network.Goerli,
 				apiKey: process.env.VUE_APP_OPENSEA_KEY,
 				gasPrice: new BigNumber(gasPrice * 1.5)
 			})
 			window.openseaSDK = new OpenSeaSDK(window.web3.currentProvider, {
-				networkName: Network.Goerli,
-				gasPrice: new BigNumber(gasPrice * 1.5)
+				networkName: process.env.VUE_APP_CHAINID === '1' ? Network.Main : Network.Goerli,
+				gasPrice: new BigNumber(gasPrice * 1.5),
+				apiKey: process.env.VUE_APP_OPENSEA_KEY
 				// networkName: Network.Main,
 				// apiKey: process.env.VUE_APP_OPENSEA_KEY
 			})
@@ -114,13 +115,14 @@ export default {
 	},
 
 	async getOffersOpensea (asset) {
+		const networkName = process.env.VUE_APP_CHAINID === '1' ? Network.Main : Network.Goerli
 		try {
 			const openseaSDK = await this.initOpenSea()
 			const {orders} = await openseaSDK.api.getOrders({
 				side: 'bid',
 				...{
 					assetContractAddress: asset.assetContractAddress,
-					chain: "GOERLI",
+					chain: networkName.toUpperCase(),
 					tokenId: asset.tokenId
 				}
 			})
