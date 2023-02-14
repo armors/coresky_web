@@ -449,7 +449,7 @@ module.exports = {
     itemDeveloper: "Developer",
     itemAPI: "API",
     itemCommunity: "Community",
-    itemPrivacyStatement: "Privacy Statement",
+    itemPrivacyStatement: "Privacy Policy",
     itemTermsService: "Terms of Service",
     joinCommunity: "Join the community",
   },

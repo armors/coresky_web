@@ -46,7 +46,7 @@ export default {
           name: 'discord',
         },
         {
-          url: 'https://medium.com/@info_57344',
+          url: 'mailto:info@coresky.com',
           name: 'email',
         },
         // 'ins',
