@@ -283,7 +283,10 @@
 	import store from "@/store";
 	import {keepPoint} from "@/filters";
 	import {CROSS_CHAIN_SEAPORT_ADDRESS, ItemType, OrderType} from "@opensea/seaport-js/lib/constants";
-	import {OPENSEA_FEE_RECIPIENT} from "opensea-js";
+  import {getMaxOrderExpirationTimestamp} from "opensea-js/lib/utils";
+  import {DEFAULT_ZONE_BY_NETWORK, OPENSEA_FEE_RECIPIENT} from "opensea-js/lib/constants";
+  import {createSellOrderSDK} from "@/util/openseaCreateSellOrder/createSellOrder";
+  import utils_web3 from "@/util/web3";
 
 	export default {
 		mixins: [],
@@ -651,6 +654,7 @@
 					this.sellNftCoresky()
 				} else if (this.platformList.find(el => el.name === 'Opensea')) {
 					this.sellNftOS()
+					// this.sellNftOsOrder()
 				} else {
           this.$tools.message(this.$t('messageTip.ChooseMarket'), 'warning');
         }
@@ -820,6 +824,64 @@
 					this.sellBtnLoading = false
 				}
 			},
+
+      async sellNftOsOrder() {
+        this.sellBtnLoading = true
+        const price = this.dataList[1].listPrice
+        if (!price || new BigNumber(price).isLessThan(0)) {
+          this.$tools.message('请输入正确的价格', 'warning');
+          this.sellBtnLoading = false
+          return
+        }
+        if (!this.form.time) {
+          this.$tools.message('请选择过期时间', 'warning');
+          this.sellBtnLoading = false
+          return
+        }
+        try {
+          const openseaSDK = await this.$sdk.initOpenSea()
+          let web3 = await utils_web3.getWeb3();
+          const createSellOrder = new createSellOrderSDK(openseaSDK, web3)
+
+          const asset = {
+            ...this.asset,
+            ...{
+              schemaName: this.tokenInfo.contractType === 1 ? ItemType.ERC1155 : ItemType.ERC721
+            }
+          }
+          const expirationTime = new Date(this.form.time).getTime() / 1000
+          let sellOrderParams = {
+            asset,
+            // tokenAddress: this.tokenInfoParams.contract, // CryptoKitties
+            // tokenId: this.tokenInfoParams.tokenId,
+            // schemaName: this.tokenInfo.contractType === 1 ? ItemType.ERC1155 : ItemType.ERC721,
+
+            accountAddress: this.user.coinbase,
+            startAmount: parseFloat(price),
+            endAmount: parseFloat(price),
+            // If `endAmount` is specified, the order will decline in value to that amount until `expirationTime`. Otherwise, it's a fixed-price order:
+            expirationTime,
+            restrictedByZone: false,
+            allowPartialFills: false
+          }
+          if (this.tokenInfo.contractType === 1) {
+            sellOrderParams = {
+              ...sellOrderParams,
+              ...{
+                quantity: Number(this.quantity)
+                // address: CROSS_CHAIN_SEAPORT_ADDRESS
+              }
+            }
+          }
+          console.log(sellOrderParams)
+          const createOrder = await createSellOrder.createSellOrder(sellOrderParams)
+          console.log(createOrder)
+        } catch (e) {
+          this.sellBtnLoading = false
+          this.$tools.message(this.$filters.filterMsgOpenseaErr(e), 'warning');
+          console.log(e)
+        }
+      },
 			async sellNftOS() {
 				// if (!this.isGetOSInfo) {
 				// 	this.$tools.message('正在拉取opensea数据，请稍等', 'warning');
@@ -838,6 +900,55 @@
 					return
 				}
 				try {
+          // let basePrice = new BigNumber(price)
+          // let creatorFee = basePrice.multipliedBy(this.dataList[1].protocolFee / 10000)
+          // let serviceFee = basePrice.multipliedBy(this.dataList[1].RoyaltiesFee / 10000)
+          // let proceedsBig = basePrice.minus(creatorFee).minus(serviceFee)
+          // let proceeds = this.$Web3.utils.toWei(proceedsBig.valueOf())
+          // let getAmountBig = basePrice.minus(proceedsBig)
+          // let getAmount = this.$Web3.utils.toWei(getAmountBig)
+          // const SALT = new Date().getTime();
+          // const params = {
+          // 	"parameters": {
+          // 		"offerer": this.user.coinbase,
+          // 		"zone": "0x0000000000000000000000000000000000000000",
+          // 		"zoneHash": "0x3000000000000000000000000000000000000000000000000000000000000000",
+          // 		"startTime": listingTime,
+          // 		"endTime": expirationTime,
+          // 		"orderType": OrderType.FULL_OPEN,
+          // 		"offer": [
+          // 			{
+          // 				"itemType": this.tokenInfo.contractType === 1 ? ItemType.ERC721 : ItemType.ERC1155,
+          // 				"token": this.asset.tokenAddress,
+          // 				"identifierOrCriteria": this.asset.tokenId.toString(),
+          // 				"startAmount": this.tokenInfo.contractType === 1 ? this.quantity.toString() : '1',
+          // 				"endAmount": this.tokenInfo.contractType === 1 ? this.quantity.toString() : '1'
+          // 			}
+          // 		],
+          // 		"consideration": [
+          // 			{
+          // 				"itemType": 0,
+          // 				"token": this.$sdk.NULL_ADDRESS(),
+          // 				"identifierOrCriteria": "0",
+          // 				"startAmount": getAmount,
+          // 				"endAmount": getAmount,
+          // 				"recipient": this.user.coinbase
+          // 			},
+          // 			{
+          // 				"itemType": 0,
+          // 				"token": this.$sdk.NULL_ADDRESS(),
+          // 				"identifierOrCriteria": "0",
+          // 				"startAmount": proceeds,
+          // 				"endAmount": proceeds,
+          // 				"recipient": OPENSEA_FEE_RECIPIENT
+          // 			}
+          // 		],
+          // 		"totalOriginalConsiderationItems": 2,
+          // 		"salt": SALT,
+          // 		"conduitKey": process.env.VUE_APP_OPENSEA_KEY
+          // 	},
+          // 	"signature": "0x678d690063d18d93541c0793abdd2cb56685a4e567863e0b8417c3632c0788c7134de97978a97d0b17a863339f1f5dbb718cfa671302fa79a02f76e651bf34d0"
+          // }
 					const asset = {
 						...this.asset,
 						...{
@@ -855,58 +966,10 @@
 						startAmount: parseFloat(price),
 						endAmount: parseFloat(price),
 						// If `endAmount` is specified, the order will decline in value to that amount until `expirationTime`. Otherwise, it's a fixed-price order:
-						expirationTime
+						expirationTime,
+            restrictedByZone: false,
+            allowPartialFills: false
 					}
-
-					// let basePrice = new BigNumber(price)
-					// let creatorFee = basePrice.multipliedBy(this.dataList[1].protocolFee / 10000)
-					// let serviceFee = basePrice.multipliedBy(this.dataList[1].RoyaltiesFee / 10000)
-					// let proceedsBig = basePrice.minus(creatorFee).minus(serviceFee)
-					// let proceeds = this.$Web3.utils.toWei(proceedsBig.valueOf())
-					// let getAmountBig = basePrice.minus(proceedsBig)
-					// let getAmount = this.$Web3.utils.toWei(getAmountBig)
-					// const SALT = new Date().getTime();
-					// const params = {
-					// 	"parameters": {
-					// 		"offerer": this.user.coinbase,
-					// 		"zone": "0x0000000000000000000000000000000000000000",
-					// 		"zoneHash": "0x3000000000000000000000000000000000000000000000000000000000000000",
-					// 		"startTime": listingTime,
-					// 		"endTime": expirationTime,
-					// 		"orderType": OrderType.FULL_OPEN,
-					// 		"offer": [
-					// 			{
-					// 				"itemType": this.tokenInfo.contractType === 1 ? ItemType.ERC721 : ItemType.ERC1155,
-					// 				"token": this.asset.tokenAddress,
-					// 				"identifierOrCriteria": this.asset.tokenId.toString(),
-					// 				"startAmount": this.tokenInfo.contractType === 1 ? this.quantity.toString() : '1',
-					// 				"endAmount": this.tokenInfo.contractType === 1 ? this.quantity.toString() : '1'
-					// 			}
-					// 		],
-					// 		"consideration": [
-					// 			{
-					// 				"itemType": 0,
-					// 				"token": this.$sdk.NULL_ADDRESS(),
-					// 				"identifierOrCriteria": "0",
-					// 				"startAmount": getAmount,
-					// 				"endAmount": getAmount,
-					// 				"recipient": this.user.coinbase
-					// 			},
-					// 			{
-					// 				"itemType": 0,
-					// 				"token": this.$sdk.NULL_ADDRESS(),
-					// 				"identifierOrCriteria": "0",
-					// 				"startAmount": proceeds,
-					// 				"endAmount": proceeds,
-					// 				"recipient": OPENSEA_FEE_RECIPIENT
-					// 			}
-					// 		],
-					// 		"totalOriginalConsiderationItems": 2,
-					// 		"salt": SALT,
-					// 		"conduitKey": process.env.VUE_APP_OPENSEA_KEY
-					// 	},
-					// 	"signature": "0x678d690063d18d93541c0793abdd2cb56685a4e567863e0b8417c3632c0788c7134de97978a97d0b17a863339f1f5dbb718cfa671302fa79a02f76e651bf34d0"
-					// }
 
 					if (this.tokenInfo.contractType === 1) {
 						sellOrderParams = {
