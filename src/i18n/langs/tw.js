@@ -236,5 +236,17 @@ module.exports = {
     TotalRevenue: '總收入',
     btn1: '接受報價',
     Approve: '授權NFT'
-  }
+  },
+  footer: {
+    projectDesc: "OUR SLOGAN xxxxxxxxxxxxxxxxxx",
+    itemDocs: "Docs",
+    itemAuditReport: "Audit Report",
+    itemJobs: "Jobs",
+    itemDeveloper: "Developer",
+    itemAPI: "API",
+    itemCommunity: "Community",
+    itemPrivacyStatement: "Privacy Statement",
+    itemTermsService: "Terms of Service",
+    joinCommunity: "Join the community",
+  },
 };

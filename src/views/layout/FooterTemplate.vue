@@ -13,16 +13,16 @@
           <!-- <div class="item-box">{{$t('footer.itemDeveloper')}}</div> -->
           <!-- <div class="item-box">{{$t('footer.itemAPI')}}</div> -->
           <!-- <div class="item-box">{{$t('footer.itemCommunity')}}</div> -->
-          <div class="item-box">{{$t('footer.itemPrivacyStatement')}}</div>
-          <div class="item-box">{{$t('footer.itemTermsService')}}</div>
+          <a href="/file/PrivacyPolicy.pdf" target="_blank" class="item-box">{{$t('footer.itemPrivacyStatement')}}</a>
+          <a href="/file/terms.pdf" target="_blank" class="item-box">{{$t('footer.itemTermsService')}}</a>
         </div>
       </div>
       <div class="footer-right">
         <div>{{$t('footer.joinCommunity')}}</div>
         <div class="media-list display-flex box-center-Y">
-          <div class="media-item" v-for="(v, i) in mediaList" :key="`media-item-${i}`">
+          <a class="media-item" v-for="(v, i) in mediaList" :key="`media-item-${i}`" :href="v.url" target="_blank">
             <img :src="require(`../../assets/images/icons/media/media_${v.name}_white.svg`)" alt="">
-          </div>
+          </a>
         </div>
       </div>
     </div>
@@ -38,15 +38,15 @@ export default {
       searchKey: this.$route.query.keyword,
       mediaList: [
         {
-          url: '',
+          url: 'https://twitter.com/Coreskyofficial',
           name: 'twitter',
         },
         {
-          url: '',
+          url: 'https://discord.gg/ZbG5HrVFEE',
           name: 'discord',
         },
         {
-          url: '',
+          url: 'https://medium.com/@info_57344',
           name: 'email',
         },
         // 'ins',

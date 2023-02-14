@@ -443,18 +443,16 @@ module.exports = {
   },
 
   footer: {
-    explore: "探索",
-    hIW: "工作原理",
-    create: "创建",
-    describe:
-      "FingerNFT market是Layer2 NFT交易市场，致力于在即将到来的数字世界中快速发展的加密和数字收藏品，重塑了全球加密金融交易市场的格局。",
-    support: "支持",
-    language: "语言",
-    terms: "条款",
-    privacy: "隐私",
-    home: "首页",
-    myItems: "我的物品",
-    following: "关注的",
+    projectDesc: "OUR SLOGAN xxxxxxxxxxxxxxxxxx",
+    itemDocs: "Docs",
+    itemAuditReport: "Audit Report",
+    itemJobs: "Jobs",
+    itemDeveloper: "Developer",
+    itemAPI: "API",
+    itemCommunity: "Community",
+    itemPrivacyStatement: "Privacy Policy",
+    itemTermsService: "Terms of Service",
+    joinCommunity: "Join the community",
   },
   hindex: {
     price: "价格",
