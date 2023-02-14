@@ -291,6 +291,41 @@ export default {
         })
         console.log(transactionHash)
         this.hash = transactionHash
+
+        let openseaCart = this.shoppingOpenseaCartList
+        console.log(this.tokenInfo.contract, this.tokenInfo.tokenId)
+        let hasOpensea = openseaCart.filter(v => !(v.orderHash === this.sellInfo.orderHash))
+        console.log(hasOpensea)
+        if (hasOpensea.length !== openseaCart.length) {
+          openseaCart = hasOpensea
+        }
+        console.log(openseaCart)
+        let obj = {}
+        obj[this.cartNameOpensea] = JSON.stringify(openseaCart)
+        setLocalStorage(obj)
+
+
+        let coreskyCart = this.shoppingCartList
+        // let hasCoresky = coreskyCart.filter(v => !(v.contract === this.tokenInfo.contract && v.makerAssetBundle.assets[0].tokenId === v.tokenId))
+        // console.log(hasCoresky)
+        // if (hasCoresky.length !== coreskyCart.length) {
+        //   coreskyCart = hasCoresky
+        // }
+
+        let newCoresky = []
+        coreskyCart.forEach(item => {
+          if (item.contract !== this.tokenInfo.contract || item.tokenId !== this.tokenInfo.tokenId) {
+            newCoresky.push(item)
+          }
+        })
+        let objCoresky = {}
+        objCoresky[this.cartName] = JSON.stringify(newCoresky)
+        setLocalStorage(objCoresky)
+        this.$store.commit('initShoppingCart')
+
+
+
+
         setTimeout(() => {
           this.isBuyOver = true // 展示交易hash值
           this.buyBtnLoading = false
