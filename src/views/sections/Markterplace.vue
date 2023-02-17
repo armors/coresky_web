@@ -1,5 +1,5 @@
 <template>
-  <div class="main-wrapper" id="marketPlace">
+  <div class="main-wrapper" id="marketPlace" ref="marketPlace">
     <div class="filter-wrap" v-if="showFilterBox">
       <div class="filter-head">
         <span class="left" @click="showFilterBox=!showFilterBox">
