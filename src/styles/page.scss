@@ -353,6 +353,12 @@
   border: none;
   flex-grow: 1;
 
+
+  height: 46px;
+  background: #FFFFFF;
+  border: 2px solid #E5E8EB;
+  border-radius: 12px;
+
   .el-input__inner {
     height: 40px;
     border: none;
@@ -361,7 +367,7 @@
   .el-input__wrapper {
     border-radius: 12px;
     box-shadow: 0 0 0 0px var(--el-input-border-color, var(--el-border-color)) inset;
-    background: $elButtonHoverBg;
+    background: var(--cs-color-white);
     border: none;
     .el-input__inner {
       background-color: transparent;

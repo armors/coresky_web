@@ -12,7 +12,7 @@ $borderRadius: 8px;
 
 $tabTitleWidth: 90px;
 
-$headerHeight: 72px;
+$headerHeight: 76px;
 $bg-white: #fff;
 $bg-white2: rgba(255, 255, 255, 0.2);
 $bg-white3: rgba(120, 104, 244, 0.04);
@@ -46,14 +46,20 @@ $bgItem: #F5F5F5;
 //);
 
 :root {
-  --page-head-bg1: #fff;
-  --page-head-bg2: rgba(0, 0, 0, 0.04);
-  --page-head-color1: #000;
-  --page-head-color4: rgba(17, 17, 17, 0.6);
-  --page-head-color4-hover: #7D47FF;
-  --page-head-btn-bg1: rgba(41, 44, 66, 1);
-
-
+  --cs-color-grey-1: #111111;
+  --cs-color-grey-2: #454545;
+  --cs-color-grey-3: #717A83;
+  --cs-color-grey-4: #D3D3D3;
+  --cs-color-grey-5: #E6E8EC;
+  --cs-color-grey-6: #FAFAF8;
+  
+  --cs-color-primary: #1063E0;
+  --cs-color-primary-1: #7190FF;
+  --cs-color-primary-2: #99B0FF;
+  --cs-color-primary-3: #C2D0FF;
+  --cs-color-primary-4: #EBEFFF;
+  --cs-color-white: #FFFFFF;
+  --cs-color-primary-b: #2F57E5;
 }
 :root[theme='dark'] {
   --page-head-bg1: rgba(18, 18, 34, 1);

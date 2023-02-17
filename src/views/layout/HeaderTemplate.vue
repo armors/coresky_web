@@ -1,8 +1,10 @@
 <template>
-  <div class="home-header">
-    <div class="header-container" :style="style">
+  <div class="home-head">
+    <div class="home-head-mask" :class="{'opacity':isScrollTop}">
+    </div>
+    <div class="home-head-content" :style="style">
       <router-link to="/" class="head-logo header-margin-r">
-        <img fit="contain" class="logo-image" :src="require('../../assets/images/logo_black.svg')" />
+        <img fit="contain" class="logo-image" :src="require('../../assets/images/logo_black.png')" />
       </router-link>
 
       <div class="header-search header-margin-r">
@@ -28,7 +30,7 @@
           :offset="15">
           <template #reference>
             <div class="nav-link" to="/erc721">
-              <svg-icon class="head-icon mr8" icon-class="chain_eth" />
+              <!-- <svg-icon class="head-icon mr8" icon-class="chain_eth" /> -->
               Ethereum
             </div>
           </template>
@@ -82,24 +84,7 @@
           </avatar>
         </div>
       </div>
-      <!-- <div class="head-menus">
-        <div class="head-connect display-flex box-center" v-if="!connected" @click="login">
-          {{ $t("navigation.connectWallet") }}
-        </div>
-
-        <div class="user-link header-margin-l" v-else>
-          <div class="user-popover">
-            <profile-popover></profile-popover>
-            <div class="user-avatar" @click="showUserDrawer=true">
-              <avatar class="avatar-img" :imageUrl="user.avatar || $filters.fullImageUrl(user.avatar)"
-                :address="user.coinbase" :imgWidth="40" :imgHeight="40" shape="circular">
-              </avatar>
-            </div>
-          </div>
-        </div>
-      </div> -->
     </div>
-
     <follow-popup :show="showFollowing" ftype="following" @close="showFollowing = false" v-if="connected"
       :address="user.coinbase">
     </follow-popup>
@@ -116,6 +101,13 @@ import { useDark, useToggle } from '@vueuse/core'
 
 export default {
   name: "HeaderTemplate",
+  props: {
+    isScrollTop: {
+      type: Boolean,
+      default: false
+    },
+  },
+
   components: {
     FollowPopup,
     userCenterDrawer,
@@ -134,7 +126,8 @@ export default {
       networks: this.$store.state.networks,
       searchShow: false,
       menuShow: false,
-      languagePopover: false
+      languagePopover: false,
+      isOpacityHead: true,
     };
   },
   computed: {
@@ -164,12 +157,6 @@ export default {
   },
   created () {
     this.isDark = useDark()
-    // if (localStorage.getItem("locale") == "zh") {
-    //   this.$store.state.language = "中文";
-    // } else {
-    //   this.$store.state.language = "English";
-    // }
-    window.addEventListener("scroll", this.handleScroll);
   },
   mounted () {
     // this.login()
@@ -198,20 +185,6 @@ export default {
       const isDark = useDark()
       useToggle(isDark)
       this.isDark = !this.isDark
-    },
-    handleScroll () {
-      let scrollTop = window.pageYOffset ||
-        document.documentElement.scrollTop ||
-        document.body.scrollTop;
-      if (scrollTop) {
-        if (scrollTop < 112) {
-          this.style.backgroundColor = `rgba(255, 255, 255,${scrollTop / (scrollTop + 112)})`;
-        } else {
-          this.style.backgroundColor = "#fff";
-        }
-      } else if (scrollTop === 0) {
-        this.style.backgroundColor = "transparent";
-      }
     },
     async searchClick () {
       this.$router.push({ name: "Search", query: { keyword: this.keyword } });
@@ -293,14 +266,41 @@ export default {
 </style>
 
 <style lang="scss" scoped>
-@import '../../styles/variables';
-.home-header {
-  position: fixed;
-  right: 0;
-  left: 0;
-  top: 0;
-  z-index: 100;
-  background: $bg-white;
+.home-head {
+  position: sticky;
+  top: 0px;
+  width: 100%;
+  z-index: 999;
+  .home-head-mask {
+    position: fixed;
+    overflow: hidden;
+    background-color: rgb(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    box-shadow: rgb(0 0 0 / 20%) 0px 2px 6px;
+    top: 0px;
+    height: $headerHeight;
+    width: 100%;
+    transition: box-shadow 0.4s ease 0s;
+    &.opacity {
+      background-color: transparent;
+      box-shadow: none;
+    }
+  }
+  .home-head-content {
+    padding: 0px 40px;
+    height: $headerHeight;
+    position: sticky;
+    top: 0px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: 15px;
+    line-height: 40px;
+    height: $headerHeight;
+    color: $color-white;
+  }
+
   .avatar-img {
     width: 32px;
     height: 32px;
@@ -321,7 +321,6 @@ export default {
 .head-navs {
   display: flex;
   align-items: center;
-  flex: 1;
   justify-content: flex-end;
 }
 
@@ -356,7 +355,7 @@ export default {
 .nav-link {
   position: relative;
   white-space: nowrap;
-  color: $color-black4;
+  color: var(--cs-color-grey-1);
   font-weight: 500;
   font-size: 16px;
   cursor: pointer;
@@ -368,14 +367,14 @@ export default {
     font-size: 22px;
     color: #000;
     &:hover {
-      color: $bgPurple;
+      color: var(--cs-color-primary);
     }
   }
   .mr8 {
     margin-right: 8px;
   }
   &:hover {
-    color: $bgPurple;
+    color: var(--cs-color-primary);
   }
   &.active {
     border-bottom: 2px solid #333;
@@ -410,14 +409,15 @@ export default {
 .head-connect {
   margin-left: 24px;
   width: 140px;
-  height: 44px;
-  background: $color-black;
+  height: 46px;
+  background: var(--cs-color-grey-1);
   font-weight: 500;
   font-size: 14px;
-  color: $color-white;
+  color: var(--cs-color-white);
   cursor: pointer;
+  border-radius: 12px;
   &:hover {
-    background: #4136f5;
+    background: var(--cs-color-primary);
   }
 }
 .wallet-link {
