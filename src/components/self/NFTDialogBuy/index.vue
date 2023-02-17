@@ -25,7 +25,7 @@
         </div>
         <div class="price-wrap">
           <span class="buy-price">
-            {{$filters.milliFormat(sellInfo.protocolData.parameters.offer[0].startAmount)}}
+            {{$filters.milliFormat(isOpensea ? sellInfo.protocolData.parameters.offer[0].startAmount : sellInfo.amount)}}
           </span>
         </div>
       </div>
@@ -119,6 +119,7 @@ export default {
   },
   methods: {
     async showBuy (tokenInfo, v = null, isOpensea = false) {
+      console.log('showBuy', v, isOpensea)
       this.isOpensea = isOpensea
       this.isBuyOver = false
       this.tokenInfo = tokenInfo

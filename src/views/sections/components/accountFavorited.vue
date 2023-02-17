@@ -124,7 +124,7 @@
                 <div class="nft-txt">
                   {{item.name?item.name:('#'+item.tokenId)}}
                 </div>
-                <div class="nft-price" v-if="item.basePrice">
+                <div class="nft-price" v-if="item.basePrice && item.basePrice !== '0'">
                   <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="">
                   <span class="price">{{!!item.basePrice?nftPrice(item.basePrice):'-- '}} ETH</span>
                 </div>

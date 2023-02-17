@@ -433,6 +433,15 @@ export default {
 	 * @param walletAccount
 	 */
 	async signature(order, walletAccount) {
+		const token = `${window.localStorage.getItem(store.state.useAuthorization) || ''}`
+		console.log('signature token', token)
+		if (!token || token === 'undefined' || token === undefined) {
+			await store.dispatch("connectAndSign");
+		}
+		const token1 = `${window.localStorage.getItem(store.state.useAuthorization) || ''}`
+		if (!token1 || token1 === 'undefined' || token1 === undefined) {
+			return {error: 'signature error'};
+		}
 		const sender = web3.getSigner(walletAccount)
 		console.log(sender)
 		const eip712Domain = {
