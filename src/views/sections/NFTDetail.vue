@@ -125,18 +125,18 @@
           <div class="display-flex box-center-Y erc1155 nft-address" v-if="tokenInfo.contractType === 1">
             <div class="box-flex1 display-flex box-center-Y">
               <div class="icon-img"><img src="@/assets/images/icons/icon_detail_owner.svg" alt=""></div>
-              <div class="tip">Owner</div>
+              <div class="tip">{{ $t('nftDetail.Owner') }}</div>
               <!--              <div>{{tokenInfo.ckCollectionsInfoEntity.holder}}</div>-->
               <div>{{tokenInfo.ownersEntityList.length}}</div>
             </div>
             <div class="box-flex1 display-flex box-center-Y">
               <div class="icon-img"><img src="@/assets/images/icons/icon_detail_item.svg" alt=""></div>
-              <div class="tip">Item</div>
+              <div class="tip">{{ $t('nftDetail.Item') }}</div>
               <div>{{tokenInfo.ckCollectionsInfoEntity.total}}</div>
             </div>
             <div class="box-flex1 display-flex box-center-Y">
               <div class="icon-img"><img src="@/assets/images/icons/icon_detail_own.svg" alt=""></div>
-              <div class="tip">You own</div>
+              <div class="tip">{{ $t('nftDetail.YouOwn') }}</div>
               <div>{{youOwnAmount}}</div>
             </div>
           </div>

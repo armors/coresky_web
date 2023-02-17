@@ -151,7 +151,8 @@ module.exports = {
     RewardsListing: 'Rewards by Listing',
     Sale: 'Sale',
     Rewards: 'Rewards',
-    ConvertTickets: 'Convert to Tickets'
+    ConvertTickets: 'Convert to Tickets',
+    TransactionMining: 'Transaction mining'
   },
   shoppingCart: {
     title: 'Shopping cart',
@@ -196,6 +197,9 @@ module.exports = {
     TimeLeft: 'Time left',
     BestOffer: 'Best offer',
     MakeOffer: 'Make an Offer',
+    Owner:'Owner',
+    Item:'Item',
+    YouOwn:'You own',
     Buy: 'Buy',
     Add: 'Add',
     Sell: 'Sell',

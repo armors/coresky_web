@@ -151,7 +151,8 @@ module.exports = {
     RewardsListing: '挂单奖励',
     Sale: '交易',
     Rewards: '积分奖励',
-    ConvertTickets: '兑换彩票'
+    ConvertTickets: '兑换彩票',
+    TransactionMining: '交易挖矿'
   },
   shoppingCart: {
     title: '购物车',
@@ -197,6 +198,9 @@ module.exports = {
     TimeLeft: '剩余时间',
     BestOffer: '最佳报价',
     MakeOffer: '报价',
+    Owner:'Owner',
+    Item:'Item',
+    YouOwn:'You own',
     Buy: '购买',
     Add: '添加',
     Sell: '出售',

@@ -13,11 +13,11 @@
             <span>{{collectInfo.name}}</span>
             <img class="tag" src="../../assets/images/icons/icon_tag.svg" alt="">
           </div>
-          <div class="creator">
+          <!-- <div class="creator">
             <span class="txt">By</span>
             <span class="name">{{$filters.ellipsisAddress(collectInfo.owner, 4)}}</span>
             <img src="../../assets/images/icons/icon_tag_purple.svg" alt="">
-          </div>
+          </div> -->
         </div>
         <div class="share-wrap">
           <div class="icon-img icon-img-collect" :class="{active: collectInfo.followStatus}" @click="followContract">

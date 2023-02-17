@@ -2,7 +2,7 @@
   <div class="app-wrapper no-scroller">
     <template v-if="layout==='default'">
       <div class="web-loading" v-if="!webLoading" v-loading.fullscreen.lock="!webLoading"></div>
-      <div class="common-wraper no-scroller" v-else>
+      <div class="common-wraper no-scroller" id="common-wraper"  v-else>
         <HeaderTemplate />
         <div class="widClass">
           <!--          <router-view v-if="isRouterAlive" :current-view="currentView" />-->

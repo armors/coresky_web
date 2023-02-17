@@ -1,14 +1,19 @@
 <template>
   <div>
     <div v-if="loadStatus==='loading'">
-      <p class="loading-txt">Coming soon…</p>
+      <p class="loading-txt">
+        <el-icon class="my-loading">
+          <Loading />
+        </el-icon>
+      </p>
     </div>
     <div v-else>
       <nft-list :nftList="dataList" :volTime="1" @onLike="onLike"></nft-list>
       <div class="custom-pagination" v-if="listCount>queryParams.limit">
         <div class="content">
-          <el-pagination background v-model:current-page="queryParams.page" :page-size="queryParams.limit" :page-="queryParams.page"
-            @current-change="pageHandle" layout="prev, pager, next" align="center" :total="listCount" />
+          <el-pagination background v-model:current-page="queryParams.page" :page-size="queryParams.limit"
+            :page-="queryParams.page" @current-change="pageHandle" layout="prev, pager, next" align="center"
+            :total="listCount" />
         </div>
       </div>
       <div class="empty-wrap" v-if="dataList.length===0">
