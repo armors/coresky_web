@@ -59,13 +59,16 @@ export default {
 				apiKey: process.env.VUE_APP_OPENSEA_KEY,
 				gasPrice: new BigNumber(gasPrice * 1.5)
 			})
-			window.openseaSDK = new OpenSeaSDK(window.web3.currentProvider, {
+			const params = {
 				networkName: process.env.VUE_APP_CHAINID === '1' ? Network.Main : Network.Goerli,
 				gasPrice: new BigNumber(gasPrice * 1.5),
-				apiKey: process.env.VUE_APP_OPENSEA_KEY
 				// networkName: Network.Main,
 				// apiKey: process.env.VUE_APP_OPENSEA_KEY
-			})
+			}
+			if (process.env.VUE_APP_CHAINID === '1') {
+				params.apiKey = process.env.VUE_APP_OPENSEA_KEY
+			}
+			window.openseaSDK = new OpenSeaSDK(window.web3.currentProvider, params)
 		}
 		return window.openseaSDK
 	},
