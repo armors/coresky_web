@@ -571,12 +571,12 @@ export default {
         //   console.log(isOrder)
         // }
         this.buyOpenseaBtnLoading = false
-        if (this.openseaCart.length === 1) {
-          const transactionHash = await openseaSDK.fulfillOrder({
-            order: this.openseaCart[0],
-            accountAddress: this.user.coinbase
-          })
-        } else {
+        // if (this.openseaCart.length === 1) {
+        //   const transactionHash = await openseaSDK.fulfillOrder({
+        //     order: this.openseaCart[0],
+        //     accountAddress: this.user.coinbase
+        //   })
+        // } else {
           let fulfillOrderDetails = []
           this.openseaCart.forEach(item => {
             fulfillOrderDetails.push({
@@ -591,7 +591,7 @@ export default {
           const moreBuyAction = await openseaSDK.seaport.fulfillOrders(params)
           await moreBuyAction.executeAllActions()
           return
-        }
+        // }
 
         // this.$tools.message('购买成功', 'success');
         // this.buyOpenseaBtnLoading= false
