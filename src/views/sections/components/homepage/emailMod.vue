@@ -2,7 +2,7 @@
  * @Author: zhaoyan
  * @Date: 2023-02-18 13:35:48
  * @LastEditors: zhaoyan
- * @LastEditTime: 2023-02-18 14:49:02
+ * @LastEditTime: 2023-02-18 15:07:11
  * @Description: 首页邮件模块
 -->
 <template>
@@ -81,6 +81,7 @@ export default {
   border-radius: 12px;
   margin: auto;
   margin-top: 20px;
+  margin-bottom: 50px;
   padding-top: 80px;
   .email-content {
     width: 744px;
