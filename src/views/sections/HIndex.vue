@@ -1,36 +1,29 @@
 <template>
   <div>
     <homeBanner />
+    <GoodsList />
     <EmailDom />
   </div>
 </template>
 <script>
-import homeBanner from '@/views/sections/components/homeBanner'
-import EmailDom from '@/views/sections/components/homepage/emailMod.vue'
+import homeBanner from "@/views/sections/components/homeBanner";
+import EmailDom from "@/views/sections/components/homepage/emailMod.vue";
+import GoodsList from "@/views/sections/components/homepage/goodsList";
 export default {
   name: "HIndex",
   components: {
     homeBanner,
-    EmailDom
+    EmailDom,
+    GoodsList,
   },
-  mixins: [
-
-  ],
+  mixins: [],
   data: function () {
-    return {
-
-    };
+    return {};
   },
-  created () {
-  },
-  mounted () {
-
-  },
-  computed: {
-  },
-  methods: {
-
-  }
+  created() {},
+  mounted() {},
+  computed: {},
+  methods: {},
 };
 </script>
 <style lang="scss" scoped>
@@ -188,7 +181,7 @@ export default {
 
 
 <style lang="scss">
-@import '../../styles/variables';
+@import "../../styles/variables";
 .home-wrapper {
   max-width: $maxWidth;
   margin: 0 auto;
@@ -196,7 +189,7 @@ export default {
 }
 .home-banner {
   height: 524px;
-  background: url('../../assets/images/bg_home.png') no-repeat;
+  background: url("../../assets/images/bg_home.png") no-repeat;
   background-size: cover;
   padding-top: 76px;
 
@@ -395,68 +388,3 @@ export default {
   }
 }
 </style>
-<!-- <style lang="scss" scoped>
-.email-wrap {
-  height: 308px;
-  background: linear-gradient(313deg, #37c9a1 0%, #7d47ff 100%);
-  .email-content {
-    width: 1200px;
-    margin: 0 auto;
-    padding-top: 54px;
-    .txt1 {
-      text-align: center;
-      height: 57px;
-      font-size: 44px;
-      font-weight: bold;
-      color: #ffffff;
-      line-height: 57px;
-    }
-    .txt2 {
-      margin-top: 20px;
-      margin-bottom: 30px;
-      text-align: center;
-      height: 34px;
-      font-size: 26px;
-      color: #ffffff;
-      line-height: 34px;
-    }
-    .input-email {
-      // margin: 0 auto;
-      width: 600px;
-      height: 52px;
-      border-radius: 12px;
-      overflow: hidden;
-    }
-    .btn-sub {
-      // background: #7d47ff;
-    }
-  }
-  ::v-deep {
-    .el-input__inner {
-      border-radius: 2px;
-      padding: 0 10px;
-      font-weight: 600;
-    }
-    .el-input__wrapper {
-      border-top-left-radius: 12px;
-      border-bottom-left-radius: 12px;
-    }
-    .el-form-item__error {
-      margin-top: 10px;
-    }
-
-    .el-input-group__append {
-      background: #7d47ff;
-      box-shadow: none;
-      font-size: 16px;
-      color: #ffffff;
-      font-weight: 600;
-      cursor: pointer;
-      &:hover {
-        opacity: 0.8;
-      }
-    }
-  }
-}
-</style> -->
-
