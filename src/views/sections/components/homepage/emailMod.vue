@@ -2,7 +2,7 @@
  * @Author: zhaoyan
  * @Date: 2023-02-18 13:35:48
  * @LastEditors: zhaoyan
- * @LastEditTime: 2023-02-18 15:07:11
+ * @LastEditTime: 2023-02-18 17:44:04
  * @Description: 首页邮件模块
 -->
 <template>
@@ -74,12 +74,26 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@media screen and (max-width: 1500px) {
+  .email-mod {
+    zoom: 0.9;
+  }
+}
+@media screen and (max-width: 1340px) {
+  .email-mod {
+    zoom: 0.8;
+  }
+}
+@media screen and (max-width: 1220px) {
+  .email-mod {
+    zoom: 0.7;
+  }
+}
 .email-mod {
-  width: 1200px;
   height: 350px;
   background: #ebefff;
   border-radius: 12px;
-  margin: auto;
+  margin: auto 40px;
   margin-top: 20px;
   margin-bottom: 50px;
   padding-top: 80px;

@@ -127,10 +127,9 @@ export default {
   height: 200px;
 
   .footer-box {
-    max-width: $maxWidth;
     margin: 0 auto;
     height: 200px;
-    padding: 26px 0;
+    padding: 26px 40px;
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
