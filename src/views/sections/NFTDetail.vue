@@ -156,7 +156,7 @@
                 <div class="row-item">
                   <img class="icon" src="@/assets/images/icons/icon_time.svg" alt="">
                   <span>{{ $t('nftDetail.TimeLeft') }}</span>
-                  <span class="item-value">{{countDownTime}}</span>
+                  <span class="item-value" v-html="countDownTime"></span>
                 </div>
                 <div class="row-item">
                   <img class="icon" src="@/assets/images/icons/icon_frame.svg" alt="">
@@ -750,13 +750,13 @@ export default {
         s = "0" + s;
       }
       if (parseInt(h) === 0 && parseInt(m) === 0) {
-        return s + "S";
+        return s + "s";
       } else if (parseInt(h) === 0) {
-        return m + "M " + s + "S";
+        return m + "m  " + s + "s";
       } else if (parseInt(d) === 0) {
-        return h + "H " + m + "M " + s + "S";
+        return h + "h    " + m + "m    " + s + "s";
       } else {
-        return d + "D " + h + "H " + m + "M " + s + "S";
+        return d + "d    " + h + "h    " + m + "m    " + s + "s";
       }
       // else if (parseInt(M) === 0){
       //   return  d + "d" + h + " H" + m + "M " + s + "S";
@@ -1457,7 +1457,7 @@ export default {
           }
           .item-value {
             margin-left: 12px;
-            font-weight: 700;
+            font-weight: 500;
             font-size: 14px;
             color: $primaryColor;
             width: 160px;
