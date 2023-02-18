@@ -2,7 +2,7 @@
  * @Author: zhaoyan
  * @Date: 2023-02-18 13:35:48
  * @LastEditors: zhaoyan
- * @LastEditTime: 2023-02-18 14:24:07
+ * @LastEditTime: 2023-02-18 14:49:02
  * @Description: 首页邮件模块
 -->
 <template>
@@ -130,10 +130,12 @@ export default {
     background: #3461ff;
     box-shadow: 0px 3.05455px 8.14545px rgba(128, 156, 255, 0.5);
     border-radius: 10px;
-    color:#fff;
-    :hover{
-      opacity: .8;
-    }
+    color: #fff;
+  }
+  .btn-sub:hover {
+    box-shadow: 0 15px 30px rgba(97, 138, 228, 0.3),
+      0 0 20px rgba(96, 153, 218, 0.1) inset;
+    transform: translate3d(0, -2px, 0);
   }
 }
 </style>
