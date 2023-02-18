@@ -1,17 +1,20 @@
 <template>
-  <div class="home-head">
-    <div class="home-head-mask" :class="{'opacity':isScrollTop}">
+  <div class="home-head" :class="{'homeIndex':isScrollTop&&isHomeIndex}">
+    <div class="home-head-mask">
     </div>
-    <div class="home-head-content" :style="style">
+    <div class="home-head-content">
       <router-link to="/" class="head-logo header-margin-r">
-        <img fit="contain" class="logo-image" :src="require('../../assets/images/logo_black.png')" />
+        <img fit="contain" v-if="isScrollTop&&isHomeIndex" class="logo-image"
+          :src="require('../../assets/images/logo_white.png')" />
+        <img fit="contain" v-else class="logo-image" :src="require('../../assets/images/logo_black.png')" />
       </router-link>
-
       <div class="header-search header-margin-r">
         <el-input class="search-input-wrap" v-model="keyword" @keyup.enter="searchClick"
           :placeholder="$t('navigation.searchTip')">
           <template #prefix>
-            <div class="img-search"><img src="../../assets/images/icons/icon_search.svg" alt=""></div>
+            <div class="img-search" v-if="isScrollTop&&isHomeIndex"><img
+                src="../../assets/images/icons/icon_search_w.svg" alt=""></div>
+            <div class="img-search" v-else><img src="../../assets/images/icons/icon_search.svg" alt=""></div>
           </template>
         </el-input>
       </div>
@@ -127,7 +130,6 @@ export default {
       searchShow: false,
       menuShow: false,
       languagePopover: false,
-      isOpacityHead: true,
     };
   },
   computed: {
@@ -153,6 +155,9 @@ export default {
     },
     shoppingOpenseaCartList () {
       return this.$store.state.shoppingOpenseaCartList;
+    },
+    isHomeIndex () {
+      return this.$route.name === 'home'
     }
   },
   created () {
@@ -271,6 +276,39 @@ export default {
   top: 0px;
   width: 100%;
   z-index: 999;
+  &.homeIndex {
+    .home-head-mask {
+      background-color: transparent;
+      box-shadow: none;
+    }
+    .nav-link {
+      color: rgba(255, 255, 255, 1);
+      &:hover {
+        color: rgba(255, 255, 255, 0.9);
+      }
+      .svg-icon {
+        color: rgba(255, 255, 255, 1);
+        &:hover {
+          color: rgba(255, 255, 255, 0.9);
+        }
+      }
+    }
+    .search-input-wrap {
+      border: none;
+    }
+    .img-search {
+      opacity: 0.9;
+    }
+    ::v-deep {
+      .el-input__wrapper {
+        background: transparent;
+        .el-input__inner {
+          color: #ffffff;
+        }
+      }
+    }
+  }
+
   .home-head-mask {
     position: fixed;
     overflow: hidden;
@@ -281,10 +319,6 @@ export default {
     height: $headerHeight;
     width: 100%;
     transition: box-shadow 0.4s ease 0s;
-    &.opacity {
-      background-color: transparent;
-      box-shadow: none;
-    }
   }
   .home-head-content {
     padding: 0px 40px;
@@ -349,8 +383,18 @@ export default {
   align-items: center;
   color: #333;
   font-size: 15px;
-  font-weight: 900;
-  width: 430px;
+  .search-input-wrap {
+    background: rgba(255, 255, 255, 0.1);
+    ::v-deep {
+      .el-input__wrapper {
+        // background: transparent;
+      }
+    }
+  }
+  .img-search {
+    width: 24px;
+    height: 24px;
+  }
 }
 .nav-link {
   position: relative;
@@ -444,7 +488,6 @@ export default {
   color: #ffffff;
   padding: 1px 3px;
 }
-
 .popover-menu-item {
   display: flex;
   flex: 1;
@@ -456,7 +499,6 @@ export default {
     color: $primaryColor;
   }
 }
-
 .chain-item {
   grid-column-gap: 8px;
   background: #fff;
