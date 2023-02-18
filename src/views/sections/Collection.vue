@@ -35,10 +35,10 @@
           <span class="lable">{{ $t('collection.items') }}:</span>
           <span class="value">{{$filters.milliFormat(collectInfo.total)}}</span>
         </div>
-        <div class="item">
+        <!-- <div class="item">
           <span class="lable">{{ $t('collection.created') }}:</span>
           <span class="value">{{$filters.timeToUTC(collectInfo.deployTime)}}</span>
-        </div>
+        </div> -->
         <div class="item">
           <span class="lable">{{ $t('collection.creatorFee') }}:</span>
           <span class="value">{{$filters.feeFormat(collectInfo.royalty)}}</span>
@@ -49,7 +49,8 @@
         </div>
         <div class="item">
           <span class="lable">{{ $t('collection.contractADD') }}:</span>
-          <span class="value">{{$filters.ellipsisAddress(collectInfo.contract)}}</span>
+          <a class="value" target="_blank"
+            :href="'https://etherscan.io/address/'+collectInfo.contract">{{$filters.ellipsisAddress(collectInfo.contract)}}</a>
           <el-icon v-clipboard:copy="collectInfo.contract" v-clipboard:success="onSuccessCopy"
             v-clipboard:error="onErrorCopy">
             <CopyDocument />
@@ -395,6 +396,11 @@ export default {
       font-size: 20px;
       line-height: 30px;
       color: $color-black3;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
     }
     .info-card {
       display: flex;

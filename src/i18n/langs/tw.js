@@ -34,8 +34,8 @@ module.exports = {
     SetPriceItem: '請輸入掛單金額',
     SetDuration: '請選擇掛單時間',
     loadingOSInfoWating: '正在拉取opensea數據，請稍等',
-    platformOneQuotation: '每個平臺僅支持一次報價，請取消{name}平臺掛單後重新掛售'
-
+    platformOneQuotation: '每個平臺僅支持一次報價，請取消{name}平臺掛單後重新掛售',
+    addedCart:'已經加入購物車'
   },
   navigation: {
     searchTip: "搜索NFT或合集",
@@ -198,9 +198,9 @@ module.exports = {
     TimeLeft: '剩餘時間',
     BestOffer: '最佳報價',
     MakeOffer: '報價',
-    Owner:'Owner',
-    Item:'Item',
-    YouOwn:'You own',
+    Owner: 'Owner',
+    Item: 'Item',
+    YouOwn: 'You own',
     Buy: '購買',
     Add: '添加',
     Sell: '出售',
@@ -252,5 +252,19 @@ module.exports = {
     itemPrivacyStatement: "Privacy Policy",
     itemTermsService: "Terms of Service",
     joinCommunity: "Join the community",
+  },
+  time: {
+    secondsAgo: "秒前",
+    minutesAgo: "分鐘前",
+    hoursAgo: "個小時前",
+    daysAgo: "天前",
+    monthsAgo: "个月前",
+    yearsAgo: "年前",
+    days: "天",
+    daysS: "天",
+    begin: "開始",
+    end: "结束",
+    over: "過期",
+    expired: "過期",
   },
 };

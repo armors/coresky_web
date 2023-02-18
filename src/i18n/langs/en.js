@@ -34,8 +34,8 @@ module.exports = {
     SetPriceItem: 'Set a price per item',
     SetDuration: 'Set duration',
     loadingOSInfoWating: 'Pulling opensea data, please wait',
-    platformOneQuotation: 'Each platform only supports one quotation. Please cancel the listing of {name} platform and re-list'
-
+    platformOneQuotation: 'Each platform only supports one quotation. Please cancel the listing of {name} platform and re-list',
+    addedCart:'Added to cart'
   },
   // 头部导航
   navigation: {

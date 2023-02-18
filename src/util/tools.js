@@ -1,4 +1,4 @@
-import {ElMessage, ElMessageBox} from "element-plus";
+import { ElMessage, ElMessageBox, ElNotification } from "element-plus";
 import i18n from "@/i18n/i18n";
 import store from "@/store";
 import router from "@/router";
@@ -52,7 +52,7 @@ const NOTIFY_SUB_TYPE = {
 };
 
 const NOTIFY_SUB_TYPE_CODE = {};
-for(var key in NOTIFY_SUB_TYPE){
+for (var key in NOTIFY_SUB_TYPE) {
   NOTIFY_SUB_TYPE_CODE[NOTIFY_SUB_TYPE[key]] = key;
 }
 
@@ -78,24 +78,24 @@ export default {
     }
     return {};
   },
-  sliceArrayTo(list, spliceLen = 6) {
+  sliceArrayTo (list, spliceLen = 6) {
     let result = []
-    for(let i=0,len=list.length;i<len;i+=spliceLen){
-      result.push(list.slice(i,i+spliceLen));
+    for (let i = 0, len = list.length; i < len; i += spliceLen) {
+      result.push(list.slice(i, i + spliceLen));
     }
     console.log(result)
     return result
   },
-  getNotifyType(type) {
+  getNotifyType (type) {
     return NOTIFY_TYPE[type];
   },
-  getNotifySubType(subType) {
+  getNotifySubType (subType) {
     return NOTIFY_SUB_TYPE[subType];
   },
-  getNotitySubTypeCode(name){
+  getNotitySubTypeCode (name) {
     return NOTIFY_SUB_TYPE_CODE[name];
   },
-  minPriceLimit(price, paytoken) {
+  minPriceLimit (price, paytoken) {
     let value = new BigNumber(price);
     value = value.multipliedBy(
       new BigNumber(10).exponentiatedBy(paytoken.decimals)
@@ -104,7 +104,7 @@ export default {
     if (value >= 1) return true;
     return false;
   },
-  needLogin(path) {
+  needLogin (path) {
     if (!store.state.connected) {
       // let url = "/connect";
       // if (path) url += "?redirect=" + path;
@@ -118,20 +118,20 @@ export default {
     }
     return true;
   },
-  needConnected(path) {
+  needConnected (path) {
     if (!store.state.connected) {
       store.dispatch("signLogin");
       return false;
     }
     return true;
   },
-  checkResponse(response) {
+  checkResponse (response) {
     if (!response.errno) {
       return true;
     }
     return false;
   },
-  serializeNfts(nfts) {
+  serializeNfts (nfts) {
     let _nfts = [];
     for (var i = 0; i < nfts.length; i++) {
       let nft = nfts[i];
@@ -139,7 +139,7 @@ export default {
     }
     return _nfts.join(",");
   },
-  serializeNfts2(nfts) {
+  serializeNfts2 (nfts) {
     let _nfts = [];
     for (var i = 0; i < nfts.length; i++) {
       let nft = nfts[i];
@@ -153,7 +153,7 @@ export default {
     }
     return _nfts.join(",");
   },
-  parseMetaData(content) {
+  parseMetaData (content) {
     if (typeof content != "string") return content;
     try {
       return JSON.parse(content);
@@ -161,7 +161,7 @@ export default {
       return {};
     }
   },
-  str2num(n) {
+  str2num (n) {
     var _n = parseFloat(n);
     if (isNaN(_n) || _n != n) return;
 
@@ -173,7 +173,7 @@ export default {
     }
     return _n;
   },
-  isEmpty(obj) {
+  isEmpty (obj) {
     if (obj == null) return true;
     if (obj.length > 0) return false;
     if (obj.length === 0) return true;
@@ -183,41 +183,41 @@ export default {
     }
     return true;
   },
-  decimal(num, v) {
+  decimal (num, v) {
     if (!v) v = store.state.decimal;
     var vv = Math.pow(10, v);
     return Math.round(num * vv) / vv;
   },
-  isAudioUrl(url) {
-    return [".mp3", ".wav", ".oga"].some(function(ext) {
+  isAudioUrl (url) {
+    return [".mp3", ".wav", ".oga"].some(function (ext) {
       return url.endsWith(ext);
     });
   },
-  isVideoUrl(url) {
-    return [".webm", ".mp4", ".m4v", ".ogg", ".ogv", ".mov"].some(function(
+  isVideoUrl (url) {
+    return [".webm", ".mp4", ".m4v", ".ogg", ".ogv", ".mov"].some(function (
       ext
     ) {
       return url.endsWith(ext);
     });
   },
-  networkName(networkId) {
+  networkName (networkId) {
     var name = NETWORKS[networkId];
     if (!name) {
       return "unknown network";
     }
     return name;
   },
-  network() {
+  network () {
     return NETWORKLIST.find((item => item.chainId === parseInt(process.env.VUE_APP_CHAINID)))
   },
   networkIds () {
     return NETWORKS
   },
-  delHashFormat(hash) {
+  delHashFormat (hash) {
     if (hash.startsWith("0x")) return hash.slice(2, hash.length);
     return hash;
   },
-  message(message, type = "") {
+  message (message, type = "") {
     ElMessage.closeAll();
 
     ElMessage({
@@ -228,7 +228,7 @@ export default {
       duration: 2000,
     });
   },
-  messageBox(title, content, confirmText = "") {
+  messageBox (title, content, confirmText = "") {
     if (!messageBoxStatus) return;
     messageBoxStatus = false;
     ElMessageBox.confirm(content, title, {
@@ -247,7 +247,15 @@ export default {
         messageBoxStatus = true;
       });
   },
-  time(item) {
+  notification (title, msg = '', type = 'success') {
+    ElNotification({
+      title: title,
+      message: msg,
+      type: type,
+      duration: 1000,
+    })
+  },
+  time (item) {
     let nowTimeStamp = new Date().getTime();
     let updateTimeStamp = new Date(item.addtime).getTime();
     let newTime = nowTimeStamp - updateTimeStamp;
@@ -267,35 +275,35 @@ export default {
     }
     return finallyTime;
   },
-  singlePrice(price, quanlity, payToken) {
+  singlePrice (price, quanlity, payToken) {
     let value = new BigNumber(price);
     value = value.dividedBy(Math.pow(10, payToken?.decimals));
     value = value.dividedBy(new BigNumber(quanlity)).toFixed(6);
     value = parseFloat(value);
     return value;
   },
-  decimalsValue(value, quanlity, decimals){
+  decimalsValue (value, quanlity, decimals) {
     value = new BigNumber(value);
     value = value.multipliedBy(new BigNumber(quanlity)).multipliedBy(
       new BigNumber(10).exponentiatedBy(new BigNumber(decimals))
     ).toFixed();
     return value;
   },
-  noDecimalsValue(value, quanlity, decimals){
+  noDecimalsValue (value, quanlity, decimals) {
     value = new BigNumber(value);
     value = value.dividedBy(new BigNumber(quanlity)).dividedBy(
       new BigNumber(10).exponentiatedBy(new BigNumber(decimals))
     ).toFixed();
     return value;
   },
-  analysis(param) {
+  analysis (param) {
     try {
       return JSON.parse(param);
     } catch (e) {
       return {};
     }
   },
-  formatSecond(second) {
+  formatSecond (second) {
     var days = Math.floor(second / 86400);
     var hours = Math.floor((second % 86400) / 3600);
 
@@ -311,7 +319,7 @@ export default {
     str = str + hours + ":" + minutes + ":" + seconds;
     return str;
   },
-  countData(leadTime) {
+  countData (leadTime) {
     let hours;
     let minutes;
     let seconds;
