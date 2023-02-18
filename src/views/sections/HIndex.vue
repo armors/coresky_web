@@ -114,7 +114,7 @@
       </burn-dialog>
 
     </div>
-    <div class="email-wrap">
+    <!-- <div class="email-wrap">
       <div class="email-content">
         <div class="txt1">Never miss a drop</div>
         <div class="txt2">Subscribe for the latest news, drops & collectibles</div>
@@ -125,9 +125,6 @@
               <el-input v-model="ruleForm.name" clearable class="input-email">
                 <template #append>
                   <el-button class="btn-sub" @click="addTopic" style="font-weight: 600;">Subscribe</el-button>
-                  <!-- <div class="btn-sub"> -->
-                  <!-- <el-button class="btn-sub" text :loading="true">Subscribe</el-button> -->
-                  <!-- </div> -->
                 </template>
               </el-input>
             </el-form-item>
@@ -135,7 +132,8 @@
         </div>
 
       </div>
-    </div>
+    </div> -->
+    <EmailDom/>
   </div>
 </template>
 <script>
@@ -148,6 +146,7 @@ import nftRecommend from '@/components/self/recommend/index'
 import nftTrade from '@/components/self/trading/index'
 import nftDrop from '@/components/self/drop/index'
 import partners from '@/components/self/partners'
+import EmailDom from '@/views/sections/components/homepage/emailMod.vue'
 export const regEmail = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
 
 export default {
@@ -158,7 +157,8 @@ export default {
     nftRecommend,
     nftTrade,
     nftDrop,
-    partners
+    partners,
+    EmailDom
   },
   mixins: [
     NftDialog,
@@ -779,7 +779,7 @@ export default {
   }
 }
 </style>
-<style lang="scss" scoped>
+<!-- <style lang="scss" scoped>
 .email-wrap {
   height: 308px;
   background: linear-gradient(313deg, #37c9a1 0%, #7d47ff 100%);
@@ -842,5 +842,5 @@ export default {
     }
   }
 }
-</style>
+</style> -->
 
