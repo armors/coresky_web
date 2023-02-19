@@ -1,16 +1,20 @@
 <template>
   <div>
     <homeBanner />
+    <homeCollectionList />
     <EmailDom />
   </div>
 </template>
 <script>
 import homeBanner from '@/views/sections/components/homeBanner'
+import homeCollectionList from '@/views/sections/components/homeCollectionList'
+
 import EmailDom from '@/views/sections/components/homepage/emailMod.vue'
 export default {
   name: "HIndex",
   components: {
     homeBanner,
+    homeCollectionList,
     EmailDom
   },
   mixins: [
