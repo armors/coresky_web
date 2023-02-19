@@ -48,7 +48,7 @@ export default {
     },
     curBgImage () {
       if (this.bannerList && this.bannerList.length > 0) {
-        return this.bannerList[this.bannerIndex].url
+        return this.bannerList[this.bannerIndex].image
       }
       return ''
     }

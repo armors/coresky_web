@@ -310,7 +310,7 @@ export default {
   }
 
   .home-head-mask {
-    position: fixed;
+    position: absolute;
     overflow: hidden;
     background-color: rgb(255, 255, 255, 0.8);
     backdrop-filter: blur(12px);
