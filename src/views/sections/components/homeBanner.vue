@@ -2,7 +2,8 @@
   <div class="banner-wrap-out">
     <div class="banner-wrap" :style="{'background-image':`url(${curBgImage})`}">
       <div class="banner-swiper">
-        <el-carousel trigger="click" height="460px" @change="bannerChange" :interval="5000">
+        <el-carousel trigger="click" height="460px" @change="bannerChange" :interval="5000" style="    overflow: hidden;
+    border-radius: 26px;">
           <el-carousel-item v-for="item in bannerList" :key="item">
             <div class="swiper-item-wrap">
               <div class="swiper-item-left">
@@ -122,11 +123,11 @@ export default {
   .banner-swiper {
     height: 460px;
     margin: 20px 40px;
-    ::v-deep{
-      .el-carousel__arrow{
+    ::v-deep {
+      .el-carousel__arrow {
         background: #a6a6a8;
         font-size: 20px;
-        i{
+        i {
           color: #ffffff;
         }
       }
