@@ -11,9 +11,12 @@
           {{ item.name }}</div>
       </div>
     </div>
-
-    <div v-if="loadStatus === 'loading'">
-      <p class="loading-txt">Coming soon…</p>
+    <div v-if="loadStatus==='loading'">
+      <p class="loading-txt">
+        <el-icon class="my-loading">
+          <Loading />
+        </el-icon>
+      </p>
     </div>
     <div v-else>
       <div class="collection-list-new">

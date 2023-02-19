@@ -42,7 +42,7 @@ export default {
   reload({ state, commit, dispatch }) {
     return new Promise(function(resolve, reject) {
       var items = getLocalStorage(state.useAuthorization);
-      if (items[state.useAuthorization] && items[state.useAuthorization] !== 'undefined') {
+      if (items[state.useAuthorization] && items[state.useAuthorization] !== 'undefined' && items[state.useAuthorization] !== undefined) {
         api("user.reload")
           .then(async function(response) {
             if (tools.checkResponse(response)) {
@@ -242,7 +242,8 @@ export default {
       });
       dispatch("authinfo");
       resolve(data);
-      api("user.login", data).then((res) => {
+      try {
+        const res = await api("user.login", data)
         console.log(res)
         if (tools.checkResponse(res)) {
           let _data = Object.assign(res.debug, {
@@ -252,7 +253,10 @@ export default {
           dispatch("authinfo");
         }
         resolve(res);
-      });
+      } catch (e) {
+        resolve(e);
+      }
+
     });
   },
   connectAndSign({ state, commit, dispatch }, type) {

@@ -591,7 +591,12 @@ export default {
     position: relative;
     border-radius: 50%;
     margin: 30px auto 0;
-
+    overflow: hidden;
+    img{
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
     .edit-icon {
       width: 32px;
       height: 32px;
@@ -604,6 +609,7 @@ export default {
       left: 0;
       top: 0;
       background-color: $color-bg5;
+      overflow: hidden;
     }
   }
 }

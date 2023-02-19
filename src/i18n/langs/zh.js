@@ -34,8 +34,8 @@ module.exports = {
     SetPriceItem: '请输入挂单金额',
     SetDuration: '请选择挂单时间',
     loadingOSInfoWating: '正在拉取opensea数据，请稍等',
-    platformOneQuotation: '每个平台仅支持一次报价，请取消{name}平台挂单后重新挂售'
-
+    platformOneQuotation: '每个平台仅支持一次报价，请取消{name}平台挂单后重新挂售',
+    addedCart:'已经加入购物车'
   },
   navigation: {
     searchTip: "搜索NFT或合集",
@@ -152,7 +152,8 @@ module.exports = {
     RewardsListing: '挂单奖励',
     Sale: '交易',
     Rewards: '积分奖励',
-    ConvertTickets: '兑换彩票'
+    ConvertTickets: '兑换彩票',
+    TransactionMining: '交易挖矿'
   },
   shoppingCart: {
     title: '购物车',
@@ -198,6 +199,9 @@ module.exports = {
     TimeLeft: '剩余时间',
     BestOffer: '最佳报价',
     MakeOffer: '报价',
+    Owner:'Owner',
+    Item:'Item',
+    YouOwn:'You own',
     Buy: '购买',
     Add: '添加',
     Sell: '出售',
@@ -630,6 +634,7 @@ module.exports = {
     monthsAgo: "个月前",
     yearsAgo: "年前",
     days: "天",
+    daysS: "天",
     begin: "开始",
     end: "结束",
     over: "过期",

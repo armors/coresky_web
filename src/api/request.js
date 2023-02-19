@@ -12,11 +12,12 @@ const service = axios.create({
 
 // request interceptor
 service.interceptors.request.use(
-  config => {
+  async config => {
     if (!config.headers['token']) {
       config.headers['token'] = `${window.localStorage.getItem(store.state.useAuthorization) || ''}`;
+    } else {
+      await store.dispatch("connectAndSign");
     }
-
     return config;
   },
   err => Promise.reject(err)

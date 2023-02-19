@@ -851,3 +851,19 @@
     }
   }
 }
+
+.my-loading {
+  color: #409eff;
+  width: 60px;
+  height: 60px;
+  animation: icon-loading 2s infinite linear;
+  font-size: 60px;
+}
+@keyframes icon-loading {
+  0% {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(1turn);
+  }
+}

@@ -13,11 +13,11 @@
             <span>{{ collectInfo.name }}</span>
             <img class="tag" src="../../assets/images/icons/icon_list_blue.svg" alt="">
           </div>
-          <div class="creator">
+          <!-- <div class="creator">
             <span class="txt">By</span>
-            <span class="name">{{ $filters.ellipsisAddress(collectInfo.owner, 4) }}</span>
-            <img src="../../assets/images/icons/icon_list_blue.svg" alt="">
-          </div>
+            <span class="name">{{$filters.ellipsisAddress(collectInfo.owner, 4)}}</span>
+            <img src="../../assets/images/icons/icon_tag_purple.svg" alt="">
+          </div> -->
         </div>
         <div class="share-wrap">
           <div class="icon-img icon-img-collect" :class="{ active: collectInfo.followStatus }" @click="followContract">
@@ -35,12 +35,10 @@
           <span class="lable">{{ $t('collection.items') }}</span>
           <span class="value">{{ $filters.milliFormat(collectInfo.total) }}</span>
         </div>
-        <div class="item">|</div>
-        <div class="item">
-          <span class="lable">{{ $t('collection.created') }}</span>
-          <span class="value">{{ $filters.timeToUTC(collectInfo.deployTime) }}</span>
-        </div>
-        <div class="item">|</div>
+        <!-- <div class="item">
+          <span class="lable">{{ $t('collection.created') }}:</span>
+          <span class="value">{{$filters.timeToUTC(collectInfo.deployTime)}}</span>
+        </div> -->
         <div class="item">
           <span class="lable">{{ $t('collection.creatorFee') }}</span>
           <span class="value">{{ $filters.feeFormat(collectInfo.royalty) }}</span>
@@ -52,8 +50,9 @@
         </div>
         <div class="item">|</div>
         <div class="item">
-          <span class="lable">{{ $t('collection.contractADD') }}</span>
-          <span class="value">{{ $filters.ellipsisAddress(collectInfo.contract) }}</span>
+          <span class="lable">{{ $t('collection.contractADD') }}:</span>
+          <a class="value" target="_blank"
+            :href="'https://etherscan.io/address/'+collectInfo.contract">{{$filters.ellipsisAddress(collectInfo.contract)}}</a>
           <el-icon v-clipboard:copy="collectInfo.contract" v-clipboard:success="onSuccessCopy"
             v-clipboard:error="onErrorCopy">
             <CopyDocument />
@@ -432,8 +431,13 @@ export default {
       font-weight: 400;
       font-size: 18px;
       line-height: 21px;
-      color: #000000;
       height: 21px;
+      color: #000000;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
     }
 
     .info-card {

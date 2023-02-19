@@ -28,7 +28,8 @@
       </div>
     </div>
     <div class="table-fix" v-loading="loadStatusCollect==='loading'">
-      <el-table :data="dataListA" v-if="dataListA.length>0" style="margin-right: 100px; width: 50%;">
+      <el-table :data="dataListA" v-if="dataListA.length>0" style="margin-right: 100px; width: 50%;"
+        @row-click="rowClick">
         <el-table-column min-width="300px">
           <template #header>
             <div class="th1">
@@ -69,7 +70,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-table :data="dataListB" v-if="dataListB.length>0" style="width: 50%;">
+      <el-table :data="dataListB" v-if="dataListB.length>0" style="width: 50%;" @row-click="rowClick">
         <el-table-column min-width="300px">
           <template #header>
             <div class="th1">
@@ -196,6 +197,12 @@ export default {
     }
   },
   methods: {
+    rowClick (row) {
+      this.$router.push({
+        name: 'collection',
+        params: { contract: row.contract }
+      })
+    },
     changeOrder (val) {
       if (this.collectionQuery.order !== val) {
         this.collectionQuery.order = val

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <link rel="icon" type="image/svg" href="/logo.svg" />
@@ -14,13 +15,32 @@
     <% } %>
       <style>
         @font-face {
-          font-family: 'Clash Display';
-          src: url('/fonts/ClashDisplay-Variable.woff2') format('woff2'),
-            url('/fonts/ClashDisplay-Variable.woff') format('woff'),
-            url('/fonts/ClashDisplay-Variable.ttf') format('truetype');
-          font-weight: 200 700;
-          font-display: swap;
+          font-family: 'Roboto';
           font-style: normal;
+          font-weight: 400;
+          font-display: swap;
+          src: url('/fonts/Roboto-Regular-webfont.woff') format('woff2');
+          unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+        }
+
+        /* greek-ext */
+        @font-face {
+          font-family: 'Roboto';
+          font-style: normal;
+          font-weight: 500;
+          font-display: swap;
+          src: url('/fonts/Roboto-Medium-webfont.woff') format('woff2');
+          unicode-range: U+1F00-1FFF;
+        }
+
+        /* greek */
+        @font-face {
+          font-family: 'Roboto';
+          font-style: normal;
+          font-weight: 700;
+          font-display: swap;
+          src: url('/fonts/Roboto-Bold-webfont.woff') format('woff2');
+          unicode-range: U+0370-03FF;
         }
       </style>
 </head>
