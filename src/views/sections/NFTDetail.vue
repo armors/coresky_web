@@ -1,9 +1,15 @@
 <template>
-  <div class="main-wrapper nft-detail">
+  <div class="nft-detail">
     <div class="flex-center">
       <div class="page-left">
         <div class="detail-img-box">
-          <image-box :src="tokenInfo.oriImage"></image-box>
+          <el-skeleton v-if="!tokenInfo.oriImage" animated>
+            <template #template>
+              <el-skeleton-item class="nft-image-skeleton" variant="h3" style="height: 100%;" />
+            </template>
+          </el-skeleton>
+          <image-box v-else :src="tokenInfo.oriImage"></image-box>
+
         </div>
         <div class="card-wrap mt30">
           <el-collapse v-model="activeName" accordion>
@@ -12,9 +18,6 @@
                 <div class="card-head">
                   <img class="icon" src="@/assets/images/icons/icon_properties.svg" alt="">
                   <span class="card-title">{{ $t('nftDetail.Properties') }}</span>
-                  <!--                  <el-icon class="down">-->
-                  <!--                    <ArrowUp />-->
-                  <!--                  </el-icon>-->
                 </div>
               </template>
               <!--              <div class="card-body no-scroller" style="height: 392px;overflow: auto;">-->
@@ -24,11 +27,20 @@
                     <p class="attr-name">{{v.type}}</p>
                     <p class="attr-value">{{v.value}}</p>
                     <div class="attr-bottom">
-                      <span class="attr-num">{{$filters.milliFormat(v.count)}}({{v.percent}}%)</span>
-                      <div class="attr-price">
+                      <span class="attr-num"></span>
+                      <div>
+                        {{v.percent}}%
+                      </div>
+                    </div>
+                    <div class="attr-bottom">
+                      <span class="attr-num">{{$filters.milliFormat(v.count)}}</span>
+                      <div class="attr-bar">
+                        <div class="attr-bar-num" :style="{width:v.percent+'%'}"></div>
+                      </div>
+                      <!-- <div class="attr-price">
                         <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
                         <span class="value">{{nftPriceFun(v.price)}}</span>
-                      </div>
+                      </div> -->
                     </div>
                   </div>
                 </div>
@@ -97,24 +109,15 @@
         <div class="detail-info">
           <router-link :to="`/collection/${$route.params.contract}`" tag="div" class="collection-name">
             <span>{{tokenInfo.ckCollectionsInfoEntity.name}}</span>
-            <img class="tag" v-if="tokenInfo.ckCollectionsInfoEntity.isCertification === '1'"
-              src="@/assets/images/icons/icon_tag.svg" alt="">
+            <svg-icon class="tag" v-if="tokenInfo.ckCollectionsInfoEntity.isCertification === '1'"
+              icon-class="icon_tag" />
           </router-link>
-          <!--          <div class="globle-floor">-->
-          <!--            <span>Globle floor : </span>-->
-          <!--            <img class="token-icon" src="@/assets/images/icons/token/token_eth.svg" alt="" />-->
-          <!--            <span class="value">{{tokenInfo.ckCollectionsInfoEntity.floorPrice}}</span>-->
-          <!--          </div>-->
           <div class="nft-name">
             <span> {{tokenInfo.name?tokenInfo.name:('#'+tokenInfo.tokenId)}}</span>
             <div class="icon_shoucang" :class="{active: tokenInfo.followStatus}" alt="" @click="followNft" />
           </div>
           <div class="nft-address" v-if="tokenInfo.contractType === 0">
-            <!--            <div class="add-item">-->
-            <!--              <div class="creator">Creator</div>-->
-            <!--              <div class="creator-name">{{$filters.ellipsisAddress(tokenInfo.ckCollectionsInfoEntity.owner)}}</div>-->
-            <!--            </div>-->
-            <div>
+            <div class="flex-owner">
               <div class="creator">{{ $t('nftDetail.CurrentOwner') }}</div>
               <router-link
                 :to="`/account/${(tokenInfo.ownersEntityList !== null && tokenInfo.ownersEntityList.length > 0) ? tokenInfo.ownersEntityList[0].address : ''}`"
@@ -126,23 +129,23 @@
           <div class="display-flex box-center-Y erc1155 nft-address" v-if="tokenInfo.contractType === 1">
             <div class="box-flex1 display-flex box-center-Y">
               <div class="icon-img"><img src="@/assets/images/icons/icon_detail_owner.svg" alt=""></div>
+              <div class="txt">{{tokenInfo.ownersEntityList.length}}</div>
               <div class="tip">{{ $t('nftDetail.Owner') }}</div>
-              <!--              <div>{{tokenInfo.ckCollectionsInfoEntity.holder}}</div>-->
-              <div>{{tokenInfo.ownersEntityList.length}}</div>
             </div>
             <div class="box-flex1 display-flex box-center-Y">
               <div class="icon-img"><img src="@/assets/images/icons/icon_detail_item.svg" alt=""></div>
+              <div class="txt">{{tokenInfo.ckCollectionsInfoEntity.total}}</div>
               <div class="tip">{{ $t('nftDetail.Item') }}</div>
-              <div>{{tokenInfo.ckCollectionsInfoEntity.total}}</div>
             </div>
             <div class="box-flex1 display-flex box-center-Y">
               <div class="icon-img"><img src="@/assets/images/icons/icon_detail_own.svg" alt=""></div>
+              <div class="txt">{{youOwnAmount}}</div>
               <div class="tip">{{ $t('nftDetail.YouOwn') }}</div>
-              <div>{{youOwnAmount}}</div>
             </div>
           </div>
           <div class="nft-bid-box">
-            <div class="box-flex" v-if="!(ckAuctionEntityList.length < 1 && ckOrdersEntityList.length < 1)">
+            <!-- v-if="!(ckAuctionEntityList.length < 1 && ckOrdersEntityList.length < 1)" -->
+            <div class="box-flex">
               <div class="box-left">
                 <div>{{ $t('nftDetail.CurrentPrice') }}</div>
                 <div class="row">
@@ -562,7 +565,8 @@ export default {
         ckCollectionsInfoEntity: {
           bannerImage: '',
           image: ''
-        }
+        },
+        oriImage: ''
       },
       tokenInfoParams: {
         contract: '',
@@ -1297,9 +1301,9 @@ export default {
   },
 };
 </script>
-<style lang="scss">
-.main-wrapper.nft-detail {
-  padding: 40px 0;
+<style lang="scss" scoped>
+.nft-detail {
+  padding: 36px 40px;
   margin-bottom: 20px;
   .flex-center {
     display: flex;
@@ -1307,7 +1311,11 @@ export default {
     justify-content: space-between;
   }
   .page-left {
-    width: 468px;
+    flex: 3 0 0%;
+    max-width: 50%;
+    min-width: 40%;
+    width: 0px;
+
     display: flex;
     flex-direction: column;
     /*justify-content: space-between;*/
@@ -1322,24 +1330,26 @@ export default {
     }
   }
   .page-right {
-    width: 708px;
+    flex: 4 0 0%;
+    margin-left: 20px;
     display: flex;
     flex-direction: column;
     /*justify-content: space-between;*/
     .collection-name {
       cursor: pointer;
-      font-weight: 600;
-      font-size: 14px;
-      line-height: 20px;
-      background: $mainLiner;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: #1063e0;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 21px;
+      // background: $mainLiner;
+      // -webkit-text-fill-color: transparent;
+      // background-clip: text;
       .tag {
         margin-left: 5px;
         vertical-align: middle;
         display: inline-block;
-        width: 16px;
-        height: 16px;
+        width: 20px;
+        height: 20px;
       }
     }
     .globle-floor {
@@ -1362,11 +1372,11 @@ export default {
       }
     }
     .nft-name {
-      margin-top: 8px;
+      margin-top: 30px;
       font-weight: 700;
-      font-size: 32px;
-      line-height: 41px;
-      color: $primaryColor;
+      font-size: 30px;
+      line-height: 35px;
+      color: #111111;
       .icon_shoucang {
         margin-left: 16px;
         display: inline-block;
@@ -1386,32 +1396,41 @@ export default {
       font-size: 12px;
       line-height: 18px;
       color: $color-black3;
-      .add-item {
-        margin-right: 24px;
-      }
-      .creator-name {
-        cursor: pointer;
-        font-weight: 700;
-        font-size: 14px;
+      .flex-owner {
+        display: flex;
+        font-weight: 500;
+        font-size: 18px;
         line-height: 21px;
-        color: $primaryColor;
+        text-transform: capitalize;
+        .creator {
+          color: #717a83;
+          margin-right: 10px;
+        }
+        .creator-name {
+          color: #1063e0;
+        }
       }
       &.erc1155 {
         font-style: normal;
         font-weight: 500;
         font-size: 14px;
-        color: $primaryColor;
+        color: #717a83;
         padding-top: 26px;
         padding-bottom: 10px;
+        font-size: 18px;
+        line-height: 21px;
         .tip {
-          font-size: 12px;
-          color: $color-black3;
-          margin-right: 4px;
+          // margin-right: 4px;
         }
         .icon-img {
-          width: 18px;
-          height: 18px;
-          margin-right: 6px;
+          width: 24px;
+          height: 24px;
+        }
+        .txt {
+          margin: 0 10px;
+          font-weight: 500;
+
+          color: #1063e0;
         }
       }
     }
@@ -1432,7 +1451,8 @@ export default {
       }
       .box-left {
         margin-right: 24px;
-        width: 318px;
+        // width: 318px;
+        flex: 3 0 0;
         padding: 16px;
         background: $elButtonHoverBg;
         border-radius: 8px;
@@ -1455,7 +1475,7 @@ export default {
         }
       }
       .box-right {
-        flex-grow: 1;
+        flex: 4 0 0;
         // margin-left: 24px;
         .row-item {
           display: flex;
@@ -1520,10 +1540,17 @@ export default {
     }
   }
   .card-wrap {
-    border-radius: 20px;
-    border: 1px solid $color-black2;
-    background: $bg-white;
+    border-radius: 12px;
+    border: 1px solid #e6e8ec;
+    background: #fafcfe;
     overflow: hidden;
+    ::v-deep {
+      .el-collapse-item {
+        .el-collapse-item__header.is-active {
+          background: #ffffff !important;
+        }
+      }
+    }
     .card-head {
       display: flex;
       align-items: center;
@@ -1549,7 +1576,7 @@ export default {
     }
     .card-body {
       padding: 24px;
-      background: $bg-white;
+      background: #fafcfe;
       &.price-history {
         padding: 0;
       }
@@ -1560,31 +1587,49 @@ export default {
     }
   }
   .arrt-list {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    flex-wrap: wrap;
+    display: grid;
     gap: 18px;
+    grid-auto-rows: minmax(0px, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
     .arrt-item {
-      width: 200px;
       padding: 12px;
       color: $color-black3;
-      background: $elButtonHoverBg;
-      border-radius: 16px;
+      background: #ffffff;
+      border: 1px solid #e6e8ec;
+      border-radius: 10px;
+      .attr-name {
+        font-size: 16px;
+        color: #717a83;
+      }
       .attr-value {
-        color: $primaryColor;
+        color: #1063e0;
         font-weight: 700;
-        font-size: 14px;
-        line-height: 21px;
+        font-size: 16px;
+        line-height: 24px;
         margin-top: 4px;
+        margin-bottom: 8px;
       }
       .attr-bottom {
         display: flex;
-        margin-top: 18px;
-        justify-content: space-between;
+        align-items: center;
+        font-size: 14px;
         .attr-num {
           font-weight: 400;
-          font-size: 12px;
+          width: 60px;
+          flex-grow: 0;
+        }
+        .attr-bar {
+          flex-grow: 1;
+          background: #ebefff;
+          border-radius: 8px;
+          height: 10px;
+          overflow: hidden;
+          .attr-bar-num {
+            background: #1063e0;
+            width: 50px;
+            height: 100%;
+          }
         }
         .token-icon {
           vertical-align: sub;
@@ -1604,11 +1649,11 @@ export default {
     .flex-detial {
       display: flex;
       justify-content: space-between;
-      height: 21px;
-      line-height: 21px;
+      height: 24px;
+      line-height: 24px;
       font-weight: 500;
-      font-size: 14px;
-      color: $color-black3;
+      font-size: 16px;
+      color: #717a83;
       cursor: pointer;
       &.line {
         height: 1px;
@@ -1638,9 +1683,9 @@ export default {
         height: 56px;
         width: 100%;
         font-size: 12px;
-        background: $bg-white;
         font-weight: 600;
         z-index: 10;
+        background: #fafcfe;
         &.top0 {
           top: 0;
         }
@@ -1651,6 +1696,9 @@ export default {
       .list-th {
         cursor: pointer;
         padding-right: 8px;
+        font-size: 16px;
+        color: #717a83;
+        font-weight: 400;
         .event-icon {
           width: 24px;
           height: 24px;
@@ -1756,6 +1804,9 @@ export default {
       }
     }
   }
+}
+.colorPrimary {
+  color: #1063e0;
 }
 </style>
 

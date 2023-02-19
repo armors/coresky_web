@@ -40,5 +40,13 @@ export default {
       transition: all 0.3s ease-out;
     }
   }
+  .error-image {
+    ::v-deep img {
+      &:hover {
+        transform: scale(1);
+        transition: all 0.3s ease-out;
+      }
+    }
+  }
 }
 </style>

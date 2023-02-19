@@ -122,6 +122,15 @@ export default {
   .banner-swiper {
     height: 460px;
     margin: 20px 40px;
+    ::v-deep{
+      .el-carousel__arrow{
+        background: #a6a6a8;
+        font-size: 20px;
+        i{
+          color: #ffffff;
+        }
+      }
+    }
   }
   .swiper-item-wrap {
     position: relative;
