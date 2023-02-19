@@ -27,7 +27,7 @@
       </div>
 
       <el-tabs v-model="activeName" class="demo-tabs">
-        <el-tab-pane label="Transaction mining" name="mining" :lazy="true">
+        <el-tab-pane :label="$t('rewards.TransactionMining')" name="mining" :lazy="true">
           <el-table :data="dataList" style="width: 100%" class="mytable" v-loading="isLoading">
             <el-table-column prop="createTime" :label="$t('rewards.Time')" width="325">
               <template #default="props">

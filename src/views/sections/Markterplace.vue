@@ -1,5 +1,5 @@
 <template>
-  <div class="main-wrapper">
+  <div class="main-wrapper" id="marketPlace" ref="marketPlace">
     <div class="filter-wrap" v-if="showFilterBox">
       <div class="filter-head">
         <span class="left" @click="showFilterBox=!showFilterBox">
@@ -94,14 +94,18 @@
           <el-option :value="4" :label="$t('common.RecentlySold')" />
           <el-option :value="5" :label="$t('common.EndingSoon')" />
         </el-select>
-        <div class="sort-wrap">
+        <!-- <div class="sort-wrap">
           <span class="icon-wrap icon_filter01" :class="{'active':viewType===1}" @click="viewType=1">
           </span>
           <span class="icon-wrap icon_filter02" :class="{'active':viewType===2}" @click="viewType=2"></span>
-        </div>
+        </div> -->
       </div>
       <div v-if="loadStatus==='loading'">
-        <p class="loading-txt">Coming soon…</p>
+        <p class="loading-txt">
+        <el-icon class="my-loading">
+          <Loading />
+        </el-icon>
+      </p>
       </div>
       <div v-else>
         <div class="nft-list">
@@ -117,7 +121,7 @@
                 <div class="nft-txt">
                   {{item.name?item.name:('#'+item.tokenId)}}
                 </div>
-                <div class="nft-price" v-if="item.basePrice">
+                <div class="nft-price" v-if="item.basePrice && item.basePrice !== '0'">
                   <img class="token-icon" src="../../assets/images/icons/token/token_eth2.svg" alt="">
                   <span class="price">{{!!item.basePrice?nftPrice(item.basePrice):'-- '}} ETH</span>
                 </div>

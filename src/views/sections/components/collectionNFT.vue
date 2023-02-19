@@ -29,8 +29,8 @@
           </span>
         </div>
         <template v-if="isOpenPriceFilter">
-          <el-select v-model="queryParams.sort" placeholder="ETH" :teleported="false" popper-class="select-popper"
-            class="select-sort">
+          <el-select v-model="queryParams.sort" disabled placeholder="ETH" :teleported="false"
+            popper-class="select-popper" class="select-sort">
             <el-option value="ETH">ETH</el-option>
           </el-select>
           <div class="price-range" style="margin-top:15px">
@@ -97,14 +97,18 @@
           <el-option :value="4" :label="$t('common.RecentlySold')" />
           <el-option :value="5" :label="$t('common.EndingSoon')" />
         </el-select>
-        <div class="sort-wrap">
+        <!-- <div class="sort-wrap">
           <span class="icon-wrap icon_filter01" :class="{'active':viewType===1}" @click="viewType=1">
           </span>
           <span class="icon-wrap icon_filter02" :class="{'active':viewType===2}" @click="viewType=2"></span>
-        </div>
+        </div> -->
       </div>
       <div v-if="loadStatus==='loading'">
-        <p class="loading-txt">Coming soon…</p>
+        <p class="loading-txt">
+          <el-icon class="my-loading">
+            <Loading />
+          </el-icon>
+        </p>
       </div>
       <div v-else>
         <div class="nft-list">

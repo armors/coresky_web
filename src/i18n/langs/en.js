@@ -34,8 +34,8 @@ module.exports = {
     SetPriceItem: 'Set a price per item',
     SetDuration: 'Set duration',
     loadingOSInfoWating: 'Pulling opensea data, please wait',
-    platformOneQuotation: 'Each platform only supports one quotation. Please cancel the listing of {name} platform and re-list'
-
+    platformOneQuotation: 'Each platform only supports one quotation. Please cancel the listing of {name} platform and re-list',
+    addedCart:'Added to cart'
   },
   // 头部导航
   navigation: {
@@ -152,7 +152,8 @@ module.exports = {
     RewardsListing: 'Rewards by Listing',
     Sale: 'Sale',
     Rewards: 'Rewards',
-    ConvertTickets: 'Convert to Tickets'
+    ConvertTickets: 'Convert to Tickets',
+    TransactionMining: 'Transaction mining'
   },
   shoppingCart: {
     title: 'Shopping cart',
@@ -197,6 +198,9 @@ module.exports = {
     TimeLeft: 'Time left',
     BestOffer: 'Best offer',
     MakeOffer: 'Make an Offer',
+    Owner:'Owner',
+    Item:'Item',
+    YouOwn:'You own',
     Buy: 'Buy',
     Add: 'Add',
     Sell: 'Sell',

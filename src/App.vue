@@ -1,5 +1,5 @@
 <template>
-  <div class="app-wrapper" ref="appWrapperRef" @scroll="pageScroll">
+  <div class="app-wrapper" id="common-wraper" ref="appWrapperRef" @scroll="pageScroll">
     <HeaderTemplate :isScrollTop="isScrollTop" />
     <router-view />
     <FooterTemplate />

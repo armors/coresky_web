@@ -400,7 +400,7 @@
     margin-right: 20px;
     line-height: 46px;
     font-size: 16px;
-    color:#111111;
+    color: #111111;
     font-weight: 600;
     img {
       width: 12px;
@@ -687,5 +687,21 @@
     &:active {
       background-image: url("@/assets/images/icons/icon_share_active.svg");
     }
+  }
+}
+
+.my-loading {
+  color: #409eff;
+  width: 60px;
+  height: 60px;
+  animation: icon-loading 2s infinite linear;
+  font-size: 60px;
+}
+@keyframes icon-loading {
+  0% {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(1turn);
   }
 }
