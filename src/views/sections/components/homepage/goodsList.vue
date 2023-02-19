@@ -2,7 +2,7 @@
  * @Author: zhaoyan
  * @Date: 2023-02-18 16:37:58
  * @LastEditors: zhaoyan
- * @LastEditTime: 2023-02-18 22:46:08
+ * @LastEditTime: 2023-02-19 10:04:34
  * @Description: 首页中间列表轮播
 -->
 <template>
@@ -42,8 +42,8 @@ export default {
         this.loadStatus = false;
         if (this.$tools.checkResponse(res)) {
             this.nftList = res.debug;
-            let arr = JSON.parse(JSON.stringify(res.debug.recommendCollection))
-            this.nftList.recommendCollection.push(...arr)
+            // let arr = JSON.parse(JSON.stringify(res.debug.recommendCollection))
+            // this.nftList.recommendCollection.push(...arr)
         } else {
           this.$tools.message(res.errmsg);
         }

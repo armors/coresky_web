@@ -80,7 +80,7 @@
     <div class="right-content">
       <div class="list-search-wrap">
         <div class="btnfilter" @click="showFilterBox=!showFilterBox">
-          <img src="../../../assets/images/icons/icon_filter_close.svg" alt="">
+          <img src="../../../assets/images/icons/icon_filter.svg" alt="">
           {{ $t('common.Filter') }}
         </div>
         <el-input class="search-input-wrap" style="width:400px" :placeholder="$t('common.SearchPlaceholder')"
