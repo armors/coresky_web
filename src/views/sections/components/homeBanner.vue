@@ -7,24 +7,25 @@
             <div class="swiper-item-wrap">
               <div class="swiper-item-left">
                 <div class="flex-name">
-                  <img :src="item.avatar" class="img-avatar" alt="">
+                  <img :src="'https://i.seadn.io/gcs/files/d54bb731a10636767f8ed4ba7eb9a4b9.png?auto=format&w=256'"
+                    class="img-avatar" alt="">
                   <span>tiffatronn</span>
                 </div>
                 <div class="item-box">
                   <div class="item-title">
-                    Rumble Kong League
+                    {{ item.name }}
                   </div>
                   <div class="item-des">
                     We help connect game developers and future players and give them
                   </div>
                 </div>
-                <div class="btn-more">
-                  More detailed
-                </div>
+                <a class="btn-more" :href="item.url">
+                  {{ $t('home.MoreDetails') }}
+                </a>
               </div>
               <div class="swiper-item-right">
                 <div class="item-cover-mask"></div>
-                <img :src="item.url" class="item-cover-img" alt="">
+                <img :src="item.image" class="item-cover-img" alt="">
               </div>
             </div>
           </el-carousel-item>
@@ -59,27 +60,31 @@ export default {
     return {
       bannerIndex: 0,
       bannerList: [
-        {
-          avatar: 'https://i.seadn.io/gcs/files/d54bb731a10636767f8ed4ba7eb9a4b9.png?auto=format&w=256',
-          url: 'https://i.seadn.io/gcs/files/2154e56748c9db4813b16eae378a5762.jpg?auto=format&w=1920',
-        },
-        {
-          avatar: 'https://i.seadn.io/gcs/files/281a2fe422ac5614e9d32fad1f93b09d.png?auto=format&w=1920',
-          url: 'https://i.seadn.io/gcs/files/3d34cef09b4043aa12bce1bed65ebdff.png?auto=format&w=1920',
-        },
-        {
-          avatar: 'https://i.seadn.io/gcs/files/281a2fe422ac5614e9d32fad1f93b09d.png?auto=format&w=1920',
-          url: 'https://i.seadn.io/gcs/files/bfe54c14eeb7a9a8a5d400f9dd82ad8e.jpg?auto=format&w=1920',
-        }
       ]
     }
   },
   methods: {
     bannerChange (index) {
       this.bannerIndex = index
+    },
+    init () {
+      var data = {
+        page: 1,
+        limit: 5,
+        cate: '',
+        sort: '',
+        order: '',
+      };
+      this.$api("home.list", data).then((res) => {
+        if (this.$tools.checkResponse(res)) {
+          this.loadStatus = "over";
+          this.bannerList = res.debug.topCollection
+        }
+      })
     }
   },
   mounted () {
+    this.init()
     console.log(this.$route)
   }
 }

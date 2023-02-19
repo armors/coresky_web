@@ -46,6 +46,7 @@ module.exports = {
   },
   home: {
     topTitle: 'Welcome to Coresky！',
+    MoreDetails: '查看更多',
     topSubTitle: 'A New Generation of Community-based NFT Marketplace',
     topBtn: '开始交易',
     topTitle1: '查找、收集、交易NFT',

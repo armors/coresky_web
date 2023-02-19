@@ -47,6 +47,7 @@ module.exports = {
   },
   home: {
     topTitle: 'Welcome to Coresky！',
+    MoreDetails: 'More details',
     topSubTitle: 'A New Generation of Community-based NFT Marketplace',
     topBtn: 'Marketplace',
     topTitle1: 'Explore, collect and trade NFT',
