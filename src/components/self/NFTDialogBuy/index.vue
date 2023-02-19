@@ -15,7 +15,7 @@
         <div class="box-center">
           <span class="tokenid">#{{tokenInfo.tokenId}}</span>
           <span class="collection-name">{{tokenInfo.ckCollectionsInfoEntity.name || '--'}}
-            <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
+            <img class="tag" v-if="tokenInfo.ckCollectionsInfoEntity.isCertification === '1'" src="@/assets/images/icons/icon_tag.svg" alt="">
           </span>
         </div>
       </div>
@@ -123,12 +123,12 @@ export default {
       this.isOpensea = isOpensea
       this.isBuyOver = false
       this.tokenInfo = tokenInfo
-      if (this.tokenInfo.contractType === 0 && !isOpensea) {
-        this.sellInfo = this.tokenInfo.ckOrdersEntityList[0]
-      } else {
-        console.log(v)
-        this.sellInfo = v
-      }
+      // if (this.tokenInfo.contractType === 0 && !isOpensea) {
+      //   this.sellInfo = this.tokenInfo.ckOrdersEntityList[0]
+      // } else {
+      //   console.log(v)
+      this.sellInfo = v
+      // }
       console.log(this.sellInfo)
       const price = this.isOpensea ? this.sellInfo.currentPrice : this.sellInfo.basePrice
       const ethBalance = await this.$sdk.getBalance({

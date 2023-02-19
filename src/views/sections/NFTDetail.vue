@@ -180,6 +180,11 @@
                   :disabled="youSellAmount === youOwnAmount || (isSellCoresky === true && isSellOpensea === true)"
                   class="btnBuy" :loading="sellDialogBtnLoading" @click="showSellNft">{{ $t('nftDetail.Sell') }}
                 </el-button>
+
+                <el-button type="primary"
+                           :disabled="youSellAmount === youOwnAmount"
+                           class="btnBuy" @click="showTransferNft">Transfer</el-button>
+
                 <!--                <el-button type="primary" class="btnBuy" v-if="!tokenInfo.state || tokenInfo.contractType === 1"-->
                 <!--                  :loading="sellDialogBtnLoading" @click="showSellNft">Sell Now</el-button>-->
                 <!--                <el-button type="primary" class="btnBuy" v-if="tokenInfo.contractType === 0 && ckOrdersEntityList.length > 0" :loading="cancelBtnLoading"-->
@@ -191,10 +196,10 @@
 <!--                  @click="cancelSell()">Cancel-->
 <!--                  Sell</el-button>-->
               </template>
-              <!--              <el-button type="primary" class="btnBuy"-->
-              <!--                v-else-if="tokenInfo.state && tokenInfo.contractType === 0 && tokenInfo.basePrice > 0"-->
-              <!--                @click="showBuyNft">Buy Now-->
-              <!--              </el-button>-->
+              <el-button type="primary" class="btnBuy"
+                v-if="(ckOrdersEntityList.length > 0 && !isSelf && tokenInfo.contractType === 0) || (tokenInfo.contractType === 1 && isSellSelfNft1155)"
+                @click="showBuyNft">Buy Now
+              </el-button>
               <!--              <el-button class="btnBlack" v-if="!isSelf && !isCart" :disabled="!(!isSelf && !isCart) || !tokenInfo.contract || !tokenInfo.state"-->
 
               <!--              <el-button class="btnBlack" v-if="tokenInfo.contractType === 0"-->
@@ -477,6 +482,7 @@
     <NFTDialogSell ref="NFTDialogSell" @sellCreateSuccess="sellCreateSuccess"></NFTDialogSell>
     <NFTDialogMakeOffer ref="NFTDialogMakeOffer" @makeOfferSuccess="makeOfferSuccess"></NFTDialogMakeOffer>
     <NFTDialogAcceptOffer ref="NFTDialogAcceptOffer" @acceptOfferSuccess="acceptOfferSuccess" />
+    <NFTDialogTransfer ref="NFTDialogTransfer"/>
     <div class="web-loading" v-if="loading" v-loading.fullscreen.lock="loading"></div>
   </div>
 </template>
@@ -487,6 +493,7 @@ import NFTDialogMakeOffer from '../../components/self/NFTDialogMakeOffer'
 import NFTDialogAcceptOffer from '../../components/self/NFTDialogAcceptOffer'
 
 import NFTDialogBuy from '../../components/self/NFTDialogBuy'
+import NFTDialogTransfer from '../../components/self/NFTDialogTransfer'
 import { setLocalStorage, getLocalStorage, removeLocalStorage } from "@/util/local-storage";
 import BigNumber from 'bignumber.js'
 import * as echarts from "echarts";
@@ -497,7 +504,8 @@ export default {
     NFTDialogSell,
     NFTDialogBuy,
     NFTDialogMakeOffer,
-    NFTDialogAcceptOffer
+    NFTDialogAcceptOffer,
+    NFTDialogTransfer
   },
   mixins: [],
   data () {
@@ -624,6 +632,10 @@ export default {
     }
   },
   methods: {
+    isSellSelfNft1155 () {
+      let otherOrder = this.ckOrdersEntityList.filter(item => !((item.source === 'coresky' && item.maker === this.user.coinbase) || (item.source === 'opensea' && item.maker.address === this.user.coinbase)))
+      return otherOrder.length > 0
+    },
     isSelf1155 (maker) {
       return maker.toLowerCase() === this.user.coinbase.toLowerCase()
     },
@@ -1088,6 +1100,9 @@ export default {
       // this.sellDialogBtnLoading = true
       // this.$refs.NFTDialogSell.showSell(this.tokenInfo)
     },
+    showTransferNft () {
+      this.$refs.NFTDialogTransfer.showTransfer(this.tokenInfo)
+    },
     async cancelMakeOffer (v, isOpensea = false) {
       this.cancelIdOrHash = isOpensea ? v.orderHash : v.id
       if (isOpensea) {
@@ -1200,8 +1215,27 @@ export default {
         this.cancelBtnLoading = false
       }
     },
-    async showBuyNft (v, isOpensea = false) {
-      this.$refs.NFTDialogBuy.showBuy(this.tokenInfo, v, isOpensea)
+    showBuyNft (v = null, isOpensea = false) {
+      if (v === null) {
+        let otherOrder = this.ckOrdersEntityList.filter(item => !((item.source === 'coresky' && item.maker === this.user.coinbase) || (item.source === 'opensea' && item.maker.address === this.user.coinbase)))
+        if (otherOrder.length === 1 || (otherOrder.length > 1 && otherOrder[0].source === 'coresky')) {
+          this.$refs.NFTDialogBuy.showBuy(this.tokenInfo, otherOrder[0], otherOrder[0].source === 'opensea')
+        } else if (otherOrder.length > 1){
+          if (otherOrder[1].source === 'coresky') {
+            let basePrice0 = otherOrder[0].source === 'opensea' ? otherOrder[0].currentPrice : otherOrder[0].basePrice
+            let basePrice1 = otherOrder[1].source === 'opensea' ? otherOrder[1].currentPrice : otherOrder[1].basePrice
+            if (new BigNumber(basePrice0).isEqualTo(new BigNumber(basePrice1))) {
+              this.$refs.NFTDialogBuy.showBuy(this.tokenInfo, otherOrder[1], otherOrder[1].source === 'opensea')
+            } else {
+              this.$refs.NFTDialogBuy.showBuy(this.tokenInfo, otherOrder[0], otherOrder[0].source === 'opensea')
+            }
+          } else {
+            this.$refs.NFTDialogBuy.showBuy(this.tokenInfo, otherOrder[0], otherOrder[0].source === 'opensea')
+          }
+        }
+      } else {
+        this.$refs.NFTDialogBuy.showBuy(this.tokenInfo, v, isOpensea)
+      }
     },
     async fulfillOrderOpensea (v) {
       console.log(v)

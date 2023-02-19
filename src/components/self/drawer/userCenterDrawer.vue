@@ -67,8 +67,9 @@
         </div>
         <div class="price-box">
           <div class="num">{{balanceETH}}</div>
-          <!--          <div class="num2">$0</div>-->
+          <div class="num2">${{$filters.milliFormat($filters.ethToUsdt(balanceETH))}}</div>
         </div>
+        <div class="swap-icon" @click="showUniswap('ETH')"><img src="../../../assets/images/icons/icon_swap.svg" alt=""></div>
       </div>
       <div class="wallet-item">
         <div class="coin-box">
@@ -79,8 +80,9 @@
         </div>
         <div class="price-box">
           <div class="num">{{balanceWETH}}</div>
-          <!--          <div class="num2">$0</div>-->
+          <div class="num2">${{$filters.milliFormat($filters.ethToUsdt(balanceWETH))}}</div>
         </div>
+        <div class="swap-icon" @click="showUniswap('WETH')"><img src="../../../assets/images/icons/icon_swap.svg" alt=""></div>
       </div>
     </div>
     <div class="drawer-wallet" style="margin-top:30px;">
@@ -98,11 +100,13 @@
         <el-link :underline="false" type="primary" @click="goView('/reward')" class="btnDetail"> {{$t('userCenter.details')}}</el-link>
       </div>
     </div>
+    <uniswapDialog ref="uniswapDialog"></uniswapDialog>
   </el-drawer>
 </template>
 
 <script>
 import { keepPoint } from "@/filters";
+import uniswapDialog from '@/components/self/uniswapDialog'
 
 export default {
   name: "userCenterDrawer",
@@ -111,6 +115,9 @@ export default {
       type: Boolean,
       default: false,
     },
+  },
+  components: {
+    uniswapDialog
   },
   watch: {
     show () {
@@ -143,6 +150,9 @@ export default {
     },
   },
   methods: {
+    showUniswap (type) {
+      this.$refs.uniswapDialog.showUniswap(type)
+    },
     async initGetBalance () {
       this.balanceETH = keepPoint(await this.$sdk.getBalance({
         address: this.$sdk.NULL_ADDRESS()
@@ -304,6 +314,12 @@ export default {
           line-height: 18px;
           color: $color-black2;
         }
+      }
+      .swap-icon{
+        cursor: pointer;
+        width: 24px;
+        height: 24px;
+        margin-left: 14px;
       }
       .btnDetail {
         margin: 0 auto;

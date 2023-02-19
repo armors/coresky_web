@@ -18,6 +18,7 @@
       </div>
 
     </template>
+    <uniswapDialog></uniswapDialog>
   </div>
 </template>
 
@@ -29,6 +30,7 @@ import HeaderTemplateNew from "./views/layout/HeaderTemplateNew";
 import BodyTemplate from "./views/layout/BodyTemplate";
 import FooterTemplate from "./views/layout/FooterTemplate";
 
+import uniswapDialog from '@/components/self/uniswapDialog'
 export default {
   name: "App",
   beforeCreate: async function () {
@@ -62,6 +64,7 @@ export default {
     BodyTemplate,
     FooterTemplate,
     HeaderTemplateNew,
+    uniswapDialog
   },
   watch: {
     $route (newRoute) {
