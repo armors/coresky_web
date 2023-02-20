@@ -21,6 +21,8 @@
       </el-tabs>
     </div>
   </div>
+  <FooterTemplate />
+
 </template>
 <script>
 
@@ -31,6 +33,8 @@ import accountCollection from './components/accountCollection'
 import accountFavorited from './components/accountFavorited'
 import accountWatchlist from './components/accountWatchlist'
 import accountActivities from './components/accountActivities'
+import FooterTemplate from "@/views/layout/FooterTemplate";
+
 export default {
   name: "Items",
   mixins: [],
@@ -41,7 +45,8 @@ export default {
     accountFavorited,
     accountWatchlist,
     accountActivities,
-    accountNFTs
+    accountNFTs,
+    FooterTemplate
   },
   data () {
     return {
@@ -83,6 +88,7 @@ export default {
 .account-page {
   // width: 1200px;
   margin: 0 40px;
+  margin-bottom: 40px;
   ::v-deep {
     .el-tabs__header.is-top {
       margin-bottom: 0;

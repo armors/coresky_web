@@ -43,7 +43,7 @@
           <div class="btn-apply" @click="searchClick">{{$t('common.Application')  }}</div>
         </template>
       </div>
-      <!-- <div class="filter-item">
+      <div class="filter-item">
         <div class="flex">
           <span class="left">{{$t('common.Collection')  }}</span>
           <span class="right" @click="isOpenSearchCollection=!isOpenSearchCollection">
@@ -72,7 +72,7 @@
             </router-link>
           </div>
         </template>
-      </div> -->
+      </div>
     </div>
     <div class="right-content">
       <div class="list-search-wrap">

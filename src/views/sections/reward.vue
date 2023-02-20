@@ -71,16 +71,21 @@
 
     </div>
   </div>
+  <FooterTemplate />
 </template>
 <script>
 import BigNumber from "bignumber.js";
+import FooterTemplate from "@/views/layout/FooterTemplate";
+
 import dayjs from 'dayjs';
 import config from '@/config/index'
 import { rowProps } from 'element-plus';
 export default {
   mixins: [],
   name: 'launchpads',
-  components: {},
+  components: {
+    FooterTemplate
+  },
   data () {
     return {
       activeName: 'mining',
