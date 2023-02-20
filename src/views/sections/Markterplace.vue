@@ -190,9 +190,9 @@ export default {
   mounted () {
     this.dataList = []
     this.queryParams.page = 0
-    // this.queryParams.keyword = this.searchKeyword || ''
-    // this.searchClick()
-    // this.searchCollection()
+    this.queryParams.keyword = this.searchKeyword || ''
+    this.searchClick()
+    this.searchCollection()
   },
   methods: {
     loadMoreData () {
