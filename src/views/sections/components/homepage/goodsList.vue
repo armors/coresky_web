@@ -6,8 +6,8 @@
  * @Description: 首页中间列表轮播
 -->
 <template>
-  <GoodsListEvery :arrList="nftList.recommendCollection" :title="'Trending in Art'" />
-  <GoodsListEvery :arrList="nftList.recommendCollection" :title="'Trending in Art'" />
+  <GoodsListEvery :arrList="nftList.recommendCollection" :title="$t('home.topTitle1')" />
+  <GoodsListEvery :arrList="nftList.popularCollection" :title="$t('home.trendingNow')" />
 </template>
 
 <script>
@@ -17,20 +17,21 @@ export default {
   components: {
     GoodsListEvery,
   },
-  data() {
+  data () {
     return {
       loadStatus: false,
-      nftList:{
-        recommendCollection:[]
+      nftList: {
+        recommendCollection: [],
+        popularCollection: []
       }
     };
   },
-  created() {},
-  mounted() {
+  created () { },
+  mounted () {
     this.getNftList();
   },
   methods: {
-    getNftList() {
+    getNftList () {
       if (this.loadStatus) return;
       this.loadStatus = true;
       var data = {
@@ -41,9 +42,9 @@ export default {
         console.log(res);
         this.loadStatus = false;
         if (this.$tools.checkResponse(res)) {
-            this.nftList = res.debug;
-            // let arr = JSON.parse(JSON.stringify(res.debug.recommendCollection))
-            // this.nftList.recommendCollection.push(...arr)
+          this.nftList = res.debug;
+          // let arr = JSON.parse(JSON.stringify(res.debug.recommendCollection))
+          // this.nftList.recommendCollection.push(...arr)
         } else {
           this.$tools.message(res.errmsg);
         }
