@@ -39,10 +39,11 @@
               :precision="4" :min="0.0001" :max="100000000000000" class="input-number" />
           </div>
           <div class="btn-apply" @click="searchClick">{{ $t('common.Application') }}</div>
+          <div class="filter-line-btn"></div>
         </template>
       </div>
-      <div class="filter-item">
-        <div class="flex">
+      <div class="filter-item select-box">
+        <div class="flex select-title">
           <span class="left">{{ $t('common.Properties') }}</span>
           <span class="right" @click="isOpenAttrFilter = !isOpenAttrFilter">
             <el-icon style="font-size:16px" :class="{ 'down': isOpenAttrFilter }">
@@ -287,5 +288,13 @@ export default {
 .filter-line{
   background: #E6E8EC;
   height: 1px;
+}
+.filter-line-btn{
+  margin-top: 20px;
+  background: #E6E8EC;
+  height: 1px;
+}
+.select-box{
+  margin-top: 6px;
 }
 </style>

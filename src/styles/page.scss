@@ -121,7 +121,7 @@
     // margin-top: 15px;
     position: relative;
     // width: 180px;
-    height: 32px;
+    // height: 32px;
 
     .el-popper {
       top: 42px !important;
@@ -166,13 +166,12 @@
   }
 
   .price-range {
-    margin-top: 15px;
+    margin-top: 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 
     .input-number {
-      width: 80px;
 
       .el-input__wrapper {
         padding-left: 0 !important;
@@ -182,12 +181,15 @@
       }
 
       .el-input__inner {
-        text-align: center;
+        text-align: left;
+        padding-left: 12px;
         border: none;
+        width: 130px;
+        height: 46px;
         gap: 8px;
-        height: 32px;
-        background: $elButtonHoverBg;
-        border-radius: 8px;
+        background: #FFFFFF;
+        border: 2px solid #E6E8EC;
+        border-radius: 12px;
 
         font-style: normal;
         font-weight: 500;
@@ -205,11 +207,12 @@
   }
 
   .btn-apply {
-    margin-top: 15px;
-    height: 32px;
-    line-height: 32px;
+    margin-top: 16px;
+    height: 46px;
+    width: 285px;
+    line-height: 46px;
     color: $color-white;
-    background: $mainLiner;
+    background: #C2D0FF;
     border-radius: 12px;
     text-align: center;
     font-size: 16px;
@@ -531,7 +534,7 @@
     position: relative;
     width: 180px;
     margin-left: 10px;
-    height: 40px;
+    // height: 40px;
 
     .el-popper {
       top: 42px !important;
