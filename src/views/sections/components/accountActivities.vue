@@ -2,10 +2,13 @@
   <div class="accountCollected">
     <div class="filter-wrap">
       <div class="filter-head">
-        <span class="left">
+        <!-- <span class="left btnfilter">
           {{ $t('common.Filter') }}
-        </span>
+        </span> -->
         <span class="right">
+          <el-icon>
+            <img src="../../../assets/images/icons/icon_filter_refresh.svg" alt="">
+          </el-icon>
         </span>
       </div>
       <div class="filter-item">
@@ -16,7 +19,7 @@
                 <div class="attr-item">
                   <span> {{ $t('activities.Sale') }}</span>
                   <div class="attr-num">
-                    <el-checkbox label="Sale">
+                    <el-checkbox class="big-checkbox" label="Sale">
                       <template #default>
                       </template>
                     </el-checkbox>
@@ -25,7 +28,7 @@
                 <div class="attr-item">
                   <span> {{ $t('activities.Listings') }}</span>
                   <div class="attr-num">
-                    <el-checkbox label="Listings">
+                    <el-checkbox class="big-checkbox" label="Listings">
                       <template #default>
                       </template>
                     </el-checkbox>
@@ -34,7 +37,7 @@
                 <div class="attr-item">
                   <span>{{ $t('activities.MakeAnOffer') }}</span>
                   <div class="attr-num">
-                    <el-checkbox label="Make offer">
+                    <el-checkbox class="big-checkbox" label="Make offer">
                       <template #default>
                       </template>
                     </el-checkbox>
@@ -43,7 +46,7 @@
                 <div class="attr-item">
                   <span>{{ $t('activities.ReceiveAnOffer') }}</span>
                   <div class="attr-num">
-                    <el-checkbox label="Receive offer">
+                    <el-checkbox class="big-checkbox" label="Receive offer">
                       <template #default>
                       </template>
                     </el-checkbox>
@@ -52,7 +55,7 @@
                 <div class="attr-item">
                   <span>{{ $t('activities.Transfer') }}</span>
                   <div class="attr-num">
-                    <el-checkbox label="Transfer">
+                    <el-checkbox class="big-checkbox" label="Transfer">
                       <template #default>
                       </template>
                     </el-checkbox>
@@ -61,7 +64,7 @@
                 <div class="attr-item">
                   <span>{{ $t('activities.CollectionOffer') }}</span>
                   <div class="attr-num">
-                    <el-checkbox label="Collection offer">
+                    <el-checkbox class="big-checkbox" label="Collection offer">
                       <template #default>
                       </template>
                     </el-checkbox>
@@ -74,7 +77,8 @@
       </div>
     </div>
     <div class="right-content">
-      <el-table :data="dataList" style="width: 100%">
+      <el-table :data="dataList" :header-cell-style="{ 
+      color:'#717A83'}" style="width: 100%">
         <el-table-column prop="date" :label="$t('activities.Activities')" width="180">
           <template #default="props">
             <div class="activity-wrap" style="min-height:67px;line-height: 67px;">
@@ -233,9 +237,25 @@ export default {
 .filter-item {
   padding-top: 0;
 }
-.gruop-wrap {
+.filter-wrap{
+  .gruop-wrap {
   margin-top: 0;
+  .type-item{
+    margin-top: 10px;
+    .attr-item{
+      height: 54px;
+      line-height: 54px;
+      font-size: 16px;
+      margin: 0;
+      font-weight: 600;
+      .big-checkbox{
+        zoom:170%
+      }
+    }
+  }
 }
+}
+
 .flex-center {
   display: flex;
   align-items: center;

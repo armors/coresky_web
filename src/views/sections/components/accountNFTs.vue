@@ -2,29 +2,29 @@
   <div class="accountNFTs">
     <div class="filter-wrap" v-if="showFilterBox">
       <div class="filter-head">
-        <span class="left" @click="showFilterBox=!showFilterBox">
+        <span class="left btnfilter" @click="showFilterBox=!showFilterBox">
           <el-icon>
-            <ArrowLeft />
+            <img src="../../../assets/images/icons/icon_filter_open.svg" alt="">
           </el-icon>{{ $t('common.Filter') }}
         </span>
         <span class="right">
           <el-icon>
-            <Refresh />
+            <img src="../../../assets/images/icons/icon_filter_refresh.svg" alt="">
           </el-icon>
         </span>
       </div>
-      <div class="filter-item flex border">
+      <div class="filter-item filter-item-buy flex border">
         <span class="left">{{ $t('common.HaveAnOffer') }}</span>
         <span class="right">
           <el-switch v-model="queryParams.hasOffer" @change="searchClick" class="ml-2" />
         </span>
       </div>
       <div class="filter-item border">
-        <div class="flex">
+        <div class="flex filter-box">
           <span class="left">{{ $t('common.Price') }}</span>
           <span class="right" @click="isOpenPriceFilter=!isOpenPriceFilter">
-            <el-icon style="font-size:16px">
-              <ArrowUp />
+            <el-icon style="font-size:16px" :class="{ 'down': isOpenPriceFilter }">
+              <img src="../../../assets/images/icons/icon_filter_up.svg" alt="">
             </el-icon>
           </span>
         </div>
@@ -76,8 +76,8 @@
     </div>
     <div class="right-content">
       <div class="list-search-wrap">
-        <div class="btnfilter" @click="showFilterBox=!showFilterBox">
-          <img src="../../../assets/images/icons/icon_filter.svg" alt="">
+        <div class="btnfilter" v-if="!showFilterBox" @click="showFilterBox=!showFilterBox">
+          <img src="../../../assets/images/icons/icon_filter_close.svg" alt="">
           {{ $t('common.Filter') }}
         </div>
         <el-input class="search-input-wrap" style="width:400px" :placeholder="$t('common.SearchPlaceholder')"
@@ -245,7 +245,7 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: flex-start;
+  // align-items: flex-start;
 }
 .right-content {
   width: 100%;
