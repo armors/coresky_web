@@ -1,7 +1,7 @@
 <template>
   <div class="app-wrapper" id="common-wraper" ref="appWrapperRef" @scroll="pageScroll">
     <HeaderTemplate :isScrollTop="isScrollTop" />
-    <router-view />
+    <router-view style="min-height:calc(100vh - 276px)" />
     <FooterTemplate />
   </div>
 </template>

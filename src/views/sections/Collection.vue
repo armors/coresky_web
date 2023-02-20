@@ -431,7 +431,6 @@ export default {
       font-weight: 400;
       font-size: 18px;
       line-height: 21px;
-      height: 21px;
       color: #000000;
       overflow: hidden;
       text-overflow: ellipsis;

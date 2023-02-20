@@ -78,16 +78,16 @@ module.exports = {
   },
   userCenter: {
     myCollection: '我的NFT',
-    favorites: '我的收藏',
+    favorites: '我的喜歡',
     setting: '設置',
     quit: '退出',
     score: '積分',
     details: '查看更多'
   },
   accountCenter: {
-    MyCollection: '我的NFT',
-    Favorite: '我的收藏',
-    Watchlist: '我的關注',
+    MyCollection: '收藏',
+    Favorite: '喜歡',
+    Watchlist: '關注',
     Activities: '歷史記錄',
   },
   activities: {

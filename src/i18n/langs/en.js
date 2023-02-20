@@ -85,7 +85,7 @@ module.exports = {
     details: 'Details'
   },
   accountCenter: {
-    MyCollection: 'My Collection',
+    MyCollection: 'Collected',
     Favorite: 'Favorite',
     Watchlist: 'Watchlist',
     Activities: 'Activities',
