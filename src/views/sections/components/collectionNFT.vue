@@ -273,27 +273,4 @@ export default {
 .right-content {
   width: 100%;
 }
-
-.filter-item-buy {
-  height: 54px;
-  margin-top: 20px;
-  font-style: normal;
-  font-weight: 600;
-  font-size: 16px;
-  color: #111111;
-  line-height: 54px;
-  padding-left: 10px;
-}
-.filter-line{
-  background: #E6E8EC;
-  height: 1px;
-}
-.filter-line-btn{
-  margin-top: 20px;
-  background: #E6E8EC;
-  height: 1px;
-}
-.select-box{
-  margin-top: 6px;
-}
 </style>

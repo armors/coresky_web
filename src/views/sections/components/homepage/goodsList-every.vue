@@ -2,7 +2,7 @@
  * @Author: zhaoyan
  * @Date: 2023-02-18 18:14:02
  * @LastEditors: zhaoyan
- * @LastEditTime: 2023-02-18 22:53:37
+ * @LastEditTime: 2023-02-20 15:31:46
  * @Description: 
 -->
 <template>
@@ -95,11 +95,22 @@ export default {
 
 .trading-banner-box {
     margin-top: 40px;
-    height: 390px;
+    height: 400px;
     position: relative;
+
+    ::v-deep {
+        .el-carousel__indicators--horizontal {
+            display: none;
+        }
+        .el-carousel__item{
+            overflow: visible;
+        }
+    }
+
 }
 
 .trading-banner {
+    padding-top: 10px;
     height: 100%;
 
     .el-carousel__container {
@@ -217,4 +228,5 @@ export default {
             }
         }
     }
-}</style>
+}
+</style>

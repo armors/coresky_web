@@ -15,6 +15,29 @@
   background: $bg-white;
   overflow: hidden;
 
+  .filter-item-buy {
+    height: 54px;
+    margin-top: 20px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    color: #111111;
+    line-height: 54px;
+    padding-left: 10px;
+    align-items: center;
+  }
+
+  .filter-line {
+    background: #E6E8EC;
+    height: 1px;
+  }
+
+  .filter-line-btn {
+    margin-top: 20px;
+    background: #E6E8EC;
+    height: 1px;
+  }
+
   .filter-head {
     display: flex;
     justify-content: start;
@@ -50,8 +73,8 @@
     .left {
       display: flex;
       align-items: center;
-      font-weight: 400;
-      font-size: 14px;
+      font-weight: 600;
+      font-size: 16px;
       color: $primaryColor;
       cursor: pointer;
 
@@ -73,13 +96,17 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      img{
+
+      img {
         width: 17px;
         height: auto;
       }
     }
   }
-
+  .select-box{
+    margin-top: 6px;
+    padding-left: 10px;
+  }
   .flex {
     display: flex;
     justify-content: space-between;
@@ -88,19 +115,23 @@
   .filter-item {
     // padding: 16px;
     line-height: 24px;
-    .filter-box{
+
+    .filter-box {
       height: 54px;
       margin-top: 6px;
       align-items: center;
       padding-left: 10px;
     }
+
     &.border {
       border-bottom: 1px solid $borderBg;
     }
-    .select-title{
+
+    .select-title {
       height: 54px;
       align-items: center;
     }
+
     .left {
       font-weight: 600;
       font-size: 16px;
@@ -162,7 +193,7 @@
       height: 20px;
       background-color: transparent;
       padding: 0;
-      color:#111111;
+      color: #111111;
       font-size: 16px;
       font-weight: 600;
     }
@@ -269,6 +300,12 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         color: $primaryColor;
+        display: flex;
+        img{
+          width: 13px;
+          height: auto;
+          margin-left: 4px;
+        }
       }
     }
   }
@@ -278,8 +315,9 @@
 
     .type-item {
       margin: 30px 0;
+
       .type-head {
-        color:#111111;
+        color: #111111;
         display: flex;
         font-size: 16px;
         height: 16px;
@@ -499,8 +537,8 @@
   }
 
   .img-search {
-    width: 16px;
-    height: 16px;
+    width: 24px;
+    height: 24px;
   }
 }
 
@@ -556,7 +594,7 @@
       padding: 10px 16px;
       border-radius: 12px;
       box-shadow: none;
-      height: 40px;
+      height: 46px;
       box-sizing: border-box;
       border: 1px solid $borderBg;
     }
@@ -576,7 +614,6 @@
   }
 
   .select-sort {
-    margin-top: 6px;
     margin-right: 20px;
   }
 
@@ -865,10 +902,12 @@
   animation: icon-loading 2s infinite linear;
   font-size: 60px;
 }
+
 @keyframes icon-loading {
   0% {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(1turn);
   }
