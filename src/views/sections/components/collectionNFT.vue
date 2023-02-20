@@ -43,9 +43,9 @@
         </template>
       </div>
       <div class="filter-item select-box">
-        <div class="flex select-title">
+        <div class="flex select-title" @click="isOpenAttrFilter = !isOpenAttrFilter">
           <span class="left">{{ $t('common.Properties') }}</span>
-          <span class="right" @click="isOpenAttrFilter = !isOpenAttrFilter">
+          <span class="right">
             <el-icon style="font-size:16px" :class="{ 'down': isOpenAttrFilter }">
               <!--            <el-icon style="font-size:16px">-->
               <ArrowUp />
@@ -111,8 +111,8 @@
       </div>
       <div v-else>
         <div class="nft-list">
-          <router-link :to="`/detail/${item.contract}/${item.tokenId}`" class="nft-card" v-for="(item, index) in dataList"
-            :key="index">
+          <router-link :to="`/detail/${item.contract}/${item.tokenId}`" class="nft-card"
+            v-for="(item, index) in dataList" :key="index">
             <div class="nft-content">
               <div class="card-top">
                 <div class="card-img">
@@ -163,7 +163,7 @@ export default {
   computed: {
 
   },
-  data() {
+  data () {
     return {
       queryParams: {
         page: 1,
@@ -185,18 +185,18 @@ export default {
       loadStatus: 'over'
     }
   },
-  created() {
+  created () {
   },
-  mounted() {
+  mounted () {
     this.searchClick()
     this.initAttrList()
   },
   methods: {
-    checkChange() {
+    checkChange () {
       this.queryData()
       // console.log(this.attrList)
     },
-    initAttrList() {
+    initAttrList () {
       this.attrList = []
       this.$api("collections.filter", { contract: this.contract }).then((res) => {
         if (this.$tools.checkResponse(res)) {
@@ -219,16 +219,16 @@ export default {
         }
       })
     },
-    nftPrice(basePrice) {
+    nftPrice (basePrice) {
       return this.$filters.keepMaxPoint(this.$Web3.utils.fromWei(basePrice.toString()))
     },
-    searchClick() {
+    searchClick () {
       this.queryParams.page = 1
       this.queryParams.contract = this.contract
 
       this.queryData()
     },
-    queryData() {
+    queryData () {
       this.dataList = []
       this.getAttrFilter()
       this.loadStatus = 'loading'
@@ -241,7 +241,7 @@ export default {
         }
       })
     },
-    getAttrFilter() {
+    getAttrFilter () {
       let listFilter = []
       this.attrList.map(el => {
         let vals = el.dataList.filter(el2 => el2.isChecked)
@@ -285,16 +285,19 @@ export default {
   line-height: 54px;
   padding-left: 10px;
 }
-.filter-line{
-  background: #E6E8EC;
+.filter-line {
+  background: #e6e8ec;
   height: 1px;
 }
-.filter-line-btn{
+.filter-line-btn {
   margin-top: 20px;
-  background: #E6E8EC;
+  background: #e6e8ec;
   height: 1px;
 }
-.select-box{
+.select-box {
   margin-top: 6px;
+  .select-title{
+    cursor: pointer;
+  }
 }
 </style>
