@@ -7,11 +7,11 @@
           <el-carousel-item v-for="item in bannerList" :key="item">
             <div class="swiper-item-wrap">
               <div class="swiper-item-left">
-                <div class="flex-name">
+                <!-- <div class="flex-name">
                   <img :src="'https://i.seadn.io/gcs/files/d54bb731a10636767f8ed4ba7eb9a4b9.png?auto=format&w=256'"
                     class="img-avatar" alt="">
                   <span>tiffatronn</span>
-                </div>
+                </div> -->
                 <div class="item-box">
                   <div class="item-title">
                     {{ item.name }}

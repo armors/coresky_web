@@ -37,13 +37,13 @@
             <el-input-number v-model="queryParams.minPrice" :placeholder="$t('common.Min')" :controls="false"
               :precision="4" :min="0.0001" :max="100000000000000" class="input-number" />
             <div class="line"></div>
-            <el-input-number v-model="queryParams.maxPrice" :placeholder="$t('home.common')" :controls="false"
+            <el-input-number v-model="queryParams.maxPrice" :placeholder="$t('common.Max')" :controls="false"
               :precision="4" :min="0.0001" :max="100000000000000" class="input-number" />
           </div>
           <div class="btn-apply" @click="searchClick">{{$t('common.Application')  }}</div>
         </template>
       </div>
-      <div class="filter-item">
+      <!-- <div class="filter-item">
         <div class="flex">
           <span class="left">{{$t('common.Collection')  }}</span>
           <span class="right" @click="isOpenSearchCollection=!isOpenSearchCollection">
@@ -72,7 +72,7 @@
             </router-link>
           </div>
         </template>
-      </div>
+      </div> -->
     </div>
     <div class="right-content">
       <div class="list-search-wrap">

@@ -81,8 +81,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .account-page {
-  width: 1200px;
-  margin: 0 auto 40px;
+  // width: 1200px;
+  margin: 0 40px;
   ::v-deep {
     .el-tabs__header.is-top {
       margin-bottom: 0;
@@ -102,8 +102,8 @@ export default {
       }
     }
     .el-tabs__active-bar {
-      background-color: $bgPurple;
-      height: 4px;
+      background-color: #111111;
+      height: 3px;
     }
   }
 }
