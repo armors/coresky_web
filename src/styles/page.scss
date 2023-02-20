@@ -96,7 +96,6 @@
       display: flex;
       justify-content: center;
       align-items: center;
-
       img {
         width: 17px;
         height: auto;
@@ -115,7 +114,6 @@
   .filter-item {
     // padding: 16px;
     line-height: 24px;
-
     .filter-box {
       height: 54px;
       margin-top: 6px;
@@ -126,7 +124,6 @@
     &.border {
       border-bottom: 1px solid $borderBg;
     }
-
     .select-title {
       height: 54px;
       align-items: center;
@@ -400,62 +397,60 @@
 
 /* nft列表 */
 .nft-list {
-  display: flex;
-  flex-flow: row wrap;
-  margin-left: -9px;
-  margin-right: -9px;
-  row-gap: 18px;
-
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   .nft-card {
     min-height: 1px;
     position: relative;
     display: block;
-    flex: 0 0 225.6px;
-    width: 225.6px;
-    margin-left: 9px;
-    margin-right: 9px;
-    cursor: pointer;
+    border-radius: 12px;
 
+    border: 1px solid $borderBg;
+    filter: drop-shadow(0px 0px 10px rgba(82, 77, 255, 0.05));
+    &:hover {
+      box-shadow: 0 7px 16px -8px rgba(0, 0, 0, 0.15);
+    }
     .nft-content {
-      height: 302px;
-      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      border-radius: 12px;
       overflow: hidden;
       transition: all 0.23s;
       background: $bg-white;
-      border: 1px solid $borderBg;
-      filter: drop-shadow(0px 0px 10px rgba(82, 77, 255, 0.05));
-
-      &:hover {
-        box-shadow: 0 7px 16px -8px rgba(0, 0, 0, 0.15);
-      }
+      position: relative;
 
       .card-top {
-        overflow: hidden;
+        z-index: 1;
         position: relative;
-        width: 100%;
-        height: 225.6px;
-
         .card-img {
-          left: 0;
-          position: absolute;
-          top: 0;
+          &::before {
+            display: block;
+            content: '';
+            padding-bottom: 100%;
+          }
+          position: relative;
           transition: all 0.23s;
-          height: 225.6px;
-          width: 100%;
-
           img,
           .cover-image {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            display: flex;
             height: 100%;
             width: 100%;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
           }
         }
       }
-
       .card-bottom {
-        height: 75px;
+        flex: 1 1 0%;
         padding: 12px 12px;
         padding-right: 20px;
-
         .nft-txt {
           font-weight: 500;
           font-size: 16px;

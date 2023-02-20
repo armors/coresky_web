@@ -66,10 +66,10 @@
               <div class="item-txt">繁体</div>
               <div class="item-dot"></div>
             </div>
-            <div class="chain-item two" @click="languageSelect('zh')" :class="{'active':language =='zh'}">
+            <!-- <div class="chain-item two" @click="languageSelect('zh')" :class="{'active':language =='zh'}">
               <div class="item-txt">中文</div>
               <div class="item-dot"></div>
-            </div>
+            </div> -->
           </div>
         </el-popover>
         <div class="nav-link shopping-cart" @click="showShoppingCartDrawer=true;showUserDrawer = false">

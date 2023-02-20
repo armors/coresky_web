@@ -103,10 +103,10 @@
       </div>
       <div v-if="loadStatus==='loading'">
         <p class="loading-txt">
-        <el-icon class="my-loading">
-          <Loading />
-        </el-icon>
-      </p>
+          <el-icon class="my-loading">
+            <Loading />
+          </el-icon>
+        </p>
       </div>
       <div v-else>
         <div class="nft-list">
@@ -115,6 +115,7 @@
             <div class="nft-content">
               <div class="card-top">
                 <div class="card-img">
+                  <!-- <div style="padding-bottom: 100%;"></div> -->
                   <image-box :src="item.oriImage"></image-box>
                 </div>
               </div>
