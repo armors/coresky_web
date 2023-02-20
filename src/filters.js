@@ -25,7 +25,7 @@ export function fullImageUrl (url) {
   var cdnUrl = store.state.config.cdnUrl;
   return cdnUrl ? cdnUrl + url : url;
 }
-export function ethToUsdt(ethNum = 0, point = 4){
+export function ethToUsdt (ethNum = 0, point = 4) {
   const ethPrice = store.state.ethPrice
   return ethNum > 0 ? keepPoint(new BigNumber(ethNum).multipliedBy(ethPrice), point) : 0
 }
@@ -183,6 +183,10 @@ export function keepPoint (num, point = 4, isRound = false) {
 }
 
 export function keepMaxPoint (num, point = 4, isRound = 1) {
+  if (num === null || num == undefined) {
+    return ''
+  }
+
   return new BigNumber(new BigNumber(num).toFixed(point, isRound)).toFormat()
 }
 
@@ -193,7 +197,7 @@ export function ckCollectionsInfoEntity (v) {
 }
 
 
-export function filterMsgOpenseaErr(e) {
+export function filterMsgOpenseaErr (e) {
   e = e.toString()
   console.log(e)
   if (e.indexOf('user rejected') > -1) {

@@ -1,420 +1,32 @@
 <template>
   <div>
-    <div class="body-wrapper">
-      <div class="home-banner">
-        <div class="max-width">
-          <div class="display-flex box-between banner-box">
-            <div class="create-app-box">
-              <div class="title">{{$t('home.topTitle')}}</div>
-              <div class="desc">{{$t('home.topSubTitle')}}</div>
-
-              <div class="btn-list display-flex box-center-Y">
-                <router-link to="/markterplace" class="btn display-flex box-center">
-                  {{$t('home.topBtn')}}
-                </router-link>
-              </div>
-            </div>
-            <div class="carousel-box">
-              <el-carousel :autoplay="false" arrow="never" v-if="topCollection.length > 0" @change="changeTop">
-                <el-carousel-item v-for="(v, i) in topCollection" :key="`recommend-item-${i}`" @click="openURL(v.url)">
-                  <!-- {{ v }} -->
-                  <image-box class="img-box" :src="v.image"></image-box>
-                </el-carousel-item>
-              </el-carousel>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="home-wrapper main-wrapper">
-        <nftRecommend :recommendCollection="recommendCollection"></nftRecommend>
-        <nftTrade :popularList="popularList"></nftTrade>
-        <div class="home-title title-margin-top">{{$t('home.rank')}}</div>
-        <div class="sort-box display-flex box-center-Y box-between">
-          <div class="display-flex box-center-Y">
-            <el-button class="filter display-flex box-center" :class="{active: collectionQuery.order === 1}"
-              @click="changeOrder(1)">
-              <div class="icon-img"><img src="../../assets/images/icons/icon_top.svg" alt=""></div>
-              <div>{{ $t("home.sortBtnText1") }}</div>
-            </el-button>
-            <el-button class="filter display-flex box-center" :class="{active: collectionQuery.order === 2}"
-              @click="changeOrder(2)">
-              <div class="icon-img"><img src="../../assets/images/icons/icon_trending.svg" alt=""></div>
-              <div>{{ $t("home.sortBtnText2") }}</div>
-            </el-button>
-            <el-button class="filter display-flex box-center" :class="{active: collectionQuery.order === 3}"
-              @click="changeOrder(3)">
-              <div class="icon-img"><img src="../../assets/images/icons/icon_mints.svg" alt=""></div>
-              <div>{{ $t("home.sortBtnText3") }}</div>
-            </el-button>
-            <el-button class="filter display-flex box-center" :class="{active: collectionQuery.order === 4}"
-              @click="changeOrder(4)">
-              <div class="icon-img"><img src="../../assets/images/icons/icon_watchlist.svg" alt=""></div>
-              <div>{{ $t("home.sortBtnText4") }}</div>
-            </el-button>
-          </div>
-          <div class="display-flex box-center-Y">
-            <el-switch v-model="collectionQuery.valueRewards" :inactive-text="$t('home.reward')" class="ml-2" />
-            <div class="text">{{ $t("home.sortFloor") }}</div>
-            <el-input-number class="input-number" :precision="4"
-                             :min="0.0001"
-                             :max="100000000000000" @blur="blurPrice" :controls="false" v-model="collectionQuery.minFloorPrice"
-              :placeholder="$t('home.minPlaceholder')" />
-            <div class="line"></div>
-            <el-input-number class="input-number" :precision="4"
-                             :min="0.0001"
-                             :max="100000000000000" @blur="blurPrice" :controls="false" v-model="collectionQuery.maxFloorPrice"
-              :placeholder="$t('home.maxPlaceholder')" />
-            <el-select v-model="collectionQuery.valueChain" placeholder="Select" class="select-chain">
-              <el-option v-for="item in optionsChain" :key="item.value" :label="item.label" :value="item.value" />
-            </el-select>
-            <el-select v-model="volTime" placeholder="Select" class="select-times" @changeTime="changeTime">
-              <el-option v-for="item in optionsTimes" :key="item.value" :label="item.label" :value="item.value" />
-            </el-select>
-          </div>
-        </div>
-        <div v-infinite-scroll="loadNftList">
-          <nft-list :nftList="nftList" :volTime="volTime" @showDialog="showDialog" @onLike="onLike"></nft-list>
-          <!--        <nft-item v-for="(nft, i) in nftList" :nft="nft" :key="i" :index="i" @showDialog="showDialog" @onLike="onLike"></nft-item>-->
-          <nft-item-load :loadStatus="loadStatus"></nft-item-load>
-          <router-link to="/allcollection" class="see-more display-flex box-center">{{$t("home.seeMoreCollects")}}
-          </router-link>
-        </div>
-
-        <!-- <nftDrop :dropList="dropList"></nftDrop> -->
-<!--        <partners></partners>-->
-
-        <!--      <nft-item-load :loadStatus="loadStatus"></nft-item-load>-->
-      </div>
-
-      <sale-dialog :show="showSaleDialog" @close="closeDialog" @confirm="dialogConfirm" :asset="dialogOrder"
-        :nft="dialogNft" :uri="dialogNftURI">
-      </sale-dialog>
-      <cancel-sale-dialog :show="showCancelSaleDialog" @close="closeDialog" @confirm="dialogConfirm"
-        :asset="dialogOrder" :nft="dialogNft" :uri="dialogNftURI">
-      </cancel-sale-dialog>
-      <buy-dialog :show="showBuyDialog" @close="closeDialog" @confirm="dialogConfirm" :asset="dialogOrder"
-        :nft="dialogNft" :uri="dialogNftURI">
-      </buy-dialog>
-
-      <bid-dialog :show="showBidDialog" @close="closeDialog" @confirm="dialogConfirm" :bid="dialogOrder"
-        :nft="dialogNft" :uri="dialogNftURI">
-      </bid-dialog>
-      <cancel-bid-dialog :show="showCancelBidDialog" @close="closeDialog" @confirm="dialogConfirm" :bid="dialogOrder"
-        :nft="dialogNft" :uri="dialogNftURI">
-      </cancel-bid-dialog>
-      <accept-dialog :show="showAcceptDialog" @close="closeDialog" @confirm="dialogConfirm" :bid="dialogOrder"
-        :nft="dialogNft" :uri="dialogNftURI">
-      </accept-dialog>
-      <transfer-dialog :show="showTransferDialog" @close="closeDialog" @confirm="dialogConfirm" :asset="dialogOrder"
-        :nft="dialogNft" :uri="dialogNftURI">
-      </transfer-dialog>
-      <burn-dialog :show="showBurnDialog" @close="closeDialog" @confirm="dialogConfirm" :asset="dialogOrder"
-        :nft="dialogNft" :uri="dialogNftURI">
-      </burn-dialog>
-
-    </div>
-    <div class="email-wrap">
-      <div class="email-content">
-        <div class="txt1">Never miss a drop</div>
-        <div class="txt2">Subscribe for the latest news, drops & collectibles</div>
-        <div>
-          <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" class="demo-ruleForm"
-            style="width:600px;margin: 0 auto;">
-            <el-form-item label="" prop="name">
-              <el-input v-model="ruleForm.name" clearable class="input-email">
-                <template #append>
-                  <el-button class="btn-sub" @click="addTopic" style="font-weight: 600;">Subscribe</el-button>
-                  <!-- <div class="btn-sub"> -->
-                  <!-- <el-button class="btn-sub" text :loading="true">Subscribe</el-button> -->
-                  <!-- </div> -->
-                </template>
-              </el-input>
-            </el-form-item>
-          </el-form>
-        </div>
-
-      </div>
-    </div>
+    <homeBanner />
+    <homeCollectionList  style="margin-bottom:30px"/>
+    <GoodsList />
+    <EmailDom />
   </div>
 </template>
 <script>
-import FilterAndSort from "@/components/FilterAndSort";
-import NftDialog from "@/mixins/NftDialog";
-import NftInfo from "@/mixins/NftInfo";
-import NftItem from "@/mixins/NftItem";
-import nftList from '@/components/self/nftList/index'
-import nftRecommend from '@/components/self/recommend/index'
-import nftTrade from '@/components/self/trading/index'
-import nftDrop from '@/components/self/drop/index'
-import partners from '@/components/self/partners'
-export const regEmail = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
-
+import homeCollectionList from '@/views/sections/components/homeCollectionList'
+import homeBanner from "@/views/sections/components/homeBanner";
+import EmailDom from "@/views/sections/components/homepage/emailMod.vue";
+import GoodsList from "@/views/sections/components/homepage/goodsList";
 export default {
   name: "HIndex",
   components: {
-    FilterAndSort,
-    nftList,
-    nftRecommend,
-    nftTrade,
-    nftDrop,
-    partners
+    homeBanner,
+    homeCollectionList,
+    EmailDom,
+    GoodsList,
   },
-  mixins: [
-    NftDialog,
-    NftItem,
-    NftInfo,
-  ],
+  mixins: [],
   data: function () {
-    return {
-      volTime: 1,
-      collectionQuery: {
-        valueChain: 'eth',
-        "keyword": "",
-        "address": "",
-        "contract": "",
-        "buyNow": false,
-        valueRewards: true,
-        "minFloorPrice": undefined,
-        "maxFloorPrice": undefined,
-        "order": 0,
-        "filter": {
-          "name": "",
-          "value": ""
-        },
-        "page": 1
-      },
-      optionsChain: [
-        {
-          value: 'eth',
-          label: 'ETH'
-        },
-        // {
-        //   value: 'heco',
-        //   label: 'HECO'
-        // },
-        // {
-        //   value: 'bsc',
-        //   label: 'BSC'
-        // }
-      ],
-      optionsTimes: [
-        {
-          value: 1,
-          label: '24 hour'
-        },
-        {
-          value: 7,
-          label: '7 days'
-        },
-        {
-          value: 30,
-          label: '30 days'
-        }
-      ],
-      banner: require("@/assets/img/home/index_bg.png"),
-      sortKey: "",
-      filterId: "",
-      filters: [],
-      sortValue: "",
-      nftList: [],
-      popularList: [],
-      dropList: [],
-      topCollection: [],
-      recommendCollection: [],
-      query: {
-        page: 1,
-        limit: this.$store.state.pageLimit,
-      },
-      loadStatus: "",
-      loadStatusCollect: "",
-      bannerHeight: "500px",
-      topIndex: 0,
-      banners: [
-        // {
-        //   src: null,
-        //   name: "Fingerchar NFT",
-        //   title: this.$t('home.tip1'),
-        //   text: this.$t('home.tip2'),
-        //   url: "https://github.com/fingerchar/fingernft",
-        //   urlText: this.$t('home.explore')
-        // },
-      ],
-      ruleForm: {
-        name: ''
-      },
-      rules: {
-        name: [
-          { required: true, type: 'email', message: 'Please input Email', trigger: 'blur' },
-        ]
-      },
-    };
+    return {};
   },
-  created () {
-    this.init();
-  },
-  mounted () {
-    window.addEventListener("resize", this.handleResize);
-    this.handleResize();
-  },
-  unmounted () {
-    window.removeEventListener("resize", this.handleResize);
-  },
-  computed: {
-    user () {
-      return this.$store.state.user;
-    },
-  },
-  methods: {
-    openURL (url) {
-      window.open(url)
-    },
-    changeTop (index) {
-      this.topIndex = index
-      console.log(index)
-    },
-    goMarket () {
-      this.$filters.openWindow(this.topCollection[this.topIndex].url)
-    },
-    blurPrice () {
-      this.getCollectionData()
-    },
-    changeTime () {
-
-    },
-    changeOrder (val) {
-      if (this.collectionQuery.order !== val) {
-        this.collectionQuery.order = val
-      } else {
-        this.collectionQuery.order = 0
-      }
-      this.getCollectionData()
-    },
-    getCollectionData () {
-      this.dataList = []
-      this.loadStatusCollect = "loading";
-      this.$api("collect.query", this.collectionQuery).then((res) => {
-        this.loadStatusCollect = 'over'
-        if (this.$tools.checkResponse(res)) {
-          this.nftList = res.debug.listData
-          this.listCount = res.debug.listCount
-          this.collectionQuery.page = res.debug.curPage
-        }
-      })
-    },
-    reloadList () {
-      this.query.page = 1;
-      this.getNftList();
-    },
-    handleResize () {
-      let header_height = 112;
-      let banner = document.getElementById("home-banner");
-      if (!banner) return;
-      banner.style.paddingTop = header_height + 10 + "px";
-      let width = banner.clientWidth;
-      this.bannerHeight = (width / 1.8) * this.imgRatio;
-      if (this.bannerHeight < 600) {
-        this.bannerHeight = '600px'
-      } else {
-        this.bannerHeight = this.bannerHeight + 'px'
-      }
-    },
-    async init () {
-      this.getCollectionData();
-      this.getNftList();
-    },
-    toRouter (url) {
-      if (!url.startsWith("http")) {
-        this.$router.push({
-          path: url,
-        });
-      } else {
-        window.open(url)
-      }
-    },
-    selectFilter (filterId) {
-      this.filterId = this.filterId == filterId ? "" : filterId;
-      this.query.page = 1;
-      this.getNftList();
-    },
-    getCategoryList () {
-      this.$api("category.list").then((res) => {
-        if (this.$tools.checkResponse(res)) {
-          this.filters = res.data;
-        }
-      });
-    },
-    seleteSort (sort) {
-      if (this.sortKey == sort) {
-        this.sortValue = this.sortValue == "asc" ? "desc" : "asc";
-      } else {
-        this.sortKey = sort;
-        this.sortValue = "desc";
-      }
-      this.query.page = 1;
-      this.getNftList();
-    },
-    loadNftList () {
-      if (this.loadStatus == "over") return;
-      this.getNftList();
-    },
-    getNftList () {
-      if (this.loadStatus == "loading") return;
-      this.loadStatus = "loading";
-      var data = {
-        page: this.query.page,
-        limit: this.query.limit,
-        cate: this.filterId,
-        sort: this.sortKey,
-        order: this.sortValue,
-      };
-      this.$api("home.list", data).then((res) => {
-        console.log(res)
-        this.loadStatus = "";
-        if (this.$tools.checkResponse(res)) {
-          this.loadStatus = "over";
-          // this.popularList = []
-          // this.nftList = []
-          // this.banner = []
-          // this.dropList = []
-          // this.topCollection = []
-          // const homeData = {"partners":[{"id":1,"deleted":0,"createTime":0,"updateTime":0,"title":"BSC","logoUrl":null,"createDate":"1970-01-01 08:00:00","updateDate":"1970-01-01 08:00:00"},{"id":2,"deleted":0,"createTime":0,"updateTime":0,"title":"HOT","logoUrl":null,"createDate":"1970-01-01 08:00:00","updateDate":"1970-01-01 08:00:00"}],"recommendCollection":[{"id":7,"deleted":0,"createTime":null,"updateTime":null,"advId":2,"contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","image":null,"weight":0,"ckCollectionsInfoEntity":{"id":13,"deleted":0,"createTime":1666344370,"updateTime":1666344370,"name":"Lu-demo","info":"Lu-demo thanks for checking us out. If you're interest in early dev, you can see some AI creation over here:","contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","total":"0","foolPrice":"0.00000","volume":"0.00000","listed":"0","image":"https://i.seadn.io/gcs/files/d54bb731a10636767f8ed4ba7eb9a4b9.png?auto=format&w=256","bannerImage":"https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840","startHeight":"7836728","weights":null,"isCertification":null,"currencyAddress":"1,2,3,8","exchangeRate":"0.05","isCacheJson":"1","cacheStatus":"0","feeContract":"0x3C8ef9F2599871Da49F6bF285A9e0B7FF618d19e","website":"https://www.youtube.com/watch?v=dMUUbpEHjKo","discord":"https://discord.com/invite/pancakeswap","twitter":"https://twitter.com/pancakeswap","telegram":null,"createDate":"2022-10-21 17:26:10","updateDate":"2022-10-21 17:26:10"},"createDate":"","updateDate":""},{"id":8,"deleted":0,"createTime":null,"updateTime":null,"advId":2,"contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","image":null,"weight":0,"ckCollectionsInfoEntity":{"id":13,"deleted":0,"createTime":1666344370,"updateTime":1666344370,"name":"Lu-demo","info":"Lu-demo thanks for checking us out. If you're interest in early dev, you can see some AI creation over here:","contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","total":"0","foolPrice":"0.00000","volume":"0.00000","listed":"0","image":"https://i.seadn.io/gcs/files/d54bb731a10636767f8ed4ba7eb9a4b9.png?auto=format&w=256","bannerImage":"https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840","startHeight":"7836728","weights":null,"isCertification":null,"currencyAddress":"1,2,3,8","exchangeRate":"0.05","isCacheJson":"1","cacheStatus":"0","feeContract":"0x3C8ef9F2599871Da49F6bF285A9e0B7FF618d19e","website":"https://www.youtube.com/watch?v=dMUUbpEHjKo","discord":"https://discord.com/invite/pancakeswap","twitter":"https://twitter.com/pancakeswap","telegram":null,"createDate":"2022-10-21 17:26:10","updateDate":"2022-10-21 17:26:10"},"createDate":"","updateDate":""},{"id":9,"deleted":0,"createTime":null,"updateTime":null,"advId":2,"contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","image":null,"weight":0,"ckCollectionsInfoEntity":{"id":13,"deleted":0,"createTime":1666344370,"updateTime":1666344370,"name":"Lu-demo","info":"Lu-demo thanks for checking us out. If you're interest in early dev, you can see some AI creation over here:","contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","total":"0","foolPrice":"0.00000","volume":"0.00000","listed":"0","image":"https://i.seadn.io/gcs/files/d54bb731a10636767f8ed4ba7eb9a4b9.png?auto=format&w=256","bannerImage":"https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840","startHeight":"7836728","weights":null,"isCertification":null,"currencyAddress":"1,2,3,8","exchangeRate":"0.05","isCacheJson":"1","cacheStatus":"0","feeContract":"0x3C8ef9F2599871Da49F6bF285A9e0B7FF618d19e","website":"https://www.youtube.com/watch?v=dMUUbpEHjKo","discord":"https://discord.com/invite/pancakeswap","twitter":"https://twitter.com/pancakeswap","telegram":null,"createDate":"2022-10-21 17:26:10","updateDate":"2022-10-21 17:26:10"},"createDate":"","updateDate":""},{"id":10,"deleted":0,"createTime":null,"updateTime":null,"advId":2,"contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","image":null,"weight":0,"ckCollectionsInfoEntity":{"id":13,"deleted":0,"createTime":1666344370,"updateTime":1666344370,"name":"Lu-demo","info":"Lu-demo thanks for checking us out. If you're interest in early dev, you can see some AI creation over here:","contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","total":"0","foolPrice":"0.00000","volume":"0.00000","listed":"0","image":"https://i.seadn.io/gcs/files/d54bb731a10636767f8ed4ba7eb9a4b9.png?auto=format&w=256","bannerImage":"https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840","startHeight":"7836728","weights":null,"isCertification":null,"currencyAddress":"1,2,3,8","exchangeRate":"0.05","isCacheJson":"1","cacheStatus":"0","feeContract":"0x3C8ef9F2599871Da49F6bF285A9e0B7FF618d19e","website":"https://www.youtube.com/watch?v=dMUUbpEHjKo","discord":"https://discord.com/invite/pancakeswap","twitter":"https://twitter.com/pancakeswap","telegram":null,"createDate":"2022-10-21 17:26:10","updateDate":"2022-10-21 17:26:10"},"createDate":"","updateDate":""},{"id":11,"deleted":0,"createTime":null,"updateTime":null,"advId":2,"contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","image":null,"weight":0,"ckCollectionsInfoEntity":{"id":13,"deleted":0,"createTime":1666344370,"updateTime":1666344370,"name":"Lu-demo","info":"Lu-demo thanks for checking us out. If you're interest in early dev, you can see some AI creation over here:","contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","total":"0","foolPrice":"0.00000","volume":"0.00000","listed":"0","image":"https://i.seadn.io/gcs/files/d54bb731a10636767f8ed4ba7eb9a4b9.png?auto=format&w=256","bannerImage":"https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840","startHeight":"7836728","weights":null,"isCertification":null,"currencyAddress":"1,2,3,8","exchangeRate":"0.05","isCacheJson":"1","cacheStatus":"0","feeContract":"0x3C8ef9F2599871Da49F6bF285A9e0B7FF618d19e","website":"https://www.youtube.com/watch?v=dMUUbpEHjKo","discord":"https://discord.com/invite/pancakeswap","twitter":"https://twitter.com/pancakeswap","telegram":null,"createDate":"2022-10-21 17:26:10","updateDate":"2022-10-21 17:26:10"},"createDate":"","updateDate":""}],"popularCollection":[{"id":12,"deleted":0,"createTime":null,"updateTime":null,"advId":3,"contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","image":null,"weight":0,"ckCollectionsInfoEntity":{"id":13,"deleted":0,"createTime":1666344370,"updateTime":1666344370,"name":"Lu-demo","info":"Lu-demo thanks for checking us out. If you're interest in early dev, you can see some AI creation over here:","contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","total":"0","foolPrice":"0.00000","volume":"0.00000","listed":"0","image":"https://i.seadn.io/gcs/files/d54bb731a10636767f8ed4ba7eb9a4b9.png?auto=format&w=256","bannerImage":"https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840","startHeight":"7836728","weights":null,"isCertification":null,"currencyAddress":"1,2,3,8","exchangeRate":"0.05","isCacheJson":"1","cacheStatus":"0","feeContract":"0x3C8ef9F2599871Da49F6bF285A9e0B7FF618d19e","website":"https://www.youtube.com/watch?v=dMUUbpEHjKo","discord":"https://discord.com/invite/pancakeswap","twitter":"https://twitter.com/pancakeswap","telegram":null,"createDate":"2022-10-21 17:26:10","updateDate":"2022-10-21 17:26:10"},"createDate":"","updateDate":""},{"id":13,"deleted":0,"createTime":null,"updateTime":null,"advId":3,"contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","image":null,"weight":0,"ckCollectionsInfoEntity":{"id":13,"deleted":0,"createTime":1666344370,"updateTime":1666344370,"name":"Lu-demo","info":"Lu-demo thanks for checking us out. If you're interest in early dev, you can see some AI creation over here:","contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","total":"0","foolPrice":"0.00000","volume":"0.00000","listed":"0","image":"https://i.seadn.io/gcs/files/d54bb731a10636767f8ed4ba7eb9a4b9.png?auto=format&w=256","bannerImage":"https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840","startHeight":"7836728","weights":null,"isCertification":null,"currencyAddress":"1,2,3,8","exchangeRate":"0.05","isCacheJson":"1","cacheStatus":"0","feeContract":"0x3C8ef9F2599871Da49F6bF285A9e0B7FF618d19e","website":"https://www.youtube.com/watch?v=dMUUbpEHjKo","discord":"https://discord.com/invite/pancakeswap","twitter":"https://twitter.com/pancakeswap","telegram":null,"createDate":"2022-10-21 17:26:10","updateDate":"2022-10-21 17:26:10"},"createDate":"","updateDate":""},{"id":14,"deleted":0,"createTime":null,"updateTime":null,"advId":3,"contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","image":null,"weight":0,"ckCollectionsInfoEntity":{"id":13,"deleted":0,"createTime":1666344370,"updateTime":1666344370,"name":"Lu-demo","info":"Lu-demo thanks for checking us out. If you're interest in early dev, you can see some AI creation over here:","contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","total":"0","foolPrice":"0.00000","volume":"0.00000","listed":"0","image":"https://i.seadn.io/gcs/files/d54bb731a10636767f8ed4ba7eb9a4b9.png?auto=format&w=256","bannerImage":"https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840","startHeight":"7836728","weights":null,"isCertification":null,"currencyAddress":"1,2,3,8","exchangeRate":"0.05","isCacheJson":"1","cacheStatus":"0","feeContract":"0x3C8ef9F2599871Da49F6bF285A9e0B7FF618d19e","website":"https://www.youtube.com/watch?v=dMUUbpEHjKo","discord":"https://discord.com/invite/pancakeswap","twitter":"https://twitter.com/pancakeswap","telegram":null,"createDate":"2022-10-21 17:26:10","updateDate":"2022-10-21 17:26:10"},"createDate":"","updateDate":""},{"id":15,"deleted":0,"createTime":null,"updateTime":null,"advId":3,"contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","image":null,"weight":0,"ckCollectionsInfoEntity":{"id":13,"deleted":0,"createTime":1666344370,"updateTime":1666344370,"name":"Lu-demo","info":"Lu-demo thanks for checking us out. If you're interest in early dev, you can see some AI creation over here:","contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","total":"0","foolPrice":"0.00000","volume":"0.00000","listed":"0","image":"https://i.seadn.io/gcs/files/d54bb731a10636767f8ed4ba7eb9a4b9.png?auto=format&w=256","bannerImage":"https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840","startHeight":"7836728","weights":null,"isCertification":null,"currencyAddress":"1,2,3,8","exchangeRate":"0.05","isCacheJson":"1","cacheStatus":"0","feeContract":"0x3C8ef9F2599871Da49F6bF285A9e0B7FF618d19e","website":"https://www.youtube.com/watch?v=dMUUbpEHjKo","discord":"https://discord.com/invite/pancakeswap","twitter":"https://twitter.com/pancakeswap","telegram":null,"createDate":"2022-10-21 17:26:10","updateDate":"2022-10-21 17:26:10"},"createDate":"","updateDate":""}],"topCollection":[{"id":4,"deleted":0,"createTime":null,"updateTime":null,"advId":1,"contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","image":null,"weight":0,"ckCollectionsInfoEntity":{"id":13,"deleted":0,"createTime":1666344370,"updateTime":1666344370,"name":"Lu-demo","info":"Lu-demo thanks for checking us out. If you're interest in early dev, you can see some AI creation over here:","contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","total":"0","foolPrice":"0.00000","volume":"0.00000","listed":"0","image":"https://i.seadn.io/gcs/files/d54bb731a10636767f8ed4ba7eb9a4b9.png?auto=format&w=256","bannerImage":"https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840","startHeight":"7836728","weights":null,"isCertification":null,"currencyAddress":"1,2,3,8","exchangeRate":"0.05","isCacheJson":"1","cacheStatus":"0","feeContract":"0x3C8ef9F2599871Da49F6bF285A9e0B7FF618d19e","website":"https://www.youtube.com/watch?v=dMUUbpEHjKo","discord":"https://discord.com/invite/pancakeswap","twitter":"https://twitter.com/pancakeswap","telegram":null,"createDate":"2022-10-21 17:26:10","updateDate":"2022-10-21 17:26:10"},"createDate":"","updateDate":""},{"id":5,"deleted":0,"createTime":null,"updateTime":null,"advId":1,"contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","image":null,"weight":0,"ckCollectionsInfoEntity":{"id":13,"deleted":0,"createTime":1666344370,"updateTime":1666344370,"name":"Lu-demo","info":"Lu-demo thanks for checking us out. If you're interest in early dev, you can see some AI creation over here:","contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","total":"0","foolPrice":"0.00000","volume":"0.00000","listed":"0","image":"https://i.seadn.io/gcs/files/d54bb731a10636767f8ed4ba7eb9a4b9.png?auto=format&w=256","bannerImage":"https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840","startHeight":"7836728","weights":null,"isCertification":null,"currencyAddress":"1,2,3,8","exchangeRate":"0.05","isCacheJson":"1","cacheStatus":"0","feeContract":"0x3C8ef9F2599871Da49F6bF285A9e0B7FF618d19e","website":"https://www.youtube.com/watch?v=dMUUbpEHjKo","discord":"https://discord.com/invite/pancakeswap","twitter":"https://twitter.com/pancakeswap","telegram":null,"createDate":"2022-10-21 17:26:10","updateDate":"2022-10-21 17:26:10"},"createDate":"","updateDate":""},{"id":6,"deleted":0,"createTime":null,"updateTime":null,"advId":1,"contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","image":null,"weight":0,"ckCollectionsInfoEntity":{"id":13,"deleted":0,"createTime":1666344370,"updateTime":1666344370,"name":"Lu-demo","info":"Lu-demo thanks for checking us out. If you're interest in early dev, you can see some AI creation over here:","contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","total":"0","foolPrice":"0.00000","volume":"0.00000","listed":"0","image":"https://i.seadn.io/gcs/files/d54bb731a10636767f8ed4ba7eb9a4b9.png?auto=format&w=256","bannerImage":"https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840","startHeight":"7836728","weights":null,"isCertification":null,"currencyAddress":"1,2,3,8","exchangeRate":"0.05","isCacheJson":"1","cacheStatus":"0","feeContract":"0x3C8ef9F2599871Da49F6bF285A9e0B7FF618d19e","website":"https://www.youtube.com/watch?v=dMUUbpEHjKo","discord":"https://discord.com/invite/pancakeswap","twitter":"https://twitter.com/pancakeswap","telegram":null,"createDate":"2022-10-21 17:26:10","updateDate":"2022-10-21 17:26:10"},"createDate":"","updateDate":""}],"dataCollection":[{"id":null,"deleted":null,"createTime":null,"updateTime":null,"contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","floorPrice":"100.00","dayAmount":"100.00","totalAmount":"100.00","ownerCount":"100.00","totalCount":"100.00","orderCount":"100.00","ckCollectionsInfoEntity":{"id":13,"deleted":0,"createTime":1666344370,"updateTime":1666344370,"name":"Lu-demo","info":"Lu-demo thanks for checking us out. If you're interest in early dev, you can see some AI creation over here:","contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","total":"0","foolPrice":"0.00000","volume":"0.00000","listed":"0","image":"https://i.seadn.io/gcs/files/d54bb731a10636767f8ed4ba7eb9a4b9.png?auto=format&w=256","bannerImage":"https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840","startHeight":"7836728","weights":null,"isCertification":null,"currencyAddress":"1,2,3,8","exchangeRate":"0.05","isCacheJson":"1","cacheStatus":"0","feeContract":"0x3C8ef9F2599871Da49F6bF285A9e0B7FF618d19e","website":"https://www.youtube.com/watch?v=dMUUbpEHjKo","discord":"https://discord.com/invite/pancakeswap","twitter":"https://twitter.com/pancakeswap","telegram":null,"createDate":"2022-10-21 17:26:10","updateDate":"2022-10-21 17:26:10"},"createDate":"","updateDate":""},{"id":null,"deleted":null,"createTime":null,"updateTime":null,"contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","floorPrice":"100.00","dayAmount":"100.00","totalAmount":"100.00","ownerCount":"100.00","totalCount":"100.00","orderCount":"100.00","ckCollectionsInfoEntity":{"id":13,"deleted":0,"createTime":1666344370,"updateTime":1666344370,"name":"Lu-demo","info":"Lu-demo thanks for checking us out. If you're interest in early dev, you can see some AI creation over here:","contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","total":"0","foolPrice":"0.00000","volume":"0.00000","listed":"0","image":"https://i.seadn.io/gcs/files/d54bb731a10636767f8ed4ba7eb9a4b9.png?auto=format&w=256","bannerImage":"https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840","startHeight":"7836728","weights":null,"isCertification":null,"currencyAddress":"1,2,3,8","exchangeRate":"0.05","isCacheJson":"1","cacheStatus":"0","feeContract":"0x3C8ef9F2599871Da49F6bF285A9e0B7FF618d19e","website":"https://www.youtube.com/watch?v=dMUUbpEHjKo","discord":"https://discord.com/invite/pancakeswap","twitter":"https://twitter.com/pancakeswap","telegram":null,"createDate":"2022-10-21 17:26:10","updateDate":"2022-10-21 17:26:10"},"createDate":"","updateDate":""},{"id":null,"deleted":null,"createTime":null,"updateTime":null,"contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","floorPrice":"100.00","dayAmount":"100.00","totalAmount":"100.00","ownerCount":"100.00","totalCount":"100.00","orderCount":"100.00","ckCollectionsInfoEntity":{"id":13,"deleted":0,"createTime":1666344370,"updateTime":1666344370,"name":"Lu-demo","info":"Lu-demo thanks for checking us out. If you're interest in early dev, you can see some AI creation over here:","contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","total":"0","foolPrice":"0.00000","volume":"0.00000","listed":"0","image":"https://i.seadn.io/gcs/files/d54bb731a10636767f8ed4ba7eb9a4b9.png?auto=format&w=256","bannerImage":"https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840","startHeight":"7836728","weights":null,"isCertification":null,"currencyAddress":"1,2,3,8","exchangeRate":"0.05","isCacheJson":"1","cacheStatus":"0","feeContract":"0x3C8ef9F2599871Da49F6bF285A9e0B7FF618d19e","website":"https://www.youtube.com/watch?v=dMUUbpEHjKo","discord":"https://discord.com/invite/pancakeswap","twitter":"https://twitter.com/pancakeswap","telegram":null,"createDate":"2022-10-21 17:26:10","updateDate":"2022-10-21 17:26:10"},"createDate":"","updateDate":""},{"id":null,"deleted":null,"createTime":null,"updateTime":null,"contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","floorPrice":"100.00","dayAmount":"100.00","totalAmount":"100.00","ownerCount":"100.00","totalCount":"100.00","orderCount":"100.00","ckCollectionsInfoEntity":{"id":13,"deleted":0,"createTime":1666344370,"updateTime":1666344370,"name":"Lu-demo","info":"Lu-demo thanks for checking us out. If you're interest in early dev, you can see some AI creation over here:","contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","total":"0","foolPrice":"0.00000","volume":"0.00000","listed":"0","image":"https://i.seadn.io/gcs/files/d54bb731a10636767f8ed4ba7eb9a4b9.png?auto=format&w=256","bannerImage":"https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840","startHeight":"7836728","weights":null,"isCertification":null,"currencyAddress":"1,2,3,8","exchangeRate":"0.05","isCacheJson":"1","cacheStatus":"0","feeContract":"0x3C8ef9F2599871Da49F6bF285A9e0B7FF618d19e","website":"https://www.youtube.com/watch?v=dMUUbpEHjKo","discord":"https://discord.com/invite/pancakeswap","twitter":"https://twitter.com/pancakeswap","telegram":null,"createDate":"2022-10-21 17:26:10","updateDate":"2022-10-21 17:26:10"},"createDate":"","updateDate":""},{"id":null,"deleted":null,"createTime":null,"updateTime":null,"contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","floorPrice":"100.00","dayAmount":"100.00","totalAmount":"100.00","ownerCount":"100.00","totalCount":"100.00","orderCount":"100.00","ckCollectionsInfoEntity":{"id":13,"deleted":0,"createTime":1666344370,"updateTime":1666344370,"name":"Lu-demo","info":"Lu-demo thanks for checking us out. If you're interest in early dev, you can see some AI creation over here:","contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","total":"0","foolPrice":"0.00000","volume":"0.00000","listed":"0","image":"https://i.seadn.io/gcs/files/d54bb731a10636767f8ed4ba7eb9a4b9.png?auto=format&w=256","bannerImage":"https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840","startHeight":"7836728","weights":null,"isCertification":null,"currencyAddress":"1,2,3,8","exchangeRate":"0.05","isCacheJson":"1","cacheStatus":"0","feeContract":"0x3C8ef9F2599871Da49F6bF285A9e0B7FF618d19e","website":"https://www.youtube.com/watch?v=dMUUbpEHjKo","discord":"https://discord.com/invite/pancakeswap","twitter":"https://twitter.com/pancakeswap","telegram":null,"createDate":"2022-10-21 17:26:10","updateDate":"2022-10-21 17:26:10"},"createDate":"","updateDate":""},{"id":null,"deleted":null,"createTime":null,"updateTime":null,"contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","floorPrice":"100.00","dayAmount":"100.00","totalAmount":"100.00","ownerCount":"100.00","totalCount":"100.00","orderCount":"100.00","ckCollectionsInfoEntity":{"id":13,"deleted":0,"createTime":1666344370,"updateTime":1666344370,"name":"Lu-demo","info":"Lu-demo thanks for checking us out. If you're interest in early dev, you can see some AI creation over here:","contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","total":"0","foolPrice":"0.00000","volume":"0.00000","listed":"0","image":"https://i.seadn.io/gcs/files/d54bb731a10636767f8ed4ba7eb9a4b9.png?auto=format&w=256","bannerImage":"https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840","startHeight":"7836728","weights":null,"isCertification":null,"currencyAddress":"1,2,3,8","exchangeRate":"0.05","isCacheJson":"1","cacheStatus":"0","feeContract":"0x3C8ef9F2599871Da49F6bF285A9e0B7FF618d19e","website":"https://www.youtube.com/watch?v=dMUUbpEHjKo","discord":"https://discord.com/invite/pancakeswap","twitter":"https://twitter.com/pancakeswap","telegram":null,"createDate":"2022-10-21 17:26:10","updateDate":"2022-10-21 17:26:10"},"createDate":"","updateDate":""},{"id":null,"deleted":null,"createTime":null,"updateTime":null,"contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","floorPrice":"100.00","dayAmount":"100.00","totalAmount":"100.00","ownerCount":"100.00","totalCount":"100.00","orderCount":"100.00","ckCollectionsInfoEntity":{"id":13,"deleted":0,"createTime":1666344370,"updateTime":1666344370,"name":"Lu-demo","info":"Lu-demo thanks for checking us out. If you're interest in early dev, you can see some AI creation over here:","contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","total":"0","foolPrice":"0.00000","volume":"0.00000","listed":"0","image":"https://i.seadn.io/gcs/files/d54bb731a10636767f8ed4ba7eb9a4b9.png?auto=format&w=256","bannerImage":"https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840","startHeight":"7836728","weights":null,"isCertification":null,"currencyAddress":"1,2,3,8","exchangeRate":"0.05","isCacheJson":"1","cacheStatus":"0","feeContract":"0x3C8ef9F2599871Da49F6bF285A9e0B7FF618d19e","website":"https://www.youtube.com/watch?v=dMUUbpEHjKo","discord":"https://discord.com/invite/pancakeswap","twitter":"https://twitter.com/pancakeswap","telegram":null,"createDate":"2022-10-21 17:26:10","updateDate":"2022-10-21 17:26:10"},"createDate":"","updateDate":""},{"id":null,"deleted":null,"createTime":null,"updateTime":null,"contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","floorPrice":"100.00","dayAmount":"100.00","totalAmount":"100.00","ownerCount":"100.00","totalCount":"100.00","orderCount":"100.00","ckCollectionsInfoEntity":{"id":13,"deleted":0,"createTime":1666344370,"updateTime":1666344370,"name":"Lu-demo","info":"Lu-demo thanks for checking us out. If you're interest in early dev, you can see some AI creation over here:","contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","total":"0","foolPrice":"0.00000","volume":"0.00000","listed":"0","image":"https://i.seadn.io/gcs/files/d54bb731a10636767f8ed4ba7eb9a4b9.png?auto=format&w=256","bannerImage":"https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840","startHeight":"7836728","weights":null,"isCertification":null,"currencyAddress":"1,2,3,8","exchangeRate":"0.05","isCacheJson":"1","cacheStatus":"0","feeContract":"0x3C8ef9F2599871Da49F6bF285A9e0B7FF618d19e","website":"https://www.youtube.com/watch?v=dMUUbpEHjKo","discord":"https://discord.com/invite/pancakeswap","twitter":"https://twitter.com/pancakeswap","telegram":null,"createDate":"2022-10-21 17:26:10","updateDate":"2022-10-21 17:26:10"},"createDate":"","updateDate":""},{"id":null,"deleted":null,"createTime":null,"updateTime":null,"contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","floorPrice":"100.00","dayAmount":"100.00","totalAmount":"100.00","ownerCount":"100.00","totalCount":"100.00","orderCount":"100.00","ckCollectionsInfoEntity":{"id":13,"deleted":0,"createTime":1666344370,"updateTime":1666344370,"name":"Lu-demo","info":"Lu-demo thanks for checking us out. If you're interest in early dev, you can see some AI creation over here:","contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","total":"0","foolPrice":"0.00000","volume":"0.00000","listed":"0","image":"https://i.seadn.io/gcs/files/d54bb731a10636767f8ed4ba7eb9a4b9.png?auto=format&w=256","bannerImage":"https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840","startHeight":"7836728","weights":null,"isCertification":null,"currencyAddress":"1,2,3,8","exchangeRate":"0.05","isCacheJson":"1","cacheStatus":"0","feeContract":"0x3C8ef9F2599871Da49F6bF285A9e0B7FF618d19e","website":"https://www.youtube.com/watch?v=dMUUbpEHjKo","discord":"https://discord.com/invite/pancakeswap","twitter":"https://twitter.com/pancakeswap","telegram":null,"createDate":"2022-10-21 17:26:10","updateDate":"2022-10-21 17:26:10"},"createDate":"","updateDate":""},{"id":null,"deleted":null,"createTime":null,"updateTime":null,"contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","floorPrice":"100.00","dayAmount":"100.00","totalAmount":"100.00","ownerCount":"100.00","totalCount":"100.00","orderCount":"100.00","ckCollectionsInfoEntity":{"id":13,"deleted":0,"createTime":1666344370,"updateTime":1666344370,"name":"Lu-demo","info":"Lu-demo thanks for checking us out. If you're interest in early dev, you can see some AI creation over here:","contract":"0xEb1e502410Bb45e51907b88B0Ea9A08Fb575D3C2","total":"0","foolPrice":"0.00000","volume":"0.00000","listed":"0","image":"https://i.seadn.io/gcs/files/d54bb731a10636767f8ed4ba7eb9a4b9.png?auto=format&w=256","bannerImage":"https://i.seadn.io/gcs/files/6fb0f06880c8cf8a2dce9014073fb4ef.jpg?auto=format&w=3840","startHeight":"7836728","weights":null,"isCertification":null,"currencyAddress":"1,2,3,8","exchangeRate":"0.05","isCacheJson":"1","cacheStatus":"0","feeContract":"0x3C8ef9F2599871Da49F6bF285A9e0B7FF618d19e","website":"https://www.youtube.com/watch?v=dMUUbpEHjKo","discord":"https://discord.com/invite/pancakeswap","twitter":"https://twitter.com/pancakeswap","telegram":null,"createDate":"2022-10-21 17:26:10","updateDate":"2022-10-21 17:26:10"},"createDate":"","updateDate":""}]}
-          this.topCollection = res.debug.topCollection
-          this.recommendCollection = res.debug.recommendCollection
-          this.popularList = res.debug.popularCollection
-          this.dropList = res.debug.dropCalendar
-          // this.banners = this.$tools.sliceArrayTo(res.data.list, 4);
-          // this.queryFunction(res.data.list, this.nftList);
-          // if (res.data.list.length < data.limit) {
-          // } else {
-          //   this.query.page += 1;
-          // }
-        } else {
-          this.$tools.message(res.errmsg);
-        }
-      });
-    },
-    queryDataImg (data) {
-      return data.map(item => {
-        item.bannerImage = item.ckCollectionsInfoEntity.bannerImage
-        item.image = item.ckCollectionsInfoEntity.image
-        item.name = item.ckCollectionsInfoEntity.name
-        return item
-      })
-    },
-    addTopic () {
-      this.$refs.ruleFormRef.validate(valid => {
-        if (valid) {
-
-          this.$api("home.addTopic", { email: this.ruleForm.name }).then((res) => {
-            if (this.$tools.checkResponse(res)) {
-              this.$tools.message('You’ve subscribed!', 'success');
-            }
-          });
-        }
-      });
-    }
-  },
+  created() {},
+  mounted() {},
+  computed: {},
+  methods: {},
 };
 </script>
 <style lang="scss" scoped>
@@ -572,7 +184,7 @@ export default {
 
 
 <style lang="scss">
-@import '../../styles/variables';
+@import "../../styles/variables";
 .home-wrapper {
   max-width: $maxWidth;
   margin: 0 auto;
@@ -580,7 +192,7 @@ export default {
 }
 .home-banner {
   height: 524px;
-  background: url('../../assets/images/bg_home.png') no-repeat;
+  background: url("../../assets/images/bg_home.png") no-repeat;
   background-size: cover;
   padding-top: 76px;
 
@@ -779,68 +391,3 @@ export default {
   }
 }
 </style>
-<style lang="scss" scoped>
-.email-wrap {
-  height: 308px;
-  background: linear-gradient(313deg, #37c9a1 0%, #7d47ff 100%);
-  .email-content {
-    width: 1200px;
-    margin: 0 auto;
-    padding-top: 54px;
-    .txt1 {
-      text-align: center;
-      height: 57px;
-      font-size: 44px;
-      font-weight: bold;
-      color: #ffffff;
-      line-height: 57px;
-    }
-    .txt2 {
-      margin-top: 20px;
-      margin-bottom: 30px;
-      text-align: center;
-      height: 34px;
-      font-size: 26px;
-      color: #ffffff;
-      line-height: 34px;
-    }
-    .input-email {
-      // margin: 0 auto;
-      width: 600px;
-      height: 52px;
-      border-radius: 12px;
-      overflow: hidden;
-    }
-    .btn-sub {
-      // background: #7d47ff;
-    }
-  }
-  ::v-deep {
-    .el-input__inner {
-      border-radius: 2px;
-      padding: 0 10px;
-      font-weight: 600;
-    }
-    .el-input__wrapper {
-      border-top-left-radius: 12px;
-      border-bottom-left-radius: 12px;
-    }
-    .el-form-item__error {
-      margin-top: 10px;
-    }
-
-    .el-input-group__append {
-      background: #7d47ff;
-      box-shadow: none;
-      font-size: 16px;
-      color: #ffffff;
-      font-weight: 600;
-      cursor: pointer;
-      &:hover {
-        opacity: 0.8;
-      }
-    }
-  }
-}
-</style>
-

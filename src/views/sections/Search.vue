@@ -4,19 +4,24 @@
       <el-tabs v-model="activeName">
         <el-tab-pane :label="$t('common.Collection')" name="collection" :lazy="true">
           <div class="list-search-wrap" style="margin-top:10px">
-            <el-input class="search-input-wrap" :placeholder="$t('common.SearchPlaceholder2')" v-model="collectionQuery.keyword" @keyup.enter="searchCollection">
+            <el-input class="search-input-wrap" :placeholder="$t('common.SearchPlaceholder2')"
+              v-model="collectionQuery.keyword" @keyup.enter="searchCollection">
               <template #prefix>
                 <div class="img-search"><img src="../../assets/images/icons/icon_search.svg" alt=""></div>
               </template>
             </el-input>
-            <div class="sort-wrap">
+            <!-- <div class="sort-wrap">
               <span class="icon-wrap icon_filter01 active">
               </span>
               <span class="icon-wrap icon_filter02"></span>
-            </div>
+            </div> -->
           </div>
           <div v-if="loadStatus==='loading'">
-            <p class="loading-txt">Coming soon…</p>
+            <p class="loading-txt">
+              <el-icon class="my-loading">
+                <Loading />
+              </el-icon>
+            </p>
           </div>
           <div v-else>
             <div class="collection-list">

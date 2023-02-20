@@ -123,10 +123,11 @@ const routes = [
 ];
 
 const router = createRouter({
-	// scrollBehavior() {
-	// 	document.getElementById("app").scrollIntoView();
-	// },
+	scrollBehavior () {
+		document.getElementById("common-wraper").scrollTop = 0;
+	},
 	history: createWebHistory(),
+	// scrollBehavior: () => ({ y: 0 }),
 	routes,
 });
 

@@ -1,24 +1,8 @@
 <template>
-  <div class="app-wrapper no-scroller" id="appWrapper">
-    <template v-if="layout==='default'">
-      <div class="web-loading" v-if="!webLoading" v-loading.fullscreen.lock="!webLoading"></div>
-      <div class="common-wraper no-scroller" v-else>
-        <HeaderTemplate />
-        <div class="widClass" ref="widClass" id="widClass">
-          <!--          <router-view v-if="isRouterAlive" :current-view="currentView" />-->
-          <router-view />
-        </div>
-        <FooterTemplate />
-      </div>
-    </template>
-    <template v-else-if="layout==='fullscreen'">
-      <div class="page-fullscreen">
-        <HeaderTemplateNew />
-        <router-view />
-      </div>
-
-    </template>
-    <uniswapDialog></uniswapDialog>
+  <div class="app-wrapper" id="common-wraper" ref="appWrapperRef" @scroll="pageScroll">
+    <HeaderTemplate :isScrollTop="isScrollTop" />
+    <router-view style="min-height:calc(100vh - 276px)" />
+    <FooterTemplate />
   </div>
 </template>
 
@@ -30,7 +14,6 @@ import HeaderTemplateNew from "./views/layout/HeaderTemplateNew";
 import BodyTemplate from "./views/layout/BodyTemplate";
 import FooterTemplate from "./views/layout/FooterTemplate";
 
-import uniswapDialog from '@/components/self/uniswapDialog'
 export default {
   name: "App",
   beforeCreate: async function () {
@@ -43,6 +26,7 @@ export default {
   data () {
     return {
       isRouterAlive: true,
+      isScrollTop: true,
     };
   },
   computed: {
@@ -64,7 +48,6 @@ export default {
     BodyTemplate,
     FooterTemplate,
     HeaderTemplateNew,
-    uniswapDialog
   },
   watch: {
     $route (newRoute) {
@@ -82,15 +65,30 @@ export default {
   mounted () {
     this["changeCurrentRouteTo"](this.$route);
     this["setCurrentView"](this.$route);
-    setTimeout(() => {
-      this.initWeb3()
-    }, 300);
+    // setTimeout(() => {
+    //   this.initWeb3()
+    // }, 300);
     console.log(this.$route)
+    // this.$refs.appWrapperRef.addEventListener
   },
   destroyed () {
     clearInterval(this.$store.state.heartbeatTimer)
   },
   methods: {
+    pageScroll () {
+      let scrollTop = this.$refs.appWrapperRef.pageYOffset ||
+        this.$refs.appWrapperRef.scrollTop ||
+        document.body.scrollTop;
+      if (scrollTop) {
+        if (scrollTop > 3) {
+          this.isScrollTop = false
+        } else {
+          this.isScrollTop = true
+        }
+      } else if (scrollTop === 0) {
+        this.isScrollTop = true
+      }
+    },
     reload () {
       this.isRouterAlive = false;
       this.$store.dispatch("authinfo")
@@ -151,53 +149,25 @@ body {
 }
 #app {
   height: 100%;
-  font-family: Montserrat-Regular;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
 }
 .router-view {
   width: 100%;
   height: auto;
-  position: absolute;
+  // position: absolute;
   top: 0;
   bottom: 0;
   margin: 0 auto;
+  margin-top: -76px;
   -webkit-overflow-scrolling: touch;
 }
 .app-wrapper {
-  height: 100%;
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  height: 100vh;
+  overflow-y: auto;
 }
 </style>
 
 <style lang="scss">
-@import './styles/variables';
-#home {
-  width: 100%;
-}
-.common-wraper {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.widClass {
-  width: 100%;
-  padding-top: $headerHeight;
-  >div{
-    min-height: calc(100vh - 180px);
-  }
-}
-</style>
-<style lang="scss" scoped>
-.page-fullscreen {
-  display: flex;
-  align-items: normal;
-  flex-direction: column;
-  justify-content: normal;
-  width: 100vw;
-  height: 100vh;
-  margin: 0px auto;
-  max-height: 100%;
-}
 </style>

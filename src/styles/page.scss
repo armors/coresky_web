@@ -1,24 +1,52 @@
+.tab-box-self {
+  .el-tabs__content {
+    overflow: visible;
+  }
+}
+
 /* 左侧条件筛选 */
 .filter-wrap {
-  width: 210px;
+  position: sticky;
+  top: 80px;
+  width: 285px;
   // height: 520px;
   flex-shrink: 0;
   margin-right: 30px;
   background: $bg-white;
-  border: 1px solid $borderBg;
-  border-radius: 12px;
   overflow: hidden;
+
   .filter-head {
     display: flex;
-    justify-content: space-between;
+    justify-content: start;
     // height: 56px;
-    padding: 16px;
     line-height: 24px;
     background: #ffffff;
     font-weight: 400;
     font-size: 14px;
     color: $primaryColor;
-    border-bottom: 1px solid $borderBg;
+
+    .btnfilter {
+      display: flex;
+      align-items: center;
+      padding: 0px 16px;
+      width: 93px;
+      height: 46px;
+      border: 2px solid #E6E8EC;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-right: 20px;
+      line-height: 46px;
+      font-size: 16px;
+      color: #111111;
+      font-weight: 600;
+
+      img {
+        width: 12px;
+        height: auto;
+        margin-right: 10px;
+      }
+    }
+
     .left {
       display: flex;
       align-items: center;
@@ -26,100 +54,145 @@
       font-size: 14px;
       color: $primaryColor;
       cursor: pointer;
+
       .el-icon {
         margin-right: 2px;
+
         &.down {
           transform: rotate(180deg);
         }
       }
     }
+
     .right {
       cursor: pointer;
+      width: 46px;
+      height: 46px;
+      border: 2px solid #E6E8EC;
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      img{
+        width: 17px;
+        height: auto;
+      }
     }
   }
+
   .flex {
     display: flex;
     justify-content: space-between;
   }
+
   .filter-item {
-    padding: 16px;
+    // padding: 16px;
     line-height: 24px;
+    .filter-box{
+      height: 54px;
+      margin-top: 6px;
+      align-items: center;
+      padding-left: 10px;
+    }
     &.border {
       border-bottom: 1px solid $borderBg;
     }
+    .select-title{
+      height: 54px;
+      align-items: center;
+    }
     .left {
-      font-weight: 500;
-      font-size: 14px;
+      font-weight: 600;
+      font-size: 16px;
       color: $primaryColor;
     }
+
     .right {
       cursor: pointer;
       display: flex;
       align-items: center;
     }
+
     .el-icon {
       &.down {
         transform: rotate(180deg);
       }
     }
   }
+
   .el-select {
-    margin-top: 15px;
+    // margin-top: 15px;
     position: relative;
     // width: 180px;
-    height: 32px;
+    // height: 32px;
+
     .el-popper {
       top: 42px !important;
     }
+
     .el-select-dropdown__item {
       height: 32px;
       line-height: 32px;
     }
+
     .el-input__suffix {
       right: 16px;
     }
+
     .el-input__wrapper {
       padding: 6px 10px;
-      border-radius: 8px;
       box-shadow: none;
-      height: 32px;
+      width: 285px;
+      height: 46px;
       box-sizing: border-box;
-      border: none;
+      border: 2px solid #E6E8EC;
+      border-radius: 12px;
       box-shadow: none;
-      background-color: $elButtonHoverBg;
     }
+
     .el-input.is-focus .el-input__wrapper {
       box-shadow: none !important;
     }
+
     &:first-child {
       margin-left: 10px;
     }
+
     .el-input__inner {
       height: 20px;
       background-color: transparent;
       padding: 0;
+      color:#111111;
+      font-size: 16px;
+      font-weight: 600;
     }
   }
+
   .price-range {
-    margin-top: 15px;
+    margin-top: 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     .input-number {
-      width: 80px;
+
       .el-input__wrapper {
         padding-left: 0 !important;
         padding-right: 0 !important;
         border: none;
         box-shadow: none;
       }
+
       .el-input__inner {
-        text-align: center;
+        text-align: left;
+        padding-left: 12px;
         border: none;
+        width: 130px;
+        height: 46px;
         gap: 8px;
-        height: 32px;
-        background: $elButtonHoverBg;
-        border-radius: 8px;
+        background: #FFFFFF;
+        border: 2px solid #E6E8EC;
+        border-radius: 12px;
 
         font-style: normal;
         font-weight: 500;
@@ -127,6 +200,7 @@
         color: $primaryColor;
       }
     }
+
     .line {
       width: 8px;
       height: 1px;
@@ -134,27 +208,33 @@
       background-color: $grayColor;
     }
   }
+
   .btn-apply {
-    margin-top: 15px;
-    height: 32px;
-    line-height: 32px;
+    margin-top: 16px;
+    height: 46px;
+    width: 285px;
+    line-height: 46px;
     color: $color-white;
-    background: $mainLiner;
+    background: #C2D0FF;
     border-radius: 12px;
     text-align: center;
     font-size: 16px;
     cursor: pointer;
   }
+
   .list-wrap {
     margin-top: 15px;
+
     .list-item {
       display: flex;
       padding: 8px;
       border-radius: 12px;
       cursor: pointer;
+
       &:hover {
         background: $elButtonHoverBg;
       }
+
       .head-img {
         width: 40px;
         height: 40px;
@@ -163,11 +243,13 @@
         padding: 2px;
         flex-shrink: 0;
         position: relative;
+
         .cover-image {
           height: 100%;
           width: 100%;
           border-radius: 50%;
         }
+
         .tag {
           width: 16px;
           height: 16px;
@@ -177,6 +259,7 @@
           z-index: 2;
         }
       }
+
       .head-txt {
         margin-left: 8px;
         font-weight: 500;
@@ -189,29 +272,36 @@
       }
     }
   }
+
   .gruop-wrap {
     margin-top: 15px;
+
     .type-item {
-      margin: 16px 0;
+      margin: 30px 0;
       .type-head {
+        color:#111111;
         display: flex;
-        font-size: 12px;
-        height: 18px;
-        line-height: 18px;
+        font-size: 16px;
+        height: 16px;
+        line-height: 16px;
         justify-content: space-between;
+
         .type-num {
           display: flex;
           align-items: center;
         }
+
         .el-icon {
           cursor: pointer;
           font-size: 15px;
           margin-left: 5px;
+
           &.down {
             transform: rotate(180deg);
           }
         }
       }
+
       .attr-content {
         .attr-item {
           margin: 16px 0;
@@ -221,17 +311,20 @@
           line-height: 18px;
           justify-content: space-between;
           color: $color-black3;
+
           .attr-num {
             display: flex;
             align-items: center;
             color: $color-black2;
           }
+
           .el-checkbox {
             margin-left: 5px;
             height: 18px;
+
             .el-checkbox__input.is-checked .el-checkbox__inner {
-              background-color: #7D47FF;
-              border-color: #7D47FF;
+              background-color: #1063E0;
+              border-color: #1063E0;
             }
           }
         }
@@ -239,28 +332,34 @@
     }
   }
 }
+
 /* 自定义分页 */
 .custom-pagination {
   text-align: center;
   margin: 20px;
+
   .content {
     display: inline-block;
   }
+
   .el-pagination.is-background .btn-prev,
   .el-pagination.is-background .btn-next {
     padding: 0;
     height: 32px;
     border-radius: 8px;
   }
+
   .el-pagination.is-background .el-pager li {
     height: 32px;
     border-radius: 8px;
+
     &.is-active {
       background-color: $bgPurple;
       color: $color-white;
     }
   }
 }
+
 /* nft列表 */
 .nft-list {
   display: flex;
@@ -268,6 +367,7 @@
   margin-left: -9px;
   margin-right: -9px;
   row-gap: 18px;
+
   .nft-card {
     min-height: 1px;
     position: relative;
@@ -277,6 +377,7 @@
     margin-left: 9px;
     margin-right: 9px;
     cursor: pointer;
+
     .nft-content {
       height: 302px;
       border-radius: 20px;
@@ -285,14 +386,17 @@
       background: $bg-white;
       border: 1px solid $borderBg;
       filter: drop-shadow(0px 0px 10px rgba(82, 77, 255, 0.05));
+
       &:hover {
         box-shadow: 0 7px 16px -8px rgba(0, 0, 0, 0.15);
       }
+
       .card-top {
         overflow: hidden;
         position: relative;
         width: 100%;
         height: 225.6px;
+
         .card-img {
           left: 0;
           position: absolute;
@@ -300,6 +404,7 @@
           transition: all 0.23s;
           height: 225.6px;
           width: 100%;
+
           img,
           .cover-image {
             height: 100%;
@@ -307,6 +412,7 @@
           }
         }
       }
+
       .card-bottom {
         height: 75px;
         padding: 12px 12px;
@@ -321,16 +427,26 @@
           white-space: nowrap;
           color: $color-black3;
         }
+
         .nft-price {
           display: flex;
           height: 22px;
           align-items: center;
+
           .token-icon {
             width: 10px;
             height: 15px;
             margin-right: 5px;
           }
+
           .price {
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 22px;
+            color: $primaryColor;
+          }
+
+          span {
             font-weight: 700;
             font-size: 14px;
             line-height: 22px;
@@ -341,6 +457,7 @@
     }
   }
 }
+
 /* 搜索框 */
 .search-input-wrap {
   overflow: hidden;
@@ -353,66 +470,88 @@
   border: none;
   flex-grow: 1;
 
+
+  height: 46px;
+  background: #FFFFFF;
+  border: 2px solid #E5E8EB;
+  border-radius: 12px;
+
   .el-input__inner {
     height: 40px;
     border: none;
     font-size: 14px;
   }
+
   .el-input__wrapper {
     border-radius: 12px;
     box-shadow: 0 0 0 0px var(--el-input-border-color, var(--el-border-color)) inset;
-    background: $elButtonHoverBg;
+    background: var(--cs-color-white);
     border: none;
+
     .el-input__inner {
       background-color: transparent;
     }
   }
+
   .el-input__prefix {
     line-height: 40px;
     left: 15px;
   }
+
   .img-search {
     width: 16px;
     height: 16px;
   }
 }
+
 /* 列表页面中的搜索区域s */
 .list-search-wrap {
-  height: 40px;
+  height: 46px;
   margin-bottom: 30px;
   display: flex;
   justify-content: space-between;
+
   .btnfilter {
     display: flex;
     align-items: center;
     padding: 0px 16px;
     width: 93px;
-    height: 40px;
-    border: 1px solid $borderBg;
+    height: 46px;
+    border: 2px solid #E6E8EC;
     border-radius: 12px;
     cursor: pointer;
     margin-right: 20px;
+    line-height: 46px;
+    font-size: 16px;
+    color: #111111;
+    font-weight: 600;
+
     img {
-      width: 18px;
-      height: 18px;
-      margin-right: 7px;
+      width: 12px;
+      height: auto;
+      margin-right: 10px;
     }
   }
+
   .el-select {
     position: relative;
     width: 180px;
     margin-left: 10px;
-    height: 40px;
+    // height: 40px;
+
     .el-popper {
       top: 42px !important;
     }
+
     .el-select-dropdown__item {
       height: 40px;
       line-height: 40px;
     }
+
     .el-input__suffix {
       right: 16px;
     }
+
     .el-input__wrapper {
       padding: 10px 16px;
       border-radius: 12px;
@@ -421,20 +560,26 @@
       box-sizing: border-box;
       border: 1px solid $borderBg;
     }
+
     .el-input.is-focus .el-input__wrapper {
       box-shadow: none !important;
     }
+
     &:first-child {
       margin-left: 10px;
     }
+
     .el-input__inner {
       height: 20px;
       padding: 0;
     }
   }
+
   .select-sort {
+    margin-top: 6px;
     margin-right: 20px;
   }
+
   .sort-wrap {
     display: flex;
     background: $elButtonHoverBg;
@@ -442,31 +587,38 @@
     align-items: center;
     width: 128px;
     padding: 4px;
+
     .icon-wrap {
       height: 32px;
       width: 58px;
       line-height: 32px;
       border-radius: 8px;
+
       &.icon_filter01 {
         background-image: url("@/assets/images/icons/icon_filter01.svg");
+
         &.active {
           background-image: url("@/assets/images/icons/icon_filter01_active.svg");
           background-color: $bg-white;
         }
       }
+
       &.icon_filter02 {
         background-image: url("@/assets/images/icons/icon_filter02.svg");
+
         &.active {
           background-image: url("@/assets/images/icons/icon_filter02_active.svg");
           background-color: $bg-white;
         }
       }
+
       &:hover {
         cursor: pointer;
       }
     }
   }
 }
+
 /* 合集列表 */
 .collection-list {
   display: flex;
@@ -475,6 +627,7 @@
   margin-right: -9px;
   row-gap: 20px;
   margin-bottom: 20px;
+
   .collection-card {
     min-height: 1px;
     position: relative;
@@ -483,6 +636,7 @@
     max-width: 33.3333333333%;
     padding-left: 9px;
     padding-right: 9px;
+
     .collection-content {
       height: 308px;
       border-radius: 20px;
@@ -490,14 +644,17 @@
       transition: all 0.23s;
       background: $bg-white;
       filter: drop-shadow(0px 0px 10px rgba(82, 77, 255, 0.05));
+
       &:hover {
         box-shadow: 0 7px 16px -8px rgba(0, 0, 0, 0.15);
       }
+
       .card-top {
         overflow: hidden;
         height: 237px;
         position: relative;
         width: 100%;
+
         .card-img {
           left: 0;
           position: absolute;
@@ -505,6 +662,7 @@
           transition: all 0.23s;
           height: 237px;
           width: 100%;
+
           img,
           .cover-image {
             height: 100%;
@@ -512,11 +670,13 @@
           }
         }
       }
+
       .card-bottom {
         display: flex;
         height: 71px;
         padding: 0 20px;
         padding-right: 30px;
+
         .head-img {
           margin-top: -20px;
           z-index: 1;
@@ -527,11 +687,13 @@
           padding: 3px;
           flex-shrink: 0;
           position: relative;
+
           .cover-image {
             width: 100%;
             height: 100%;
             border-radius: 50%;
           }
+
           .tag {
             width: 24px;
             height: 24px;
@@ -541,6 +703,7 @@
             z-index: 2;
           }
         }
+
         .head-txt {
           margin-left: 15px;
           margin-top: 16px;
@@ -556,30 +719,36 @@
     }
   }
 }
+
 .el-dialog.custom-dialog {
   padding: 40px;
   height: auto;
   width: 700px;
+
   .el-dialog__header {
     padding: 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-right: 0;
+
     .left {
       color: $color-black;
       font-weight: 700;
       font-size: 22px;
       line-height: 28px;
     }
+
     .el-icon {
       cursor: pointer;
       font-size: 20px;
+
       &.down {
         transform: rotate(180deg);
       }
     }
   }
+
   .el-dialog__body {
     padding: 30px 0 0;
   }
@@ -601,6 +770,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
   .txt {
     font-weight: 500;
     font-size: 18px;
@@ -608,6 +778,7 @@
     color: $color-black2;
     margin-bottom: 16px;
   }
+
   img {
     width: 100px;
     height: 100px;
@@ -621,6 +792,7 @@
   height: 44px;
   align-self: center;
   display: flex;
+
   .icon-img {
     width: 44px;
     height: 44px;
@@ -636,6 +808,7 @@
 
   .icon-link-img {
     background-image: url("@/assets/images/icons/icon_link.svg");
+
     &:hover {
       background-image: url("@/assets/images/icons/icon_link_active.svg");
     }
@@ -643,6 +816,7 @@
 
   .icon-img-website {
     background-image: url("@/assets/images/icons/icon_lang_active_gray.svg");
+
     &.active {
       background-image: url("@/assets/images/icons/icon_lang_active.svg");
     }
@@ -650,6 +824,7 @@
 
   .icon-img-discord {
     background-image: url("@/assets/images/icons/media/media_tg.svg");
+
     &:active {
       background-image: url("@/assets/images/icons/media/media_tg_active.svg");
     }
@@ -657,6 +832,7 @@
 
   .icon-img-twitter {
     background-image: url("@/assets/images/icons/media/media_twitter.svg");
+
     &:active {
       background-image: url("@/assets/images/icons/media/media_twitter_active.svg");
     }
@@ -667,6 +843,7 @@
     border-radius: 50%;
     background-image: url('@/assets/images/icons/icon_shoucang.svg');
     background-size: 24px 24px;
+
     &.active {
       background-image: url('@/assets/images/icons/icon_shoucang_active.svg');
     }
@@ -674,8 +851,25 @@
 
   .icon-img-share {
     background-image: url("@/assets/images/icons/icon_share.svg");
+
     &:active {
       background-image: url("@/assets/images/icons/icon_share_active.svg");
     }
+  }
+}
+
+.my-loading {
+  color: #409eff;
+  width: 60px;
+  height: 60px;
+  animation: icon-loading 2s infinite linear;
+  font-size: 60px;
+}
+@keyframes icon-loading {
+  0% {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(1turn);
   }
 }

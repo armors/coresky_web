@@ -37,13 +37,13 @@
             <el-input-number v-model="queryParams.minPrice" :placeholder="$t('common.Min')" :controls="false"
               :precision="4" :min="0.0001" :max="100000000000000" class="input-number" />
             <div class="line"></div>
-            <el-input-number v-model="queryParams.maxPrice" :placeholder="$t('home.common')" :controls="false"
+            <el-input-number v-model="queryParams.maxPrice" :placeholder="$t('common.Max')" :controls="false"
               :precision="4" :min="0.0001" :max="100000000000000" class="input-number" />
           </div>
           <div class="btn-apply" @click="searchClick">{{$t('common.Application')  }}</div>
         </template>
       </div>
-      <div class="filter-item">
+      <!-- <div class="filter-item">
         <div class="flex">
           <span class="left">{{$t('common.Collection')  }}</span>
           <span class="right" @click="isOpenSearchCollection=!isOpenSearchCollection">
@@ -72,7 +72,7 @@
             </router-link>
           </div>
         </template>
-      </div>
+      </div> -->
     </div>
     <div class="right-content">
       <div class="list-search-wrap">
@@ -94,14 +94,18 @@
           <el-option :value="4" :label="$t('common.RecentlySold')" />
           <el-option :value="5" :label="$t('common.EndingSoon')" />
         </el-select>
-        <div class="sort-wrap">
+        <!-- <div class="sort-wrap">
           <span class="icon-wrap icon_filter01" :class="{'active':viewType===1}" @click="viewType=1">
           </span>
           <span class="icon-wrap icon_filter02" :class="{'active':viewType===2}" @click="viewType=2"></span>
-        </div>
+        </div> -->
       </div>
       <div v-if="loadStatus==='loading'">
-        <p class="loading-txt">Coming soon…</p>
+        <p class="loading-txt">
+          <el-icon class="my-loading">
+            <Loading />
+          </el-icon>
+        </p>
       </div>
       <div v-else>
         <div class="nft-list">
@@ -118,8 +122,7 @@
                 <div class="nft-txt">
                   {{item.name?item.name:('#'+item.tokenId)}}
                 </div>
-                <div class="nft-price"
-                  v-if="item && item.state !== 0">
+                <div class="nft-price" v-if="item && item.state !== 0">
                   <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="">
                   <span class="price">{{nftPrice(item.basePrice)}} ETH</span>
                 </div>

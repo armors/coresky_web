@@ -2,15 +2,17 @@
   <div class="account-wrap">
     <div class="bg-box"
       :style=" account.background ? 'background: url('+ account.background +') no-repeat; background-size: cover;':'' ">
+      <div class="avatar-box">
+        <img :src="account.photo" alt="">
+      </div>
     </div>
     <div class="account-info">
       <div class="info-top">
-        <div class="avatar-box">
-          <img :src="account.photo" alt="">
-        </div>
+
         <div class="info-title">
           <div class="title">
             <span>{{account.nickname}}</span>
+            <svg-icon class="tag" icon-class="icon_tag" />
             <!-- <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt=""> -->
           </div>
           <div class="creator">
@@ -101,44 +103,60 @@ export default {
 
 <style lang="scss" scoped>
 .account-wrap {
+  margin-top: -76px;
   .bg-box {
-    height: 320px;
+    height: 350px;
     width: 100%;
+    position: relative;
+    .avatar-box {
+      position: absolute;
+      left: 40px;
+      bottom: -20px;
+      z-index: 1;
+      width: 168px;
+      height: 168px;
+      padding: 5px;
+      background-color: $bg-white;
+      border-radius: 10px;
+      overflow: hidden;
+      filter: drop-shadow(0px 4px 16px rgba(0, 0, 0, 0.08));
+      img {
+        border-radius: 10px;
+        overflow: hidden;
+      }
+    }
   }
   .account-info {
-    width: 1200px;
-    margin: 0 auto;
-    margin-top: 15px;
+    // width: 1200px;
+    margin: 0 40px;
+    margin-top: 20px;
     margin-bottom: 40px;
     .info-top {
-      height: 80px;
+      // height: 80px;
+      margin-top: 35px;
       position: relative;
-      .avatar-box {
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        z-index: 1;
-        width: 168px;
-        height: 168px;
-        padding: 5px;
-        background-color: $bg-white;
-        border-radius: 50%;
-      }
+
       .info-title {
-        margin-left: 178px;
+        // margin-left: 178px;
         .title {
           display: flex;
           align-items: center;
           font-style: normal;
           font-weight: 700;
-          font-size: 32px;
-          line-height: 41px;
+          font-size: 30px;
+          line-height: 35px;
+          margin-bottom: 10px;
+          color: #111111;
+          .tag {
+            margin-left: 5px;
+            font-size: 22px;
+          }
         }
         .creator {
           .txt {
-            font-size: 20px;
-            line-height: 30px;
-            color: $color-black2;
+            font-weight: 700;
+            font-size: 18px;
+            line-height: 21px;
           }
           .el-icon {
             cursor: pointer;

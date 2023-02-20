@@ -34,8 +34,8 @@ module.exports = {
     SetPriceItem: 'Set a price per item',
     SetDuration: 'Set duration',
     loadingOSInfoWating: 'Pulling opensea data, please wait',
-    platformOneQuotation: 'Each platform only supports one quotation. Please cancel the listing of {name} platform and re-list'
-
+    platformOneQuotation: 'Each platform only supports one quotation. Please cancel the listing of {name} platform and re-list',
+    addedCart:'Added to cart'
   },
   // 头部导航
   navigation: {
@@ -47,6 +47,7 @@ module.exports = {
   },
   home: {
     topTitle: 'Welcome to Coresky！',
+    MoreDetails: 'More details',
     topSubTitle: 'A New Generation of Community-based NFT Marketplace',
     topBtn: 'Marketplace',
     topTitle1: 'Explore, collect and trade NFT',
@@ -84,7 +85,7 @@ module.exports = {
     details: 'Details'
   },
   accountCenter: {
-    MyCollection: 'My Collection',
+    MyCollection: 'Collected',
     Favorite: 'Favorite',
     Watchlist: 'Watchlist',
     Activities: 'Activities',
@@ -116,7 +117,7 @@ module.exports = {
     created: 'Created',
     creatorFee: 'Creator fee',
     chain: 'Chain',
-    contractADD: 'Contract ADD',
+    contractADD: 'Contract',
     floorPrice: 'Floor Price',
     bestOffer: 'Best Offer',
     hrVolume: '24hr Volume',
@@ -151,7 +152,8 @@ module.exports = {
     RewardsListing: 'Rewards by Listing',
     Sale: 'Sale',
     Rewards: 'Rewards',
-    ConvertTickets: 'Convert to Tickets'
+    ConvertTickets: 'Convert to Tickets',
+    TransactionMining: 'Transaction mining'
   },
   shoppingCart: {
     title: 'Shopping cart',
@@ -196,6 +198,9 @@ module.exports = {
     TimeLeft: 'Time left',
     BestOffer: 'Best offer',
     MakeOffer: 'Make an Offer',
+    Owner:'Owner',
+    Item:'Item',
+    YouOwn:'You own',
     Buy: 'Buy',
     Add: 'Add',
     Sell: 'Sell',

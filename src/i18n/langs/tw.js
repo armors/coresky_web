@@ -34,8 +34,8 @@ module.exports = {
     SetPriceItem: '請輸入掛單金額',
     SetDuration: '請選擇掛單時間',
     loadingOSInfoWating: '正在拉取opensea數據，請稍等',
-    platformOneQuotation: '每個平臺僅支持一次報價，請取消{name}平臺掛單後重新掛售'
-
+    platformOneQuotation: '每個平臺僅支持一次報價，請取消{name}平臺掛單後重新掛售',
+    addedCart:'已經加入購物車'
   },
   navigation: {
     searchTip: "搜索NFT或合集",
@@ -46,6 +46,7 @@ module.exports = {
   },
   home: {
     topTitle: 'Welcome to Coresky！',
+    MoreDetails: '查看更多',
     topSubTitle: 'A New Generation of Community-based NFT Marketplace',
     topBtn: '開始交易',
     topTitle1: '查找、收集、交易NFT',
@@ -77,16 +78,16 @@ module.exports = {
   },
   userCenter: {
     myCollection: '我的NFT',
-    favorites: '我的收藏',
+    favorites: '我的喜歡',
     setting: '設置',
     quit: '退出',
     score: '積分',
     details: '查看更多'
   },
   accountCenter: {
-    MyCollection: '我的NFT',
-    Favorite: '我的收藏',
-    Watchlist: '我的關注',
+    MyCollection: '收藏',
+    Favorite: '喜歡',
+    Watchlist: '關注',
     Activities: '歷史記錄',
   },
   activities: {
@@ -151,7 +152,8 @@ module.exports = {
     RewardsListing: '掛單獎勵',
     Sale: '交易',
     Rewards: '積分獎勵',
-    ConvertTickets: '兌換彩票'
+    ConvertTickets: '兌換彩票',
+    TransactionMining: '交易挖礦'
   },
   shoppingCart: {
     title: '購物車',
@@ -197,6 +199,9 @@ module.exports = {
     TimeLeft: '剩餘時間',
     BestOffer: '最佳報價',
     MakeOffer: '報價',
+    Owner: 'Owner',
+    Item: 'Item',
+    YouOwn: 'You own',
     Buy: '購買',
     Add: '添加',
     Sell: '出售',
@@ -248,5 +253,19 @@ module.exports = {
     itemPrivacyStatement: "Privacy Policy",
     itemTermsService: "Terms of Service",
     joinCommunity: "Join the community",
+  },
+  time: {
+    secondsAgo: "秒前",
+    minutesAgo: "分鐘前",
+    hoursAgo: "個小時前",
+    daysAgo: "天前",
+    monthsAgo: "个月前",
+    yearsAgo: "年前",
+    days: "天",
+    daysS: "天",
+    begin: "開始",
+    end: "结束",
+    over: "過期",
+    expired: "過期",
   },
 };

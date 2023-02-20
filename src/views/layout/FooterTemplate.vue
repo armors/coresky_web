@@ -3,27 +3,36 @@
     <div class="footer-box display-flex box-center-Y box-between">
       <div class="box-flex1">
         <div class="display-flex box-center-Y">
-          <div class="logo-white"><img src="../../assets/images/logo_white.svg" alt=""></div>
+          <div class="logo-black">
+            <img src="../../assets/images/bottom_logo.svg" alt="" />
+          </div>
           <!-- <div class="project-desc">{{$t('footer.projectDesc')}}</div> -->
         </div>
-        <div class="display-flex box-center-Y item-list">
-          <div class="item-box">{{$t('footer.itemDocs')}}</div>
-          <div class="item-box">{{$t('footer.itemAuditReport')}}</div>
-          <!-- <div class="item-box">{{$t('footer.itemJobs')}}</div> -->
-          <!-- <div class="item-box">{{$t('footer.itemDeveloper')}}</div> -->
-          <!-- <div class="item-box">{{$t('footer.itemAPI')}}</div> -->
-          <!-- <div class="item-box">{{$t('footer.itemCommunity')}}</div> -->
-          <a href="/file/PrivacyPolicy.pdf" target="_blank" class="item-box">{{$t('footer.itemPrivacyStatement')}}</a>
-          <a href="/file/terms.pdf" target="_blank" class="item-box">{{$t('footer.itemTermsService')}}</a>
+        <div class="display-flex link-box">
+          <div class="display-flex box-center-Y item-list">
+            <div class="item-box">{{ $t("footer.itemDocs") }}</div>
+            <div class="item-box">{{ $t("footer.itemAuditReport") }}</div>
+            <!-- <div class="item-box">{{$t('footer.itemJobs')}}</div> -->
+            <!-- <div class="item-box">{{$t('footer.itemDeveloper')}}</div> -->
+            <!-- <div class="item-box">{{$t('footer.itemAPI')}}</div> -->
+            <!-- <div class="item-box">{{$t('footer.itemCommunity')}}</div> -->
+            <a href="/file/PrivacyPolicy.pdf" target="_blank" class="item-box">{{ $t("footer.itemPrivacyStatement") }}</a>
+            <a href="/file/terms.pdf" target="_blank" class="item-box">{{
+              $t("footer.itemTermsService")
+            }}</a>
+          </div>
+          <div class="display-flex box-center-Y link-right">
+            <div>Community</div>
+            <div class="media-list display-flex box-center-Y">
+              <a class="media-item" v-for="(v, i) in mediaList" :key="`media-item-${i}`" :href="v.url" target="_blank">
+                <img :src="
+                  require(`../../assets/images/icons/media/media_${v.name}_black.svg`)
+                " alt="" />
+              </a>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="footer-right">
-        <div>{{$t('footer.joinCommunity')}}</div>
-        <div class="media-list display-flex box-center-Y">
-          <a class="media-item" v-for="(v, i) in mediaList" :key="`media-item-${i}`" :href="v.url" target="_blank">
-            <img :src="require(`../../assets/images/icons/media/media_${v.name}_white.svg`)" alt="">
-          </a>
-        </div>
+
       </div>
     </div>
   </div>
@@ -38,42 +47,42 @@ export default {
       searchKey: this.$route.query.keyword,
       mediaList: [
         {
-          url: 'https://twitter.com/Coreskyofficial',
-          name: 'twitter',
+          url: "https://twitter.com/Coreskyofficial",
+          name: "twitter",
         },
         {
-          url: 'https://discord.gg/ZbG5HrVFEE',
-          name: 'discord',
+          url: "https://discord.gg/ZbG5HrVFEE",
+          name: "discord",
         },
         {
-          url: 'mailto:info@coresky.com',
-          name: 'email',
+          url: "mailto:info@coresky.com",
+          name: "email",
         },
         // 'ins',
         // 'reddit',
         // 'youtube',
         // 'tiktok',
-      ]
+      ],
     };
   },
   computed: {
-    share () {
+    share() {
       return this.$store.state.share;
     },
-    connected () {
+    connected() {
       return this.$store.state.connected;
     },
-    user () {
+    user() {
       return this.$store.state.user;
     },
-    locale () {
+    locale() {
       return this.$i18n.locale;
     },
-    language () {
+    language() {
       return this.$store.state.language;
-    }
+    },
   },
-  created () {
+  created() {
     // if (localStorage.getItem("locale") == "zh") {
     //   this.$store.state.language = "中文";
     // } else {
@@ -81,7 +90,7 @@ export default {
     // }
   },
   methods: {
-    send () {
+    send() {
       var site_name = this.$store.state.name;
       location =
         "mailto:?cc=" +
@@ -90,7 +99,7 @@ export default {
         site_name +
         "&body=email content";
     },
-    open (name) {
+    open(name) {
       switch (name) {
         case "twitter":
           window.open(this.share.twitter.url);
@@ -103,9 +112,9 @@ export default {
           break;
       }
     },
-    async searchClick () {
+    async searchClick() {
       this.$router.push({ name: "Search", query: { keyword: this.searchKey } });
-    }
+    },
   },
 };
 </script>
@@ -114,49 +123,65 @@ export default {
 .footer-wrapper {
   width: 100%;
   backdrop-filter: blur(28px);
-  background-color: $primaryColor;
-  height: 111px;
+  background-color: #fafaf8;
+  height: 200px;
+
   .footer-box {
-    max-width: $maxWidth;
     margin: 0 auto;
-    height: 100%;
-    padding: 26px 0;
+    height: 200px;
+    padding: 26px 40px;
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
-    color: $color-white3;
-    .logo-white {
-      width: 110px;
-      height: 28.55px;
+    color: #717a83;
+
+    .logo-black {
+      width: auto;
+      height: 30px;
     }
+
     .project-desc {
       margin-left: 20px;
       /* Body_3_regular */
-      color: $color-white4;
+      // color: $color;
     }
+
+    .link-box {
+      margin-top: 18px;
+      justify-content: space-between;
+    }
+
     .item-list {
-      margin-top: 10px;
-      .item-box {
-        cursor: pointer;
-        line-height: 1.5;
+      font-weight: 400;
+      :hover {
+        color: #1063e0;
       }
-      .item-box + .item-box {
+      height: 30px;
+      .item-box+.item-box {
         margin-left: 30px;
       }
     }
-    .footer-right {
-      .media-list {
-        margin-top: 12px;
-        .media-item {
-          cursor: pointer;
-          width: 24px;
-          height: 24px;
+    .link-right{
+      .media-item{
+        margin-left: 56px;
+        display: flex;
+        border-radius: 50%;
+        width: 44px;
+        height: 44px;
+        justify-content: center;
+        img{
+          width: 30px;
+          height: auto;
+          border-radius: 0;
         }
-        .media-item + .media-item {
-          margin-left: 12px;
-        }
+      
+      }
+      .media-item:hover{
+        background: #fff;
+        box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08);
       }
     }
+
   }
 }
 </style>

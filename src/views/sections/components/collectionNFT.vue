@@ -2,35 +2,33 @@
   <div class="item-page">
     <div class="filter-wrap" v-if="showFilterBox">
       <div class="filter-head">
-        <span class="left" @click="showFilterBox=!showFilterBox">
-          <el-icon>
-            <ArrowLeft />
-          </el-icon>{{ $t('common.Filter') }}
-        </span>
+        <div v-if="showFilterBox" class="btnfilter" @click="showFilterBox = !showFilterBox">
+          <img src="../../../assets/images/icons/icon_filter_open.svg" alt="">
+          {{ $t('common.Filter') }}
+        </div>
         <span class="right">
-          <el-icon>
-            <Refresh />
-          </el-icon>
+          <img src="../../../assets/images/icons/icon_filter_refresh.svg" alt="">
         </span>
       </div>
-      <div class="filter-item flex border">
+      <div class="filter-item-buy flex ">
         <span class="left">{{ $t('common.BuyNow') }}</span>
         <span class="right">
           <el-switch v-model="queryParams.buyNow" @change="searchClick" class="ml-2" />
         </span>
       </div>
+      <div class="filter-line"></div>
       <div class="filter-item border">
-        <div class="flex">
+        <div class="flex filter-box">
           <span class="left">{{ $t('common.Price') }}</span>
-          <span class="right" @click="isOpenPriceFilter=!isOpenPriceFilter">
-            <el-icon style="font-size:16px" :class="{'down': isOpenPriceFilter}">
-              <ArrowUp />
+          <span class="right" @click="isOpenPriceFilter = !isOpenPriceFilter">
+            <el-icon style="font-size:16px" :class="{ 'down': isOpenPriceFilter }">
+              <img src="../../../assets/images/icons/icon_filter_up.svg" alt="">
             </el-icon>
           </span>
         </div>
         <template v-if="isOpenPriceFilter">
-          <el-select v-model="queryParams.sort" placeholder="ETH" :teleported="false" popper-class="select-popper"
-            class="select-sort">
+          <el-select v-model="queryParams.sort" disabled placeholder="ETH" :teleported="false"
+            popper-class="select-popper" class="select-sort">
             <el-option value="ETH">ETH</el-option>
           </el-select>
           <div class="price-range" style="margin-top:15px">
@@ -40,35 +38,35 @@
             <el-input-number v-model="queryParams.maxPrice" :placeholder="$t('common.Max')" :controls="false"
               :precision="4" :min="0.0001" :max="100000000000000" class="input-number" />
           </div>
-          <div class="btn-apply" @click="searchClick">{{$t('common.Application')}}</div>
+          <div class="btn-apply" @click="searchClick">{{ $t('common.Application') }}</div>
+          <div class="filter-line-btn"></div>
         </template>
       </div>
-      <div class="filter-item">
-        <div class="flex">
-          <span class="left">{{$t('common.Properties')}}</span>
-          <span class="right" @click="isOpenAttrFilter = !isOpenAttrFilter">
-            <el-icon style="font-size:16px" :class="{'down': isOpenAttrFilter}">
-              <!--            <el-icon style="font-size:16px">-->
-              <ArrowUp />
+      <div class="filter-item select-box">
+        <div class="flex select-title" @click="isOpenAttrFilter = !isOpenAttrFilter">
+          <span class="left">{{ $t('common.Properties') }}</span>
+          <span class="right">
+            <el-icon style="font-size:16px" :class="{ 'down': isOpenAttrFilter }">
+              <img src="../../../assets/images/icons/icon_filter_up.svg" alt="">
             </el-icon>
           </span>
         </div>
         <div class="gruop-wrap" v-if="isOpenAttrFilter">
-          <div class="type-item" v-for="(item,index) in attrList" :key="index">
+          <div class="type-item" v-for="(item, index) in attrList" :key="index">
             <div class="type-head">
-              <span class="type-name">{{item.attrNm}}</span>
+              <span class="type-name">{{ item.attrNm }}</span>
               <div class="type-num">
-                <span>{{item.total}}</span>
-                <el-icon :class="{'down':item.isShow}" @click="item.isShow=!item.isShow" style="font-size:15px">
+                <span>{{ item.total }}</span>
+                <el-icon :class="{ 'down': item.isShow }" @click="item.isShow = !item.isShow" style="font-size:15px">
                   <ArrowUp />
                 </el-icon>
               </div>
             </div>
             <div class="attr-content" v-if="item.isShow">
-              <div class="attr-item" v-for="(child,cindex) in item.dataList" :key="cindex">
-                <span>{{child.name}}</span>
+              <div class="attr-item" v-for="(child, cindex) in item.dataList" :key="cindex">
+                <span>{{ child.name }}</span>
                 <div class="attr-num">
-                  <span>{{child.num}}</span>
+                  <span>{{ child.num }}</span>
                   <el-checkbox v-model="child.isChecked" @change="checkChange" label="" />
                 </div>
               </div>
@@ -79,8 +77,8 @@
     </div>
     <div class="right-content">
       <div class="list-search-wrap">
-        <div class="btnfilter" @click="showFilterBox=!showFilterBox">
-          <img src="../../../assets/images/icons/icon_filter.svg" alt="">
+        <div v-if="!showFilterBox" class="btnfilter" @click="showFilterBox = !showFilterBox">
+          <img src="../../../assets/images/icons/icon_filter_close.svg" alt="">
           {{ $t('common.Filter') }}
         </div>
         <el-input class="search-input-wrap" style="width:400px" :placeholder="$t('common.SearchPlaceholder')"
@@ -97,19 +95,23 @@
           <el-option :value="4" :label="$t('common.RecentlySold')" />
           <el-option :value="5" :label="$t('common.EndingSoon')" />
         </el-select>
-        <div class="sort-wrap">
+        <!-- <div class="sort-wrap">
           <span class="icon-wrap icon_filter01" :class="{'active':viewType===1}" @click="viewType=1">
           </span>
           <span class="icon-wrap icon_filter02" :class="{'active':viewType===2}" @click="viewType=2"></span>
-        </div>
+        </div> -->
       </div>
       <div v-if="loadStatus==='loading'">
-        <p class="loading-txt">Coming soon…</p>
+        <p class="loading-txt">
+          <el-icon class="my-loading">
+            <Loading />
+          </el-icon>
+        </p>
       </div>
       <div v-else>
         <div class="nft-list">
           <router-link :to="`/detail/${item.contract}/${item.tokenId}`" class="nft-card"
-            v-for="(item,index) in dataList" :key="index">
+            v-for="(item, index) in dataList" :key="index">
             <div class="nft-content">
               <div class="card-top">
                 <div class="card-img">
@@ -118,31 +120,30 @@
               </div>
               <div class="card-bottom">
                 <div class="nft-txt">
-                  {{item.name?item.name:('#'+item.tokenId)}}
+                  {{ item.name ? item.name : ('#' + item.tokenId) }}
                 </div>
                 <div class="nft-price" v-if="item.basePrice">
-                  <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="">
-                  <span class="price">{{!!item.basePrice?nftPrice(item.basePrice):'-- '}} ETH</span>
+                  <span class="price">{{ !!item.basePrice ? nftPrice(item.basePrice) : '-- ' }} </span>
+                  <span style="margin-left:4px">ETH</span>
                 </div>
               </div>
             </div>
           </router-link>
         </div>
-        <div class="custom-pagination" v-if="listCount>queryParams.limit">
+        <div class="custom-pagination" v-if="listCount > queryParams.limit">
           <div class="content">
             <el-pagination background v-model:current-page="queryParams.page" :page-size="queryParams.limit"
               :page-="queryParams.limit" @current-change="queryData" layout="prev, pager, next" align="center"
               :total="listCount" />
           </div>
         </div>
-        <div class="empty-wrap" v-if="dataList.length===0">
+        <div class="empty-wrap" v-if="dataList.length === 0">
           <p class="txt">No Data</p>
           <img src="@/assets/images/no-data.png" alt="">
         </div>
       </div>
     </div>
   </div>
-
 </template>
 
 <script>
@@ -268,7 +269,34 @@ export default {
   justify-content: space-between;
   align-items: flex-start;
 }
+
 .right-content {
   width: 100%;
+}
+
+.filter-item-buy {
+  height: 54px;
+  margin-top: 20px;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  color: #111111;
+  line-height: 54px;
+  padding-left: 10px;
+}
+.filter-line {
+  background: #e6e8ec;
+  height: 1px;
+}
+.filter-line-btn {
+  margin-top: 20px;
+  background: #e6e8ec;
+  height: 1px;
+}
+.select-box {
+  margin-top: 6px;
+  .select-title{
+    cursor: pointer;
+  }
 }
 </style>

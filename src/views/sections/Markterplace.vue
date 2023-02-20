@@ -94,14 +94,18 @@
           <el-option :value="4" :label="$t('common.RecentlySold')" />
           <el-option :value="5" :label="$t('common.EndingSoon')" />
         </el-select>
-        <div class="sort-wrap">
+        <!-- <div class="sort-wrap">
           <span class="icon-wrap icon_filter01" :class="{'active':viewType===1}" @click="viewType=1">
           </span>
           <span class="icon-wrap icon_filter02" :class="{'active':viewType===2}" @click="viewType=2"></span>
-        </div>
+        </div> -->
       </div>
       <div v-if="loadStatus==='loading'">
-        <p class="loading-txt">Coming soon…</p>
+        <p class="loading-txt">
+        <el-icon class="my-loading">
+          <Loading />
+        </el-icon>
+      </p>
       </div>
       <div v-else>
         <div class="nft-list">
@@ -220,7 +224,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 .main-wrapper {
-  padding: 40px 0;
+  padding: 40px 40px;
+  width: 100%;
+  max-width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
