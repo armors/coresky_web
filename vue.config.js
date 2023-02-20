@@ -32,6 +32,7 @@ module.exports = defineConfig({
   publicPath: '/',
   outputDir: 'dist',
   // transpileDependencies: true,
+  productionSourceMap: false,
   assetsDir: 'static',
   lintOnSave: false,
   css: {
