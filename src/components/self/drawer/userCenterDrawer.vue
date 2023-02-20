@@ -2,9 +2,13 @@
   <el-drawer v-model="visible" @closed="handleClose" size="406" :append-to-body="true" zIndex="99"
     custom-class="coresky-drawer" :withHeader="false">
     <div class="drawer-top">
-      <avatar class="avatar-box" :imageUrl="user.avatar || $filters.fullImageUrl(user.avatar)" :address="user.coinbase"
-        :imgWidth="52" :imgHeight="52" shape="circular">
-      </avatar>
+<!--      <avatar class="avatar-box" :imageUrl="user.avatar || $filters.fullImageUrl(user.avatar)" :address="user.coinbase"-->
+<!--        :imgWidth="52" :imgHeight="52" shape="circular">-->
+<!--      </avatar>-->
+
+      <div class="avatar-box">
+          <img :src="user.avatar || $filters.fullImageUrl(user.avatar)" alt="">
+        </div>
       <div class="info">
         <div class="user-name display-flex box-center-Y">
           {{user.nickname}}
@@ -205,6 +209,13 @@ export default {
       width: 52px;
       height: 52px;
       margin-right: 12px;
+      border-radius: 50%;
+      img{
+        width: 100%;
+        height: 100%;
+        display: block;
+        border-radius: 50%;
+      }
     }
     .info {
       display: flex;

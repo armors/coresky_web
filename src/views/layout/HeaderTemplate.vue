@@ -82,9 +82,12 @@
           {{ $t("navigation.connectWallet") }}
         </div>
         <div class="nav-link" @click="showUserDrawer=true;showShoppingCartDrawer = false" v-else>
-          <avatar class="avatar-img" :imageUrl="user.avatar || $filters.fullImageUrl(user.avatar)"
-            :address="user.coinbase" :imgWidth="32" :imgHeight="32" shape="circular">
-          </avatar>
+          <div class="avatar-img">
+            <img :src="user.avatar || $filters.fullImageUrl(user.avatar)" alt="">
+          </div>
+<!--          <avatar class="avatar-img" :imageUrl="user.avatar || $filters.fullImageUrl(user.avatar)"-->
+<!--            :address="user.coinbase" shape="circular">-->
+<!--          </avatar>-->
         </div>
       </div>
     </div>
@@ -338,6 +341,14 @@ export default {
   .avatar-img {
     width: 32px;
     height: 32px;
+    overflow: hidden;
+    border-radius: 50%;
+    img{
+      width: 100%;
+      height: 100%;
+      display: block;
+      border-radius: 50%;
+    }
   }
   .header-container {
     max-width: $maxWidthRate;
