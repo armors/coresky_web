@@ -104,12 +104,12 @@ import { useDark, useToggle } from '@vueuse/core'
 
 export default {
   name: "HeaderTemplate",
-  props: {
-    isScrollTop: {
-      type: Boolean,
-      default: false
-    },
-  },
+  // props: {
+  //   isScrollTop: {
+  //     type: Boolean,
+  //     default: false
+  //   },
+  // },
 
   components: {
     FollowPopup,
@@ -158,6 +158,9 @@ export default {
     },
     isHomeIndex () {
       return this.$route.name === 'home'
+    },
+    isScrollTop () {
+      return this.$store.state.isScrollTop;
     }
   },
   created () {

@@ -50,5 +50,6 @@ export default {
   categorys: [],
   ...settings,
   shoppingCartList: [],
-  shoppingOpenseaCartList: []
+  shoppingOpenseaCartList: [],
+  isScrollTop: true,
 };

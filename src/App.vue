@@ -1,9 +1,9 @@
 <template>
-  <div class="app-wrapper" id="common-wraper" ref="appWrapperRef" @scroll="pageScroll">
-    <HeaderTemplate :isScrollTop="isScrollTop" />
-    <router-view style="min-height:calc(100vh - 276px)" />
-    <FooterTemplate />
-  </div>
+  <!-- @scroll="pageScroll" -->
+  <!-- <div class="app-wrapper" id="common-wraper" ref="appWrapperRef"> -->
+  <HeaderTemplate :isScrollTop="isScrollTop" />
+  <router-view style="min-height:calc(100vh - 276px)" />
+  <!-- </div> -->
 </template>
 
 <script>
@@ -12,7 +12,6 @@ import HeaderTemplate from "./views/layout/HeaderTemplate";
 import HeaderTemplateNew from "./views/layout/HeaderTemplateNew";
 
 import BodyTemplate from "./views/layout/BodyTemplate";
-import FooterTemplate from "./views/layout/FooterTemplate";
 
 export default {
   name: "App",
@@ -46,7 +45,6 @@ export default {
   components: {
     HeaderTemplate,
     BodyTemplate,
-    FooterTemplate,
     HeaderTemplateNew,
   },
   watch: {
@@ -145,10 +143,10 @@ export default {
 <style lang="scss">
 html,
 body {
-  height: 100%;
+  // height: 100%;
 }
 #app {
-  height: 100%;
+  // height: 100%;
 }
 .router-view {
   width: 100%;
@@ -164,8 +162,8 @@ body {
   position: relative;
   width: 100%;
   min-height: 100vh;
-  height: 100vh;
-  overflow-y: auto;
+  // height: 100vh;
+  // overflow-y: auto;
 }
 </style>
 

@@ -124,7 +124,7 @@ const routes = [
 
 const router = createRouter({
 	scrollBehavior () {
-		document.getElementById("common-wraper").scrollTop = 0;
+		document.documentElement.scrollTop = 0
 	},
 	history: createWebHistory(),
 	// scrollBehavior: () => ({ y: 0 }),

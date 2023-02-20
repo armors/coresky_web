@@ -1,5 +1,6 @@
 <template>
-  <div class="main-wrapper" id="marketPlace" ref="marketPlace">
+  <div class="main-wrapper" id="marketPlace" ref="marketPlace" v-infinite-scroll="loadMoreData"
+    :infinite-scroll-disabled="disabledLoadMore" :infinite-scroll-distance="50">
     <div class="filter-wrap" v-if="showFilterBox">
       <div class="filter-head">
         <span class="left btnfilter" @click="showFilterBox=!showFilterBox">
@@ -101,14 +102,7 @@
           <span class="icon-wrap icon_filter02" :class="{'active':viewType===2}" @click="viewType=2"></span>
         </div> -->
       </div>
-      <div v-if="loadStatus==='loading'">
-        <p class="loading-txt">
-          <el-icon class="my-loading">
-            <Loading />
-          </el-icon>
-        </p>
-      </div>
-      <div v-else>
+      <div>
         <div class="nft-list">
           <router-link :to="`/detail/${item.contract}/${item.tokenId}`" class="nft-card"
             v-for="(item,index) in dataList" :key="index">
@@ -130,14 +124,21 @@
             </div>
           </router-link>
         </div>
-        <div class="custom-pagination" v-if="listCount>queryParams.limit">
+        <!-- <div class="custom-pagination" v-if="listCount>queryParams.limit">
           <div class="content">
             <el-pagination background v-model:current-page="queryParams.page" :page-size="queryParams.limit"
               :page-="queryParams.limit" @current-change="queryData" layout="prev, pager, next" align="center"
               :total="listCount" />
           </div>
+        </div> -->
+        <div v-if="loadStatus==='loading'">
+          <p class="loading-txt">
+            <el-icon class="my-loading">
+              <Loading />
+            </el-icon>
+          </p>
         </div>
-        <div class="empty-wrap" v-if="dataList.length===0">
+        <div class="empty-wrap" v-if="dataList.length===0&& loadStatus!=='loading'">
           <p class="txt">No Data</p>
           <img src="../../assets/images/no-data.png" alt="">
         </div>
@@ -157,6 +158,11 @@ export default {
       default: ''
     },
   },
+  computed: {
+    disabledLoadMore: function () {
+      return this.loadStatus === 'loading' || this.dataList.length >= this.listCount
+    },
+  },
   data: function () {
     return {
       queryParams: {
@@ -172,22 +178,28 @@ export default {
       isOpenPriceFilter: true,
       isOpenSearchCollection: true,
       viewType: 1,
-      listCount: 0,
+      listCount: 1,
       dataList: [],
       loadStatus: 'over',
       keyword2: '',
-      collectionList: []
+      collectionList: [],
     }
   },
   created () {
   },
   mounted () {
-
-    this.queryParams.keyword = this.searchKeyword || ''
-    this.searchClick()
-    this.searchCollection()
+    this.dataList = []
+    this.queryParams.page = 0
+    // this.queryParams.keyword = this.searchKeyword || ''
+    // this.searchClick()
+    // this.searchCollection()
   },
   methods: {
+    loadMoreData () {
+      console.log(33377)
+      this.queryParams.page += 1
+      this.queryData()
+    },
     searchCollection () {
       let params = {
         keyword: this.keyword2,
@@ -206,17 +218,20 @@ export default {
     },
     searchClick () {
       this.queryParams.page = 1
+      this.dataList = []
       this.queryData()
     },
     queryData () {
-      this.dataList = []
+      // this.dataList = []
       this.loadStatus = 'loading'
       this.$api("token.query", this.queryParams).then((res) => {
         this.loadStatus = 'over'
         if (this.$tools.checkResponse(res)) {
-          this.dataList = res.debug.listData
-          this.listCount = res.debug.listCount
-          this.queryParams.page = res.debug.curPage
+          if (res.debug.listData.length > 0) {
+            this.dataList = this.dataList.concat(res.debug.listData)
+            this.listCount = res.debug.listCount
+            this.queryParams.page = res.debug.curPage
+          }
         }
       })
     }

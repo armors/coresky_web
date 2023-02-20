@@ -260,5 +260,8 @@ export default {
       coresky_cart_opensea = []
     }
     state.shoppingOpenseaCartList = coresky_cart_opensea;
+  },
+  setScrollTop (state, payload) {
+    state.isScrollTop = payload;
   }
 };

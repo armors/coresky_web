@@ -1,12 +1,14 @@
 <template>
   <div>
     <homeBanner />
-    <homeCollectionList  style="margin-bottom:30px"/>
+    <homeCollectionList style="margin-bottom:30px" />
     <GoodsList />
     <EmailDom />
+    <FooterTemplate />
   </div>
 </template>
 <script>
+import FooterTemplate from "@/views/layout/FooterTemplate";
 import homeCollectionList from '@/views/sections/components/homeCollectionList'
 import homeBanner from "@/views/sections/components/homeBanner";
 import EmailDom from "@/views/sections/components/homepage/emailMod.vue";
@@ -18,15 +20,38 @@ export default {
     homeCollectionList,
     EmailDom,
     GoodsList,
+    FooterTemplate
   },
   mixins: [],
-  data: function () {
-    return {};
+  data () {
+    return {
+      isScrollTop: false
+    };
   },
-  created() {},
-  mounted() {},
+  created () { },
+  mounted () {
+    window.addEventListener('scroll', this.handleScroll)
+  },
   computed: {},
-  methods: {},
+  methods: {
+    handleScroll () {
+      console.log(333444)
+      let scrollTop = document.documentElement.scrollTop;
+      if (scrollTop) {
+        if (scrollTop > 3) {
+          this.isScrollTop = false
+        } else {
+          this.isScrollTop = true
+        }
+      } else if (scrollTop === 0) {
+        this.isScrollTop = true
+      }
+      this.$store.commit('setScrollTop', this.isScrollTop)
+    }
+  },
+  beforeUnmount () {
+    window.removeEventListener('scroll', this.handleScroll)
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -184,7 +209,7 @@ export default {
 
 
 <style lang="scss">
-@import "../../styles/variables";
+@import '../../styles/variables';
 .home-wrapper {
   max-width: $maxWidth;
   margin: 0 auto;
@@ -192,7 +217,7 @@ export default {
 }
 .home-banner {
   height: 524px;
-  background: url("../../assets/images/bg_home.png") no-repeat;
+  background: url('../../assets/images/bg_home.png') no-repeat;
   background-size: cover;
   padding-top: 76px;
 
