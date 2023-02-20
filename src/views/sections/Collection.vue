@@ -328,7 +328,7 @@ export default {
       .avatar-box {
         position: absolute;
         left: 0;
-        bottom: 78px;
+        bottom: 58px;
         z-index: 1;
         width: 170px;
         height: 170px;

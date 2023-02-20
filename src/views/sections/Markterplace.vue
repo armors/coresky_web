@@ -224,7 +224,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 .main-wrapper {
-  padding: 40px 0;
+  padding: 40px 40px;
+  width: 100%;
+  max-width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;

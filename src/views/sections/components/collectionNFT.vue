@@ -47,8 +47,7 @@
           <span class="left">{{ $t('common.Properties') }}</span>
           <span class="right">
             <el-icon style="font-size:16px" :class="{ 'down': isOpenAttrFilter }">
-              <!--            <el-icon style="font-size:16px">-->
-              <ArrowUp />
+              <img src="../../../assets/images/icons/icon_filter_up.svg" alt="">
             </el-icon>
           </span>
         </div>

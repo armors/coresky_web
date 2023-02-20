@@ -97,7 +97,10 @@
     &.border {
       border-bottom: 1px solid $borderBg;
     }
-
+    .select-title{
+      height: 54px;
+      align-items: center;
+    }
     .left {
       font-weight: 600;
       font-size: 16px;
@@ -274,13 +277,13 @@
     margin-top: 15px;
 
     .type-item {
-      margin: 16px 0;
-
+      margin: 30px 0;
       .type-head {
+        color:#111111;
         display: flex;
-        font-size: 12px;
-        height: 18px;
-        line-height: 18px;
+        font-size: 16px;
+        height: 16px;
+        line-height: 16px;
         justify-content: space-between;
 
         .type-num {
@@ -320,8 +323,8 @@
             height: 18px;
 
             .el-checkbox__input.is-checked .el-checkbox__inner {
-              background-color: #7D47FF;
-              border-color: #7D47FF;
+              background-color: #1063E0;
+              border-color: #1063E0;
             }
           }
         }
