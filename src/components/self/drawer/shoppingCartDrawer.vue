@@ -571,15 +571,36 @@ export default {
         //   console.log(isOrder)
         // }
         this.buyOpenseaBtnLoading = false
-        const transactionHash = await openseaSDK.fulfillOrder({
-          order: this.openseaCart[0],
-          accountAddress: this.user.coinbase
-        })
+        // if (this.openseaCart.length === 1) {
+        //   const transactionHash = await openseaSDK.fulfillOrder({
+        //     order: this.openseaCart[0],
+        //     accountAddress: this.user.coinbase
+        //   })
+        // } else {
+          let fulfillOrderDetails = []
+          this.openseaCart.forEach(item => {
+            fulfillOrderDetails.push({
+              order: item.protocolData
+            })
+          })
+          let params = {
+            fulfillOrderDetails: fulfillOrderDetails,
+            accountAddress: this.user.coinbase
+          }
+          console.log(params)
+          const moreBuyAction = await openseaSDK.seaport.fulfillOrders(params)
+          await moreBuyAction.executeAllActions()
+          return
+        // }
+
         // this.$tools.message('购买成功', 'success');
         // this.buyOpenseaBtnLoading= false
 
         let coreskyCart = this.coreskyCart
-        let hasCoresky = coreskyCart.filter(v => !(this.openseaCart[0].makerAssetBundle.assets[0].tokenAddress === v.contract && this.openseaCart[0].makerAssetBundle.assets[0].tokenId === v.tokenId))
+        let hasCoresky = coreskyCart.filter(v => {
+          let openseaI = this.openseaCart.forEach(item => {!(item.makerAssetBundle.assets[0].tokenAddress === v.contract && item.makerAssetBundle.assets[0].tokenId === v.tokenId)})
+          return openseaI === null
+        })
         if (hasCoresky.length !== coreskyCart.length) {
           coreskyCart = hasCoresky
         }

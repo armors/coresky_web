@@ -57,6 +57,7 @@ import "@/styles/index.scss";
 import "@/assets/font/font.css";
 
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import UniswapVue from 'uniswap-vue';
 
 const app = createApp(App); // 创建实例
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
@@ -68,6 +69,10 @@ app.config.globalProperties.$api = api;
 app.config.globalProperties.$tools = tools;
 app.config.globalProperties.$sdk = sdk;
 app.config.globalProperties.$filters = filters;
+
+// https://market.hellonft.vip
+
+app.use(UniswapVue);
 
 app.use(VueClipboard);
 app.use(ElementPlus);

@@ -43,9 +43,12 @@
           <div class="user-popover">
             <!-- <profile-popover></profile-popover> -->
             <div class="user-avatar" @click="showUserDrawer=true">
-              <avatar class="avatar-img" :imageUrl="user.avatar || $filters.fullImageUrl(user.avatar)"
-                :address="user.coinbase" :imgWidth="40" :imgHeight="40" shape="circular">
-              </avatar>
+<!--              <avatar class="avatar-img" :imageUrl="user.avatar || $filters.fullImageUrl(user.avatar)"-->
+<!--                :address="user.coinbase" :imgWidth="40" :imgHeight="40" shape="circular">-->
+<!--              </avatar>-->
+              <div class="avatar-img">
+                <img :src="user.avatar || $filters.fullImageUrl(user.avatar)" alt="">
+              </div>
             </div>
           </div>
         </div>
@@ -229,6 +232,13 @@ export default {
   .avatar-img {
     width: 40px;
     height: 40px;
+    overflow: hidden;
+    border-radius: 50%;
+    img{
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
   }
   .header-container {
     width: 100%;

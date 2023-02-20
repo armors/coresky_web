@@ -8,6 +8,7 @@ import store from "@/store";
 import web3 from "@/util/web3/index.js";
 import {ethers} from 'ethers'
 import {keepPoint} from "@/filters";
+import { isAddress } from '@ethersproject/address'
 
 var Web3 = require("web3");
 const eth_util = require("ethereumjs-util");
@@ -35,7 +36,9 @@ import { OpenSeaSDK, Network } from 'opensea-js'
 
 export default {
 	// self start
-
+	isAddressVild(address) {
+		return isAddress(address)
+	},
 	// opensea start
 	_sleep(time = 1100) {
 		return new Promise((resolve) => {
@@ -59,13 +62,16 @@ export default {
 				apiKey: process.env.VUE_APP_OPENSEA_KEY,
 				gasPrice: new BigNumber(gasPrice * 1.5)
 			})
-			window.openseaSDK = new OpenSeaSDK(window.web3.currentProvider, {
+			const params = {
 				networkName: process.env.VUE_APP_CHAINID === '1' ? Network.Main : Network.Goerli,
 				gasPrice: new BigNumber(gasPrice * 1.5),
-				apiKey: process.env.VUE_APP_OPENSEA_KEY
 				// networkName: Network.Main,
 				// apiKey: process.env.VUE_APP_OPENSEA_KEY
-			})
+			}
+			if (process.env.VUE_APP_CHAINID === '1') {
+				params.apiKey = process.env.VUE_APP_OPENSEA_KEY
+			}
+			window.openseaSDK = new OpenSeaSDK(window.web3.currentProvider, params)
 		}
 		return window.openseaSDK
 	},
@@ -1066,15 +1072,29 @@ export default {
 		asset.contractAddress = asset.address;
 		return await utils.contractAt(asset.abi, asset.contractAddress);
 	},
-	async transferAsset(asset, from, to) {
-		asset.type = 3;
-		asset = this.getFullAsset(asset);
+	async transferAsset(asset) {
+		// asset.type = 3;
+		console.log(asset)
+		let asset1 = this.getFullAsset(asset);
+		console.log(asset1)
+		asset = {
+			...asset1,
+			...asset,
+		}
+		console.log(asset)
 		let contract = await this.getAssetContract(asset);
+		console.log(contract)
 		if (contract.error) return contract;
 		try {
-			return await contract.transferFrom(from, to, asset.tokenId, {
-				from: from,
-			});
+			if (asset.type === 3) {
+				return await contract.transferFrom(asset.from, asset.to, asset.tokenId, {
+					from: asset.from,
+				});
+			} else if (asset.type === 6) {
+				return await contract.safeTransferFrom(asset.from, asset.to, asset.tokenId, asset.amount, '0x', {
+					from: asset.from,
+				});
+			}
 		} catch (e) {
 			return {error: e.message};
 		}

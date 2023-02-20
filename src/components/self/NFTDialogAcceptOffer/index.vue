@@ -21,7 +21,7 @@
           <span class="tokenid">#{{tokenInfo.tokenId}}</span>
           <span class="collection-name">
             {{tokenInfo.ckCollectionsInfoEntity.name || '--'}}
-            <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
+            <img class="tag" v-if="tokenInfo.ckCollectionsInfoEntity.isCertification === '1'" src="@/assets/images/icons/icon_tag.svg" alt="">
           </span>
         </div>
         <div class="box-right">
