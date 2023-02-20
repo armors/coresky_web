@@ -117,7 +117,7 @@ module.exports = {
     created: 'Created',
     creatorFee: 'Creator fee',
     chain: 'Chain',
-    contractADD: 'Contract ADD',
+    contractADD: 'Contract',
     floorPrice: 'Floor Price',
     bestOffer: 'Best Offer',
     hrVolume: '24hr Volume',

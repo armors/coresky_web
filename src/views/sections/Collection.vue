@@ -50,7 +50,7 @@
         </div>
         <div class="item">|</div>
         <div class="item">
-          <span class="lable">{{ $t('collection.contractADD') }}:</span>
+          <span class="lable">{{ $t('collection.contractADD') }}</span>
           <a class="value" target="_blank"
             :href="'https://etherscan.io/address/'+collectInfo.contract">{{$filters.ellipsisAddress(collectInfo.contract)}}</a>
           <el-icon v-clipboard:copy="collectInfo.contract" v-clipboard:success="onSuccessCopy"
