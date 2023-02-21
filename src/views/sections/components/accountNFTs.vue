@@ -1,5 +1,6 @@
 <template>
-  <div class="accountNFTs">
+  <div class="accountNFTs" v-infinite-scroll="loadMoreData" :infinite-scroll-disabled="disabledLoadMore"
+    :infinite-scroll-distance="50">
     <div class="filter-wrap" v-if="showFilterBox">
       <div class="filter-head">
         <span class="left btnfilter" @click="showFilterBox=!showFilterBox">
@@ -43,8 +44,9 @@
           <div class="btn-apply" @click="searchClick">{{$t('common.Application')  }}</div>
         </template>
       </div>
+      <div class="filter-line"></div>
       <div class="filter-item">
-        <div class="flex">
+        <div class="flex select-title">
           <span class="left">{{$t('common.Collection')  }}</span>
           <span class="right" @click="isOpenSearchCollection=!isOpenSearchCollection">
             <el-icon style="font-size:16px">
@@ -100,14 +102,7 @@
           <span class="icon-wrap icon_filter02" :class="{'active':viewType===2}" @click="viewType=2"></span>
         </div> -->
       </div>
-      <div v-if="loadStatus==='loading'">
-        <p class="loading-txt">
-          <el-icon class="my-loading">
-            <Loading />
-          </el-icon>
-        </p>
-      </div>
-      <div v-else>
+      <div >
         <div class="nft-list">
           <router-link :to="`/detail/${item.contract}/${item.tokenId}`" class="nft-card" v-for="(item,index) in nftList"
             :key="index">
@@ -130,14 +125,14 @@
             </div>
           </router-link>
         </div>
-        <div class="custom-pagination" v-if="queryParams.limit<listCount">
-          <div class="content">
-            <el-pagination background v-model:current-page="queryParams.page" :page-size="queryParams.limit"
-              :page-="queryParams.limit" @current-change="pageHandle" layout="prev, pager, next" align="center"
-              :total="listCount" />
-          </div>
+        <div v-if="loadStatus === 'loading'">
+          <p class="loading-txt">
+            <el-icon class="my-loading">
+              <Loading />
+            </el-icon>
+          </p>
         </div>
-        <div class="empty-wrap" v-if="nftList.length===0">
+        <div class="empty-wrap" v-if="nftList.length === 0 && loadStatus !== 'loading'">
           <p class="txt">No Data</p>
           <img src="../../../assets/images/no-data.png" alt="">
         </div>
@@ -161,6 +156,11 @@ export default {
     $route (to, from) {
       this.init();
       this.searchCollection()
+    },
+  },
+  computed: {
+    disabledLoadMore: function () {
+      return this.loadStatus === 'loading' || this.nftList.length >= this.listCount
     },
   },
   data () {
@@ -214,12 +214,12 @@ export default {
       })
     },
     pageHandle () {
-      this.nftList = [];
+      // this.nftList = [];
       this.loadStatus = "loading";
       this.$api("token.query", this.queryParams).then((res) => {
         this.loadStatus = 'over'
         if (this.$tools.checkResponse(res)) {
-          this.nftList = res.debug.listData
+          this.nftList = this.nftList.concat( res.debug.listData)
           this.queryParams.page = res.debug.curPage
           this.listCount = res.debug.listCount
         } else {
@@ -229,7 +229,11 @@ export default {
     },
     searchClick () {
       this.init()
-    }
+    },
+    loadMoreData() {
+      this.queryParams.page += 1
+      this.pageHandle()
+    },
   },
   created () {
     this.init();

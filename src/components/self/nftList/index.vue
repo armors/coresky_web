@@ -25,7 +25,7 @@
 			<div class="nft-info display-flex box-center-Y">
 				<image-box :src="v.image"></image-box>
 				<div class="nft-name">{{ v.name }}</div>
-				<div class="icon-tag"><img src="../../../assets/images/icons/icon_tag.svg" alt=""></div>
+				<div class="icon-tag"><img src="../../../assets/images/icons/icon_list_blue.svg" alt=""></div>
 			</div>
 			<div class="price box-flex1 display-flex box-center-Y">
 				<div class="box-flex1"></div>

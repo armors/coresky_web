@@ -1,16 +1,16 @@
 <template>
   <div class="accountCollected">
     <div class="filter-wrap">
-      <div class="filter-head">
-        <!-- <span class="left btnfilter">
+      <!-- <div class="filter-head">
+        <span class="left btnfilter">
           {{ $t('common.Filter') }}
-        </span> -->
+        </span>
         <span class="right">
           <el-icon>
             <img src="../../../assets/images/icons/icon_filter_refresh.svg" alt="">
           </el-icon>
         </span>
-      </div>
+      </div> -->
       <div class="filter-item">
         <div class="gruop-wrap">
           <div class="type-item">

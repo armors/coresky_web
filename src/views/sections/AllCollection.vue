@@ -1,6 +1,6 @@
 <template>
-  <div class="collection-wrapper" v-infinite-scroll="loadMoreData"
-    :infinite-scroll-disabled="disabledLoadMore" :infinite-scroll-distance="50">
+  <div class="collection-wrapper" v-infinite-scroll="loadMoreData" :infinite-scroll-disabled="disabledLoadMore"
+    :infinite-scroll-distance="50">
     <div class="collection-banner">
       <div class="page-top">
         <div class="page-title">Explore Categories!</div>
@@ -14,7 +14,7 @@
       </div>
     </div>
 
-    <div >
+    <div>
       <div class="collection-list-new">
         <router-link :to="`/collection/${item.contract}`" class="collection-card" v-for="(item, index) in dataList"
           :key="index">
@@ -31,30 +31,24 @@
               </div>
               <div class="head-txt">
                 <span>{{ item.name }}</span>
-                
+
                 <img class="tag" src="../../assets/images/icons/icon_list_blue.svg" alt="" />
               </div>
             </div>
           </div>
         </router-link>
       </div>
-      <div v-if="loadStatus==='loading'">
-          <p class="loading-txt">
-            <el-icon class="my-loading">
-              <Loading />
-            </el-icon>
-          </p>
-        </div>
-      <div class="custom-pagination" v-if="listCount > query.limit">
-        <!-- <div class="content">
-          <el-pagination background v-model:current-page="query.page" :page-size="query.limit" :page-="query.limit"
-            @current-change="search" layout="prev, pager, next" align="center" :total="listCount" />
-        </div> -->
+      <div v-if="loadStatus === 'loading'">
+        <p class="loading-txt">
+          <el-icon class="my-loading">
+            <Loading />
+          </el-icon>
+        </p>
       </div>
-      <div class="empty-wrap" v-if="dataList.length===0&& loadStatus!=='loading'">
-          <p class="txt">No Data</p>
-          <img src="../../assets/images/no-data.png" alt="">
-        </div>
+      <div class="empty-wrap" v-if="dataList.length === 0 && loadStatus !== 'loading'">
+        <p class="txt">No Data</p>
+        <img src="../../assets/images/no-data.png" alt="">
+      </div>
     </div>
   </div>
 </template>
@@ -128,7 +122,7 @@ export default {
     },
     changeCategory(item) {
       this.query.cid = item.id;
-      this.dataList=[]
+      this.dataList = []
       this.search();
     },
     search() {
@@ -142,8 +136,7 @@ export default {
         }
       });
     },
-    loadMoreData () {
-      console.log(33377)
+    loadMoreData() {
       this.query.page += 1
       this.search()
     },
@@ -151,8 +144,6 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-
-
 .collection-wrapper {
   .collection-banner {
     background: linear-gradient(180deg,
@@ -246,32 +237,35 @@ export default {
     }
 
     .card-top {
-        z-index: 1;
+      z-index: 1;
+      position: relative;
+
+      .card-img {
+        &::before {
+          display: block;
+          content: '';
+          padding-bottom: 100%;
+        }
+
         position: relative;
-        .card-img {
-          &::before {
-            display: block;
-            content: '';
-            padding-bottom: 100%;
-          }
-          position: relative;
-          transition: all 0.23s;
-          img,
-          .cover-image {
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            display: flex;
-            height: 100%;
-            width: 100%;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-          }
+        transition: all 0.23s;
+
+        img,
+        .cover-image {
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          display: flex;
+          height: 100%;
+          width: 100%;
+          align-items: center;
+          justify-content: center;
+          overflow: hidden;
         }
       }
+    }
 
     .card-bottom {
       height: 70px;
@@ -284,11 +278,11 @@ export default {
         border-radius: 12px;
         margin-top: -20px;
         margin-left: 26px;
-
         .cover-image {
           width: 60px;
           height: 60px;
           border-radius: 12px;
+         box-shadow: 0 7px 16px -8px rgba(0, 0, 0, 0.2);
         }
       }
 
@@ -305,12 +299,13 @@ export default {
         margin-bottom: 10px;
         display: flex;
         align-items: center;
-        span{
+
+        span {
           display: block;
           max-width: 200px;
           overflow: hidden;
-text-overflow:ellipsis;
-white-space: nowrap;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
 
         img {
