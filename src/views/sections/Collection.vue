@@ -402,7 +402,6 @@ export default {
       margin-top: 15px;
 
       .item {
-        font-family: 'Roboto';
         height: 21px;
         line-height: 21px;
         margin-right: 20px;

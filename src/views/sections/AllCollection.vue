@@ -1,24 +1,20 @@
 <template>
-  <div class="collection-wrapper">
+  <div class="collection-wrapper" v-infinite-scroll="loadMoreData"
+    :infinite-scroll-disabled="disabledLoadMore" :infinite-scroll-distance="50">
     <div class="collection-banner">
       <div class="page-top">
         <div class="page-title">Explore Categories!</div>
         <div class="page-title-sub">Choose collections whatever you like!</div>
       </div>
       <div class="top-nav">
-        <div class="item-nav" :class="{ 'active': item.id === query.cid }" @click="changeCategory(item)"
+        <div class="item-nav" :class="{ active: item.id === query.cid }" @click="changeCategory(item)"
           v-for="(item, index) in categoryList" :key="index">
-          {{ item.name }}</div>
+          {{ item.name }}
+        </div>
       </div>
     </div>
-    <div v-if="loadStatus==='loading'">
-      <p class="loading-txt">
-        <el-icon class="my-loading">
-          <Loading />
-        </el-icon>
-      </p>
-    </div>
-    <div v-else>
+
+    <div >
       <div class="collection-list-new">
         <router-link :to="`/collection/${item.contract}`" class="collection-card" v-for="(item, index) in dataList"
           :key="index">
@@ -34,31 +30,38 @@
                 <!-- <img class="tag" src="../../assets/images/icons/icon_tag.svg" alt=""> -->
               </div>
               <div class="head-txt">
-                {{ item.name }}
-                <img class="tag" src="../../assets/images/icons/icon_list_blue.svg" alt="">
+                <span>{{ item.name }}</span>
+                
+                <img class="tag" src="../../assets/images/icons/icon_list_blue.svg" alt="" />
               </div>
             </div>
-
           </div>
         </router-link>
       </div>
+      <div v-if="loadStatus==='loading'">
+          <p class="loading-txt">
+            <el-icon class="my-loading">
+              <Loading />
+            </el-icon>
+          </p>
+        </div>
       <div class="custom-pagination" v-if="listCount > query.limit">
-        <div class="content">
+        <!-- <div class="content">
           <el-pagination background v-model:current-page="query.page" :page-size="query.limit" :page-="query.limit"
             @current-change="search" layout="prev, pager, next" align="center" :total="listCount" />
+        </div> -->
+      </div>
+      <div class="empty-wrap" v-if="dataList.length===0&& loadStatus!=='loading'">
+          <p class="txt">No Data</p>
+          <img src="../../assets/images/no-data.png" alt="">
         </div>
-      </div>
-      <div class="empty-wrap" v-if="dataList.length === 0">
-        <p class="txt">No Data</p>
-        <img src="../../assets/images/no-data.png" alt="">
-      </div>
     </div>
   </div>
 </template>
 <script>
 export default {
   mixins: [],
-  name: 'AllCollection',
+  name: "AllCollection",
   components: {},
   data: function () {
     return {
@@ -66,11 +69,12 @@ export default {
       query: {
         search: this.$route.query.keyword || "",
         page: 1,
+        limit: 20,
         cid: 1,
         limit: this.$store.state.pageLimit,
       },
-      keyword: '',
-      loadStatus: 'over',
+      keyword: "",
+      loadStatus: "over",
       sortIndex: "first",
       accountList: [],
       categoryList: [],
@@ -94,6 +98,9 @@ export default {
   },
   mounted() { },
   computed: {
+    disabledLoadMore: function () {
+      return this.loadStatus === 'loading' || this.dataList.length >= this.listCount
+    },
     showAddress() {
       return (search) => {
         var res =
@@ -108,76 +115,55 @@ export default {
   },
   methods: {
     init() {
-      this.getCategoryList()
+      this.getCategoryList();
       this.search();
     },
     getCategoryList() {
       this.$api("collections.type").then((res) => {
         if (this.$tools.checkResponse(res)) {
-          console.log('😺👉➡️', res)
+          console.log("😺👉➡️", res);
           this.categoryList = res.debug;
         }
       });
     },
     changeCategory(item) {
-      this.query.cid = item.id
-      this.search()
+      this.query.cid = item.id;
+      this.dataList=[]
+      this.search();
     },
     search() {
-      this.dataList = []
       this.loadStatus = "loading";
       this.$api("collect.query", this.query).then((res) => {
-        this.loadStatus = 'over'
+        this.loadStatus = "over";
         if (this.$tools.checkResponse(res)) {
-          this.dataList = res.debug.listData
-          this.listCount = res.debug.listCount
-          this.query.page = res.debug.curPage
+          this.dataList = this.dataList.concat(res.debug.listData);
+          this.listCount = res.debug.listCount;
+          this.query.page = res.debug.curPage;
         }
-      })
+      });
+    },
+    loadMoreData () {
+      console.log(33377)
+      this.query.page += 1
+      this.search()
     },
   },
 };
 </script>
 <style lang="scss" scoped>
-@media screen and (max-width: 4000px) {
-  .collection-list-new {
-    grid-template-columns: repeat(5, 1fr);
-  }
-}
 
-@media screen and (max-width: 1800px) {
-  .collection-card {
-    zoom: .9;
-  }
-}
-
-@media screen and (max-width: 1500px) {
-  .collection-card {
-    zoom: .8;
-  }
-}
-@media screen and (max-width: 1500px) {
-  .collection-card {
-    zoom: .7;
-  }
-}
-@media screen and (max-width: 1700px) {
-
-  .collection-list-new {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
 
 .collection-wrapper {
   .collection-banner {
-    background: linear-gradient(180deg, #E7EAF5 13.57%, rgba(231, 234, 245, 0) 100%);
+    background: linear-gradient(180deg,
+        #e7eaf5 13.57%,
+        rgba(231, 234, 245, 0) 100%);
     padding: 0 40px;
     padding-top: 60px;
     height: 300px;
   }
 
   .page-title {
-    font-family: 'Roboto';
     font-style: normal;
     font-weight: 700;
     font-size: 60px;
@@ -187,7 +173,6 @@ export default {
   }
 
   .page-title-sub {
-    font-family: 'Roboto';
     font-style: normal;
     font-weight: 400;
     font-size: 18px;
@@ -195,7 +180,7 @@ export default {
     height: 21px;
     margin-top: 9px;
 
-    color: #717A83;
+    color: #717a83;
   }
 
   .top-nav {
@@ -212,7 +197,7 @@ export default {
       font-weight: 400;
       font-size: 16px;
       color: #111111;
-      border: 2px solid #E6E8EC;
+      border: 2px solid #e6e8ec;
 
       &:hover {
         cursor: pointer;
@@ -220,12 +205,12 @@ export default {
 
       &:hover {
         color: $color-black3;
-        border: 2px solid #E6E8EC;
+        border: 2px solid #e6e8ec;
         box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.16);
       }
 
       &.active {
-        background: #1063E0;
+        background: #1063e0;
         color: #fff;
       }
     }
@@ -234,75 +219,109 @@ export default {
   .collection-list-new {
     padding: 40px;
     display: grid;
-    grid-auto-rows: minmax(0px, 1fr);
-    grid-gap: 20px 20px;
+    gap: 18px;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
 
     .collection-card {
+      min-height: 1px;
+      position: relative;
+      display: block;
       border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0px 0px 20px $arrowBtnShadow;
+      border: 1px solid $borderBg;
+      filter: drop-shadow(0px 0px 10px rgba(82, 77, 255, 0.05));
+
+      &:hover {
+        box-shadow: 0 7px 16px -8px rgba(0, 0, 0, 0.15);
+      }
+
+      .collection-content {
+        display: flex;
+        flex-direction: column;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.23s;
+        background: $bg-white;
+        position: relative;
+      }
     }
 
     .card-top {
-      height: 360px;
-      width: 100%;
-      overflow: hidden;
-
-      .card-img {
-        height: 360px;
-
+        z-index: 1;
+        position: relative;
+        .card-img {
+          &::before {
+            display: block;
+            content: '';
+            padding-bottom: 100%;
+          }
+          position: relative;
+          transition: all 0.23s;
+          img,
+          .cover-image {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            height: 100%;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+          }
+        }
       }
-
-      .card-img .cover-image {
-        height: 360px;
-        width: auto;
-      }
-    }
 
     .card-bottom {
-      height: 90px;
+      height: 70px;
       display: flex;
 
       .head-img {
-        position: relative;
-        width: 80px;
-        height: 80px;
+        z-index: 1;
         background: #fff;
         padding: 2px;
         border-radius: 12px;
-        margin-top: -24px;
+        margin-top: -20px;
         margin-left: 26px;
 
         .cover-image {
-          width: 100%;
-          height: 100%;
+          width: 60px;
+          height: 60px;
           border-radius: 12px;
         }
       }
 
       .head-txt {
-        font-family: 'Roboto';
         font-style: normal;
         font-weight: 500;
-        font-size: 18px;
-        line-height: 100%;
+        font-size: 16px;
+        color: #111111;
+        margin-left: 8px;
+        vertical-align: middle;
+        overflow: auto;
+        width: auto;
+        padding-right: 20px;
+        margin-bottom: 10px;
         display: flex;
         align-items: center;
-        color: #111111;
-        margin-left: 12px;
+        span{
+          display: block;
+          max-width: 200px;
+          overflow: hidden;
+text-overflow:ellipsis;
+white-space: nowrap;
+        }
 
         img {
+          display: inline-block;
           height: 20px;
           width: 20px;
-          margin-left: 8px;
+          margin-left: 4px;
         }
       }
     }
-
   }
-
-
-
 }
 </style>
 

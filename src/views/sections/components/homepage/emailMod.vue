@@ -103,7 +103,7 @@ export default {
     h5 {
       height: 60px;
       line-height: 60px;
-      font-family: "Roboto";
+      // font-family: "Roboto";
       font-weight: bold;
       font-size: 40px;
       line-height: 150%;
@@ -113,7 +113,7 @@ export default {
     h6 {
       height: 24px;
       line-height: 24px;
-      font-family: "Roboto";
+      // font-family: "Roboto";
       font-style: normal;
       // font-weight: 300;
       font-size: 16px;

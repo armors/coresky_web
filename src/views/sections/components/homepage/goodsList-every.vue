@@ -2,7 +2,7 @@
  * @Author: zhaoyan
  * @Date: 2023-02-18 18:14:02
  * @LastEditors: zhaoyan
- * @LastEditTime: 2023-02-20 15:31:46
+ * @LastEditTime: 2023-02-21 10:12:10
  * @Description: 
 -->
 <template>
@@ -82,7 +82,6 @@ export default {
     margin-bottom: 50px;
 
     .list-title {
-        font-family: "Roboto";
         font-style: normal;
         font-weight: 700;
         font-size: 30px;
