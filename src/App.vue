@@ -63,10 +63,10 @@ export default {
   mounted () {
     this["changeCurrentRouteTo"](this.$route);
     this["setCurrentView"](this.$route);
-    // setTimeout(() => {
-    //   this.initWeb3()
-    // }, 300);
-    console.log(this.$route)
+    setTimeout(() => {
+      this.initWeb3()
+    }, 300);
+    // console.log(this.$route)
     // this.$refs.appWrapperRef.addEventListener
   },
   destroyed () {
