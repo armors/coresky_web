@@ -6,16 +6,20 @@
  * @Description: 首页中间列表轮播
 -->
 <template>
-  <GoodsListEvery :arrList="nftList.recommendCollection" :title="$t('home.topTitle1')" />
-  <GoodsListEvery :arrList="nftList.popularCollection" :title="$t('home.trendingNow')" />
+  <!-- <GoodsListEvery :arrList="nftList.recommendCollection" :title="$t('home.topTitle1')" /> -->
+  <test :arrList="nftList.recommendCollection" :title="$t('home.topTitle1')" />
+  <test :arrList="nftList.popularCollection" :title="$t('home.trendingNow')" />
 </template>
 
 <script>
 import GoodsListEvery from "./goodsList-every";
+import test from "./test";
+
 export default {
   name: "goodsList",
   components: {
     GoodsListEvery,
+    test
   },
   data () {
     return {
@@ -54,5 +58,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

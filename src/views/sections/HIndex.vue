@@ -35,7 +35,6 @@ export default {
   computed: {},
   methods: {
     handleScroll () {
-      console.log(333444)
       let scrollTop = document.documentElement.scrollTop;
       if (scrollTop) {
         if (scrollTop > 3) {
