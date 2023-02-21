@@ -549,7 +549,7 @@ export default {
 	 * @param value 此项目中表示交易的nft的数量
 	 * @returns {{howToCall: number, side: number, salt: number, staticExtradata: string, _sender: *, listingTime: number, maker: *, makerRelayerFee: number, takerProtocolFee: number, target: *, paymentToken: string, staticTarget: string, takerRelayerFee: number, calldata: *, expirationTime: number, extra: number, exchange: *, saleKind: number, taker: string, makerProtocolFee: number, feeRecipient: string, feeMethod: number, replacementPattern: (string), basePrice: BigNumber}}
 	 */
-	makeOrder({exchangeAddress, sender, nftAddress, side = 0, tokenId = null, isMaker=false, buyerAddress = '', feeType = 1, RelayerFee = 100, feeRecipient = ZERO_ADDRESS, contractType = 0, value = 1}) {
+	makeOrder({exchangeAddress, sender, nftAddress, side = 0, tokenId = null, isMaker=false, buyerAddress = '', feeType = 1, RelayerFee = 100, feeRecipient = ZERO_ADDRESS, taker = ZERO_ADDRESS, contractType = 0, value = 1}) {
 		let calldata = null
 		let replacementPattern = null
 		if (isMaker) { // 是否是挂单
@@ -590,7 +590,7 @@ export default {
 		return {
 			exchange: exchangeAddress,                     // 当前 exhcnage 合约地址 default : exchangeAddress
 			maker: sender,                                 // 订单创建者 default sender
-			taker: ZERO_ADDRESS,                           // 订单参与者 require
+			taker: taker,                                  // 订单参与者 require
 			makerRelayerFee: makerRelayerFee,                           // 版税  default: 0 挂单版税卖家出在此设置
 			takerRelayerFee: takerRelayerFee,                            // 版税  default: 0
 			makerProtocolFee: makerProtocolFee,                         // 手续费  default: 0 挂单手续费卖家出在此设置

@@ -664,7 +664,7 @@ export default {
     },
     goExplore (address, isTx = false) {
       console.log(address, isTx)
-      if (address !== null) {
+      if (address !== null && address !== '--' && !!address) {
         this.$filters.openWindow(isTx ? this.$filters.hashExplore(address).href : this.$filters.contractExplore(address).href)
       }
     },

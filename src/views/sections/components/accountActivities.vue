@@ -28,7 +28,7 @@
                 <div class="attr-item">
                   <span> {{ $t('activities.Listings') }}</span>
                   <div class="attr-num">
-                    <el-checkbox class="big-checkbox" label="Listings">
+                    <el-checkbox class="big-checkbox" label="Listing">
                       <template #default>
                       </template>
                     </el-checkbox>
@@ -77,7 +77,7 @@
       </div>
     </div>
     <div class="right-content">
-      <el-table :data="dataList" :header-cell-style="{ 
+      <el-table :data="dataList" :header-cell-style="{
       color:'#717A83'}" style="width: 100%">
         <el-table-column prop="date" :label="$t('activities.Activities')" width="180">
           <template #default="props">
@@ -173,6 +173,7 @@ export default {
       return this.$filters.keepMaxPoint(this.$Web3.utils.fromWei(basePrice.toString()))
     },
     changeChecked () {
+      console.log(this.checkList, this.dataList, this.allDataList)
       if (this.checkList === undefined || this.checkList.length == 0) {
         this.dataList = this.allDataList
         return
