@@ -66,7 +66,7 @@ export default {
     setTimeout(() => {
       this.initWeb3()
     }, 300);
-    // console.log(this.$route)
+    console.log(this.$route)
     // this.$refs.appWrapperRef.addEventListener
   },
   destroyed () {

@@ -501,7 +501,7 @@
     <NFTDialogSell ref="NFTDialogSell" @sellCreateSuccess="sellCreateSuccess"></NFTDialogSell>
     <NFTDialogMakeOffer ref="NFTDialogMakeOffer" @makeOfferSuccess="makeOfferSuccess"></NFTDialogMakeOffer>
     <NFTDialogAcceptOffer ref="NFTDialogAcceptOffer" @acceptOfferSuccess="acceptOfferSuccess" />
-    <NFTDialogTransfer ref="NFTDialogTransfer"/>
+    <NFTDialogTransfer ref="NFTDialogTransfer" @transferSuccess="transferSuccess"/>
     <div class="web-loading" v-if="loading" v-loading.fullscreen.lock="loading"></div>
   </div>
 </template>
@@ -1303,6 +1303,10 @@ export default {
       this.getTokenInfo()
     },
     buySuccess (v) {
+      console.log(v)
+      this.getTokenInfo()
+    },
+    transferSuccess (v) {
       console.log(v)
       this.getTokenInfo()
     },

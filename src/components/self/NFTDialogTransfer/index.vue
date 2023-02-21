@@ -88,6 +88,7 @@ export default {
       if (this.tokenInfo.contractType === 1) {
         const amount = await this.$sdk.getERC1155Amount(this.tokenInfo.contract, this.tokenInfo.tokenId, this.user.coinbase)
         console.log(amount)
+        console.log(typeof amount == 'object' && amount.error)
         if (typeof amount == 'object' && amount.error) {
           return
         }
@@ -136,6 +137,9 @@ export default {
         this.hash = hashTransfer.transactionHash
         this.isBuyOver = true // 展示交易hash值
         this.transferBtnLoading = false
+        setTimeout(() => {
+          this.$emit('transferSuccess', hashTransfer)
+        }, 1000)
       } catch (e) {
         console.log(e)
         this.transferBtnLoading = false
