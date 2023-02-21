@@ -202,7 +202,7 @@
               </template>
               <el-button type="primary" class="btnBuy"
                 v-if="(ckOrdersEntityList.length > 0 && !isSelf && tokenInfo.contractType === 0) || (tokenInfo.contractType === 1 && isSellSelfNft1155)"
-                @click="showBuyNft">Buy Now
+                @click="showBuyNftNow">Buy Now
               </el-button>
               <!--              <el-button class="btnBlack" v-if="!isSelf && !isCart" :disabled="!(!isSelf && !isCart) || !tokenInfo.contract || !tokenInfo.state"-->
 
@@ -1236,6 +1236,9 @@ export default {
         this.cancelIdOrHash = undefined
         this.cancelBtnLoading = false
       }
+    },
+    showBuyNftNow () {
+      this.showBuyNft()
     },
     showBuyNft (v = null, isOpensea = false) {
       if (v === null) {
