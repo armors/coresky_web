@@ -45,12 +45,6 @@
           </el-icon>
         </p>
       </div>
-      <div class="custom-pagination" v-if="listCount > query.limit">
-        <!-- <div class="content">
-          <el-pagination background v-model:current-page="query.page" :page-size="query.limit" :page-="query.limit"
-            @current-change="search" layout="prev, pager, next" align="center" :total="listCount" />
-        </div> -->
-      </div>
       <div class="empty-wrap" v-if="dataList.length === 0 && loadStatus !== 'loading'">
         <p class="txt">No Data</p>
         <img src="../../assets/images/no-data.png" alt="">

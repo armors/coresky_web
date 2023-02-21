@@ -1,5 +1,5 @@
 <template>
-  <div class="main-wrapper" id="marketPlace" ref="marketPlace" v-infinite-scroll="loadMoreData"
+  <div class="accountFavorited" id="marketPlace" ref="marketPlace" v-infinite-scroll="loadMoreData"
     :infinite-scroll-disabled="disabledLoadMore" :infinite-scroll-distance="50">
     <div class="filter-wrap" v-if="showFilterBox">
       <div class="filter-head">
@@ -250,6 +250,12 @@ export default {
   .right-content {
     width: 100%;
   }
+}
+.accountFavorited {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 </style>
 
