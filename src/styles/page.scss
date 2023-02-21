@@ -6,6 +6,10 @@
 
 /* 左侧条件筛选 */
 .filter-wrap {
+  .filter-line {
+    background: #E6E8EC;
+    height: 1px;
+  }
   position: sticky;
   top: 80px;
   width: 285px;
@@ -27,10 +31,7 @@
     align-items: center;
   }
 
-  .filter-line {
-    background: #E6E8EC;
-    height: 1px;
-  }
+ 
 
   .filter-line-btn {
     margin-top: 20px;
@@ -125,8 +126,10 @@
       border-bottom: 1px solid $borderBg;
     }
     .select-title {
+      padding-left: 10px;
       height: 54px;
       align-items: center;
+      margin-top: 6px;
     }
 
     .left {
@@ -248,6 +251,7 @@
     text-align: center;
     font-size: 16px;
     cursor: pointer;
+    margin-bottom: 20px;
   }
 
   .list-wrap {

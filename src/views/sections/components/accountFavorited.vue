@@ -1,8 +1,9 @@
 <template>
-  <div class="accountFavorited">
+  <div class="accountFavorited" v-infinite-scroll="loadMoreData" :infinite-scroll-disabled="disabledLoadMore"
+    :infinite-scroll-distance="50">
     <div class="filter-wrap" v-if="showFilterBox">
       <div class="filter-head">
-        <span class="left btnfilter" @click="showFilterBox=!showFilterBox">
+        <span class="left btnfilter" @click="showFilterBox = !showFilterBox">
           <el-icon>
             <img src="../../../assets/images/icons/icon_filter_open.svg" alt="">
           </el-icon>{{ $t('common.Filter') }}
@@ -28,7 +29,7 @@
       <div class="filter-item border">
         <div class="flex filter-box">
           <span class="left">{{ $t('common.Price') }}</span>
-          <span class="right" @click="isOpenPriceFilter=!isOpenPriceFilter">
+          <span class="right" @click="isOpenPriceFilter = !isOpenPriceFilter">
             <el-icon style="font-size:16px" :class="{ 'down': isOpenPriceFilter }">
               <img src="../../../assets/images/icons/icon_filter_up.svg" alt="">
             </el-icon>
@@ -46,13 +47,13 @@
             <el-input-number v-model="queryParams.maxPrice" :placeholder="$t('common.Max')" :controls="false"
               :precision="4" :min="0.0001" :max="100000000000000" class="input-number" />
           </div>
-          <div class="btn-apply" @click="searchClick">{{$t('common.Application')  }}</div>
+          <div class="btn-apply" @click="searchClick">{{ $t('common.Application') }}</div>
         </template>
       </div>
       <div class="filter-item">
         <div class="flex select-title">
-          <span class="left">{{$t('common.Collection')  }}</span>
-          <span class="right" @click="isOpenSearchCollection=!isOpenSearchCollection">
+          <span class="left">{{ $t('common.Collection') }}</span>
+          <span class="right" @click="isOpenSearchCollection = !isOpenSearchCollection">
             <el-icon style="font-size:16px" :class="{ 'down': isOpenSearchCollection }">
               <img src="../../../assets/images/icons/icon_filter_up.svg" alt="">
             </el-icon>
@@ -66,14 +67,14 @@
             </template>
           </el-input>
           <div class="list-wrap">
-            <router-link :to="`/collection/${item.contract}`" class="list-item" v-for="(item,index) in collectionList"
+            <router-link :to="`/collection/${item.contract}`" class="list-item" v-for="(item, index) in collectionList"
               :key="index">
               <div class="head-img">
                 <image-box :src="item.image"></image-box>
                 <img class="tag" src="../../../assets/images/icons/icon_tag.svg" alt="">
               </div>
               <div class="head-txt">
-                {{item.name}}
+                {{ item.name }}
               </div>
             </router-link>
           </div>
@@ -82,7 +83,7 @@
     </div>
     <div class="right-content">
       <div class="list-search-wrap">
-        <div class="btnfilter"  v-if="!showFilterBox" @click="showFilterBox=!showFilterBox">
+        <div class="btnfilter" v-if="!showFilterBox" @click="showFilterBox = !showFilterBox">
           <img src="../../../assets/images/icons/icon_filter_close.svg" alt="">
           {{ $t('common.Filter') }}
         </div>
@@ -106,16 +107,9 @@
           <span class="icon-wrap icon_filter02" :class="{'active':viewType===2}" @click="viewType=2"></span>
         </div> -->
       </div>
-      <div v-if="loadStatus==='loading'">
-        <p class="loading-txt">
-          <el-icon class="my-loading">
-            <Loading />
-          </el-icon>
-        </p>
-      </div>
-      <div v-else>
+      <div>
         <div class="nft-list">
-          <router-link :to="`/detail/${item.contract}/${item.tokenId}`" class="nft-card" v-for="(item,index) in nftList"
+          <router-link :to="`/detail/${item.contract}/${item.tokenId}`" class="nft-card" v-for="(item, index) in nftList"
             :key="index">
             <div class="nft-content">
               <div class="card-top">
@@ -126,31 +120,37 @@
               </div>
               <div class="card-bottom">
                 <div class="nft-txt">
-                  {{item.name?item.name:('#'+item.tokenId)}}
+                  {{ item.name ? item.name : ('#' + item.tokenId) }}
                 </div>
                 <div class="nft-price" v-if="item.basePrice && item.basePrice !== '0'">
                   <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="">
-                  <span class="price">{{!!item.basePrice?nftPrice(item.basePrice):'-- '}} ETH</span>
+                  <span class="price">{{ !!item.basePrice ? nftPrice(item.basePrice) : '-- ' }} ETH</span>
                 </div>
               </div>
             </div>
           </router-link>
         </div>
-        <div class="custom-pagination" v-if="queryParams.limit<listCount">
+        <!-- <div class="custom-pagination" v-if="queryParams.limit<listCount">
           <div class="content">
             <el-pagination background v-model:current-page="queryParams.page" :page-size="queryParams.limit"
               :page-="queryParams.limit" @current-change="pageHandle" layout="prev, pager, next" align="center"
               :total="listCount" />
           </div>
+        </div> -->
+        <div v-if="loadStatus === 'loading'">
+          <p class="loading-txt">
+            <el-icon class="my-loading">
+              <Loading />
+            </el-icon>
+          </p>
         </div>
-        <div class="empty-wrap" v-if="nftList.length===0">
+        <div class="empty-wrap" v-if="nftList.length === 0 && loadStatus !== 'loading'">
           <p class="txt">No Data</p>
           <img src="../../../assets/images/no-data.png" alt="">
         </div>
       </div>
     </div>
   </div>
-
 </template>
 
 <script>
@@ -163,7 +163,12 @@ export default {
       default: ''
     },
   },
-  data () {
+  computed: {
+    disabledLoadMore: function () {
+      return this.loadStatus === 'loading' || this.nftList.length >= this.listCount
+    },
+  },
+  data() {
     return {
       nftList: [],
       queryParams: {
@@ -176,7 +181,7 @@ export default {
         contract: '',
         minPrice: undefined,
         maxPrice: undefined,
-        order: 1,
+        order: 3,
         address: '',
         followAddress: ''
       },
@@ -193,15 +198,15 @@ export default {
     }
   },
   methods: {
-    nftPrice (basePrice) {
+    nftPrice(basePrice) {
       return this.$filters.keepMaxPoint(this.$Web3.utils.fromWei(basePrice.toString()))
     },
-    init () {
+    init() {
       this.queryParams.page = 1
       this.queryParams.followAddress = this.address
       this.pageHandle()
     },
-    searchCollection () {
+    searchCollection() {
       let params = {
         keyword: this.keyword2,
         page: 1,
@@ -214,13 +219,13 @@ export default {
         }
       })
     },
-    pageHandle () {
-      this.nftList = [];
+    pageHandle() {
+      // this.nftList = [];
       this.loadStatus = "loading";
       this.$api("token.query", this.queryParams).then((res) => {
         this.loadStatus = 'over'
         if (this.$tools.checkResponse(res)) {
-          this.nftList = res.debug.listData
+          this.nftList = this.nftList.concat(res.debug.listData)
           this.queryParams.page = res.debug.curPage
           this.listCount = res.debug.listCount
         } else {
@@ -228,11 +233,15 @@ export default {
         }
       });
     },
-    searchClick () {
+    searchClick() {
       this.init()
-    }
+    },
+    loadMoreData() {
+      this.queryParams.page += 1
+      this.pageHandle()
+    },
   },
-  created () {
+  created() {
     this.init();
     this.searchCollection()
   },
@@ -248,6 +257,7 @@ export default {
   justify-content: space-between;
   align-items: flex-start;
 }
+
 .right-content {
   width: 100%;
 }
