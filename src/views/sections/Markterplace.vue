@@ -1,5 +1,5 @@
 <template>
-  <div class="accountFavorited" id="marketPlace" ref="marketPlace" v-infinite-scroll="loadMoreData"
+  <div class="main-wrapper" id="marketPlace" ref="marketPlace" v-infinite-scroll="loadMoreData"
     :infinite-scroll-disabled="disabledLoadMore" :infinite-scroll-distance="50">
     <div class="filter-wrap" v-if="showFilterBox">
       <div class="filter-head">
