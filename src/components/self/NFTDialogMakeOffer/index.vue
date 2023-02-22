@@ -196,6 +196,7 @@ export default {
       }
       this.btnMakeOfferLoading = true
       let buyer = null
+
       if (this.makeOfferType === 1) { // 单个nft报价
         buyer = this.$sdk.makeOrder({
           exchangeAddress: process.env.VUE_APP_MARKET_EXCHANGE,
@@ -209,6 +210,14 @@ export default {
           contractType: this.tokenInfo.contractType,
           value: Number(this.form.quantity)
         })
+        if (this.tokenInfo.contractType === 0) {
+          buyer = {
+            ...buyer,
+            ...{
+              taker: this.tokenInfo.ownersEntityList[0].address
+            }
+          }
+        }
       } else { // 集合报价
         buyer = this.$sdk.makeOrder({
           exchangeAddress: process.env.VUE_APP_MARKET_EXCHANGE,

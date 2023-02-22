@@ -131,19 +131,23 @@ export default {
       // }
       console.log(this.sellInfo)
       const price = this.isOpensea ? this.sellInfo.currentPrice : this.sellInfo.basePrice
-      const ethBalance = await this.$sdk.getBalance({
-        address: this.$sdk.NULL_ADDRESS()
-      }, this.user.coinbase)
-      if (new BigNumber(ethBalance).isLessThan(
-        this.$sdk.fromWeiNum(price)
-      )) {
-        this.$tools.message('No Enough Balance Of ETH');
-        return
+      try {
+        const ethBalance = await this.$sdk.getBalance({
+          address: this.$sdk.NULL_ADDRESS()
+        }, this.user.coinbase)
+        if (new BigNumber(ethBalance).isLessThan(
+          this.$sdk.fromWeiNum(price)
+        )) {
+          this.$tools.message('No Enough Balance Of ETH');
+          return
+        }
+        this.tokenInfo.tokenId = parseInt(this.tokenInfo.tokenId)
+        this.isShowBuyDialog = true
+        this.nftPrice = this.$sdk.fromWeiNum(price)
+        console.log(this.tokenInfo)
+      } catch (e) {
+        console.log(e)
       }
-      this.tokenInfo.tokenId = parseInt(this.tokenInfo.tokenId)
-      this.isShowBuyDialog = true
-      this.nftPrice = this.$sdk.fromWeiNum(price)
-      console.log(this.tokenInfo)
     },
     async buyNft () {
       this.buyBtnLoading = true

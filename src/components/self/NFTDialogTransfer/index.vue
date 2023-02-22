@@ -97,7 +97,6 @@ export default {
       this.isBuyOver = false
       this.nftQuantity = 1
       this.recivierAddress = ''
-      this.nftAmount1155 =  0
       this.transferBtnLoading = false
       this.isShowTransferDialog = true
     },
