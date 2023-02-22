@@ -145,7 +145,7 @@
             </div>
           </div>
           <div class="nft-bid-box">
-            <div class="box-count-down" v-if="ckAuctionEntityList.length < 1 && ckOrdersEntityList.length < 1">
+            <div class="box-count-down" v-if="ckOrdersEntityList.length > 0">
               <div class="icon-box">
                 <img class="icon" src="@/assets/images/icons/icon_time.svg" alt="">
                 <span>{{ $t('nftDetail.TimeLeft') }}</span>
@@ -1038,6 +1038,7 @@ export default {
       }
     },
     sortOrdersAndOffer (data, isOrder = false) {
+      if (data.length === 0) return []
       function compare () { //这是比较函数
         return function (m, n) {
           let mmprice = m.source === 'coresky' ? m.basePrice : m.currentPrice
@@ -1164,7 +1165,7 @@ export default {
         console.log('openseaOffers.data', openseaOffers.data)
         if (openseaOffers.data.length > 0) {
           this.bestPrice = this.nftPriceFun(this.ckAuctionEntityList[0].source === 'opensea' ? this.ckAuctionEntityList[0].currentPrice : this.ckAuctionEntityList[0].basePrice)
-          const filtersOffer = this.sortOrdersAndOffer(openseaListed.data)
+          const filtersOffer = this.sortOrdersAndOffer(openseaOffers.data)
           params.osMaxOfferPrice = filtersOffer[0].currentPrice
           params.osExpirationTime = filtersOffer[0].expirationTime
         }
@@ -1374,7 +1375,6 @@ export default {
       }
     },
     nftPriceFun (basePrice) {
-      console.log(basePrice)
       return (basePrice !== null && basePrice !== undefined) ? this.$filters.keepMaxPoint(this.$Web3.utils.fromWei(basePrice.toString())) : '--'
     },
     showMakeOfferNFT () {
