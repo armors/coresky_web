@@ -612,10 +612,14 @@
     }
   }
 
-  .select-sort {
+  .filter-item .select-sort {
     margin-right: 20px;
   }
-
+  .right-content {
+    .select-sort-right{
+      margin-top: 0px;
+    } 
+  }
   .sort-wrap {
     display: flex;
     background: $elButtonHoverBg;

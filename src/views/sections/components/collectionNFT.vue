@@ -1,5 +1,6 @@
 <template>
-  <div class="item-page">
+  <div class="item-page" v-infinite-scroll="loadMoreData" :infinite-scroll-disabled="disabledLoadMore"
+    :infinite-scroll-distance="50">
     <div class="filter-wrap" v-if="showFilterBox">
       <div class="filter-head">
         <div v-if="showFilterBox" class="btnfilter" @click="showFilterBox = !showFilterBox">
@@ -101,14 +102,7 @@
           <span class="icon-wrap icon_filter02" :class="{'active':viewType===2}" @click="viewType=2"></span>
         </div> -->
       </div>
-      <div v-if="loadStatus==='loading'">
-        <p class="loading-txt">
-          <el-icon class="my-loading">
-            <Loading />
-          </el-icon>
-        </p>
-      </div>
-      <div v-else>
+      <div >
         <div class="nft-list">
           <router-link :to="`/detail/${item.contract}/${item.tokenId}`" class="nft-card"
             v-for="(item, index) in dataList" :key="index">
@@ -130,16 +124,16 @@
             </div>
           </router-link>
         </div>
-        <div class="custom-pagination" v-if="listCount > queryParams.limit">
-          <div class="content">
-            <el-pagination background v-model:current-page="queryParams.page" :page-size="queryParams.limit"
-              :page-="queryParams.limit" @current-change="queryData" layout="prev, pager, next" align="center"
-              :total="listCount" />
-          </div>
+        <div v-if="loadStatus === 'loading'">
+          <p class="loading-txt">
+            <el-icon class="my-loading">
+              <Loading />
+            </el-icon>
+          </p>
         </div>
-        <div class="empty-wrap" v-if="dataList.length === 0">
+        <div class="empty-wrap" v-if="dataList.length === 0 && loadStatus !== 'loading'">
           <p class="txt">No Data</p>
-          <img src="@/assets/images/no-data.png" alt="">
+          <img src="../../../assets/images/no-data.png" alt="">
         </div>
       </div>
     </div>
@@ -160,7 +154,9 @@ export default {
     },
   },
   computed: {
-
+    disabledLoadMore: function () {
+      return this.loadStatus === 'loading' || this.dataList.length >= this.listCount
+    },
   },
   data () {
     return {
@@ -228,13 +224,13 @@ export default {
       this.queryData()
     },
     queryData () {
-      this.dataList = []
+      // this.dataList = []
       this.getAttrFilter()
       this.loadStatus = 'loading'
       this.$api("token.query", this.queryParams).then((res) => {
         this.loadStatus = 'over'
         if (this.$tools.checkResponse(res)) {
-          this.dataList = res.debug.listData
+          this.dataList = this.dataList.concat(res.debug.listData)
           this.listCount = res.debug.listCount
           this.queryParams.page = res.debug.curPage
         }
@@ -255,7 +251,11 @@ export default {
       else {
         this.queryParams.filterList = null
       }
-    }
+    },
+    loadMoreData() {
+      this.queryParams.page += 1
+      this.queryData()
+    },
   },
 }
 

@@ -26,7 +26,7 @@
         <div class="info-share">
         </div>
       </div>
-      <div class="info-rem">{{ account.intro || 'The brief introduction has not been filled in yet'}}</div>
+      <div v-if="account.intro" class="info-rem">{{ account.intro }}</div>
     </div>
   </div>
 
@@ -130,7 +130,7 @@ export default {
     // width: 1200px;
     margin: 0 40px;
     margin-top: 20px;
-    margin-bottom: 40px;
+    margin-bottom: 26px;
     .info-top {
       // height: 80px;
       margin-top: 35px;
