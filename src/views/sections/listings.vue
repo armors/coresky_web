@@ -23,6 +23,8 @@
         </div>
       </div>
       <div class="title2">
+		<img class="icon-lock"
+                 src="@/assets/images/icons/icon_lock.svg" alt="">
         {{$t('marketListing.NFTMarketplace')}}
       </div>
       <div class="platform">
@@ -1086,12 +1088,23 @@
 	}
 
 	.title2 {
-		margin: 30px 0 20px;
-		height: 29px;
-		font-size: 22px;
+		padding-left: 24px;
+		display: flex;
+		margin-top: 30px;
+		height: 75px;
+		font-size: 18px;
 		font-weight: bold;
-		color: #000000;
-		line-height: 29px;
+		color: #717A83;
+		line-height: 75px;
+		border: 1px solid #E6E8EC;
+		border-bottom: 0;
+		border-radius: 12px 12px 0px 0px;
+		align-items: center;
+		.icon-lock{
+			width: 24px;
+			height: auto;
+			margin-right: 8px;
+		}
 	}
 
 	.title3 {
@@ -1103,7 +1116,12 @@
 
 	.platform {
 		display: flex;
-
+		height: 98px;
+		padding-top: 24px;
+		padding-left: 24px;
+		border: 1px solid #E6E8EC;
+		border-radius:  0px 0px 12px 12px;
+		background: #FAFCFE;
 		.item {
 			display: flex;
 			align-items: center;
@@ -1136,10 +1154,14 @@
 
 	.flex-com {
 		margin-top: 30px;
-		margin-bottom: 20px;
+		height: 70px;
+		line-height: 70px;
+		padding:0 24px;
 		display: flex;
 		align-items: center;
-
+		border: 1px solid #E6E8EC;
+		border-bottom: 0;
+		border-radius: 12px 12px 0px 0px;
 		.item {
 			margin-right: 50px;
 		}
@@ -1147,7 +1169,7 @@
 
 	.mytable {
 		border: 1px solid $borderBg;
-		border-radius: 10px;
+		border-radius: 0 0 12px 12px ;
 
 		.flex-m {
 			display: flex;
@@ -1163,8 +1185,10 @@
 
 	::v-deep .el-table {
 		.head-row th.el-table__cell {
-			height: 50px;
-			background-color: $elButtonHoverBg;
+			height: 66px;
+		background: #FAFCFE;
+		font-size: 18px;
+
 		}
 
 		.el-input-group__append {
@@ -1173,6 +1197,7 @@
 
 		.el-input__wrapper {
 			padding: 1px 5px;
+			background: #fff;
 		}
 
 		.el-input__inner {
@@ -1218,15 +1243,16 @@
 
 	.btn-submit {
 		margin-top: 30px;
-		width: 320px;
-		height: 44px;
-		line-height: 44px;
-		color: $color-white;
-		background: $mainLiner;
+		width: 337px;
+        height: 60px;
+		line-height: 60px;
+		background: #1063E0;
 		border-radius: 12px;
+		color: $color-white;
 		text-align: center;
-		font-size: 16px;
+		font-size: 18px;
 		cursor: pointer;
+		margin-bottom: 50px;
 	}
 
 	::v-deep {
@@ -1321,6 +1347,7 @@
 </style>
 <style lang="scss">
 	.listings-box {
+		margin-top: 40px;
 		.el-input-number .el-input__inner {
 			text-align: left;
 		}

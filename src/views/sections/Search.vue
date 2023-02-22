@@ -125,7 +125,7 @@ export default {
       })
     },
     loadMoreData() {
-      console.log('😺👉➡️',11)
+      console.log('😺👉➡️', 11)
       this.collectionQuery.page += 1
       this.getCollectionData()
     }
@@ -171,11 +171,16 @@ export default {
 }
 
 .account-page {
+
   // overflow:auto;
   ::v-deep {
-    .el-tabs__content{
-overflow: visible;
+    .main-wrapper{
+      padding: 0;
     }
+    .el-tabs__content {
+      overflow: visible;
+    }
+
     .el-tabs__item {
       padding: 0 40px;
       font-weight: 700;
@@ -315,6 +320,7 @@ overflow: visible;
       }
     }
   }
-}</style>
+}
+</style>
 
 
