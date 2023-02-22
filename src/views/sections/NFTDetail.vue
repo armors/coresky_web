@@ -1106,7 +1106,7 @@ export default {
         this.ckAuctionEntityList = this.sortOrdersAndOffer(this.ckAuctionEntityList)
         console.log('openseaOffers.data', openseaOffers.data)
         if (openseaOffers.data.length > 0) {
-          this.bestPrice = this.nftPriceFun(this.ckAuctionEntityList[0].source === 'opensea' ? this.ckAuctionEntityList[0].currentPrice : this.ckOrdersEntityList[0].basePrice)
+          this.bestPrice = this.nftPriceFun(this.ckAuctionEntityList[0].source === 'opensea' ? this.ckAuctionEntityList[0].currentPrice : this.ckAuctionEntityList[0].basePrice)
           const filtersOffer = this.sortOrdersAndOffer(openseaListed.data)
           params.osMaxOfferPrice = filtersOffer[0].currentPrice
           params.osExpirationTime = filtersOffer[0].expirationTime
