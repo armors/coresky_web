@@ -138,9 +138,9 @@
         						Data analysis
         					</el-tab-pane> -->
         </el-tabs>
-        <!--        <div class="btn-box">-->
-        <!--          <el-button class="btnWhite"  @click="showMakeOfferCollect">Make Offer Collect</el-button>-->
-        <!--        </div>-->
+<!--        <div class="btn-box">-->
+<!--          <el-button class="btnWhite"  @click="showMakeOfferCollect">Make Offer Collect</el-button>-->
+<!--        </div>-->
       </div>
     </div>
     <NFTDialogMakeOffer ref="NFTDialogMakeOffer" @makeOfferSuccess="makeOfferSuccess"></NFTDialogMakeOffer>
@@ -550,7 +550,7 @@ export default {
       top: -16px;
       position: absolute;
       right: 0;
-      
+
       button {
         width: 210px;
         height: 48px;

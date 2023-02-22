@@ -14,7 +14,7 @@
       <div class="box-center">
         <span class="tokenid">#{{tokenInfo.tokenId}}</span>
         <span class="collection-name">{{tokenInfo.name || '--'}}
-          <img class="tag" v-if="tokenInfo.ckCollectionsInfoEntity.isCertification === '1'" src="@/assets/images/icons/icon_tag.svg" alt="">
+          <img class="tag" v-if="tokenInfo.isCertification === '1'" src="@/assets/images/icons/icon_tag.svg" alt="">
         </span>
       </div>
     </div>
@@ -175,7 +175,7 @@ export default {
         this.tokenInfo.tokenId = parseInt(this.tokenInfo.tokenId)
       }
       this.isShowMakeOfferDialog = true
-      this.serviceFee = this.$filters.feeFormat(makeOfferType === 1 ? this.tokenInfo.ckCollectionsInfoEntity.royalty : this.tokenInfo.royalty)
+      this.serviceFee = this.$filters.feeFormat(makeOfferType === 1 ? this.tokenInfo.royalty : this.tokenInfo.royalty)
       console.log(this.tokenInfo)
     },
     async makerBuyer () {
@@ -204,8 +204,8 @@ export default {
           nftAddress: this.tokenInfo.contract,
           side: 0,
           tokenId: this.tokenInfo.tokenId,
-          feeRecipient: this.tokenInfo.ckCollectionsInfoEntity.feeContract,
-          RelayerFee: this.tokenInfo.ckCollectionsInfoEntity.royalty,
+          feeRecipient: this.tokenInfo.feeContract,
+          RelayerFee: this.tokenInfo.royalty,
           feeType: 2,
           contractType: this.tokenInfo.contractType,
           value: Number(this.form.quantity)
