@@ -145,7 +145,7 @@
             </div>
           </div>
           <div class="nft-bid-box">
-            <div class="box-count-down" v-if="!(ckAuctionEntityList.length < 1 && ckOrdersEntityList.length < 1)">
+            <div class="box-count-down" v-if="ckAuctionEntityList.length < 1 && ckOrdersEntityList.length < 1">
               <div class="icon-box">
                 <img class="icon" src="@/assets/images/icons/icon_time.svg" alt="">
                 <span>{{ $t('nftDetail.TimeLeft') }}</span>
@@ -1104,9 +1104,9 @@ export default {
         this.ckOrdersEntityList = this.sortOrdersAndOffer(listed, true)
         this.bestPrice = this.ckAuctionEntityList.length > 0 ? this.nftPriceFun(this.ckAuctionEntityList[0].basePrice) : '--'
         this.nftPrice = this.ckOrdersEntityList.length > 0 ? this.nftPriceFun(this.ckOrdersEntityList[0].basePrice) : '--'
-        // setTimeout(() => {
-        //   this.loading = false
-        // }, 3000)
+        setTimeout(() => {
+          this.loading = false
+        }, 3000)
         await this.getOrdersAndOffers()
         if (this.ckOrdersEntityList.length > 0) {
           this.countDown()
