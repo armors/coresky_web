@@ -770,9 +770,9 @@ export default {
             type: 'line',
             itemStyle: {
               normal: {
-                color: '#7D47FF',
+                color: '#1063E0',
                 lineStyle: {
-                  color: '#7D47FF'
+                  color: '#1063E0'
                 },
               }
             },
