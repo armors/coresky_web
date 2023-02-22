@@ -89,7 +89,7 @@
           </template>
         </el-input>
         <el-select v-model="queryParams.order" placeholder="Recently listed" @change="searchClick" :teleported="false"
-          popper-class="select-popper" class="select-sort">
+          popper-class="select-popper" class="select-sort select-sort-right">
           <el-option :value="1" :label="$t('common.PriceLowToHigh')" />
           <el-option :value="2" :label="$t('common.PriceHighToLow')" />
           <el-option :value="3" :label="$t('common.RecentlyListed')" />
@@ -250,6 +250,10 @@ export default {
   .right-content {
     width: 100%;
   }
+}
+#marketPlace{
+  // padding: 40px 0;
+  // align-items: inherit;
 }
 .accountFavorited {
   margin-top: 25px;

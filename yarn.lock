@@ -5220,12 +5220,12 @@
   "resolved" "https://registry.npmmirror.com/dom-walk/-/dom-walk-0.1.2.tgz"
   "version" "0.1.2"
 
-"dom7@^2.1.5":
-  "integrity" "sha512-xnhwVgyOh3eD++/XGtH+5qBwYTgCm0aW91GFgPJ3XG+jlsRLyJivnbP0QmUBFhI+Oaz9FV0s7cxgXHezwOEBYA=="
-  "resolved" "https://registry.npmjs.org/dom7/-/dom7-2.1.5.tgz"
-  "version" "2.1.5"
+"dom7@^4.0.4":
+  "integrity" "sha512-emjdpPLhpNubapLFdjNL9tP06Sr+GZkrIHEXLWvOGsytACUrkbeIdjO5g77m00BrHTznnlcNqgmn7pCN192TBA=="
+  "resolved" "https://registry.npmjs.org/dom7/-/dom7-4.0.6.tgz"
+  "version" "4.0.6"
   dependencies:
-    "ssr-window" "^2.0.0"
+    "ssr-window" "^4.0.0"
 
 "domain-browser@^4.19.0":
   "integrity" "sha512-IGBwjF7tNk3cwypFNH/7bfzBcgSCbaMOD3GsaY1AU/JRrnHnYgEM0+9kQt52iZxjNsjBtJYtao146V+f8jFZNw=="
@@ -12174,10 +12174,10 @@
     "safer-buffer" "^2.0.2"
     "tweetnacl" "~0.14.0"
 
-"ssr-window@^2.0.0":
-  "integrity" "sha512-NXzN+/HPObKAx191H3zKlYomE5WrVIkoCB5IaSdvKokxTpjBdWfr0RaP+1Z5KOfDT0ZVz+2tdtiBkhsEQ9p+0A=="
-  "resolved" "https://registry.npmjs.org/ssr-window/-/ssr-window-2.0.0.tgz"
-  "version" "2.0.0"
+"ssr-window@^4.0.0", "ssr-window@^4.0.2":
+  "integrity" "sha512-ISv/Ch+ig7SOtw7G2+qkwfVASzazUnvlDTwypdLoPoySv+6MqlOV10VwPSE6EWkGjhW50lUmghPmpYZXMu/+AQ=="
+  "resolved" "https://registry.npmjs.org/ssr-window/-/ssr-window-4.0.2.tgz"
+  "version" "4.0.2"
 
 "ssri@^10.0.0", "ssri@^10.0.1":
   "integrity" "sha512-WVy6di9DlPOeBWEjMScpNipeSX2jIZBGEn5Uuo8Q7aIuFEuDX0pw8RxcOjlD1TWP4obi24ki7m/13+nFpcbXrw=="
@@ -12513,13 +12513,13 @@
     "tar" "^4.0.2"
     "xhr-request" "^1.0.1"
 
-"swiper@^5.4.5", "swiper@^7.0.0  || ^8.0.0":
-  "integrity" "sha512-7QjA0XpdOmiMoClfaZ2lYN6ICHcMm72LXiY+NF4fQLFidigameaofvpjEEiTQuw3xm5eksG5hzkaRsjQX57vtA=="
-  "resolved" "https://registry.npmjs.org/swiper/-/swiper-5.4.5.tgz"
-  "version" "5.4.5"
+"swiper@^7.0.0  || ^8.0.0", "swiper@^8.4.4":
+  "integrity" "sha512-jA/8BfOZwT8PqPSnMX0TENZYitXEhNa7ZSNj1Diqh5LZyUJoBQaZcqAiPQ/PIg1+IPaRn/V8ZYVb0nxHMh51yw=="
+  "resolved" "https://registry.npmjs.org/swiper/-/swiper-8.4.4.tgz"
+  "version" "8.4.4"
   dependencies:
-    "dom7" "^2.1.5"
-    "ssr-window" "^2.0.0"
+    "dom7" "^4.0.4"
+    "ssr-window" "^4.0.2"
 
 "table@^6.0.9":
   "integrity" "sha512-Y4X9zqrCftUhMeH2EptSSERdVKt/nEdijTOacGD/97EKjhQ/Qs8RTlEGABSJNNN8lac9kheH+af7yAkEWlgneA=="

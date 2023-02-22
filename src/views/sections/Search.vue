@@ -135,7 +135,7 @@ export default {
 <style lang="scss" scoped>
 .main-wrapper {
   max-width: 100%;
-  padding: 0 40px;
+  padding: 40px 40px;
 }
 
 .title {
@@ -171,8 +171,11 @@ export default {
 }
 
 .account-page {
-  overflow:auto;
+  // overflow:auto;
   ::v-deep {
+    .el-tabs__content{
+overflow: visible;
+    }
     .el-tabs__item {
       padding: 0 40px;
       font-weight: 700;
