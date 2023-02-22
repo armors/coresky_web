@@ -248,10 +248,10 @@ export default {
   border: none;
   cursor: pointer;
   color: $color-white;
-  background: $mainLiner;
-  &:hover {
-    background: $mainLiner;
-  }
+  // background: $mainLiner;
+  // &:hover {
+  //   background: $mainLiner;
+  // }
 }
 .hash-txt {
   color: #038ddb;

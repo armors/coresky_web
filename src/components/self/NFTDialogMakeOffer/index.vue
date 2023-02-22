@@ -355,7 +355,7 @@ export default {
   border: none;
   cursor: pointer;
   color: $color-white;
-  background: $mainLiner;
+  // background: $mainLiner;
 }
 
 .describe-box {

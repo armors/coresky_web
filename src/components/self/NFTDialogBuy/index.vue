@@ -415,13 +415,9 @@ export default {
   padding: 10px 0;
   border-radius: 12px;
   font-weight: 700;
-  border: none;
+  // border: none;
   cursor: pointer;
   color: $color-white;
-  background: $mainLiner;
-  &:hover {
-    background: $mainLiner;
-  }
 }
 .hash-txt {
   color: #038ddb;
