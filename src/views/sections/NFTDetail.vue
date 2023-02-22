@@ -1117,8 +1117,24 @@ export default {
         // this.isInCart()
       })
     },
+    putTokenPrice (params) {
+      this.$api("token.price", {
+        ...{
+          "tokenId": Number(this.tokenInfo.tokenId),
+          "contract": this.tokenInfo.contract,
+        },
+        ...params
+      }).then(res => {
+        console.log(res)
+      })
+    },
     async getOrdersAndOffers () {
-
+      let params = {
+        "osMinListedPrice": "0",
+        "osListingTime": "0",
+        "osExpirationTime": "0",
+        "osMaxOfferPrice": "0"
+      }
       const openseaListed = await this.$sdk.getOrdersOpensea(this.asset, this.user.coinbase, this.tokenInfo.contractType)
       if (openseaListed.code === 200) {
         if (this.tokenInfo.contractType === 1) {
@@ -1131,6 +1147,9 @@ export default {
         console.log(this.ckOrdersEntityList)
         if (openseaListed.data.length > 0) {
           this.nftPrice = this.nftPriceFun(this.ckOrdersEntityList[0].source === 'opensea' ? this.ckOrdersEntityList[0].currentPrice : this.ckOrdersEntityList[0].basePrice)
+          const filtersListing = this.sortOrdersAndOffer(openseaListed.data, true)
+          params.osMinListedPrice = filtersListing[0].currentPrice
+          params.osListingTime = filtersListing[0].listingTime
         }
         console.log(this.nftPrice)
       } else {
@@ -1144,10 +1163,16 @@ export default {
         this.ckAuctionEntityList = this.sortOrdersAndOffer(this.ckAuctionEntityList)
         console.log('openseaOffers.data', openseaOffers.data)
         if (openseaOffers.data.length > 0) {
-          this.bestPrice = this.nftPriceFun(this.ckAuctionEntityList[0].source === 'opensea' ? this.ckAuctionEntityList[0].currentPrice : this.ckOrdersEntityList[0].basePrice)
+          this.bestPrice = this.nftPriceFun(this.ckAuctionEntityList[0].source === 'opensea' ? this.ckAuctionEntityList[0].currentPrice : this.ckAuctionEntityList[0].basePrice)
+          const filtersOffer = this.sortOrdersAndOffer(openseaListed.data)
+          params.osMaxOfferPrice = filtersOffer[0].currentPrice
+          params.osExpirationTime = filtersOffer[0].expirationTime
         }
       }
       console.log(this.ckAuctionEntityList, this.ckOrdersEntityList)
+      if (openseaOffers.code === 200 && openseaListed.code === 200) {
+        this.putTokenPrice(params)
+      }
     },
     getTokenEvent () {
       this.$api("collect.tokenActivity", this.tokenInfoParams).then((res) => {

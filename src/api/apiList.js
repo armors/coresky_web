@@ -418,6 +418,10 @@ export default {
       url: "/token/query",
       method: "post",
     },
+    price: {
+      url: "/token/price",
+      method: "post",
+    }
   },
   collections: {
     type: {
