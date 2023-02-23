@@ -220,7 +220,9 @@
                 <!--              <el-button class="btnBlack" v-if="tokenInfo.contractType === 0"-->
                 <!--                :disabled="(isIncartInit || !tokenInfo.contract || !tokenInfo.state)" @click="addCart">Add to Cart</el-button>-->
 
-                <el-button class="btnWhite" plain v-if="tokenInfo.contractType === 1 || (!isSelf && !this.isMakeOffer)"
+                <el-button class="btnWhite" plain
+                           v-if="tokenInfo.contract && ckAuctionEntityList.filter(item => item.source === 'coresky'
+                 && item.maker === user.coinbase).length < 1"
                   :disabled="!tokenInfo.contract || ckAuctionEntityList.filter(item => item.source === 'coresky' && item.maker === user.coinbase).length > 0"
                   @click="showMakeOfferNFT">{{ $t('nftDetail.MakeOffer') }}</el-button>
                 <!--              <el-button class="btnWhite" v-if="tokenInfo.contractType === 1 || (!isSelf && !this.isMakeOffer)"-->
