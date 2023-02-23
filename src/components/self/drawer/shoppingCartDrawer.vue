@@ -12,10 +12,10 @@
     <div class="shopping-cart-content-head display-flex box-center-Y">
 
       <el-menu :default-active="activeIndex" class="el-menu-cart box-flex1" mode="horizontal" @select="handleSelect">
-        <el-badge :value="items" class="item">
+        <el-badge :hidden="items==0" :value="items" class="item">
           <el-menu-item index="1">CoreSky</el-menu-item>
         </el-badge>
-        <el-badge :value="shoppingOpenseaCartList.length" class="item">
+        <el-badge :hidden="shoppingOpenseaCartList.length==0" :value="shoppingOpenseaCartList.length" class="item">
           <el-menu-item index="2"> {{$t('shoppingCart.other')}}</el-menu-item>
         </el-badge>
       </el-menu>

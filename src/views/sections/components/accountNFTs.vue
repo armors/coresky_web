@@ -183,7 +183,7 @@ export default {
       listCount: 0,
       loadStatus: 'over',
 
-      showFilterBox: true,
+      showFilterBox: false,
       isOpenPriceFilter: true,
       isOpenSearchCollection: true,
       keyword2: '',
