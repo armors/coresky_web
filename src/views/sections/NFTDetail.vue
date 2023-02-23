@@ -88,8 +88,7 @@
                     <span class="name">{{ $t('nftDetail.CreatorRebate') }}</span>
                     <div class="value primaryColor display-flex box-center-Y">
                       <el-tooltip placement="right">
-                        <template #content> The creator of this collection will receive a certain <br> percentage of
-                          amout for every sale. </template>
+                        <template #content>{{ $t('nftDetail.Tip.First') }}<br> {{ $t('nftDetail.Tip.Second') }}</template>
                         <div class="display-flex box-center-Y">
                           <div>{{ $filters.feeFormat(tokenInfo.ckCollectionsInfoEntity.royalty) }}</div>
                           <div class="tip-icon"><img src="../../assets/images/icons/icon_tip_black.svg" alt=""></div>

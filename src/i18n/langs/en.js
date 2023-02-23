@@ -193,6 +193,10 @@ module.exports = {
     TokenStandard: 'Token Standard',
     Contract: 'Contract',
     CreatorRebate: 'Creator Rebate',
+    Tip:{
+      First:'The creator of this collection will receive a certain ',
+      Second:'percentage of amout for every sale.'
+    },
     CurrentOwner: 'Current owner',
     CurrentPrice: 'Current Price',
     TimeLeft: 'Time left',

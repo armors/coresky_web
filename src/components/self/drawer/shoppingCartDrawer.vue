@@ -639,7 +639,7 @@ export default {
 }
 .coresky-drawer {
   width: 406px;
-  height: calc(100% - $headerHeight) !important;
+  height: calc(100% - $headerHeight) ;
   margin-top: $headerHeight;
   .el-drawer__body {
     padding: 20px 30px 20px;

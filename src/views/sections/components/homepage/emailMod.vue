@@ -2,7 +2,7 @@
  * @Author: zhaoyan
  * @Date: 2023-02-18 13:35:48
  * @LastEditors: zhaoyan
- * @LastEditTime: 2023-02-23 15:04:41
+ * @LastEditTime: 2023-02-23 18:14:57
  * @Description: 首页邮件模块
 -->
 <template>
@@ -151,7 +151,6 @@ export default {
     margin: auto;
     margin-top: 22px;
     font-size: 14px;
-    line-height: 50px;
   }
 
   .btn-sub:hover {

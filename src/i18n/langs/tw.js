@@ -194,6 +194,10 @@ module.exports = {
     TokenStandard: '協議',
     Contract: '合約',
     CreatorRebate: '版稅',
+    Tip:{
+      First:'該NFT系列的創建者將從每次銷售中',
+      Second:'獲得一定比例的金額'
+    },
     CurrentOwner: '持有者',
     CurrentPrice: '當前價格',
     TimeLeft: '剩餘時間',

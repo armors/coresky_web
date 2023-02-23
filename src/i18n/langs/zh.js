@@ -194,6 +194,10 @@ module.exports = {
     TokenStandard: '协议',
     Contract: '合约',
     CreatorRebate: '版税',
+    Tip:{
+      First:'该NFT系列的创建者將从每次销售中',
+      Second:'获得一定比例的金额'
+    },
     CurrentOwner: '持有者',
     CurrentPrice: '当前价格',
     TimeLeft: '剩余时间',

@@ -1,6 +1,5 @@
 <template>
-  <el-drawer v-model="visible" @closed="handleClose" size="406" :append-to-body="true" zIndex="99"
-    custom-class="coresky-drawer" :withHeader="false">
+  <el-drawer v-model="visible" @closed="handleClose" size="380" :append-to-body="true" zIndex="99"  custom-class="coresky-drawer user-window" :withHeader="false">
     <div class="drawer-top">
 <!--      <avatar class="avatar-box" :imageUrl="user.avatar || $filters.fullImageUrl(user.avatar)" :address="user.coinbase"-->
 <!--        :imgWidth="52" :imgHeight="52" shape="circular">-->
@@ -194,10 +193,15 @@ export default {
 </script>
 
 <style lang="scss">
+.user-window{
+  right: 10px!important;
+  margin-top: calc($headerHeight + 10px)!important;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08);
+border-radius: 16px;
+height: 650px!important;
+}
 .coresky-drawer {
-  width: 406px;
-  height: calc(100% - $headerHeight) !important;
-  margin-top: $headerHeight;
+  // height: calc(100% - $headerHeight) !important;
   .el-drawer__body {
     padding: 20px 30px 20px;
   }
