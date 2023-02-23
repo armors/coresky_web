@@ -6,19 +6,26 @@
 
 /* 左侧条件筛选 */
 .filter-wrap {
-  .filter-line {
-    background: #E6E8EC;
-    height: 1px;
-  }
+
   position: sticky;
-  top: 80px;
+  top: $headerHeight;
   width: 285px;
   // height: 520px;
   flex-shrink: 0;
   margin-right: 30px;
   background: $bg-white;
-  overflow: hidden;
+  overflow-y: auto;
+  height: calc((100vh ) - 76px);
+  padding-bottom: 10px;
+  .filter-wrap-box{
+    width: 100%;
+    padding-right: 16px;
+  }
 
+  .filter-line {
+    background: #E6E8EC;
+    height: 1px;
+  }
   .filter-item-buy {
     height: 54px;
     margin-top: 20px;
@@ -30,9 +37,6 @@
     padding-left: 10px;
     align-items: center;
   }
-
- 
-
   .filter-line-btn {
     margin-top: 20px;
     background: #E6E8EC;
@@ -105,7 +109,7 @@
   }
   .select-box{
     margin-top: 6px;
-    padding-left: 10px;
+    // padding-left: 10px;
   }
   .flex {
     display: flex;
@@ -126,10 +130,10 @@
       border-bottom: 1px solid $borderBg;
     }
     .select-title {
-      padding-left: 10px;
-      height: 54px;
+      height: 48px;
       align-items: center;
       margin-top: 6px;
+      padding: 0 10px;
     }
 
     .left {
@@ -152,11 +156,8 @@
   }
 
   .el-select {
-    // margin-top: 15px;
     position: relative;
-    // width: 180px;
-    // height: 32px;
-
+    width: 100%;
     .el-popper {
       top: 42px !important;
     }
@@ -173,7 +174,7 @@
     .el-input__wrapper {
       padding: 6px 10px;
       box-shadow: none;
-      width: 285px;
+      width: 100%;
       height: 46px;
       box-sizing: border-box;
       border: 2px solid #E6E8EC;
@@ -216,9 +217,9 @@
 
       .el-input__inner {
         text-align: left;
-        padding-left: 12px;
+        // padding-left: 12px;
         border: none;
-        width: 130px;
+        // width: 130px;
         height: 46px;
         gap: 8px;
         background: #FFFFFF;
@@ -228,6 +229,7 @@
         font-style: normal;
         font-weight: 500;
         font-size: 14px;
+        text-align: center;
         color: $primaryColor;
       }
     }
@@ -243,7 +245,7 @@
   .btn-apply {
     margin-top: 16px;
     height: 46px;
-    width: 285px;
+    width: 100%;
     line-height: 46px;
     color: $color-white;
     background: #C2D0FF;
@@ -312,18 +314,23 @@
   }
 
   .gruop-wrap {
-    margin-top: 15px;
-
+    // margin: 0 -10px;
     .type-item {
-      margin: 30px 0;
-
+      cursor: pointer;
       .type-head {
+        padding: 0 10px;
         color: #111111;
         display: flex;
+        font-weight: 600;
         font-size: 16px;
-        height: 16px;
-        line-height: 16px;
+        height: 48px;
+        line-height: 48px;
+        border-radius: 12px;
         justify-content: space-between;
+
+        &:hover{
+          background-color: #FAFAF8;
+        }
 
         .type-num {
           display: flex;
@@ -343,13 +350,18 @@
 
       .attr-content {
         .attr-item {
-          margin: 16px 0;
+          margin: 0;
+          padding: 0 10px;
           display: flex;
-          font-size: 12px;
-          height: 18px;
-          line-height: 18px;
+          font-size: 16px;
+          height: 48px;
+          line-height: 48px;
           justify-content: space-between;
           color: $color-black3;
+          border-radius: 12px;
+          &:hover{
+            background-color: #FAFAF8;
+          }
 
           .attr-num {
             display: flex;

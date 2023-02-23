@@ -51,8 +51,8 @@
         <div class="item">|</div>
         <div class="item">
           <span class="lable">{{ $t('collection.contractADD') }}</span>
-          <a class="value" target="_blank"
-            :href="'https://etherscan.io/address/'+collectInfo.contract">{{$filters.ellipsisAddress(collectInfo.contract)}}</a>
+          <a class="value" target="_blank" :href="'https://etherscan.io/address/' + collectInfo.contract">{{
+            $filters.ellipsisAddress(collectInfo.contract) }}</a>
           <el-icon v-clipboard:copy="collectInfo.contract" v-clipboard:success="onSuccessCopy"
             v-clipboard:error="onErrorCopy">
             <CopyDocument />
@@ -127,20 +127,7 @@
         </div>
       </div>
       <div class="tab-box-self">
-        <el-tabs v-model="activeName">
-          <el-tab-pane label="NFT" name="collected">
-            <collectionNFT :contract="contract" />
-          </el-tab-pane>
-          <!-- <el-tab-pane label="Transaction dynamics" name="transaction" :lazy="true" :disabled="true">
-        						Transaction dynamics
-        					</el-tab-pane>
-        					<el-tab-pane label="Data analysis" name="analysis" :lazy="true" :disabled="true">
-        						Data analysis
-        					</el-tab-pane> -->
-        </el-tabs>
-<!--        <div class="btn-box">-->
-<!--          <el-button class="btnWhite"  @click="showMakeOfferCollect">Make Offer Collect</el-button>-->
-<!--        </div>-->
+        <collectionNFT :contract="contract" />
       </div>
     </div>
     <NFTDialogMakeOffer ref="NFTDialogMakeOffer" @makeOfferSuccess="makeOfferSuccess"></NFTDialogMakeOffer>
@@ -157,7 +144,7 @@ export default {
     NFTDialogMakeOffer
   },
   mixins: [],
-  data() {
+  data () {
     return {
       EXPLORE_URL: process.env.VUE_APP_EXPLORE,
       activeName: 'collected',
@@ -184,74 +171,7 @@ export default {
         page: 1,
         limit: 20
       },
-      attrList: [
-        {
-          attrNm: 'Background1',
-          total: 99,
-          isShow: false,
-          dataList: [
-            {
-              name: 'Pearl1',
-              num: 100,
-              isChecked: false,
-            },
-            {
-              name: 'Pearl2',
-              num: 100,
-              isChecked: false,
-            },
-            {
-              name: 'Pearl3',
-              num: 100,
-              isChecked: false,
-            }
-          ]
-        },
-        {
-          attrNm: 'Background2',
-          total: 99,
-          isShow: false,
-          dataList: [
-            {
-              name: 'Pearl1',
-              num: 100,
-              isChecked: false,
-            },
-            {
-              name: 'Pearl2',
-              num: 100,
-              isChecked: false,
-            },
-            {
-              name: 'Pearl3',
-              num: 100,
-              isChecked: false,
-            }
-          ]
-        },
-        {
-          attrNm: 'Background3',
-          total: 99,
-          isShow: false,
-          dataList: [
-            {
-              name: 'Pearl1',
-              num: 100,
-              isChecked: false,
-            },
-            {
-              name: 'Pearl2',
-              num: 100,
-              isChecked: false,
-            },
-            {
-              name: 'Pearl3',
-              num: 100,
-              isChecked: false,
-            }
-          ]
-        }
-      ],
+      attrList: [],
       contract: '',
       collectInfo: {
         bannerImage: '',
@@ -262,11 +182,11 @@ export default {
     };
   },
 
-  created() {
+  created () {
     this.contract = this.$route.params.contract
     this.tokenQueryParams.contract = this.contract
   },
-  mounted() {
+  mounted () {
     if (this.contract) {
       this.getCollectInfo()
     }
@@ -276,19 +196,19 @@ export default {
   },
 
   methods: {
-    showMakeOfferCollect() {
+    showMakeOfferCollect () {
       this.$refs.NFTDialogMakeOffer.showMakeOffer(this.collectInfo, 2)
     },
-    makeOfferSuccess(v) {
+    makeOfferSuccess (v) {
       console.log(v)
     },
-    onSuccessCopy() {
+    onSuccessCopy () {
       this.$tools.message(this.$t("request.copySuccess"), "success");
     },
-    onErrorCopy() {
+    onErrorCopy () {
       this.$tools.message(this.$t("request.copyError"));
     },
-    getCollectInfo() {
+    getCollectInfo () {
       this.$api("collect.info", {
         contract: this.contract
       }).then((res) => {
@@ -296,7 +216,7 @@ export default {
         this.collectInfo.bestPriceFrom = this.$sdk.fromWeiNum(this.collectInfo.bestPrice)
       })
     },
-    followContract() {
+    followContract () {
       const tokenColloctUrl = this.collectInfo.followStatus ? "collect.contractCancel" : "collect.contractFollow"
       this.$api(tokenColloctUrl, {
         "contract": this.contract,
@@ -318,7 +238,6 @@ export default {
   .collection-info {
     margin: 0 auto;
     margin-top: 15px;
-    margin-bottom: 40px;
     padding: 0 40px;
 
     .info-top {
@@ -584,4 +503,5 @@ export default {
 
 .right-content {
   width: 100%;
-}</style>
+}
+</style>
