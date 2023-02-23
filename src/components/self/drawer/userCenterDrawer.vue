@@ -1,5 +1,7 @@
 <template>
   <el-drawer v-model="visible" @closed="handleClose" size="380" :append-to-body="true" zIndex="99"  custom-class="coresky-drawer user-window" :withHeader="false">
+    <img class="account-close" src="../../../assets/images/icons/icon_account_close.svg" @click="visible=false"
+              alt="">
     <div class="drawer-top">
 <!--      <avatar class="avatar-box" :imageUrl="user.avatar || $filters.fullImageUrl(user.avatar)" :address="user.coinbase"-->
 <!--        :imgWidth="52" :imgHeight="52" shape="circular">-->
@@ -51,7 +53,7 @@
         <span>Activities</span>
       </div> -->
       <div class="nav-item" @click="goProfile">
-        <svg-icon class="icon" icon-class="setting" />
+        <img class="icon" src="@/assets/images/icons/icon_class_setting.svg" alt="">
         {{$t('userCenter.setting')}}
       </div>
       <div class="nav-item" @click="logout">
@@ -88,7 +90,7 @@
         <div class="swap-icon" @click="showUniswap('WETH')"><img src="../../../assets/images/icons/icon_swap.svg" alt=""></div>
       </div>
     </div>
-    <div class="drawer-wallet" style="margin-top:30px;">
+    <div v-if="false" class="drawer-wallet" style="margin-top:30px;">
       <div class="wallet-item">
         <!-- <div class="coin-box">
         </div> -->
@@ -202,16 +204,24 @@ height: 650px!important;
 }
 .coresky-drawer {
   // height: calc(100% - $headerHeight) !important;
+  .account-close{
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    right: 24px;
+    top: 24px;
+    cursor: pointer;
+  }
   .el-drawer__body {
-    padding: 20px 30px 20px;
+    padding: 20px;
   }
   .drawer-top {
     display: flex;
     align-items: center;
     margin-bottom: 12px;
     .avatar-box {
-      width: 52px;
-      height: 52px;
+      width: 66px;
+      height: 66px;
       margin-right: 12px;
       border-radius: 50%;
       img{
@@ -226,21 +236,21 @@ height: 650px!important;
       flex-direction: column;
       .user-name {
         font-weight: 700;
-        font-size: 22px;
+        font-size: 18px;
         line-height: 28px;
         color: $primaryColor;
         .edit-icon {
           cursor: pointer;
           width: 24px;
           height: 24px;
-          margin-left: 24px;
+          margin-left: 10px;
         }
       }
       .token-address {
         font-weight: 400;
         font-size: 16px;
         line-height: 24px;
-        color: $color-black2;
+        color: #717A83;
       }
     }
     .el-icon {
@@ -257,10 +267,10 @@ height: 650px!important;
       align-items: center;
       margin-bottom: 8px;
       border-radius: 12px;
-      padding: 12px 16px;
+      padding: 12px 0;
       line-height: 30px;
-      font-weight: 500;
-      font-size: 20px;
+      font-weight: 600;
+      font-size: 16px;
       color: $primaryColor;
       cursor: pointer;
       &:hover {
@@ -270,6 +280,7 @@ height: 650px!important;
         height: 1px;
         padding: 0;
         background: $borderBg;
+        margin-top: 0px;
       }
       .icon {
         width: 24px;
