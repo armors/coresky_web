@@ -2,7 +2,7 @@
  * @Author: zhaoyan
  * @Date: 2023-02-18 13:35:48
  * @LastEditors: zhaoyan
- * @LastEditTime: 2023-02-18 17:44:04
+ * @LastEditTime: 2023-02-23 15:04:41
  * @Description: 首页邮件模块
 -->
 <template>
@@ -11,21 +11,11 @@
       <h5>Never miss a drop</h5>
       <h6>Subscribe for the latest news, drops & collectibles</h6>
       <div>
-        <el-form
-          ref="ruleFormRef"
-          :model="ruleForm"
-          :rules="rules"
-          class="demo-ruleForm"
-        >
+        <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" class="demo-ruleForm">
           <el-form-item label="" prop="name">
             <el-input v-model="ruleForm.name" clearable class="input-email">
               <template #append>
-                <el-button
-                  class="btn-sub"
-                  @click="addTopic"
-                  style="font-weight: 600"
-                  >Subscribe</el-button
-                >
+                <el-button class="btn-sub" @click="addTopic" style="font-weight: 600">Subscribe</el-button>
               </template>
             </el-input>
           </el-form-item>
@@ -79,74 +69,91 @@ export default {
     zoom: 0.9;
   }
 }
+
 @media screen and (max-width: 1340px) {
   .email-mod {
     zoom: 0.8;
   }
 }
+
 @media screen and (max-width: 1220px) {
   .email-mod {
     zoom: 0.7;
   }
 }
+
 .email-mod {
   height: 350px;
-  background: #ebefff;
+  background-image: url("../../../../assets/images/bg-email.png");
+  background-size: cover;
+  background-repeat: no-repeat;
   border-radius: 12px;
   margin: auto 40px;
   margin-top: 20px;
   margin-bottom: 50px;
-  padding-top: 80px;
+  padding-top: 64px;
+
   .email-content {
-    width: 744px;
+    width: 500px;
     margin: auto;
+
     h5 {
-      height: 60px;
-      line-height: 60px;
-      // font-family: "Roboto";
+      height: 65px;
+      line-height: 65px;
       font-weight: bold;
-      font-size: 40px;
-      line-height: 150%;
+      font-size: 50px;
       color: #111111;
       text-align: center;
     }
+
     h6 {
-      height: 24px;
-      line-height: 24px;
-      // font-family: "Roboto";
-      font-style: normal;
-      // font-weight: 300;
       font-size: 16px;
-      color: #111111;
+      color: #717A83;
       text-align: center;
-      margin-top: 10px;
     }
   }
 }
+
 .email-mod .demo-ruleForm {
-  margin-top: 50px;
+  margin-top: 14px;
+
+
   .input-email {
     width: 100%;
-    display: flex;
-    justify-content: space-between;
+    display: block;
+
     ::v-deep .el-input__wrapper {
-      width: 584px;
+      width: 449px;
       height: 48px;
       background: #ffffff;
       border-radius: 12px;
-      flex: none;
-      order: 0;
-      flex-grow: 0;
+      margin: auto;
+      display: block;
+    }
+
+    ::v-deep .el-input-group__append {
+      display: block;
+      background: transparent;
+      border: 0;
+      box-shadow: 0 0 0 0;
+      margin: auto;
     }
   }
+
   .btn-sub {
+    display: block;
     width: 140px;
-    height: 49px;
+    height: 50px;
     background: #3461ff;
     box-shadow: 0px 3.05455px 8.14545px rgba(128, 156, 255, 0.5);
     border-radius: 10px;
     color: #fff;
+    margin: auto;
+    margin-top: 22px;
+    font-size: 14px;
+    line-height: 50px;
   }
+
   .btn-sub:hover {
     box-shadow: 0 15px 30px rgba(97, 138, 228, 0.3),
       0 0 20px rgba(96, 153, 218, 0.1) inset;
