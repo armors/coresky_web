@@ -15,7 +15,7 @@
         <div class="gruop-wrap">
           <div class="type-item">
             <div class="attr-content">
-              <el-checkbox-group v-model="checkList" @change="changeChecked">
+              <el-checkbox-group v-model="queryParams.activityType" @change="changeChecked">
                 <div class="attr-item">
                   <span> {{ $t('activities.Sale') }}</span>
                   <div class="attr-num">
@@ -78,26 +78,27 @@
     </div>
     <div class="right-content">
       <el-table :data="dataList" :header-cell-style="{
-      color:'#717A83'}" style="width: 100%">
+        color: '#717A83'
+      }" style="width: 100%">
         <el-table-column prop="date" :label="$t('activities.Activities')" width="180">
           <template #default="props">
             <div class="activity-wrap" style="min-height:67px;line-height: 67px;">
-              <img :src="require(`@/assets/images/icons/activities/${props.row.activity}.svg`)" alt="">
-              <span>{{ $t(`activities.listType.${props.row.activity}`) }}</span>
+              <img :src="require(`@/assets/images/icons/activities/${props.row.type}.svg`)" alt="">
+              <span>{{ $t(`activities.listType.${props.row.type}`) }}</span>
             </div>
           </template>
         </el-table-column>
         <el-table-column prop="Item" :label="$t('activities.Items')" width="200" :show-overflow-tooltip="true">
           <template #default="props">
-            <image-box v-if="props.row.itemImage!=null" :src="props.row.itemImage" />
-            <span class="item-name">{{ props.row.itemName||'--' }}</span>
+            <image-box v-if="props.row.image != null" :src="props.row.image" />
+            <span class="item-name">{{ props.row.name || '--' }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="address" :label="$t('activities.Price')">
           <template #default="props">
-            <div class="flex-center" v-if="props.row.price">
+            <div class="flex-center" v-if="props.row.basePrice">
               <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="">
-              <span class="item-name">{{!!props.row.price?nftPrice(props.row.price):'-- '}}</span>
+              <span class="item-name">{{ !!props.row.basePrice ? nftPrice(props.row.basePrice) : '-- ' }}</span>
             </div>
             <div v-else>
               --
@@ -106,17 +107,17 @@
         </el-table-column>
         <el-table-column prop="Item" :label="$t('activities.From')" width="140">
           <template #default="props">
-            <a class="link">{{$filters.ellipsisAddress(props.row.from, 4)}}</a>
+            <a class="link">{{ $filters.ellipsisAddress(props.row.fromAddress, 4) }}</a>
           </template>
         </el-table-column>
         <el-table-column prop="address" :label="$t('activities.To')" width="140">
           <template #default="props">
-            <a class="link">{{$filters.ellipsisAddress(props.row.to, 4)}}</a>
+            <a class="link">{{ $filters.ellipsisAddress(props.row.toAddress, 4) }}</a>
           </template>
         </el-table-column>
         <el-table-column prop="address" :label="$t('activities.Date')">
           <template #default="props">
-            <div>{{$filters.timeFormat(props.row.date)}}</div>
+            <div>{{ $filters.timeFormat(props.row.createTime) }}</div>
           </template>
         </el-table-column>
         <template #empty>
@@ -126,17 +127,16 @@
           </div>
         </template>
       </el-table>
-      <!-- <div class="custom-pagination" v-if="listCount>queryParams.limit">
+      <div class="custom-pagination" v-if="listCount > queryParams.limit">
         <div class="content">
           <el-pagination background v-model:current-page="queryParams.page" :page-size="queryParams.limit"
             :page-="queryParams.limit" @current-change="queryData" layout="prev, pager, next" align="center"
             :total="listCount" />
         </div>
-      </div> -->
+      </div>
 
     </div>
   </div>
-
 </template>
 
 <script>
@@ -162,9 +162,11 @@ export default {
       checkList: [],
       queryParams: {
         page: 1,
-        limit: 2,
+        limit: 10,
         address: '',
+        activityType: [],
       },
+      listCount: 0,
       allDataList: [],
     }
   },
@@ -173,21 +175,22 @@ export default {
       return this.$filters.keepMaxPoint(this.$Web3.utils.fromWei(basePrice.toString()))
     },
     changeChecked () {
-      console.log(this.checkList, this.dataList, this.allDataList)
-      if (this.checkList === undefined || this.checkList.length == 0) {
-        this.dataList = this.allDataList
-        return
-      }
-      let datalist = this.allDataList.filter(el => {
-        let obj = this.checkList.find(item => item === el.activity)
-        if (obj) {
-          return true
-        }
-        else {
-          return false
-        }
-      })
-      this.dataList = datalist
+      console.log(this.checkList)
+      this.searchClick()
+      // if (this.checkList === undefined || this.checkList.length == 0) {
+      //   this.dataList = this.allDataList
+      //   return
+      // }
+      // let datalist = this.allDataList.filter(el => {
+      //   let obj = this.checkList.find(item => item === el.activity)
+      //   if (obj) {
+      //     return true
+      //   }
+      //   else {
+      //     return false
+      //   }
+      // })
+      // this.dataList = datalist
     },
     goExplore (address, isTx = false) {
       if (address !== null) {
@@ -201,10 +204,9 @@ export default {
       this.$api("user.activity", this.queryParams).then((res) => {
         this.loadStatus = 'over'
         if (this.$tools.checkResponse(res)) {
-          this.dataList = res.debug
-          this.allDataList = res.debug
-          // this.listCount = res.debug.listCount
-          // this.queryParams.page = res.debug.curPage
+          this.dataList = res.debug.listData
+          this.listCount = res.debug.listCount
+          this.queryParams.page = res.debug.curPage
         }
       })
     },
@@ -238,23 +240,23 @@ export default {
 .filter-item {
   padding-top: 0;
 }
-.filter-wrap{
+.filter-wrap {
   .gruop-wrap {
-  margin-top: 0;
-  .type-item{
-    margin-top: 10px;
-    .attr-item{
-      height: 54px;
-      line-height: 54px;
-      font-size: 16px;
-      margin: 0;
-      font-weight: 600;
-      .big-checkbox{
-        zoom:170%
+    margin-top: 0;
+    .type-item {
+      margin-top: 10px;
+      .attr-item {
+        height: 54px;
+        line-height: 54px;
+        font-size: 16px;
+        margin: 0;
+        font-weight: 600;
+        .big-checkbox {
+          zoom: 170%
+        }
       }
     }
   }
-}
 }
 
 .flex-center {

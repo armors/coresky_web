@@ -101,7 +101,7 @@ module.exports = {
     Items: 'Items',
     Price: 'Price',
     From: 'From',
-    to: 'to',
+    To: 'to',
     Date: 'Date',
     listType: {
       'Sale': 'Sale',
