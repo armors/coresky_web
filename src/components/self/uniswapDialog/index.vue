@@ -1,23 +1,27 @@
 <template>
 	<el-dialog :model-value="isShowUniswapDialog"
 	           :show-close="true"
+	           style="width: 440px"
 	           :close-on-click-modal="true"
 	           @closed="isShowUniswapDialog = false">
-		<uniswap-vue
-			:uniswapDappSharedLogicContext="uniswapDappSharedLogicContext"
-			v-if="uniswapDappSharedLogicContext"
-		/>
+		<div id="reactApp"></div>
 	</el-dialog>
 </template>
 
 <script>
-	import { ChainId, ETH, WETHContract } from 'uniswap-dapp-integration-shared'
+	import React from 'react'; // 此处用的是 18 版本
+	import * as ReactDOM from 'react-dom/client'; // 此处用的是 18 版本(写法有点改变)
+	import { ETH, WETHContract } from 'uniswap-dapp-integration-shared'
+	import UniswapReact from "@/components/self/uniswapReact";
 	export default {
 		name: "index",
 		computed: {
 			user() {
 				return this.$store.state.user;
 			}
+		},
+		components: {
+			'Uniswap-React': UniswapReact
 		},
 		data () {
 			return {
@@ -33,49 +37,50 @@
 		},
 		methods: {
 			showUniswap (type) {
-				this.uniswapDappSharedLogicContext = undefined
 				let defaultInputTokenGEORLI
 				let defaultOutputTokenGEORLI
 				let defaultInputTokenMAINNET
 				let defaultOutputTokenMAINNET
-				defaultInputTokenGEORLI = type === 'ETH' ? ETH.GORLI().contractAddress : WETHContract.GORLI().contractAddress
-				defaultOutputTokenGEORLI = type === 'ETH' ? WETHContract.GORLI().contractAddress : ETH.GORLI().contractAddress
-				defaultInputTokenMAINNET = type === 'ETH' ? ETH.MAINNET().contractAddress : WETHContract.MAINNET().contractAddress
-				defaultOutputTokenMAINNET = type === 'ETH' ? WETHContract.MAINNET().contractAddress : ETH.MAINNET().contractAddress
-				this.uniswapDappSharedLogicContext = {
-					supportedNetworkTokens: [
-						{
-							chainId: ChainId.MAINNET,
-							// defaultInputValue: '0.000001',
-							defaultInputToken: defaultInputTokenMAINNET,
-							defaultOutputToken: defaultOutputTokenMAINNET,
-							supportedTokens: [
-								// { contractAddress: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' },
-								{ contractAddress: WETHContract.MAINNET().contractAddress },
-								{ contractAddress: ETH.MAINNET().contractAddress }
-							]
-						},
-						{
-							chainId: 5,
-							// defaultInputValue: '0.000001',
-							defaultInputToken: defaultInputTokenGEORLI,
-							defaultOutputToken: defaultOutputTokenGEORLI,
-							supportedTokens: [
-								{ contractAddress: WETHContract.GORLI().contractAddress },
-								{ contractAddress: ETH.GORLI().contractAddress }
-							]
-						}
-					],
-					ethereumAddress: this.user.coinbase,
-					ethereumProvider: window.ethereum
-				}
-				console.log(this.uniswapDappSharedLogicContext)
+				let ethAddress = 'NATIVE'
+				defaultInputTokenGEORLI = type === 'ETH' ? ethAddress : WETHContract.GORLI().contractAddress
+				defaultOutputTokenGEORLI = type === 'ETH' ? WETHContract.GORLI().contractAddress : ethAddress
+				defaultInputTokenMAINNET = type === 'ETH' ? ethAddress : WETHContract.MAINNET().contractAddress
+				defaultOutputTokenMAINNET = type === 'ETH' ? WETHContract.MAINNET().contractAddress : ethAddress
 				this.isShowUniswapDialog = true
+				this.$nextTick(() => {
+					setTimeout(() => {
+						const container = document.getElementById('reactApp');
+						const root = ReactDOM.createRoot(container);
+						// root.render(<Test />); // 下面有解释，解析jsx的babel-loader要放在rules数组的第一位，此行才能替代下面一行。
+
+						root.render(React.createElement(UniswapReact, {
+							defaultInputTokenAddress: process.env.VUE_APP_CHAINID === '1' ? defaultInputTokenMAINNET : defaultInputTokenGEORLI,
+							defaultOutputTokenAddress: process.env.VUE_APP_CHAINID === '1' ? defaultOutputTokenMAINNET : defaultOutputTokenGEORLI,
+						}));
+					}, 300)
+				})
 			},
 		}
 	}
 </script>
 
-<style scoped>
-
+<style lang="scss">
+	#reactApp {
+		width: 360px;
+		.kiMPul{
+			/*width: 80% !important;*/
+		}
+		.jlGmcj{
+			img{
+				width: 16px !important;
+				height: 16px !important;
+			}
+		}
+		.igNbuE{
+			min-width: 100% !important;
+		}
+		.kpbOyk{
+			transform: unset !important;
+		}
+	}
 </style>
