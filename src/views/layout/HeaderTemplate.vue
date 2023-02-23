@@ -4,9 +4,9 @@
     </div>
     <div class="home-head-content">
       <router-link to="/" class="head-logo header-margin-r">
-        <img fit="contain" v-if="isScrollTop&&isHomeIndex" class="logo-image"
-          :src="require('../../assets/images/logo_white.png')" />
-        <img fit="contain" v-else class="logo-image" :src="require('../../assets/images/logo_black.png')" />
+        <img fit="contain" v-if="isScrollTop&&isHomeIndex" class="logo-image aa"
+          :src="require('../../assets/images/logo_white_new.svg')" />
+        <img fit="contain" v-else class="logo-image" :src="require('../../assets/images/bottom_logo.svg')" />
       </router-link>
       <div class="header-search header-margin-r">
         <el-input class="search-input-wrap" v-model="keyword" @keyup.enter="searchClick"

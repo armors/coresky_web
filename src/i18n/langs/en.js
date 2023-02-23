@@ -121,8 +121,8 @@ module.exports = {
     floorPrice: 'Floor Price',
     bestOffer: 'Best Offer',
     hrVolume: '24hr Volume',
-    totalVolume: 'total volume',
-    owers: 'Owers'
+    totalVolume: 'Total volume',
+    owers: 'Owners'
   },
   profile: {
     editProfile: "General Settings",
