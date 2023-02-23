@@ -3,13 +3,19 @@
     <div class="flex-center">
       <div class="page-left">
         <div class="detail-img-box">
-          <el-skeleton v-if="!tokenInfo.oriImage" animated>
-            <template #template>
-              <el-skeleton-item class="nft-image-skeleton" variant="h3" style="height: 100%;" />
-            </template>
-          </el-skeleton>
-          <image-box v-else :src="tokenInfo.oriImage"></image-box>
-
+          <div class="detail-img-box-center">
+            <el-skeleton v-if="!tokenInfo.oriImage" animated>
+              <template #template>
+                <el-skeleton-item class="nft-image-skeleton" variant="h3" style="height: 100%;" />
+              </template>
+            </el-skeleton>
+            <div class="img-inset" v-else>
+              <div style="width: 100%;height:100%;margin: 0 auto;">
+                <el-image :src="tokenInfo.oriImage" fit="contain" lazy>
+                </el-image>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="card-wrap mt30">
           <el-collapse v-model="activeName" accordion>
@@ -1442,12 +1448,22 @@ export default {
     flex-direction: column;
     /*justify-content: space-between;*/
     .detail-img-box {
-      border-radius: 20px;
-      height: 468px;
-      .cover-image {
-        width: 100%;
-        height: 100%;
-        border-radius: 20px;
+      border-radius: 10px;
+      border: 1px solid rgb(229, 232, 235);
+      overflow: hidden;
+
+      .detail-img-box-center {
+        position: relative;
+        height: 0px;
+        padding-bottom: 100%;
+        .img-inset {
+          inset: 0px;
+          position: absolute;
+          .el-image {
+            height: 100%;
+            width: 100%;
+          }
+        }
       }
     }
   }

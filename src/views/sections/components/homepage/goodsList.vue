@@ -5,10 +5,9 @@
  * @LastEditTime: 2023-02-21 18:29:32
  * @Description: 首页中间列表轮播
 -->
-<template>
-  <!-- <GoodsListEvery :arrList="nftList.recommendCollection" :title="$t('home.topTitle1')" /> -->
-  <test :arrList="nftList.recommendCollection" :title="$t('home.topTitle1')" />
-  <test :arrList="nftList.popularCollection" :title="$t('home.trendingNow')" />
+<template><!-- <GoodsListEvery :arrList="nftList.recommendCollection" :title="$t('home.topTitle1')" /> -->
+  <test key="xxx1" :arrList="nftList.recommendCollection" id="top" :title="$t('home.topTitle1')" />
+  <test key="xxx2" :arrList="nftList.popularCollection" id="trending" :title="$t('home.trendingNow')" />
 </template>
 
 <script>

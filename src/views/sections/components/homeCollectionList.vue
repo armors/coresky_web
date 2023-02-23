@@ -2,16 +2,16 @@
   <div class="homeCollection">
     <div class="home-tab-wrap">
       <div class="tab-left">
-        <div class="tab-item " :class="{active: collectionQuery.order === 1}" @click="changeOrder(1)">
+        <div class="tab-item " :class="{ active: collectionQuery.order === 1 }" @click="changeOrder(1)">
           {{ $t("home.sortBtnText1") }}</div>
-        <div class="tab-item" :class="{active: collectionQuery.order === 2}" @click="changeOrder(2)">
+        <div class="tab-item" :class="{ active: collectionQuery.order === 2 }" @click="changeOrder(2)">
           {{ $t("home.sortBtnText2") }}</div>
-        <div class="tab-item" :class="{active: collectionQuery.order === 3}" @click="changeOrder(3)">
+        <!-- <div class="tab-item" :class="{ active: collectionQuery.order === 3 }" @click="changeOrder(3)">
           {{ $t("home.sortBtnText3") }}</div>
-        <div class="tab-item" :class="{active: collectionQuery.order === 4}" @click="changeOrder(4)">
-          {{ $t("home.sortBtnText4") }}</div>
+        <div class="tab-item" :class="{ active: collectionQuery.order === 4 }" @click="changeOrder(4)">
+          {{ $t("home.sortBtnText4") }}</div> -->
       </div>
-      <div class="tab-right sort-box">
+      <!-- <div class="tab-right sort-box">
         <el-switch v-model="collectionQuery.valueRewards" :inactive-text="$t('home.reward')" class="ml-2" />
         <div class="text">{{ $t("home.sortFloor") }}</div>
         <el-input-number class="input-number" @blur="blurPrice" :controls="false" v-model="collectionQuery.minPrice"
@@ -25,94 +25,73 @@
         <el-select v-model="volTime" placeholder="Select" class="select-times" @changeTime="changeTime">
           <el-option v-for="item in optionsTimes" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
-      </div>
+      </div> -->
     </div>
-    <div class="table-fix" v-loading="loadStatusCollect==='loading'">
-      <el-table :data="dataListA" v-if="dataListA.length>0" style="margin-right: 100px; width: 50%;"
-        @row-click="rowClick">
-        <el-table-column min-width="300px">
-          <template #header>
-            <div class="th1">
-              {{$t('home.nftListTitle1')}}
+    <div class="table-fix" v-loading="loadStatusCollect === 'loading'">
+      <div v-if="dataListA.length > 0" style="margin-right: 50px; width: 50%;">
+        <div class="table-head">
+          <div class="w60 th1"> {{ $t('home.nftListTitle1') }}</div>
+          <div class="w20 th1"> {{ $t('home.nftListTitle2') }}</div>
+          <div class="w20 th1"> {{ $t('home.nftListTitle3') }}</div>
+        </div>
+        <div class="table-body">
+          <div class="table-row" v-for="(item, index) in dataListA" :key="index" @click="rowClick(item)">
+            <div class="w60">
+              <div class="flex-column1">
+                <div class="num">{{ index + 1 }}</div>
+                <image-box class="collection-image" :src="item.image"></image-box>
+                <div class="collection-name">
+                  <div class="collection-name-txt"> {{ item.name }}</div>
+                </div>
+                <svg-icon class="icon-tag" icon-class="icon_tag" />
+              </div>
             </div>
-          </template>
-          <template #default="scope">
-            <div class="flex-column1">
-              <div class="num">{{scope.$index+1}}</div>
-              <image-box class="collection-image" :src="scope.row.image"></image-box>
-              <div class="collection-name">{{ scope.row.name }}</div>
-              <svg-icon class="icon-tag" icon-class="icon_tag" />
+            <div class="w20">
+              <div class="floor-num" v-if="item.foolPrice">{{ $filters.keepPoint(item.foolPrice,2) }}&nbsp;ETH
+              </div>
             </div>
-          </template>
-        </el-table-column>
-        <el-table-column align="right" min-width="160px">
-          <template #header>
-            <div class="th1">
-              {{$t('home.nftListTitle2')}}
+            <div class="w20">
+              <div class="floor-num">
+                {{ $filters.keepMaxPoint(volTime === 1 ? item.dayVol : (volTime === 7 ? item.weekVol :
+                  item.monthVol)) }}
+                &nbsp;ETH
+              </div>
             </div>
-          </template>
-          <template #default="scope">
-            <div class="floor-num" v-if="scope.row.foolPrice">{{ $filters.keepMaxPoint(scope.row.foolPrice)}}&nbsp;ETH
+          </div>
+        </div>
+      </div>
+      <div v-if="dataListB.length > 0" style="width: 50%;">
+        <div class="table-head">
+          <div class="w60 th1"> {{ $t('home.nftListTitle1') }}</div>
+          <div class="w20 th1"> {{ $t('home.nftListTitle2') }}</div>
+          <div class="w20 th1"> {{ $t('home.nftListTitle3') }}</div>
+        </div>
+        <div class="table-body">
+          <div class="table-row" v-for="(item, index) in dataListB" :key="index" @click="rowClick(item)">
+            <div class="w60">
+              <div class="flex-column1">
+                <div class="num">{{ index + 6 }}</div>
+                <image-box class="collection-image" :src="item.image"></image-box>
+                <div class="collection-name">
+                  <div class="collection-name-txt"> {{ item.name }}</div>
+                </div>
+                <svg-icon class="icon-tag" icon-class="icon_tag" />
+              </div>
             </div>
-          </template>
-        </el-table-column>
-        <el-table-column align="right">
-          <template #header>
-            <div class="th1">
-              {{$t('home.nftListTitle3' + volTime)}}
+            <div class="w20">
+              <div class="floor-num" v-if="item.foolPrice">{{ $filters.keepPoint(item.foolPrice,2) }}&nbsp;ETH
+              </div>
             </div>
-          </template>
-          <template #default="scope">
-            <div class="floor-num">
-              {{$filters.keepMaxPoint(volTime === 1 ? scope.row.dayVol : (volTime === 7 ?  scope.row.weekVol :  scope.row.monthVol))}}
-              &nbsp;ETH
+            <div class="w20">
+              <div class="floor-num">
+                {{ $filters.keepMaxPoint(volTime === 1 ? item.dayVol : (volTime === 7 ? item.weekVol :
+                  item.monthVol)) }}
+                ETH
+              </div>
             </div>
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-table :data="dataListB" v-if="dataListB.length>0" style="width: 50%;" @row-click="rowClick">
-        <el-table-column min-width="300px">
-          <template #header>
-            <div class="th1">
-              {{$t('home.nftListTitle1')}}
-            </div>
-          </template>
-          <template #default="scope">
-            <div class="flex-column1">
-              <div class="num">{{scope.$index+6}}</div>
-              <image-box class="collection-image" :src="scope.row.image"></image-box>
-              <div class="collection-name">{{ scope.row.name }}</div>
-              <svg-icon class="icon-tag" icon-class="icon_tag" />
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column align="right" min-width="160px">
-          <template #header>
-            <div class="th1">
-              {{$t('home.nftListTitle2')}}
-            </div>
-          </template>
-          <template #default="scope">
-            <div class="floor-num">
-              {{$filters.keepMaxPoint(volTime === 1 ? scope.row.dayVol : (volTime === 7 ?  scope.row.weekVol :  scope.row.monthVol))}}
-              &nbsp;ETH
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column align="right">
-          <template #header>
-            <div class="th1">
-              {{$t('home.nftListTitle3' + volTime)}}
-            </div>
-          </template>
-          <template #default="scope">
-            <div class="floor-num">
-              {{$filters.keepMaxPoint(volTime === 1 ? scope.row.dayVol : (volTime === 7 ?  scope.row.weekVol :  scope.row.monthVol))}}
-              &nbsp;ETH
-            </div>
-          </template>
-        </el-table-column>
-      </el-table>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -284,7 +263,7 @@ export default {
             color: $color-black3;
           }
         }
-        .el-button + .el-button {
+        .el-button+.el-button {
           margin-left: 6px;
         }
         .text {
@@ -361,28 +340,53 @@ export default {
     margin-top: 29px;
     display: flex;
     justify-content: space-between;
-    .el-table {
-      grid-column: 6;
-      .th1 {
-        padding-left: 10px;
-        height: 20px;
-        font-weight: 500;
-        font-size: 12px;
-        line-height: 20px;
-        color: #717a83;
+
+    .table-head {
+      width: 100%;
+      display: flex;
+      padding-right: 8px;
+    }
+    .table-body {
+      // padding-right: 8px;
+    }
+    .table-row {
+      width: 100%;
+      display: flex;
+      // padding-right: 5px;
+      padding-right: 8px;
+      cursor: pointer;
+      &:hover {
+        background: #FAFCFE;
       }
     }
-    ::v-deep {
-      .el-table td.el-table__cell,
-      .el-table th.el-table__cell.is-leaf {
-        border-bottom: none;
-      }
+    .th1 {
+      padding-left: 10px;
+      height: 20px;
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 20px;
+      color: #717a83;
+    }
+    .w60 {
+      width: 60%;
+      display: flex;
+      justify-content: flex-start;
+      flex: 0 0 60%;
+      align-items: center;
+    }
+    .w20 {
+      width: 20%;
+      display: flex;
+      justify-content: flex-end;
+      flex: 0 0 20%;
+      align-items: center;
     }
   }
   .flex-column1 {
     display: flex;
     height: 90px;
     align-items: center;
+    width: 100%;
     .num {
       padding-left: 5px;
       font-weight: 500;
@@ -407,6 +411,17 @@ export default {
       font-size: 20px;
       line-height: 27px;
       color: #111111;
+      display: flex;
+      max-width: 100%;
+      overflow: hidden;
+
+      .collection-name-txt {
+        width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
     }
     .icon-tag {
       width: 18px;
@@ -419,6 +434,7 @@ export default {
     font-size: 18px;
     line-height: 150%;
     text-align: right;
+    // padding-right: 5px;
     color: #111111;
   }
 }
