@@ -1,10 +1,10 @@
 <template>
-  <div class="home-head" :class="{'homeIndex':isScrollTop&&isHomeIndex}">
+  <div class="home-head" :class="{ 'homeIndex': isScrollTop && isHomeIndex }">
     <div class="home-head-mask">
     </div>
     <div class="home-head-content">
       <router-link to="/" class="head-logo header-margin-r">
-        <img fit="contain" v-if="isScrollTop&&isHomeIndex" class="logo-image aa"
+        <img fit="contain" v-if="isScrollTop && isHomeIndex" class="logo-image aa"
           :src="require('../../assets/images/logo_white_new.svg')" />
         <img fit="contain" v-else class="logo-image" :src="require('../../assets/images/bottom_logo.svg')" />
       </router-link>
@@ -12,8 +12,8 @@
         <el-input class="search-input-wrap" v-model="keyword" @keyup.enter="searchClick"
           :placeholder="$t('navigation.searchTip')">
           <template #prefix>
-            <div class="img-search" v-if="isScrollTop&&isHomeIndex"><img
-                src="../../assets/images/icons/icon_search_w.svg" alt=""></div>
+            <div class="img-search" v-if="isScrollTop && isHomeIndex"><img src="../../assets/images/icons/icon_search_w.svg"
+                alt=""></div>
             <div class="img-search" v-else><img src="../../assets/images/icons/icon_search.svg" alt=""></div>
           </template>
         </el-input>
@@ -58,11 +58,11 @@
             </div>
           </template>
           <div>
-            <div class="chain-item two" @click="languageSelect('en')" :class="{'active':language =='en'}">
+            <div class="chain-item two" @click="languageSelect('en')" :class="{ 'active': language == 'en' }">
               <div class="item-txt">English</div>
               <div class="item-dot"></div>
             </div>
-            <div class="chain-item two" @click="languageSelect('tw')" :class="{'active':language =='tw'}">
+            <div class="chain-item two" @click="languageSelect('tw')" :class="{ 'active': language == 'tw' }">
               <div class="item-txt">繁体</div>
               <div class="item-dot"></div>
             </div>
@@ -72,22 +72,22 @@
             </div> -->
           </div>
         </el-popover>
-        <div class="nav-link shopping-cart" @click="showShoppingCartDrawer=true;showUserDrawer = false">
+        <div class="nav-link shopping-cart" @click="showShoppingCartDrawer = true; showUserDrawer = false">
           <div class="notify-num"
-            v-if="shoppingCartList&&shoppingCartList.length>0 || shoppingOpenseaCartList&&shoppingOpenseaCartList.length>0">
+            v-if="shoppingCartList && shoppingCartList.length > 0 || shoppingOpenseaCartList && shoppingOpenseaCartList.length > 0">
             {{ shoppingCartList.length + shoppingOpenseaCartList.length }}</div>
           <svg-icon class="head-icon" icon-class="gouwuche" />
         </div>
         <div class="head-connect display-flex box-center" v-if="!connected" @click="login">
           {{ $t("navigation.connectWallet") }}
         </div>
-        <div class="nav-link" @click="showUserDrawer=true;showShoppingCartDrawer = false" v-else>
+        <div class="nav-link" @click="showUserDrawer = true; showShoppingCartDrawer = false" v-else>
           <div class="avatar-img">
             <img :src="user.avatar || $filters.fullImageUrl(user.avatar)" alt="">
           </div>
-<!--          <avatar class="avatar-img" :imageUrl="user.avatar || $filters.fullImageUrl(user.avatar)"-->
-<!--            :address="user.coinbase" shape="circular">-->
-<!--          </avatar>-->
+          <!--          <avatar class="avatar-img" :imageUrl="user.avatar || $filters.fullImageUrl(user.avatar)"-->
+          <!--            :address="user.coinbase" shape="circular">-->
+          <!--          </avatar>-->
         </div>
       </div>
     </div>
@@ -300,6 +300,7 @@ export default {
       }
     }
     .search-input-wrap {
+      background: rgba(255, 255, 255, 0.1);
       border: none;
     }
     .img-search {
@@ -346,7 +347,7 @@ export default {
     height: 32px;
     overflow: hidden;
     border-radius: 50%;
-    img{
+    img {
       width: 100%;
       height: 100%;
       display: block;
@@ -398,7 +399,7 @@ export default {
   color: #333;
   font-size: 15px;
   .search-input-wrap {
-    background: rgba(255, 255, 255, 0.1);
+    // background: rgba(255, 255, 255, 0.1);
     ::v-deep {
       .el-input__wrapper {
         // background: transparent;
@@ -462,6 +463,10 @@ export default {
 .head-logo {
   display: flex;
   align-items: center;
+  .logo-image {
+    width: 136px;
+    height: 34px;
+  }
 }
 
 .head-connect {

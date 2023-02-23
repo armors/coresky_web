@@ -3,9 +3,9 @@
     <div class="list-box">
         <div class="list-title">{{ title }}</div>
         <div class="trading-banner-box">
-            <swiper ref="mySwiper" slidesPerView="auto" @swiper="onSwiper" :spaceBetween="18" :navigation="{
-                nextEl: '.arrow-right',
-                prevEl: '.arrow-left',
+            <swiper :ref="'mySwiper' + id" slidesPerView="auto" @swiper="onSwiper" :spaceBetween="18" :navigation="{
+                nextEl: '.arrow-right' + id,
+                prevEl: '.arrow-left' + id,
             }" :freeMode="true" :modules="modules" class="swiper">
                 <swiper-slide v-for="(v, i1) in arrList" :key="`trading-${i}`" @click="
                     $router.push({
@@ -15,28 +15,28 @@
                     <div class="trading-item">
                         <image-box :src="v.image"></image-box>
                         <div class="nft-name">
-                            <div class="name-top display-flex">
-                                <div>{{ v.name }}</div>
+                            <div class="name-top">
+                                <div class="name-txt">{{ v.name }}</div>
                                 <img :src="require(`../../../../assets/images/icons/icon_list_blue.svg`)" alt="" />
                             </div>
-                            <div class="name-bottom">
+                            <div class="name-bottom" v-if="v.price">
                                 <span class="b-t">Floor</span>
-                                <span class="b-value">222ETH</span>
+                                <span class="b-value">{{ prasePrice(v.price) }} ETH</span>
                             </div>
                         </div>
                     </div>
                 </swiper-slide>
                 <!-- <div class="swiper-button-prev" slot="button-prev" @click="next"></div> -->
             <!-- <div class="arrow-prev arrow-icon" slot="button-prev" @click="prev"></div>
-                                                                                                                                    <div class="arrow-next arrow-icon" slot="button-next" @click="next"></div> -->
+                                                                                                                                                                                                        <div class="arrow-next arrow-icon" slot="button-next" @click="next"></div> -->
 
             </swiper>
-            <div class="arrow-left" slot="button-prev" @click="prev">
+            <div :class="'arrow-left arrow-left' + id" @click="prev">
                 <el-icon>
                     <ArrowLeftBold />
                 </el-icon>
             </div>
-            <div class="arrow-right" slot="button-next" @click="next">
+            <div :class="'arrow-right arrow-right' + id" @click="next">
                 <el-icon>
                     <ArrowRightBold />
                 </el-icon>
@@ -53,6 +53,7 @@ import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
+import BigNumber from "bignumber.js";
 
 
 export default {
@@ -71,6 +72,10 @@ export default {
             type: String,
             default: "",
         },
+        id: {
+            type: String,
+            default: "",
+        },
         arrList: {
             type: Array,
             default: () => {
@@ -86,22 +91,21 @@ export default {
         };
     },
     methods: {
+        prasePrice (price) {
+            if (new BigNumber(price).isLessThan(0.01)) {
+                return '< 0.01'
+            }
+            return this.$filters.keepPoint(price, 2)
+        },
         onSwiper (swiper) {
             this.swiper = swiper
-            setTimeout(() => {
-
-            }, 300);
             console.log(222, swiper)
         },
         prev () {
             this.swiper.slidePrev()
-            // console.log(this.$refs.mySwiper.$el.slideNext)
-            // this.swiper.slidePrev();
         },
         next () {
             this.swiper.slideNext()
-            // console.log(this.$refs.mySwiper)
-            // this.swiper.slideNext();
         },
         handleResize () {
 
@@ -164,7 +168,7 @@ export default {
         border-radius: 20px 20px 0px 0px;
     }
     .nft-name {
-        padding: 23px 0 0 26px;
+        padding: 20px 24px;
 
         .name-top {
             font-weight: 700;
@@ -172,7 +176,14 @@ export default {
             line-height: 24px;
             height: 24px;
             align-items: center;
+            display: flex;
+            // max-width: 100%;
 
+            .name-txt {
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
             div {
                 color: #111111;
                 margin-right: 4px;
@@ -182,6 +193,7 @@ export default {
             img {
                 width: 16px;
                 height: 16px;
+                flex-shrink: 0;
             }
         }
 

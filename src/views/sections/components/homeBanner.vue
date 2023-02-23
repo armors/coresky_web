@@ -1,9 +1,9 @@
 <template>
   <div class="banner-wrap-out">
-    <div class="banner-wrap" :style="{'background-image':`url(${curBgImage})`}">
+    <div class="banner-wrap" :style="{ 'background-image': `url(${curBgImage})` }">
       <div class="banner-swiper">
         <el-carousel trigger="click" height="460px" @change="bannerChange" :interval="5000" style="    overflow: hidden;
-    border-radius: 26px;">
+      border-radius: 26px;">
           <el-carousel-item v-for="item in bannerList" :key="item">
             <div class="swiper-item-wrap">
               <div class="swiper-item-left">
@@ -17,7 +17,7 @@
                     {{ item.name }}
                   </div>
                   <div class="item-des">
-                    We help connect game developers and future players and give them
+                    {{ item.subtitle }}
                   </div>
                 </div>
                 <a class="btn-more" :href="item.url">
@@ -111,8 +111,7 @@ export default {
   &::after {
     inset: 0;
     backdrop-filter: blur(20px);
-    background: linear-gradient(0deg, rgb(255, 255, 255) 5%, rgba(0, 0, 0, 0) 60%)
-      rgba(0, 0, 0, 0.6);
+    background: linear-gradient(0deg, rgb(255, 255, 255) 5%, rgba(0, 0, 0, 0) 60%) rgba(0, 0, 0, 0.6);
     pointer-events: none;
     content: '';
     position: absolute;
