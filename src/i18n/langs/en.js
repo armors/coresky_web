@@ -107,7 +107,7 @@ module.exports = {
       'Sale': 'Sale',
       'Listings': 'Listings',
       'Make an offer': 'Make an offer',
-      'Receive an offer': 'Make an offer',
+      'Receive an offer': 'Receive an offer',
       'Transfer': 'Transfer',
       'Collection offer': 'Collection offer'
     }
