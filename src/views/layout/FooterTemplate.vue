@@ -25,9 +25,11 @@
             <div>Community</div>
             <div class="media-list display-flex box-center-Y">
               <a class="media-item" v-for="(v, i) in mediaList" :key="`media-item-${i}`" :href="v.url" target="_blank">
+                <!-- <el-tooltip class="item" effect="dark" :content="v.tip" placement="top"> -->
                 <img :src="
                   require(`../../assets/images/icons/media/media_${v.name}_black.svg`)
                 " alt="" />
+                <!-- </el-tooltip> -->
               </a>
             </div>
           </div>
@@ -49,14 +51,17 @@ export default {
         {
           url: "https://twitter.com/Coreskyofficial",
           name: "twitter",
+          tip:'website'
         },
         {
           url: "https://discord.gg/ZbG5HrVFEE",
           name: "discord",
+          tip:'website2'
         },
         {
           url: "mailto:info@coresky.com",
           name: "email",
+          tip:'website'
         },
         // 'ins',
         // 'reddit',
@@ -166,8 +171,8 @@ export default {
         margin-left: 56px;
         display: flex;
         border-radius: 50%;
-        width: 44px;
-        height: 44px;
+        width: 50px;
+        height: 50px;
         justify-content: center;
         img {
           width: 30px;
