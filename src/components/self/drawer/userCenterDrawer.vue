@@ -264,7 +264,6 @@ height: 650px!important;
     margin: 12px 0;
     .nav-item {
       display: flex;
-      align-items: center;
       margin-bottom: 8px;
       border-radius: 12px;
       padding: 12px 0;
@@ -282,9 +281,20 @@ height: 650px!important;
         background: $borderBg;
         margin-top: 0px;
       }
+      &:nth-child(1){
+        .icon{
+          width: 23px;
+        }
+      }
+      &:nth-child(4){
+        .icon{
+        margin-left: 2px;     
+        margin-right: 8px;     
+        }
+      }
       .icon {
-        width: 24px;
-        height: 24px;
+        width: 20px;
+        height: auto;
         margin-right: 10px;
       }
     }

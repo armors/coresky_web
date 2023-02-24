@@ -21,7 +21,8 @@
         </div>
         <div class="share-wrap">
           <div class="icon-img " :class="{ active: collectInfo.followStatus }" @click="followContract">
-            <img class="tag" src="../../assets/images/icons/icon_collect_collect.svg" alt="">
+            <img v-if="!collectInfo.followStatus" class="tag" src="../../assets/images/icons/icon_collect_collect.svg" alt="">
+            <img v-else class="tag" src="../../assets/images/icons/icon_collect_collected.svg" alt="">
           </div>
           <a class="icon-img " target="_blank" :href="collectInfo.website">
             <img class="tag" src="../../assets/images/icons/icon_collect_global.svg" alt="">
@@ -42,6 +43,7 @@
           <span class="lable">{{ $t('collection.items') }}</span>
           <span class="value">{{ $filters.milliFormat(collectInfo.total) }}</span>
         </div>
+        <div class="item">|</div>
         <!-- <div class="item">
           <span class="lable">{{ $t('collection.created') }}:</span>
           <span class="value">{{$filters.timeToUTC(collectInfo.deployTime)}}</span>
@@ -326,6 +328,9 @@ export default {
           justify-content: center;
           background-color: #fff;
           border-radius: 50%;
+          &:active{
+            background: #FAFAF8;
+          }
           &:hover{
             background: #fff;
             box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08);
@@ -347,7 +352,7 @@ export default {
         line-height: 21px;
         margin-right: 20px;
         color: #717A83;
-        font-size: 16px;
+        font-size: 18px;
         line-height: 24px;
 
         .value {
@@ -382,7 +387,7 @@ export default {
     .info-card {
       display: flex;
       // justify-content: space-between;
-      margin-top: 60px;
+      margin-top: 26px;
       margin-bottom: 50px;
       color: $color-black3;
 
