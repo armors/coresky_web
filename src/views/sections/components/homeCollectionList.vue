@@ -32,7 +32,9 @@
         <div class="table-head">
           <div class="w60 th1"> {{ $t('home.nftListTitle1') }}</div>
           <div class="w20 th1"> {{ $t('home.nftListTitle2') }}</div>
-          <div class="w20 th1"> {{ $t('home.nftListTitle3') }}</div>
+          <div class="w20 th1"> {{ collectionQuery.order === 1 ? $t('collection.totalVolume') : $t('home.nftListTitle3')
+          }}
+          </div>
         </div>
         <div class="table-body">
           <div class="table-row" v-for="(item, index) in dataListA" :key="index" @click="rowClick(item)">
@@ -51,10 +53,13 @@
               </div>
             </div>
             <div class="w20">
-              <div class="floor-num">
-                {{ $filters.keepMaxPoint(volTime === 1 ? item.dayVol : (volTime === 7 ? item.weekVol :
-                  item.monthVol)) }}
-                &nbsp;ETH
+              <div class="floor-num" v-if="collectionQuery.order === 1">
+                {{ $filters.keepMaxPoint(item.volume) }}
+                ETH
+              </div>
+              <div class="floor-num" v-else>
+                {{ $filters.keepMaxPoint(item.dayVol) }}
+                ETH
               </div>
             </div>
           </div>
@@ -64,7 +69,9 @@
         <div class="table-head">
           <div class="w60 th1"> {{ $t('home.nftListTitle1') }}</div>
           <div class="w20 th1"> {{ $t('home.nftListTitle2') }}</div>
-          <div class="w20 th1"> {{ $t('home.nftListTitle3') }}</div>
+          <div class="w20 th1">
+            {{ collectionQuery.order === 1 ? $t('collection.totalVolume') : $t('home.nftListTitle3') }}
+          </div>
         </div>
         <div class="table-body">
           <div class="table-row" v-for="(item, index) in dataListB" :key="index" @click="rowClick(item)">
@@ -83,9 +90,12 @@
               </div>
             </div>
             <div class="w20">
-              <div class="floor-num">
-                {{ $filters.keepMaxPoint(volTime === 1 ? item.dayVol : (volTime === 7 ? item.weekVol :
-                  item.monthVol)) }}
+              <div class="floor-num" v-if="collectionQuery.order === 1">
+                {{ $filters.keepMaxPoint(item.volume) }}
+                ETH
+              </div>
+              <div class="floor-num" v-else>
+                {{ $filters.keepMaxPoint(item.dayVol) }}
                 ETH
               </div>
             </div>
@@ -147,7 +157,7 @@ export default {
         'valueRewards': true,
         "minPrice": undefined,
         "maxPrice": undefined,
-        "order": 0,
+        "order": 1,
         "filter": {
           "name": "",
           "value": ""
@@ -193,7 +203,7 @@ export default {
       if (this.collectionQuery.order !== val) {
         this.collectionQuery.order = val
       } else {
-        this.collectionQuery.order = 0
+        this.collectionQuery.order = 1
       }
       this.getCollectionData()
     },
