@@ -128,7 +128,6 @@ export default {
 				side: 'bid',
 				...{
 					assetContractAddress: asset.assetContractAddress,
-					chain: networkName.toUpperCase(),
 					tokenId: asset.tokenId
 				}
 			})
