@@ -1,16 +1,7 @@
 <template>
   <div class="accountCollected">
-    <div class="filter-wrap">
-      <!-- <div class="filter-head">
-        <span class="left btnfilter">
-          {{ $t('common.Filter') }}
-        </span>
-        <span class="right">
-          <el-icon>
-            <img src="../../../assets/images/icons/icon_filter_refresh.svg" alt="">
-          </el-icon>
-        </span>
-      </div> -->
+    <div class="type-wrap">
+
       <div class="filter-item">
         <div class="gruop-wrap">
           <div class="type-item">
@@ -127,7 +118,7 @@
           </div>
         </template>
       </el-table>
-      <div class="custom-pagination" v-if="listCount > queryParams.limit">
+      <div class="custom-pagination" v-if="listCount > 0">
         <div class="content">
           <el-pagination background v-model:current-page="queryParams.page" :page-size="queryParams.limit"
             :page-="queryParams.limit" @current-change="queryData" layout="prev, pager, next" align="center"
@@ -240,11 +231,45 @@ export default {
 .filter-item {
   padding-top: 0;
 }
-.filter-wrap {
+.type-wrap {
+  width: 285px;
   .gruop-wrap {
     margin-top: 0;
+    
     .type-item {
       margin-top: 10px;
+      .attr-content {
+        .attr-item {
+          margin: 0;
+          padding: 0 10px;
+          display: flex;
+          font-size: 16px;
+          height: 48px;
+          line-height: 48px;
+          justify-content: space-between;
+          color: $color-black3;
+          border-radius: 12px;
+          &:hover{
+            background-color: #FAFAF8;
+          }
+
+          .attr-num {
+            display: flex;
+            align-items: center;
+            color: $color-black2;
+          }
+
+          .el-checkbox {
+            margin-left: 5px;
+            height: 18px;
+
+            .el-checkbox__input.is-checked .el-checkbox__inner {
+              background-color: #1063E0;
+              border-color: #1063E0;
+            }
+          }
+        }
+      }
       .attr-item {
         height: 54px;
         line-height: 54px;
