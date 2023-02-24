@@ -105,11 +105,11 @@ module.exports = {
     Date: '时间',
     listType: {
       'Sale': '交易',
-      'Listing': '挂单',
-      'Make offer': '报价',
-      'Receive offer': '收到报价',
+      'Listings': '挂单',
+      'Make an offer': '报价',
+      'Receive an offer': '收到报价',
       'Transfer': '转移',
-      'Make collection offer': '合集报价'
+      'Collection offer': '合集报价'
     }
   },
   collection: {
