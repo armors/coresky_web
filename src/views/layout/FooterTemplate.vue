@@ -10,7 +10,7 @@
         </div>
         <div class="display-flex link-box">
           <div class="display-flex box-center-Y item-list">
-            <div class="item-box">{{ $t("footer.itemDocs") }}</div>
+            <a class="item-box" target="_blank" href="https://docs.coresky.com/">{{ $t("footer.itemDocs") }}</a>
             <div class="item-box">{{ $t("footer.itemAuditReport") }}</div>
             <!-- <div class="item-box">{{$t('footer.itemJobs')}}</div> -->
             <!-- <div class="item-box">{{$t('footer.itemDeveloper')}}</div> -->
@@ -66,23 +66,23 @@ export default {
     };
   },
   computed: {
-    share() {
+    share () {
       return this.$store.state.share;
     },
-    connected() {
+    connected () {
       return this.$store.state.connected;
     },
-    user() {
+    user () {
       return this.$store.state.user;
     },
-    locale() {
+    locale () {
       return this.$i18n.locale;
     },
-    language() {
+    language () {
       return this.$store.state.language;
     },
   },
-  created() {
+  created () {
     // if (localStorage.getItem("locale") == "zh") {
     //   this.$store.state.language = "中文";
     // } else {
@@ -90,7 +90,7 @@ export default {
     // }
   },
   methods: {
-    send() {
+    send () {
       var site_name = this.$store.state.name;
       location =
         "mailto:?cc=" +
@@ -99,7 +99,7 @@ export default {
         site_name +
         "&body=email content";
     },
-    open(name) {
+    open (name) {
       switch (name) {
         case "twitter":
           window.open(this.share.twitter.url);
@@ -112,7 +112,7 @@ export default {
           break;
       }
     },
-    async searchClick() {
+    async searchClick () {
       this.$router.push({ name: "Search", query: { keyword: this.searchKey } });
     },
   },
@@ -161,22 +161,22 @@ export default {
         margin-left: 30px;
       }
     }
-    .link-right{
-      .media-item{
+    .link-right {
+      .media-item {
         margin-left: 56px;
         display: flex;
         border-radius: 50%;
         width: 44px;
         height: 44px;
         justify-content: center;
-        img{
+        img {
           width: 30px;
           height: auto;
           border-radius: 0;
         }
-      
+
       }
-      .media-item:hover{
+      .media-item:hover {
         background: #fff;
         box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08);
       }
