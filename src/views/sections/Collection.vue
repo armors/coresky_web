@@ -20,11 +20,18 @@
           </div> -->
         </div>
         <div class="share-wrap">
-          <div class="icon-img icon-img-collect" :class="{ active: collectInfo.followStatus }" @click="followContract">
+          <div class="icon-img " :class="{ active: collectInfo.followStatus }" @click="followContract">
+            <img class="tag" src="../../assets/images/icons/icon_collect_collect.svg" alt="">
           </div>
-          <a class="icon-img icon-img-website" target="_blank" :href="collectInfo.website"></a>
-          <a class="icon-img icon-img-twitter" target="_blank" :href="collectInfo.twitter"></a>
-          <a class="icon-img icon-img-discord" target="_blank" :href="collectInfo.discord"></a>
+          <a class="icon-img " target="_blank" :href="collectInfo.website">
+            <img class="tag" src="../../assets/images/icons/icon_collect_global.svg" alt="">
+          </a>
+          <a class="icon-img " target="_blank" :href="collectInfo.twitter">
+            <img class="tag" src="../../assets/images/icons/icon_collect_twitter.svg" alt="">
+          </a>
+          <a class="icon-img " target="_blank" :href="collectInfo.discord">
+            <img class="tag" src="../../assets/images/icons/icon_collect_discord.svg" alt="">
+          </a>
           <!-- <div class="icon-img icon-img-collect"></div> -->
           <!-- <div class="icon-img icon-img-share"></div> -->
           <!-- <div class="icon-img icon-img-more"></div> -->
@@ -144,7 +151,7 @@ export default {
     NFTDialogMakeOffer
   },
   mixins: [],
-  data () {
+  data() {
     return {
       EXPLORE_URL: process.env.VUE_APP_EXPLORE,
       activeName: 'collected',
@@ -182,11 +189,11 @@ export default {
     };
   },
 
-  created () {
+  created() {
     this.contract = this.$route.params.contract
     this.tokenQueryParams.contract = this.contract
   },
-  mounted () {
+  mounted() {
     if (this.contract) {
       this.getCollectInfo()
     }
@@ -196,19 +203,19 @@ export default {
   },
 
   methods: {
-    showMakeOfferCollect () {
+    showMakeOfferCollect() {
       this.$refs.NFTDialogMakeOffer.showMakeOffer(this.collectInfo, 2)
     },
-    makeOfferSuccess (v) {
+    makeOfferSuccess(v) {
       console.log(v)
     },
-    onSuccessCopy () {
+    onSuccessCopy() {
       this.$tools.message(this.$t("request.copySuccess"), "success");
     },
-    onErrorCopy () {
+    onErrorCopy() {
       this.$tools.message(this.$t("request.copyError"));
     },
-    getCollectInfo () {
+    getCollectInfo() {
       this.$api("collect.info", {
         contract: this.contract
       }).then((res) => {
@@ -216,7 +223,7 @@ export default {
         this.collectInfo.bestPriceFrom = this.$sdk.fromWeiNum(this.collectInfo.bestPrice)
       })
     },
-    followContract () {
+    followContract() {
       const tokenColloctUrl = this.collectInfo.followStatus ? "collect.contractCancel" : "collect.contractFollow"
       this.$api(tokenColloctUrl, {
         "contract": this.contract,
@@ -254,6 +261,7 @@ export default {
         padding: 4px;
         background-color: $bg-white;
         border-radius: 16px;
+        filter: drop-shadow(0px 4px 16px rgba(0, 0, 0, 0.08));
       }
 
       .info-title {
@@ -311,7 +319,21 @@ export default {
         }
 
         .icon-img {
+          width: 44px;
+          height: 44px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           background-color: #fff;
+          border-radius: 50%;
+          &:hover{
+            background: #fff;
+            box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08);
+          }
+          img{
+            width: 20px;
+            height: auto;
+          }
         }
       }
     }
