@@ -137,6 +137,9 @@
       </div>
       <div class="tab-box-self">
         <collectionNFT :contract="contract" />
+<!--        <div class="btn-box">-->
+<!--          <el-button class="btnWhite"  @click="showMakeOfferCollect">Make Offer Collect</el-button>-->
+<!--        </div>-->
       </div>
     </div>
     <NFTDialogMakeOffer ref="NFTDialogMakeOffer" @makeOfferSuccess="makeOfferSuccess"></NFTDialogMakeOffer>
