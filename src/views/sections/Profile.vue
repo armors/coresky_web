@@ -25,7 +25,7 @@
               <el-input v-model="userFrom.bio" :placeholder="$t('profile.placeholderBio')" type="textarea" />
             </el-form-item>
 
-            <el-form-item :label="$t('profile.myPlatform')" class="platform-info">
+            <el-form-item v-if="false" :label="$t('profile.myPlatform')" class="platform-info">
               <el-input v-model="userFrom.website" placeholder="https://www.iconfont.cn/">
                 <template #prefix>
                   <div class="prefix-icon"><img src="../../assets/images/icons/profile/icon_website.svg" alt=""></div>

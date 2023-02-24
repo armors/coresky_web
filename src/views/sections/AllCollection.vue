@@ -6,14 +6,13 @@
         <div class="page-title">Explore Categories!</div>
         <div class="page-title-sub">Choose collections whatever you like!</div>
       </div>
-      <div class="top-nav">
-        <div class="item-nav" :class="{ active: item.id === query.cid }" @click="changeCategory(item)"
-          v-for="(item, index) in categoryList" :key="index">
-          {{ item.name }}
-        </div>
+    </div>
+    <div class="top-nav">
+      <div class="item-nav" :class="{ active: item.id === query.cid }" @click="changeCategory(item)"
+        v-for="(item, index) in categoryList" :key="index">
+        {{ item.name }}
       </div>
     </div>
-
     <div>
       <div class="collection-list-new">
         <router-link :to="`/collection/${item.contract}`" class="collection-card" v-for="(item, index) in dataList"
@@ -47,7 +46,7 @@
       </div>
       <div class="empty-wrap" v-if="dataList.length === 0 && loadStatus !== 'loading'">
         <p class="txt">No Data</p>
-        <img src="../../assets/images/no-data.png" alt="">
+        <img src="../../assets/images/no-data.png" alt="" />
       </div>
     </div>
   </div>
@@ -93,7 +92,9 @@ export default {
   mounted() { },
   computed: {
     disabledLoadMore: function () {
-      return this.loadStatus === 'loading' || this.dataList.length >= this.listCount
+      return (
+        this.loadStatus === "loading" || this.dataList.length >= this.listCount
+      );
     },
     showAddress() {
       return (search) => {
@@ -122,7 +123,7 @@ export default {
     },
     changeCategory(item) {
       this.query.cid = item.id;
-      this.dataList = []
+      this.dataList = [];
       this.search();
     },
     search() {
@@ -137,8 +138,8 @@ export default {
       });
     },
     loadMoreData() {
-      this.query.page += 1
-      this.search()
+      this.query.page += 1;
+      this.search();
     },
   },
 };
@@ -146,20 +147,21 @@ export default {
 <style lang="scss" scoped>
 .collection-wrapper {
   .collection-banner {
-    background: linear-gradient(180deg,
-        #e7eaf5 13.57%,
-        rgba(231, 234, 245, 0) 100%);
-    padding: 0 40px;
-    padding-top: 60px;
-    height: 300px;
+    background: linear-gradient(180deg, #E7EAF5 0%, rgba(231, 234, 245, 0) 100%);
+    background-image: url("../../assets/images/bg-collection.png");
+    background-size: cover;
+    background-repeat: repeat-y;
+    height: 190px;
+    padding-left: 40px;
+    padding-top: 59px;
   }
 
   .page-title {
     font-style: normal;
     font-weight: 700;
-    font-size: 60px;
-    line-height: 70px;
-    height: 70px;
+    height: 47px;
+    font-size: 40px;
+    line-height: 47px;
     color: #111111;
   }
 
@@ -170,22 +172,22 @@ export default {
     line-height: 21px;
     height: 21px;
     margin-top: 9px;
-
     color: #717a83;
   }
 
   .top-nav {
-    margin-top: 64px;
+    margin-top: 20px;
     display: flex;
     flex-wrap: wrap;
     grid-gap: 20px;
+    padding: 0 40px;
 
     .item-nav {
       height: 46px;
       line-height: 46px;
       padding: 0 24px;
       border-radius: 12px;
-      font-weight: 400;
+      font-weight: 700;
       font-size: 16px;
       color: #111111;
       border: 2px solid #e6e8ec;
@@ -195,9 +197,8 @@ export default {
       }
 
       &:hover {
-        color: $color-black3;
         border: 2px solid #e6e8ec;
-        box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.16);
+        box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.2);
       }
 
       &.active {
@@ -218,11 +219,14 @@ export default {
       position: relative;
       display: block;
       border-radius: 12px;
-      border: 1px solid $borderBg;
+      box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08);
       filter: drop-shadow(0px 0px 10px rgba(82, 77, 255, 0.05));
+      transition: all 0.3s;
+
 
       &:hover {
         box-shadow: 0 7px 16px -8px rgba(0, 0, 0, 0.15);
+        transform: translate(0,-5px);
       }
 
       .collection-content {
@@ -243,7 +247,7 @@ export default {
       .card-img {
         &::before {
           display: block;
-          content: '';
+          content: "";
           padding-bottom: 100%;
         }
 
@@ -263,6 +267,19 @@ export default {
           align-items: center;
           justify-content: center;
           overflow: hidden;
+          ::v-deep img {
+            transition: all .3s;
+            &:hover {
+              transition: all .3s;
+              transform: scale(1.05);
+            }
+          }
+
+
+          // &:hover {
+          //   transform: scale(1.05);
+          //   transition: all 0.3s ease-out;
+          // }
         }
       }
     }
@@ -282,13 +299,20 @@ export default {
           width: 60px;
           height: 60px;
           border-radius: 12px;
-         box-shadow: 0 7px 16px -8px rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(113, 122, 131, 0.15);
+
+          ::v-deep img {
+            &:hover {
+              transform:scale(1);
+            }
+          }
+       
         }
       }
 
       .head-txt {
         font-style: normal;
-        font-weight: 500;
+        font-weight: 600;
         font-size: 16px;
         color: #111111;
         margin-left: 8px;
@@ -310,8 +334,8 @@ export default {
 
         img {
           display: inline-block;
-          height: 20px;
-          width: 20px;
+          height: 16px;
+          width: 16px;
           margin-left: 4px;
         }
       }

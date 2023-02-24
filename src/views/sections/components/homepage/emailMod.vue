@@ -2,7 +2,7 @@
  * @Author: zhaoyan
  * @Date: 2023-02-18 13:35:48
  * @LastEditors: zhaoyan
- * @LastEditTime: 2023-02-23 18:14:57
+ * @LastEditTime: 2023-02-24 15:18:03
  * @Description: 首页邮件模块
 -->
 <template>
@@ -14,11 +14,9 @@
         <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" class="demo-ruleForm">
           <el-form-item label="" prop="name">
             <el-input v-model="ruleForm.name" clearable class="input-email">
-              <template #append>
-                <el-button class="btn-sub" @click="addTopic" style="font-weight: 600">Subscribe</el-button>
-              </template>
             </el-input>
           </el-form-item>
+          <el-button class="btn-sub" @click="addTopic" style="font-weight: 600">Subscribe</el-button>
         </el-form>
       </div>
     </div>
@@ -120,7 +118,6 @@ export default {
 
   .input-email {
     width: 100%;
-    display: block;
 
     ::v-deep .el-input__wrapper {
       width: 449px;
@@ -128,11 +125,13 @@ export default {
       background: #ffffff;
       border-radius: 12px;
       margin: auto;
-      display: block;
+      .el-input__inner{
+        height: 100%;
+      }
     }
 
     ::v-deep .el-input-group__append {
-      display: block;
+      // display: block;
       background: transparent;
       border: 0;
       box-shadow: 0 0 0 0;
