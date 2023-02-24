@@ -146,7 +146,7 @@ export default {
     }
 }
 .trading-banner-box {
-    margin-top: 40px;
+    margin-top: 15px;
     position: relative;
 }
 .trading-item {
@@ -165,7 +165,7 @@ export default {
     .cover-image {
         width: 285px;
         height: 285px;
-        border-radius: 20px 20px 0px 0px;
+        border-radius: 12px 12px 0px 0px;
     }
     .nft-name {
         padding: 20px 24px;

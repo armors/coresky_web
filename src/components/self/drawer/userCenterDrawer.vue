@@ -57,7 +57,7 @@
         {{$t('userCenter.setting')}}
       </div>
       <div class="nav-item" @click="logout">
-        <svg-icon class="icon" icon-class="tuichu" />
+        <img class="icon" src="@/assets/images/icons/icon_class_quit.svg" alt="">
         {{$t('userCenter.quit')}}
       </div>
       <div class="nav-item line" style="margin:25px 0"></div>
