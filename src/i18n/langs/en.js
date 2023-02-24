@@ -105,11 +105,11 @@ module.exports = {
     Date: 'Date',
     listType: {
       'Sale': 'Sale',
-      'Listing': 'Listings',
-      'Make offer': 'Make an offer',
-      'Receive offer': 'Make an offer',
+      'Listings': 'Listings',
+      'Make an offer': 'Make an offer',
+      'Receive an offer': 'Make an offer',
       'Transfer': 'Transfer',
-      'Make collection offer': 'Collection offer'
+      'Collection offer': 'Collection offer'
     }
   },
   collection: {

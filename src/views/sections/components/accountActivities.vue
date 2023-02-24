@@ -28,7 +28,7 @@
                 <div class="attr-item">
                   <span> {{ $t('activities.Listings') }}</span>
                   <div class="attr-num">
-                    <el-checkbox class="big-checkbox" label="Listing">
+                    <el-checkbox class="big-checkbox" label="Listings">
                       <template #default>
                       </template>
                     </el-checkbox>
@@ -37,7 +37,7 @@
                 <div class="attr-item">
                   <span>{{ $t('activities.MakeAnOffer') }}</span>
                   <div class="attr-num">
-                    <el-checkbox class="big-checkbox" label="Make offer">
+                    <el-checkbox class="big-checkbox" label="Make an offer">
                       <template #default>
                       </template>
                     </el-checkbox>
@@ -46,7 +46,7 @@
                 <div class="attr-item">
                   <span>{{ $t('activities.ReceiveAnOffer') }}</span>
                   <div class="attr-num">
-                    <el-checkbox class="big-checkbox" label="Receive offer">
+                    <el-checkbox class="big-checkbox" label="Receive an offer">
                       <template #default>
                       </template>
                     </el-checkbox>
