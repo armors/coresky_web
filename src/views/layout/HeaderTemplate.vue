@@ -20,9 +20,9 @@
       </div>
 
       <div class="head-navs">
-        <router-link class="nav-link" to="/reward">
+        <!-- <router-link class="nav-link" to="/reward">
           {{ $t("navigation.rewards") }}
-        </router-link>
+        </router-link> -->
         <router-link class="nav-link" to="/markterplace">
           {{ $t("navigation.marketplace") }}
         </router-link>

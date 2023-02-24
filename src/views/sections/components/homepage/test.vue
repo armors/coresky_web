@@ -93,7 +93,7 @@ export default {
     methods: {
         prasePrice (price) {
             if (new BigNumber(price).isLessThan(0.01)) {
-                return '< 0.01'
+                return '<0.01'
             }
             return this.$filters.keepPoint(price, 2)
         },

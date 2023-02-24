@@ -47,7 +47,7 @@
               </div>
             </div>
             <div class="w20">
-              <div class="floor-num" v-if="item.foolPrice">{{ $filters.keepPoint(item.foolPrice,2) }}&nbsp;ETH
+              <div class="floor-num" v-if="item.foolPrice">{{ prasePrice(item.foolPrice) }}&nbsp;ETH
               </div>
             </div>
             <div class="w20">
@@ -79,7 +79,7 @@
               </div>
             </div>
             <div class="w20">
-              <div class="floor-num" v-if="item.foolPrice">{{ $filters.keepPoint(item.foolPrice,2) }}&nbsp;ETH
+              <div class="floor-num" v-if="item.foolPrice">{{ prasePrice(item.foolPrice) }}&nbsp;ETH
               </div>
             </div>
             <div class="w20">
@@ -97,6 +97,7 @@
 </template>
 
 <script>
+import BigNumber from "bignumber.js";
 
 export default {
   name: "homeCollectionList",
@@ -176,6 +177,12 @@ export default {
     }
   },
   methods: {
+    prasePrice (price) {
+      if (new BigNumber(price).isLessThan(0.01)) {
+        return '<0.01'
+      }
+      return this.$filters.keepPoint(price, 2)
+    },
     rowClick (row) {
       this.$router.push({
         name: 'collection',
