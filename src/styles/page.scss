@@ -8,7 +8,7 @@
 .filter-wrap {
 
   position: sticky;
-  top: $headerHeight;
+  top: calc($headerHeight + 16px);
   width: 285px;
   // height: 520px;
   flex-shrink: 0;
@@ -146,6 +146,7 @@
       align-items: center;
       margin-top: 6px;
       padding: 0 10px;
+      padding-right: 0;
     }
 
     .left {
@@ -538,7 +539,6 @@
   border: none;
   flex-grow: 1;
   height: 46px;
-  background: #FFFFFF;
  
 
   .el-input__inner {
@@ -582,10 +582,17 @@
 
 /* 列表页面中的搜索区域s */
 .list-search-wrap {
-  height: 46px;
+  z-index: 9;
+  position: sticky;
+  top:76px;
   margin-bottom: 30px;
   display: flex;
   justify-content: space-between;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter :blur(15px);
+  padding-top: 10px;
+  padding-bottom: 10px;
 
   .btnfilter {
     display: flex;

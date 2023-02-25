@@ -13,8 +13,10 @@
       <div class="info">
         <div class="user-name display-flex box-center-Y">
           {{user.nickname}}
-          <div class="edit-icon" @click="goProfile"><img src="../../../assets/images/icons/icon_edit_profile.svg"
-              alt=""></div>
+          <div class="edit-icon" @click="goProfile">
+            <!-- <img src="../../../assets/images/icons/icon_edit_profile.svg"
+              alt=""> -->
+            </div>
         </div>
         <!--        profile-->
         <div class="token-address">View profile</div>
@@ -241,9 +243,16 @@ height: 650px!important;
         color: $primaryColor;
         .edit-icon {
           cursor: pointer;
-          width: 24px;
-          height: 24px;
+          width: 12px;
+          height: 15px;
           margin-left: 10px;
+          background-image: url("@/assets/images/icons/icon_edit_profile.svg");
+      background-size: 12px auto;
+      background-position: center;
+      background-repeat: no-repeat;
+      &:hover{
+        background-image: url("@/assets/images/icons/icon_edit_blue.svg");
+      }
         }
       }
       .token-address {

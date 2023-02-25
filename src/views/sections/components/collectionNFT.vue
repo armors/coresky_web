@@ -271,7 +271,6 @@ export default {
 
 <style lang="scss" scoped>
 .item-page {
-  margin-top: 20px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;

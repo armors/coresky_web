@@ -267,6 +267,10 @@ export default {
         background-color: $bg-white;
         border-radius: 16px;
         filter: drop-shadow(0px 4px 16px rgba(0, 0, 0, 0.08));
+        img{
+          object-fit: cover;
+          height: 100%;
+        }
       }
 
       .info-title {
