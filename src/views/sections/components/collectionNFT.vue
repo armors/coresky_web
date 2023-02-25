@@ -24,7 +24,7 @@
             <span class="left">{{ $t('common.Price') }}</span>
             <span class="right" @click="isOpenPriceFilter = !isOpenPriceFilter">
               <el-icon style="font-size:16px" :class="{ 'down': isOpenPriceFilter }">
-                <img src="../../../assets/images/icons/icon_filter_up.svg" alt="">
+                <!-- <img src="../../../assets/images/icons/icon_filter_up.svg" alt=""> -->
               </el-icon>
             </span>
           </div>

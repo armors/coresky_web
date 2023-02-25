@@ -161,6 +161,13 @@
     }
 
     .el-icon {
+      background-image: url("@/assets/images/icons/icon_filter_up.svg");
+      background-size: 12px auto;
+      background-position: center;
+      background-repeat: no-repeat;
+      &:hover{
+        background-image: url("@/assets/images/icons/icon_filter_blue.svg");
+      }
       &.down {
         transform: rotate(180deg);
       }
@@ -521,7 +528,6 @@
 
 /* 搜索框 */
 .search-input-wrap {
-  overflow: hidden;
   color: #fff;
   display: flex;
   align-items: center;
@@ -530,12 +536,9 @@
   margin-right: 20px;
   border: none;
   flex-grow: 1;
-
-
   height: 46px;
   background: #FFFFFF;
-  border: 2px solid #E5E8EB;
-  border-radius: 12px;
+ 
 
   .el-input__inner {
     height: 40px;
@@ -547,11 +550,22 @@
     border-radius: 12px;
     box-shadow: 0 0 0 0px var(--el-input-border-color, var(--el-border-color)) inset;
     background: var(--cs-color-white);
-    border: none;
+    border: 2px solid #E6E8EC;
+    border-radius: 12px;
+    &:hover{
+      box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.16);
+    }
+    &:focus{
+      background: #ccc;
+    }
 
     .el-input__inner {
       background-color: transparent;
+      color:#111111;
     }
+  }
+  .is-focus{
+    border: 2px solid #D3D3D3;
   }
 
   .el-input__prefix {
@@ -613,6 +627,13 @@
     .el-select-dropdown__item {
       height: 40px;
       line-height: 40px;
+      &:hover{
+        background: #FAFAF8;
+
+      }
+    }
+    .selected{
+      color: #1063E0;
     }
 
     .el-input__suffix {
@@ -625,7 +646,14 @@
       box-shadow: none;
       height: 46px;
       box-sizing: border-box;
-      border: 1px solid $borderBg;
+      border: 2px solid $borderBg;
+      &:hover{
+        box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.16);
+      }
+      &:active{
+        background: #FAFAF8;
+        border: 2px solid #D3D3D3;
+      }
     }
 
     .el-input.is-focus .el-input__wrapper {
