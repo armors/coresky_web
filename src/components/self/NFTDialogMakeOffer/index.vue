@@ -204,8 +204,8 @@ export default {
           nftAddress: this.tokenInfo.contract,
           side: 0,
           tokenId: this.tokenInfo.tokenId,
-          feeRecipient: this.tokenInfo.feeContract,
-          RelayerFee: this.tokenInfo.royalty,
+          feeRecipient: this.tokenInfo.ckCollectionsInfoEntity.feeContract,
+          RelayerFee: this.tokenInfo.ckCollectionsInfoEntity.royalty,
           feeType: 2,
           contractType: this.tokenInfo.contractType,
           value: Number(this.form.quantity)
