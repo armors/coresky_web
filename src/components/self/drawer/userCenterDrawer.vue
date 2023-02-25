@@ -1,5 +1,5 @@
 <template>
-  <el-drawer v-model="visible" @closed="handleClose" size="380" :append-to-body="true" zIndex="99"  custom-class="coresky-drawer user-window" :withHeader="false">
+  <el-drawer v-model="visible" @closed="handleClose" size="380" :append-to-body="true" zIndex="999"  custom-class="coresky-drawer user-window" :withHeader="false">
     <img class="account-close" src="../../../assets/images/icons/icon_account_close.svg" @click="visible=false"
               alt="">
     <div class="drawer-top">

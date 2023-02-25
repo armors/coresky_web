@@ -8,7 +8,7 @@
 .filter-wrap {
 
   position: sticky;
-  top: calc($headerHeight + 16px);
+  top: calc($headerHeight + 10px);
   width: 285px;
   // height: 520px;
   flex-shrink: 0;
@@ -269,12 +269,19 @@
     width: 100%;
     line-height: 46px;
     color: $color-white;
-    background: #C2D0FF;
+    background: #1063E0;
     border-radius: 12px;
     text-align: center;
     font-size: 16px;
     cursor: pointer;
     margin-bottom: 20px;
+    &:hover{
+      background: #3F8CFF;
+      box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.2);
+    }
+    &:active{
+      background: #2F57E5;
+    }
   }
 
   .list-wrap {
@@ -293,8 +300,9 @@
       .head-img {
         width: 40px;
         height: 40px;
-        background-color: $bg-white;
-        border-radius: 50px;
+        border: 1px solid rgba(113, 122, 131, 0.15);
+        border-radius: 6px;
+        
         padding: 2px;
         flex-shrink: 0;
         position: relative;
@@ -302,7 +310,7 @@
         .cover-image {
           height: 100%;
           width: 100%;
-          border-radius: 50%;
+          border-radius: 6px;
         }
 
         .tag {
@@ -442,11 +450,12 @@
     position: relative;
     display: block;
     border-radius: 12px;
-
-    border: 1px solid $borderBg;
     filter: drop-shadow(0px 0px 10px rgba(82, 77, 255, 0.05));
+    transition: all .3s;
+
     &:hover {
       box-shadow: 0 7px 16px -8px rgba(0, 0, 0, 0.15);
+      transform: translateY(-5px);
     }
     .nft-content {
       display: flex;
@@ -625,7 +634,7 @@
   .el-select {
     position: relative;
     width: 180px;
-    margin-left: 10px;
+    // margin-left: 10px;
     // height: 40px;
 
     .el-popper {

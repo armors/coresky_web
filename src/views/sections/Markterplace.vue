@@ -65,7 +65,7 @@
               :key="index">
               <div class="head-img">
                 <image-box :src="item.image"></image-box>
-                <img class="tag" src="../../assets/images/icons/icon_tag.svg" alt="">
+                <!-- <img class="tag" src="../../assets/images/icons/icon_tag.svg" alt=""> -->
               </div>
               <div class="head-txt">
                 {{item.name}}
