@@ -49,7 +49,7 @@
             <span class="left">{{ $t('common.Properties') }}</span>
             <span class="right">
               <el-icon style="font-size:16px" :class="{ 'down': isOpenAttrFilter }">
-                <img src="../../../assets/images/icons/icon_filter_up.svg" alt="">
+                <!-- <img src="../../../assets/images/icons/icon_filter_up.svg" alt=""> -->
               </el-icon>
             </span>
           </div>
@@ -60,7 +60,7 @@
                 <div class="type-num">
                   <span>{{ item.total }}</span>
                   <el-icon :class="{ 'down': item.isShow }" style="font-size:15px">
-                    <ArrowUp />
+                    <!-- <ArrowUp /> -->
                   </el-icon>
                 </div>
               </div>
