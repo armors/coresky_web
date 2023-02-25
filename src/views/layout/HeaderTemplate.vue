@@ -8,13 +8,13 @@
           :src="require('../../assets/images/logo_white_new.svg')" />
         <img fit="contain" v-else class="logo-image" :src="require('../../assets/images/bottom_logo.svg')" />
       </router-link>
-      <div class="header-search header-margin-r">
+      <div class="header-search">
         <el-input class="search-input-wrap" v-model="keyword" @keyup.enter="searchClick"
           :placeholder="$t('navigation.searchTip')">
           <template #prefix>
-            <div class="img-search" v-if="isScrollTop && isHomeIndex"><img src="../../assets/images/icons/icon_search_w.svg"
-                alt=""></div>
-            <div class="img-search" v-else><img src="../../assets/images/icons/icon_search.svg" alt=""></div>
+            <div class="img-search">
+              <!-- <img src="../../assets/images/icons/icon_search_w.svg" alt=""> -->
+            </div>
           </template>
         </el-input>
       </div>
@@ -228,60 +228,13 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.header-search {
-  .search-input {
-    border-radius: 10px;
-    overflow: hidden;
-    height: 40px;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    font-size: 16px;
-    border-radius: 12px;
-    .el-input__wrapper {
-      height: 100%;
-      padding: 0;
-      border-radius: 12px;
-    }
-    .el-input__inner {
-      font-size: 13px;
-      padding-left: 38px !important;
-      height: 100%;
-      border: none;
-      gap: 8px;
-      background: rgba(0, 0, 0, 0.04);
-      border-radius: 12px;
-    }
-    .el-input__prefix {
-      line-height: 40px;
-      left: 20px;
-    }
-    .img-search {
-      width: 16px;
-      height: 16px;
-    }
-  }
-
-  .nav-popover {
-    width: fit-content !important;
-    height: fit-content !important;
-    min-width: unset !important;
-    padding-bottom: 0px !important;
-    z-index: 15000 !important;
-    :hover {
-      color: grey;
-    }
-  }
-}
-</style>
 
 <style lang="scss" scoped>
 .home-head {
   position: sticky;
   top: 0px;
   width: 100%;
-  z-index: 999;
+  z-index: 99;
   &.homeIndex {
     .home-head-mask {
       background-color: transparent;
@@ -302,13 +255,34 @@ export default {
     .search-input-wrap {
       background: rgba(255, 255, 255, 0.1);
       border: none;
+      border-radius: 12px;
     }
     .img-search {
+      width: 24px;
+      height: 24px;
       opacity: 0.9;
+      background: url(../../assets/images/icons/icon_search_w.svg);
     }
     ::v-deep {
       .el-input__wrapper {
         background: transparent;
+        border: 2px solid transparent;
+        &:hover {
+          transition: all 0.6s;
+          background: rgb(255, 255, 255, 0.9);
+          .el-input__inner {
+            color: #111111;
+          }
+          .img-search{
+            background: url(../../assets/images/icons/icon_search.svg);
+          }
+        }
+        // &:focus {
+        //   background: #ffffff;
+        //   .el-input__inner {
+        //     color: #111111;
+        //   }
+        // }
         .el-input__inner {
           color: #ffffff;
         }
@@ -400,6 +374,7 @@ export default {
   font-size: 15px;
   .search-input-wrap {
     // background: rgba(255, 255, 255, 0.1);
+    background: transparent;
     ::v-deep {
       .el-input__wrapper {
         // background: transparent;
@@ -409,6 +384,7 @@ export default {
   .img-search {
     width: 24px;
     height: 24px;
+    background: url(../../assets/images/icons/icon_search.svg);
   }
 }
 .nav-link {

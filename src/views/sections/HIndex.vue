@@ -31,6 +31,7 @@ export default {
   created () { },
   mounted () {
     window.addEventListener('scroll', this.handleScroll)
+    this.handleScroll()
   },
   computed: {},
   methods: {
