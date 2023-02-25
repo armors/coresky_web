@@ -168,7 +168,7 @@ export default {
         page: 1,
         limit: 20,
         keyword: "",
-        buyNow: false,
+        buyNow: true,
         minPrice: undefined,
         maxPrice: undefined,
         order: 1,
