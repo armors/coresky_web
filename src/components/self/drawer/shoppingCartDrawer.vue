@@ -1,27 +1,26 @@
 <template>
   <el-drawer v-model="visible" @closed="handleClose" size="406" :append-to-body="true" zIndex="99"
-    custom-class="coresky-drawer" :withHeader="false">
+    custom-class="coresky-drawer cart-window" :withHeader="false"> <img class="account-close"
+      src="../../../assets/images/icons/icon_account_close.svg" @click="visible = false" alt="">
     <div class="shopping-cart-header">
       <div class="txt">
-        {{$t('shoppingCart.title')}}
+        {{ $t('shoppingCart.title') }}
       </div>
-      <el-icon @click="visible=false">
-        <Close />
-      </el-icon>
     </div>
+    <div class="cart-line"></div>
     <div class="shopping-cart-content-head display-flex box-center-Y">
 
       <el-menu :default-active="activeIndex" class="el-menu-cart box-flex1" mode="horizontal" @select="handleSelect">
-        <el-badge :hidden="items==0" :value="items" class="item">
+        <el-badge :hidden="items == 0" :value="items" class="item">
           <el-menu-item index="1">CoreSky</el-menu-item>
         </el-badge>
-        <el-badge :hidden="shoppingOpenseaCartList.length==0" :value="shoppingOpenseaCartList.length" class="item">
-          <el-menu-item index="2"> {{$t('shoppingCart.other')}}</el-menu-item>
+        <el-badge :hidden="shoppingOpenseaCartList.length == 0" :value="shoppingOpenseaCartList.length" class="item">
+          <el-menu-item index="2"> {{ $t('shoppingCart.other') }}</el-menu-item>
         </el-badge>
       </el-menu>
       <div class="right" @click="clearCart">
-        <img src="@/assets/images/icons/icon_clearcart.svg" class="icon-clear" alt="">
-        <span>{{$t('shoppingCart.clearAll')}}</span>
+        <!-- <img src="@/assets/images/icons/icon_clearcart.svg" class="icon-clear" alt=""> -->
+        <span>{{ $t('shoppingCart.clearAll') }}</span>
       </div>
     </div>
     <template v-if="activeIndex === '1'">
@@ -31,12 +30,13 @@
             <div class="shopping-info">
               <image-box :src="v.oriImage"></image-box>
               <div class="info-txt">
-                <div class="txt1 ellipsis">{{v.name || '--'}}</div>
+                <div class="txt1 ellipsis">{{ v.name || '--' }}</div>
                 <div class="txt2 display-flex box-center-Y">
-                  <div>{{v.ckCollectionsInfoEntity.name || '--'}}</div>
-                  <img class="tag" v-if="v.ckCollectionsInfoEntity.isCertification === '1'" src="@/assets/images/icons/icon_tag.svg" alt="">
+                  <div>{{ v.ckCollectionsInfoEntity.name || '--' }}</div>
+                  <img class="tag" v-if="v.ckCollectionsInfoEntity.isCertification === '1'"
+                    src="@/assets/images/icons/icon_tag.svg" alt="">
                 </div>
-<!--                <div class="txt3">{{$t('shoppingCart.creatorFees')}} {{$filters.feeFormat(vc.makerRelayerFee)}}</div>-->
+                <!--                <div class="txt3">{{$t('shoppingCart.creatorFees')}} {{$filters.feeFormat(vc.makerRelayerFee)}}</div>-->
               </div>
             </div>
             <div class="shopping-price">
@@ -44,13 +44,13 @@
                 <template #reference>
                   <div class="price-value ellipsis">
                     <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-                    {{$filters.milliFormat(getNftPrice(vc, true))}}
+                    {{ $filters.milliFormat(getNftPrice(vc, true)) }}
                   </div>
                 </template>
                 <template #default>
                   <div class="price-value">
                     <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-                    {{$filters.milliFormat(getNftPrice(vc, true), false)}}
+                    {{ $filters.milliFormat(getNftPrice(vc, true), false) }}
                   </div>
                 </template>
               </el-popover>
@@ -63,15 +63,15 @@
       </div>
       <div class="shopping-cart-footer">
         <div class="total-box">
-          <div class="title">{{$t('shoppingCart.total')}}</div>
+          <div class="title">{{ $t('shoppingCart.total') }}</div>
           <div class="total">
             <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-            {{totalPriceShow}}
+            {{ totalPriceShow }}
           </div>
         </div>
         <div>
           <el-button type="primary" :disabled="coreskyCart.length < 1" class="btnOption" :loading="buyBtnLoading"
-            @click="cartBuy">{{$t('shoppingCart.purchase')}}</el-button>
+            @click="cartBuy">{{ $t('shoppingCart.purchase') }}</el-button>
         </div>
       </div>
     </template>
@@ -81,21 +81,21 @@
           <div class="shopping-info">
             <image-box :src="v.makerAssetBundle.assets[0].imageUrl"></image-box>
             <div class="info-txt">
-              <div class="txt1 ellipsis">{{v.makerAssetBundle.assets[0].name || '--'}}</div>
+              <div class="txt1 ellipsis">{{ v.makerAssetBundle.assets[0].name || '--' }}</div>
               <div class="txt2 display-flex box-center-Y">
-                <div>{{v.makerAssetBundle.assets[0].collection.name || '--'}}</div>
-                <img class="tag" src="@/assets/images/icons/icon_tag.svg" alt="">
+                <div>{{ v.makerAssetBundle.assets[0].collection.name || '--' }}</div>
+                <svg-icon class="tag" icon-class="icon_tag" />
               </div>
 
-<!--              <div class="txt1 ellipsis">{{v.name || '&#45;&#45;'}}</div>-->
-<!--              <div class="txt2 display-flex box-center-Y">-->
-<!--                <div>{{v.ckCollectionsInfoEntity.name || '&#45;&#45;'}}</div>-->
-<!--&lt;!&ndash;                <img class="tag" v-if="v.ckCollectionsInfoEntity.isCertification === '1'" src="@/assets/images/icons/icon_tag.svg" alt="">&ndash;&gt;-->
-<!--              </div>-->
+              <!--              <div class="txt1 ellipsis">{{v.name || '&#45;&#45;'}}</div>-->
+              <!--              <div class="txt2 display-flex box-center-Y">-->
+              <!--                <div>{{v.ckCollectionsInfoEntity.name || '&#45;&#45;'}}</div>-->
+              <!--&lt;!&ndash;                <img class="tag" v-if="v.ckCollectionsInfoEntity.isCertification === '1'" src="@/assets/images/icons/icon_tag.svg" alt="">&ndash;&gt;-->
+              <!--              </div>-->
 
 
-<!--              <div class="txt3">{{$t('shoppingCart.creatorFees')}}-->
-<!--                {{$filters.feeFormat(v.makerAssetBundle.assets[0].assetContract.openseaSellerFeeBasisPoints)}}</div>-->
+              <!--              <div class="txt3">{{$t('shoppingCart.creatorFees')}}-->
+              <!--                {{$filters.feeFormat(v.makerAssetBundle.assets[0].assetContract.openseaSellerFeeBasisPoints)}}</div>-->
             </div>
           </div>
           <div class="shopping-price">
@@ -103,34 +103,35 @@
             <el-popover placement="top-start" title="" :width="200" trigger="hover">
               <template #reference>
                 <div class="price-value ellipsis">
-                  <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-                  {{$filters.milliFormat(nftPriceFun(v.currentPrice, true))}}
+                  <!-- <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" /> -->
+                  {{ $filters.milliFormat(nftPriceFun(v.currentPrice, true)) }} ETH
                 </div>
               </template>
               <template #default>
                 <div class="price-value">
-                  <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-                  {{$filters.milliFormat(nftPriceFun(v.currentPrice, true), false)}}
+                  <!-- <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" /> -->
+                  {{ $filters.milliFormat(nftPriceFun(v.currentPrice, true), false) }} ETH
                 </div>
               </template>
             </el-popover>
-            <el-icon @click="deleteCartOpensea(v)">
+            <el-icon class="list-del" @click="deleteCartOpensea(v)">
               <Delete />
             </el-icon>
           </div>
         </div>
       </div>
+      <!-- <div class="cart-line"></div> -->
       <div class="shopping-cart-footer">
         <div class="total-box">
-          <div class="title">{{$t('shoppingCart.total')}}</div>
+          <div class="title">{{ $t('shoppingCart.total') }}</div>
           <div class="total">
-            <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
-            {{totalOpenseaPriceShow}}
+            <!-- <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" /> -->
+            {{ totalOpenseaPriceShow }} ETH
           </div>
         </div>
         <div>
           <el-button type="primary" :disabled="openseaCart.length < 1" class="btnOption" :loading="buyOpenseaBtnLoading"
-            @click="cartBuyOpensea">{{$t('shoppingCart.purchase')}}</el-button>
+            @click="cartBuyOpensea">{{ $t('shoppingCart.purchase') }}</el-button>
         </div>
       </div>
     </template>
@@ -150,12 +151,12 @@ export default {
     },
   },
   watch: {
-    show () {
+    show() {
       this.visible = this.show;
       this.getCartInfo()
     },
   },
-  data () {
+  data() {
     return {
       buyBtnLoading: false,
       buyOpenseaBtnLoading: false,
@@ -173,39 +174,39 @@ export default {
       activeIndex: '1'
     };
   },
-  created () {
+  created() {
   },
-  mounted () {
+  mounted() {
   },
   computed: {
-    user () {
+    user() {
       return this.$store.state.user;
     },
-    cartName () {
+    cartName() {
       return `coresky_cart_${this.$store.state.user.coinbase}`
     },
-    cartNameOpensea () {
+    cartNameOpensea() {
       return `coresky_cart_opensea_${this.$store.state.user.coinbase}`
     },
-    shoppingOpenseaCartList () {
+    shoppingOpenseaCartList() {
       return this.$store.state.shoppingOpenseaCartList;
     },
-    shoppingCartList () {
+    shoppingCartList() {
       return this.$store.state.shoppingCartList;
     }
   },
   methods: {
-    handleSelect (index) {
+    handleSelect(index) {
       console.log(this.activeIndex)
       this.activeIndex = index
     },
-    clearCart () {
+    clearCart() {
       removeLocalStorage([this.cartName])
       removeLocalStorage([this.cartNameOpensea])
       this.$store.commit('initShoppingCart')
       this.getCartInfo()
     },
-    deleteCart (v, id) {
+    deleteCart(v, id) {
       const coreskyCartLength = this.coreskyCart.length
       let cart = []
       for (let i = 0; i < coreskyCartLength; i++) {
@@ -230,7 +231,7 @@ export default {
       this.$store.commit('initShoppingCart')
       this.getCartInfo()
     },
-    deleteCartOpensea (v) {
+    deleteCartOpensea(v) {
       const shoppingOpenseaCartList = this.shoppingOpenseaCartList.filter(item => item.orderHash !== v.orderHash)
       if (shoppingOpenseaCartList.length < 1) {
         removeLocalStorage([this.cartNameOpensea])
@@ -241,7 +242,7 @@ export default {
       }
       this.$store.commit('initShoppingCart')
     },
-    async getCartInfo (isCheckOrder = false) {
+    async getCartInfo(isCheckOrder = false) {
       this.totalPrice = 0
       this.totalPriceShow = 0
       const local = getLocalStorage(this.cartName)
@@ -275,7 +276,7 @@ export default {
       let coresky_opensea_cart = localOpensea[this.cartNameOpensea] || []
       if (coresky_opensea_cart !== null && coresky_opensea_cart.length > 0) {
         this.openseaCart = JSON.parse(coresky_opensea_cart)
-        this.openseaCart = this.openseaCart.filter(item=> item.expirationTime > (new Date().getTime()/ 1000))
+        this.openseaCart = this.openseaCart.filter(item => item.expirationTime > (new Date().getTime() / 1000))
         this.openseaCart.forEach(item => {
           this.totalOpenseaPrice = new BigNumber(this.$sdk.fromWeiNumOrigin(item.currentPrice)).plus(new BigNumber(this.totalOpenseaPrice))
         })
@@ -290,17 +291,17 @@ export default {
         this.$store.commit('initShoppingCart')
       }
     },
-    handleClose () {
+    handleClose() {
       this.$emit('update:show', false)
     },
-    getNftPrice (v, isShow = false) {
+    getNftPrice(v, isShow = false) {
       return isShow ? parseFloat(this.$filters.keepPoint(this.$Web3.utils.fromWei(v.basePrice.toString()))) : this.$Web3.utils.fromWei(v.basePrice.toString())
     },
-    nftPriceFun (basePrice) {
+    nftPriceFun(basePrice) {
       console.log(basePrice)
       return (basePrice !== null && basePrice !== undefined) ? this.$filters.keepMaxPoint(this.$Web3.utils.fromWei(basePrice.toString())) : '--'
     },
-    async checkOrder (isInitCart) {
+    async checkOrder(isInitCart) {
       try {
         const res = await this.$api('order.check', {
           ids: this.ids
@@ -356,7 +357,7 @@ export default {
         }
       }
     },
-    async cartBuy () {
+    async cartBuy() {
       this.buyBtnLoading = true
       const res = await this.checkOrder()
       if (res.code !== 200) {
@@ -380,7 +381,7 @@ export default {
         await this.buyNft()
       }
     },
-    async manyBuy () {
+    async manyBuy() {
       let sellers = []
       this.checkOrderData.forEach(item => {
         item.basePrice = item.basePrice.toString()
@@ -464,7 +465,7 @@ export default {
       }
 
     },
-    async buyNft () {
+    async buyNft() {
       const sellerToken = this.checkOrderData[0]
       let seller = this.$sdk.getAtomicMatchWrapOrder(sellerToken, false)
       seller = {
@@ -559,7 +560,7 @@ export default {
         this.buyBtnLoading = false
       }
     },
-    async cartBuyOpensea () {
+    async cartBuyOpensea() {
       // isOrderFulfillable
       console.log(this.openseaCart)
       this.buyOpenseaBtnLoading = true
@@ -577,20 +578,20 @@ export default {
         //     accountAddress: this.user.coinbase
         //   })
         // } else {
-          let fulfillOrderDetails = []
-          this.openseaCart.forEach(item => {
-            fulfillOrderDetails.push({
-              order: item.protocolData
-            })
+        let fulfillOrderDetails = []
+        this.openseaCart.forEach(item => {
+          fulfillOrderDetails.push({
+            order: item.protocolData
           })
-          let params = {
-            fulfillOrderDetails: fulfillOrderDetails,
-            accountAddress: this.user.coinbase
-          }
-          console.log(params)
-          const moreBuyAction = await openseaSDK.seaport.fulfillOrders(params)
-          await moreBuyAction.executeAllActions()
-          return
+        })
+        let params = {
+          fulfillOrderDetails: fulfillOrderDetails,
+          accountAddress: this.user.coinbase
+        }
+        console.log(params)
+        const moreBuyAction = await openseaSDK.seaport.fulfillOrders(params)
+        await moreBuyAction.executeAllActions()
+        return
         // }
 
         // this.$tools.message('购买成功', 'success');
@@ -598,7 +599,7 @@ export default {
 
         let coreskyCart = this.coreskyCart
         let hasCoresky = coreskyCart.filter(v => {
-          let openseaI = this.openseaCart.forEach(item => {!(item.makerAssetBundle.assets[0].tokenAddress === v.contract && item.makerAssetBundle.assets[0].tokenId === v.tokenId)})
+          let openseaI = this.openseaCart.forEach(item => { !(item.makerAssetBundle.assets[0].tokenAddress === v.contract && item.makerAssetBundle.assets[0].tokenId === v.tokenId) })
           return openseaI === null
         })
         if (hasCoresky.length !== coreskyCart.length) {
@@ -621,12 +622,26 @@ export default {
 </script>
 
 <style lang="scss">
+.cart-window {
+  right: 10px !important;
+  margin-top: calc($headerHeight + 10px) !important;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  height: 740px !important;
+
+  .el-drawer__body {
+    padding: 20px 0 !important;
+    padding-right: 10px !important;
+    overflow:inherit;
+  }
+}
+
 .el-popper {
   .price-value {
     font-weight: 500;
     font-size: 14px;
     line-height: 21px;
-    color: $primaryColor;
+    color: #111111;
 
     .token-icon {
       display: inline-block;
@@ -637,24 +652,32 @@ export default {
     }
   }
 }
+
 .coresky-drawer {
   width: 406px;
-  height: calc(100% - $headerHeight) ;
+  height: calc(100% - $headerHeight);
   margin-top: $headerHeight;
+
   .el-drawer__body {
     padding: 20px 30px 20px;
   }
+
   .shopping-cart-header {
     align-items: center;
     display: flex;
     font-weight: 700;
-    font-size: 22px;
+    font-size: 26px;
     line-height: 28px;
     justify-content: space-between;
     width: 100%;
+    height: 39px;
+    line-height: 39px;
+    padding-left: 20px;
+
     .txt {
-      color: $primaryColor;
+      color: #000000;
     }
+
     .el-icon {
       cursor: pointer;
       font-size: 24px;
@@ -662,35 +685,73 @@ export default {
       color: $color-black2;
     }
   }
+
+  .cart-line {
+    height: 1px;
+    background: #E6E8EC;
+    margin-top: 15px;
+    margin-bottom: 15px;
+
+  }
+
   .shopping-cart-content-head {
     width: 100%;
-    padding: 20px 0 10px;
+    padding: 0px 14px 10px;
     font-weight: 500;
-    font-size: 16px;
-    color: $primaryColor;
+    font-size: 18px;
+    color: #111111;
+
     .left {
       color: $primaryColor;
     }
+
     .right {
       height: 32px;
       font-size: 16px;
       font-weight: 400;
-      color: $primaryColor;
+      color: #000000;
       border-radius: 12px;
       display: flex;
       align-items: center;
       padding: 4px 10px;
       cursor: pointer;
+
       &:hover {
         background: $elButtonHoverBg;
       }
+
       .icon-clear {
         width: 18px;
         height: 18px;
       }
     }
   }
+
+  /*滚动条样式*/
+  .shopping-cart-content::-webkit-scrollbar {
+    width: 2px;
+  }
+
+  .shopping-cart-content::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background: #717A83;
+  }
+
+  .shopping-cart-content::-webkit-scrollbar-track {
+    // box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 4px;
+    background: #E6E8EC;
+
+  }
+
+
   .shopping-cart-content {
+    padding-left: 20px;
+    padding-right: 8px;
+    margin-top: 18px;
+    height: 450px;
+    overflow-y: scroll;
+
     // padding:0 -8px;
     .shopping-item {
       display: flex;
@@ -699,33 +760,48 @@ export default {
       border-radius: 12px;
       justify-content: space-between;
       cursor: pointer;
+
       &:hover {
         background: $elButtonHoverBg;
+
+        .shopping-price .list-del {
+          display: block;
+        }
+
+        .shopping-price .price-value {
+          display: none;
+        }
       }
+
       .shopping-info {
         display: flex;
+
         .cover-image {
           width: 64px;
           height: 64px;
           border-radius: 8px;
         }
+
         .info-txt {
           margin-left: 12px;
           display: flex;
           flex-direction: column;
           justify-content: space-around;
           width: 160px;
+
           .txt1 {
             font-weight: 500;
             font-size: 16px;
             line-height: 24px;
             color: $primaryColor;
           }
+
           .txt2 {
             font-weight: 400;
             font-size: 12px;
             line-height: 18px;
             color: $color-black3;
+
             .tag {
               margin-left: 5px;
               display: block;
@@ -733,6 +809,7 @@ export default {
               height: 16px;
             }
           }
+
           .txt3 {
             font-weight: 400;
             font-size: 12px;
@@ -741,14 +818,14 @@ export default {
           }
         }
       }
+
       .shopping-price {
         display: flex;
-        flex-direction: column;
         justify-content: space-between;
-        align-items: self-end;
+        align-items: center;
         margin-right: 5px;
+
         .price-value {
-          width: 120px;
           font-weight: 500;
           font-size: 14px;
           line-height: 21px;
@@ -762,6 +839,11 @@ export default {
             vertical-align: text-bottom;
           }
         }
+
+        .list-del {
+          display: none;
+        }
+
         .el-icon {
           cursor: pointer;
           font-size: 16px;
@@ -770,44 +852,63 @@ export default {
       }
     }
   }
+
   .shopping-cart-footer {
-    margin-top: 20px;
+    padding: 10px 10px  0 20px;
     .total-box {
       display: flex;
       justify-content: space-between;
       font-weight: 500;
-      font-size: 20px;
-      line-height: 30px;
+      font-size: 18px;
+      line-height: 20px;
+      height: 20px;
+
       .title {
         font-weight: 400;
-        color: $color-black3;
+        color: #717A83;
       }
+
       .total {
         color: #111111;
         display: flex;
+        font-weight: 700;
         align-items: center;
+
         .token-icon {
           width: 10px;
           height: 16px;
           margin-right: 8px;
         }
+
         color: $primaryColor;
       }
     }
+
     .btnOption {
-      margin-top: 20px;
+      margin-top: 14px;
       width: 100%;
-      height: 48px;
+      height: 60px;
+      line-height: 60;
       padding: 10px 0;
       border-radius: 12px;
       font-weight: 700;
       border: none;
       cursor: pointer;
       color: $color-white;
-      background: $mainLiner;
+      background: #1063E0;
+
+      &:hover {
+        background: #3F8CFF;
+        box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.2);
+      }
+
+      &.active {
+        background: #2F57E5;
+      }
     }
   }
 }
+
 .hidden-scroll {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -815,5 +916,4 @@ export default {
 
 .hidden-scroll::-webkit-scrollbar {
   display: none;
-}
-</style>
+}</style>
