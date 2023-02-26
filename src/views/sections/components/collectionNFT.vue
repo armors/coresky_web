@@ -279,5 +279,6 @@ export default {
 
 .right-content {
   width: 100%;
+  margin-top: -10px;
 }
 </style>
