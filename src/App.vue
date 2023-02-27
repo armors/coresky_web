@@ -1,8 +1,15 @@
 <template>
   <!-- @scroll="pageScroll" -->
   <!-- <div class="app-wrapper" id="common-wraper" ref="appWrapperRef"> -->
-  <HeaderTemplate :isScrollTop="isScrollTop" />
-  <router-view style="min-height:calc(100vh - 276px)" />
+
+  <template v-if="$route.name !== 'launch'">
+    <HeaderTemplate :isScrollTop="isScrollTop" />
+    <router-view style="min-height:calc(100vh - 276px)" />
+  </template>
+  <template v-else>
+    <router-view style="min-height:calc(100vh - 276px)" />
+  </template>
+
   <!-- </div> -->
 </template>
 
@@ -167,5 +174,4 @@ body {
 }
 </style>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>
