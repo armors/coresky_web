@@ -1417,7 +1417,7 @@ export default {
       //   return
       // }
       // this.acceptDialogBtnLoading = false
-      this.$refs.NFTDialogAcceptOffer.show(this.tokenInfo, v, v.tokenId === '0' ? 2 : 1, isOpensea)
+      this.$refs.NFTDialogAcceptOffer.show(this.tokenInfo, v, 1, isOpensea)
     },
     followNft () {
       if (!this.tokenInfo.contract || !this.tokenInfo.tokenId) return
