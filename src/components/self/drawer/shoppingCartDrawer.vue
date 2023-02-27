@@ -151,12 +151,12 @@ export default {
     },
   },
   watch: {
-    show() {
+    show () {
       this.visible = this.show;
       this.getCartInfo()
     },
   },
-  data() {
+  data () {
     return {
       buyBtnLoading: false,
       buyOpenseaBtnLoading: false,
@@ -174,39 +174,39 @@ export default {
       activeIndex: '1'
     };
   },
-  created() {
+  created () {
   },
-  mounted() {
+  mounted () {
   },
   computed: {
-    user() {
+    user () {
       return this.$store.state.user;
     },
-    cartName() {
+    cartName () {
       return `coresky_cart_${this.$store.state.user.coinbase}`
     },
-    cartNameOpensea() {
+    cartNameOpensea () {
       return `coresky_cart_opensea_${this.$store.state.user.coinbase}`
     },
-    shoppingOpenseaCartList() {
+    shoppingOpenseaCartList () {
       return this.$store.state.shoppingOpenseaCartList;
     },
-    shoppingCartList() {
+    shoppingCartList () {
       return this.$store.state.shoppingCartList;
     }
   },
   methods: {
-    handleSelect(index) {
+    handleSelect (index) {
       console.log(this.activeIndex)
       this.activeIndex = index
     },
-    clearCart() {
+    clearCart () {
       removeLocalStorage([this.cartName])
       removeLocalStorage([this.cartNameOpensea])
       this.$store.commit('initShoppingCart')
       this.getCartInfo()
     },
-    deleteCart(v, id) {
+    deleteCart (v, id) {
       const coreskyCartLength = this.coreskyCart.length
       let cart = []
       for (let i = 0; i < coreskyCartLength; i++) {
@@ -231,7 +231,7 @@ export default {
       this.$store.commit('initShoppingCart')
       this.getCartInfo()
     },
-    deleteCartOpensea(v) {
+    deleteCartOpensea (v) {
       const shoppingOpenseaCartList = this.shoppingOpenseaCartList.filter(item => item.orderHash !== v.orderHash)
       if (shoppingOpenseaCartList.length < 1) {
         removeLocalStorage([this.cartNameOpensea])
@@ -242,7 +242,7 @@ export default {
       }
       this.$store.commit('initShoppingCart')
     },
-    async getCartInfo(isCheckOrder = false) {
+    async getCartInfo (isCheckOrder = false) {
       this.totalPrice = 0
       this.totalPriceShow = 0
       const local = getLocalStorage(this.cartName)
@@ -291,17 +291,17 @@ export default {
         this.$store.commit('initShoppingCart')
       }
     },
-    handleClose() {
+    handleClose () {
       this.$emit('update:show', false)
     },
-    getNftPrice(v, isShow = false) {
+    getNftPrice (v, isShow = false) {
       return isShow ? parseFloat(this.$filters.keepPoint(this.$Web3.utils.fromWei(v.basePrice.toString()))) : this.$Web3.utils.fromWei(v.basePrice.toString())
     },
-    nftPriceFun(basePrice) {
+    nftPriceFun (basePrice) {
       console.log(basePrice)
       return (basePrice !== null && basePrice !== undefined) ? this.$filters.keepMaxPoint(this.$Web3.utils.fromWei(basePrice.toString())) : '--'
     },
-    async checkOrder(isInitCart) {
+    async checkOrder (isInitCart) {
       try {
         const res = await this.$api('order.check', {
           ids: this.ids
@@ -357,7 +357,7 @@ export default {
         }
       }
     },
-    async cartBuy() {
+    async cartBuy () {
       this.buyBtnLoading = true
       const res = await this.checkOrder()
       if (res.code !== 200) {
@@ -381,7 +381,7 @@ export default {
         await this.buyNft()
       }
     },
-    async manyBuy() {
+    async manyBuy () {
       let sellers = []
       this.checkOrderData.forEach(item => {
         item.basePrice = item.basePrice.toString()
@@ -465,7 +465,7 @@ export default {
       }
 
     },
-    async buyNft() {
+    async buyNft () {
       const sellerToken = this.checkOrderData[0]
       let seller = this.$sdk.getAtomicMatchWrapOrder(sellerToken, false)
       seller = {
@@ -560,7 +560,7 @@ export default {
         this.buyBtnLoading = false
       }
     },
-    async cartBuyOpensea() {
+    async cartBuyOpensea () {
       // isOrderFulfillable
       console.log(this.openseaCart)
       this.buyOpenseaBtnLoading = true
@@ -627,12 +627,12 @@ export default {
   margin-top: calc($headerHeight + 10px) !important;
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08);
   border-radius: 16px;
-  height: 740px !important;
+  // height: 740px !important;
 
   .el-drawer__body {
     padding: 20px 0 !important;
     padding-right: 10px !important;
-    overflow:inherit;
+    overflow: inherit;
   }
 }
 
@@ -655,7 +655,9 @@ export default {
 
 .coresky-drawer {
   width: 406px;
-  height: calc(100% - $headerHeight);
+  &.el-drawer.rtl {
+    height: calc(100% - $headerHeight - 50px);
+  }
   margin-top: $headerHeight;
 
   .el-drawer__body {
@@ -749,7 +751,7 @@ export default {
     padding-left: 20px;
     padding-right: 8px;
     margin-top: 18px;
-    height: 450px;
+    max-height: 450px;
     overflow-y: scroll;
 
     // padding:0 -8px;
@@ -854,7 +856,7 @@ export default {
   }
 
   .shopping-cart-footer {
-    padding: 10px 10px  0 20px;
+    padding: 10px 10px 0 20px;
     .total-box {
       display: flex;
       justify-content: space-between;
@@ -916,4 +918,7 @@ export default {
 
 .hidden-scroll::-webkit-scrollbar {
   display: none;
-}</style>
+}
+</style>
+<style lang="scss" scoped>
+</style>
