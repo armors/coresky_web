@@ -1182,6 +1182,8 @@ export default {
       if (openseaOffers.code === 200 && openseaListed.code === 200) {
         this.putTokenPrice(params)
       }
+      // await this.$sdk._sleep(2000)
+      // await this.$sdk.getOffersOpenseaCollect(this.asset)
     },
     getTokenEvent () {
       this.$api("collect.tokenActivity", this.tokenInfoParams).then((res) => {

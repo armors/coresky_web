@@ -9,6 +9,7 @@ import web3 from "@/util/web3/index.js";
 import {ethers} from 'ethers'
 import {keepPoint} from "@/filters";
 import { isAddress } from '@ethersproject/address'
+import axios from 'axios'
 
 var Web3 = require("web3");
 const eth_util = require("ethereumjs-util");
@@ -117,11 +118,39 @@ export default {
 				message: e
 			}
 		}
+	},
+	async getOffersOpenseaCollect(asset) {
+		try {
+			const openseaSDK = await this.initOpenSea()
+			const assetInfo = await openseaSDK.api.getAsset({
+				tokenAddress: asset.assetContractAddress, // CryptoKitties
+				tokenId: asset.tokenId
+			})
+			console.log(assetInfo)
+			await this._sleep(2000)
+			const options = {
+				method: 'GET',
+				url: 'https://testnets-api.opensea.io/v2/offers/collection/' + assetInfo.collection.slug + '/all',
+				headers: {accept: 'application/json'}
+			};
+			axios
+				.request(options)
+				.then(function (response) {
+					console.log(response.data);
+				})
+				.catch(function (error) {
+					console.error(error);
+				});
+		} catch (e) {
+			return {
+				code: 500,
+				data: null,
+				message: e
+			}
+		}
 
 	},
-
 	async getOffersOpensea (asset) {
-		const networkName = process.env.VUE_APP_CHAINID === '1' ? Network.Main : Network.Goerli
 		try {
 			const openseaSDK = await this.initOpenSea()
 			const {orders} = await openseaSDK.api.getOrders({
