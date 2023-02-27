@@ -245,6 +245,7 @@ export default {
         setLocalStorage(obj)
       }
       this.$store.commit('initShoppingCart')
+      this.getCartInfo()
     },
     async getCartInfo (isCheckOrder = false) {
       this.totalPrice = 0
@@ -571,35 +572,38 @@ export default {
       try {
         const openseaSDK = await this.$sdk.initOpenSea()
         console.log(openseaSDK)
+
         // for (let i = 0; i < this.openseaCart.length; i++) {
         //   const isOrder = await openseaSDK.isOrderFulfillable(this.openseaCart[i])
         //   console.log(isOrder)
         // }
-        this.buyOpenseaBtnLoading = false
         // if (this.openseaCart.length === 1) {
         //   const transactionHash = await openseaSDK.fulfillOrder({
         //     order: this.openseaCart[0],
         //     accountAddress: this.user.coinbase
         //   })
         // } else {
-        let fulfillOrderDetails = []
-        this.openseaCart.forEach(item => {
-          fulfillOrderDetails.push({
-            order: item.protocolData
-          })
-        })
-        let params = {
-          fulfillOrderDetails: fulfillOrderDetails,
-          accountAddress: this.user.coinbase
-        }
-        console.log(params)
-        const moreBuyAction = await openseaSDK.seaport.fulfillOrders(params)
-        await moreBuyAction.executeAllActions()
-        return
+        //   let fulfillOrderDetails = []
+        //   this.openseaCart.forEach(item => {
+        //     fulfillOrderDetails.push({
+        //       order: item.protocolData
+        //     })
+        //   })
+        //   let params = {
+        //     fulfillOrderDetails: fulfillOrderDetails,
+        //     accountAddress: this.user.coinbase
+        //   }
+        //   console.log(params)
+        //   const moreBuyAction = await openseaSDK.seaport.fulfillOrders(params)
+        //   await moreBuyAction.executeAllActions()
+        //   return
         // }
-
-        // this.$tools.message('购买成功', 'success');
-        // this.buyOpenseaBtnLoading= false
+        const transactionHash = await openseaSDK.fulfillOrder({
+          order: this.openseaCart[0],
+          accountAddress: this.user.coinbase
+        })
+        this.$tools.message('购买成功', 'success');
+        this.buyOpenseaBtnLoading= false
 
         let coreskyCart = this.coreskyCart
         let hasCoresky = coreskyCart.filter(v => {

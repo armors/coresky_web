@@ -26,6 +26,7 @@ export function fullImageUrl (url) {
   return cdnUrl ? cdnUrl + url : url;
 }
 export function ethToUsdt (ethNum = 0, point = 4) {
+  ethNum = ethNum.toString().split(',').join('')
   const ethPrice = store.state.ethPrice
   return ethNum > 0 ? keepPoint(new BigNumber(ethNum).multipliedBy(ethPrice), point) : 0
 }
