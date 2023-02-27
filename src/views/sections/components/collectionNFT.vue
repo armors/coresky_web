@@ -24,7 +24,7 @@
             <span class="left">{{ $t('common.Price') }}</span>
             <span class="right" @click="isOpenPriceFilter = !isOpenPriceFilter">
               <el-icon style="font-size:16px" :class="{ 'down': isOpenPriceFilter }">
-                <img src="../../../assets/images/icons/icon_filter_up.svg" alt="">
+                <!-- <img src="../../../assets/images/icons/icon_filter_up.svg" alt=""> -->
               </el-icon>
             </span>
           </div>
@@ -49,7 +49,7 @@
             <span class="left">{{ $t('common.Properties') }}</span>
             <span class="right">
               <el-icon style="font-size:16px" :class="{ 'down': isOpenAttrFilter }">
-                <img src="../../../assets/images/icons/icon_filter_up.svg" alt="">
+                <!-- <img src="../../../assets/images/icons/icon_filter_up.svg" alt=""> -->
               </el-icon>
             </span>
           </div>
@@ -60,7 +60,7 @@
                 <div class="type-num">
                   <span>{{ item.total }}</span>
                   <el-icon :class="{ 'down': item.isShow }" style="font-size:15px">
-                    <ArrowUp />
+                    <!-- <ArrowUp /> -->
                   </el-icon>
                 </div>
               </div>
@@ -168,7 +168,7 @@ export default {
         page: 1,
         limit: 20,
         keyword: "",
-        buyNow: false,
+        buyNow: true,
         minPrice: undefined,
         maxPrice: undefined,
         order: 1,
@@ -271,7 +271,6 @@ export default {
 
 <style lang="scss" scoped>
 .item-page {
-  margin-top: 20px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -280,5 +279,6 @@ export default {
 
 .right-content {
   width: 100%;
+  margin-top: -10px;
 }
 </style>

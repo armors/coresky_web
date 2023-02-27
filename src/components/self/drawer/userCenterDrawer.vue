@@ -1,20 +1,22 @@
 <template>
-  <el-drawer v-model="visible" @closed="handleClose" size="380" :append-to-body="true" zIndex="99"  custom-class="coresky-drawer user-window" :withHeader="false">
-    <img class="account-close" src="../../../assets/images/icons/icon_account_close.svg" @click="visible=false"
-              alt="">
+  <el-drawer v-model="visible" @closed="handleClose" size="380" :append-to-body="true" zIndex="999"
+    custom-class="coresky-drawer user-window" :withHeader="false">
+    <img class="account-close" src="../../../assets/images/icons/icon_account_close.svg" @click="visible = false" alt="">
     <div class="drawer-top">
-<!--      <avatar class="avatar-box" :imageUrl="user.avatar || $filters.fullImageUrl(user.avatar)" :address="user.coinbase"-->
-<!--        :imgWidth="52" :imgHeight="52" shape="circular">-->
-<!--      </avatar>-->
+      <!--      <avatar class="avatar-box" :imageUrl="user.avatar || $filters.fullImageUrl(user.avatar)" :address="user.coinbase"-->
+      <!--        :imgWidth="52" :imgHeight="52" shape="circular">-->
+      <!--      </avatar>-->
 
       <div class="avatar-box">
-          <img :src="user.avatar || $filters.fullImageUrl(user.avatar)" alt="">
-        </div>
+        <img :src="user.avatar || $filters.fullImageUrl(user.avatar)" alt="">
+      </div>
       <div class="info">
         <div class="user-name display-flex box-center-Y">
-          {{user.nickname}}
-          <div class="edit-icon" @click="goProfile"><img src="../../../assets/images/icons/icon_edit_profile.svg"
-              alt=""></div>
+          {{ user.nickname }}
+          <div class="edit-icon" @click="goProfile">
+            <!-- <img src="../../../assets/images/icons/icon_edit_profile.svg"
+              alt=""> -->
+          </div>
         </div>
         <!--        profile-->
         <div class="token-address">View profile</div>
@@ -24,17 +26,17 @@
       </el-icon> -->
     </div>
     <div class="drawer-nav">
-      <div class="nav-item" @click="goView('/account/'+ user.coinbase+'?tag=Collected')">
+      <div class="nav-item" @click="goView('/account/' + user.coinbase + '?tag=Collected')">
         <img class="icon" src="@/assets/images/icons/icon_nft.svg" alt="">
-        <span>{{$t('userCenter.myCollection')}}</span>
+        <span>{{ $t('userCenter.myCollection') }}</span>
       </div>
       <!-- <div class="nav-item" @click="goView('/account/'+ user.coinbase+'?tag=Created')">
         <img class="icon" src="@/assets/images/icons/icon_collection.svg" alt="">
         <span>Created</span>
       </div> -->
-      <div class="nav-item" @click="goView('/account/'+ user.coinbase+'?tag=Favorited')">
+      <div class="nav-item" @click="goView('/account/' + user.coinbase + '?tag=Favorited')">
         <img class="icon" src="@/assets/images/icons/icon_watchlist2.svg" alt="">
-        <span>{{$t('userCenter.favorites')}}</span>
+        <span>{{ $t('userCenter.favorites') }}</span>
       </div>
       <!-- <div class="nav-item">
         <img class="icon" src="@/assets/images/icons/icon_quotation.svg" alt="">
@@ -54,55 +56,68 @@
       </div> -->
       <div class="nav-item" @click="goProfile">
         <img class="icon" src="@/assets/images/icons/icon_class_setting.svg" alt="">
-        {{$t('userCenter.setting')}}
+        {{ $t('userCenter.setting') }}
       </div>
       <div class="nav-item" @click="logout">
         <img class="icon" src="@/assets/images/icons/icon_class_quit.svg" alt="">
-        {{$t('userCenter.quit')}}
+        {{ $t('userCenter.quit') }}
       </div>
-      <div class="nav-item line" style="margin:25px 0"></div>
+      <div class="line-box">
+        <div class="nav-item line"></div>
+      </div>
     </div>
     <div class="drawer-wallet">
-      <div class="wallet-item">
-        <div class="coin-box">
-          <svg-icon class="eth-icon" icon-class="eth_01" />
+      <div class="drawer-wallet-content">
+        <div class="wallet-item">
+          <div class="coin-box">
+            <img src="../../../assets/images/icons/token/token_eth.svg" alt="">
+          </div>
+          <div class="coin-name">
+            ETH
+          </div>
+          <div class="price-box">
+            <div class="num">{{ balanceETH }}</div>
+            <div class="num2">${{ $filters.milliFormat($filters.ethToUsdt(balanceETH)) }}</div>
+          </div>
+          <div class="swap-icon" @click="showUniswap('ETH')"><img src="../../../assets/images/icons/icon_swap.svg" alt="">
+          </div>
         </div>
-        <div class="coin-name">
-          ETH
+        <div class="wallet-line">
+          <div class="w-line"></div>
         </div>
-        <div class="price-box">
-          <div class="num">{{balanceETH}}</div>
-          <div class="num2">${{$filters.milliFormat($filters.ethToUsdt(balanceETH))}}</div>
+        <div class="wallet-item">
+          <div class="coin-box">
+            <img src="../../../assets/images/icons/token/token_eth.svg" alt="">
+          </div>
+          <div class="coin-name">
+            WETH
+          </div>
+          <div class="price-box">
+            <div class="num">{{ balanceWETH }}</div>
+            <div class="num2">${{ $filters.milliFormat($filters.ethToUsdt(balanceWETH)) }}</div>
+          </div>
+          <div class="swap-icon" @click="showUniswap('WETH')"><img src="../../../assets/images/icons/icon_swap.svg"
+              alt="">
+          </div>
         </div>
-        <div class="swap-icon" @click="showUniswap('ETH')"><img src="../../../assets/images/icons/icon_swap.svg" alt=""></div>
       </div>
-      <div class="wallet-item">
-        <div class="coin-box">
-          <svg-icon class="eth-icon weth" icon-class="eth_01" />
-        </div>
-        <div class="coin-name">
-          WETH
-        </div>
-        <div class="price-box">
-          <div class="num">{{balanceWETH}}</div>
-          <div class="num2">${{$filters.milliFormat($filters.ethToUsdt(balanceWETH))}}</div>
-        </div>
-        <div class="swap-icon" @click="showUniswap('WETH')"><img src="../../../assets/images/icons/icon_swap.svg" alt=""></div>
-      </div>
+
+
     </div>
-    <div v-if="false" class="drawer-wallet" style="margin-top:30px;">
+    <div v-if="false" class="drawer-wallet" style="margin-top:30px;">\
       <div class="wallet-item">
         <!-- <div class="coin-box">
         </div> -->
         <div class="coin-name">
-          {{$t('userCenter.score')}}:
+          {{ $t('userCenter.score') }}:
         </div>
         <div class="price-box">
-          <div class="num">{{user&&user.score}}</div>
+          <div class="num">{{ user && user.score }}</div>
         </div>
       </div>
       <div class="wallet-item">
-        <el-link :underline="false" type="primary" @click="goView('/reward')" class="btnDetail"> {{$t('userCenter.details')}}</el-link>
+        <el-link :underline="false" type="primary" @click="goView('/reward')" class="btnDetail">
+          {{ $t('userCenter.details') }}</el-link>
       </div>
     </div>
     <uniswapDialog ref="uniswapDialog"></uniswapDialog>
@@ -125,7 +140,7 @@ export default {
     uniswapDialog
   },
   watch: {
-    show () {
+    show() {
       this.visible = this.show;
       if (this.visible) {
         this.initGetBalance()
@@ -135,7 +150,7 @@ export default {
       this.initGetBalance()
     }
   },
-  data () {
+  data() {
     return {
       loading: true,
       visible: false,
@@ -143,22 +158,22 @@ export default {
       balanceWETH: '--',
     };
   },
-  created () {
+  created() {
 
   },
-  mounted () {
+  mounted() {
 
   },
   computed: {
-    user () {
+    user() {
       return this.$store.state.user;
     },
   },
   methods: {
-    showUniswap (type) {
+    showUniswap(type) {
       this.$refs.uniswapDialog.showUniswap(type)
     },
-    async initGetBalance () {
+    async initGetBalance() {
       this.balanceETH = keepPoint(await this.$sdk.getBalance({
         address: this.$sdk.NULL_ADDRESS()
       }, this.user.coinbase))
@@ -174,20 +189,20 @@ export default {
       }
       console.log(this.user)
     },
-    logout () {
+    logout() {
       this.$web3.disconnect();
       this.handleClose()
     },
-    goProfile () {
+    goProfile() {
       this.visible = false
       this.$router.push({ path: '/profile' });
       this.handleClose()
     },
-    goView (path) {
+    goView(path) {
       this.$router.push(path)
       this.handleClose()
     },
-    handleClose () {
+    handleClose() {
       this.$emit('update:show', false)
     }
   },
@@ -195,16 +210,22 @@ export default {
 </script>
 
 <style lang="scss">
-.user-window{
-  right: 10px!important;
-  margin-top: calc($headerHeight + 10px)!important;
+.user-window {
+  right: 10px !important;
+  margin-top: calc($headerHeight + 10px) !important;
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08);
-border-radius: 16px;
-height: 650px!important;
+  border-radius: 16px;
+  height: 530px !important;
+
+  .el-drawer__body {
+    padding: 20px 0 !important;
+  }
 }
+
 .coresky-drawer {
+
   // height: calc(100% - $headerHeight) !important;
-  .account-close{
+  .account-close {
     width: 15px;
     height: 15px;
     position: absolute;
@@ -212,40 +233,55 @@ height: 650px!important;
     top: 24px;
     cursor: pointer;
   }
-  .el-drawer__body {
-    padding: 20px;
-  }
+
+
+
   .drawer-top {
     display: flex;
     align-items: center;
     margin-bottom: 12px;
+    padding: 0 20px;
+
     .avatar-box {
       width: 66px;
       height: 66px;
       margin-right: 12px;
       border-radius: 50%;
-      img{
+
+      img {
         width: 100%;
         height: 100%;
         display: block;
         border-radius: 50%;
       }
     }
+
     .info {
       display: flex;
       flex-direction: column;
+
       .user-name {
         font-weight: 700;
         font-size: 18px;
         line-height: 28px;
         color: $primaryColor;
+
         .edit-icon {
           cursor: pointer;
-          width: 24px;
-          height: 24px;
+          width: 12px;
+          height: 15px;
           margin-left: 10px;
+          background-image: url("@/assets/images/icons/icon_edit_profile.svg");
+          background-size: 12px auto;
+          background-position: center;
+          background-repeat: no-repeat;
+
+          &:hover {
+            background-image: url("@/assets/images/icons/icon_edit_blue.svg");
+          }
         }
       }
+
       .token-address {
         font-weight: 400;
         font-size: 16px;
@@ -253,6 +289,7 @@ height: 650px!important;
         color: #717A83;
       }
     }
+
     .el-icon {
       cursor: pointer;
       font-size: 24px;
@@ -260,103 +297,138 @@ height: 650px!important;
       color: $color-black2;
     }
   }
+
   .drawer-nav {
-    margin: 12px 0;
+    margin-top: 20px;
+
     .nav-item {
       display: flex;
-      margin-bottom: 8px;
-      border-radius: 12px;
-      padding: 12px 0;
-      line-height: 30px;
+      line-height: 48px;
+      height: 48px;
       font-weight: 600;
       font-size: 16px;
       color: $primaryColor;
+      padding: 0 20px;
       cursor: pointer;
+
       &:hover {
         background: $elButtonHoverBg;
       }
+
       &.line {
-        height: 1px;
-        padding: 0;
-        background: $borderBg;
-        margin-top: 0px;
+        height: 2px;
+        background: #E6E8EC;
+        margin: auto;
+        margin-top: 16px;
+        margin-bottom: 20px;
       }
-      &:nth-child(1){
-        .icon{
+
+      &:nth-child(1) {
+        .icon {
           width: 23px;
         }
       }
-      &:nth-child(4){
-        .icon{
-        margin-left: 2px;     
-        margin-right: 8px;     
+
+      &:nth-child(4) {
+        .icon {
+          margin-left: 2px;
+          margin-right: 8px;
         }
       }
+
       .icon {
         width: 20px;
         height: auto;
         margin-right: 10px;
       }
     }
+
+    .line-box {
+      padding: 0 20px;
+    }
   }
+
   .drawer-wallet {
-    border: 1px solid $borderBg;
-    border-radius: 12px;
+    padding: 0 20px;
+
+    .drawer-wallet-content {
+      border: 2px solid #E6E8EC;
+      border-radius: 10px;
+    }
+
+    .wallet-line {
+      padding: 0 10px;
+
+      .w-line {
+        height: 2px;
+        margin: auto;
+        background: #E6E8EC;
+      }
+    }
+
     .wallet-item {
       display: flex;
       padding: 16px;
       align-items: center;
-      &:not(:last-child) {
-        border-bottom: 1px solid $borderBg;
-      }
+
+
+
       .coin-box {
-        width: 24px;
-        height: 24px;
+        width: 12px;
+        height: auto;
         display: flex;
         justify-content: center;
         align-items: center;
-        border-radius: 50%;
-        background: $borderBg;
+
         .coin-img {
           width: 12px;
           height: 20px;
         }
+
         .eth-icon {
           color: #728be7;
           font-size: 18px;
+
           &.weth {
             color: #ed8ee4;
           }
         }
       }
+
       .coin-name {
         margin-left: 10px;
         font-size: 16px;
         line-height: 24px;
-        color: $color-black3;
+        color: #111111;
+        font-weight: 500;
       }
+
       .price-box {
         margin-left: auto;
         text-align: right;
+
         .num {
           font-weight: 500;
           font-size: 16px;
           line-height: 24px;
-          color: $primaryColor;
+          color: #111111;
         }
+
         .num2 {
           font-weight: 400;
           font-size: 12px;
           line-height: 18px;
-          color: $color-black2;
+          color: #717A83;
         }
       }
-      .swap-icon{
+
+      .swap-icon {
         cursor: pointer;
         width: 24px;
         height: 24px;
         margin-left: 14px;
       }
+
       .btnDetail {
         margin: 0 auto;
         font-size: 16px;
@@ -364,5 +436,4 @@ height: 650px!important;
       }
     }
   }
-}
-</style>
+}</style>

@@ -150,4 +150,7 @@ export default {
   justify-content: space-between;
   align-items: flex-start;
 }
+.right-content{
+  margin-top: -10px;
+}
 </style>

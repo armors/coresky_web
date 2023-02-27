@@ -90,6 +90,9 @@ export default {
   margin: 0 40px;
   margin-bottom: 40px;
   ::v-deep {
+    .el-tabs__content{
+      overflow: visible;
+    }
     .el-tabs__header.is-top {
       margin-bottom: 0;
     }
