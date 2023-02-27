@@ -1,11 +1,15 @@
 <template>
   <el-drawer v-model="visible" @closed="handleClose" size="406" :append-to-body="true" zIndex="99"
-    custom-class="coresky-drawer cart-window" :withHeader="false"> <img class="account-close"
-      src="../../../assets/images/icons/icon_account_close.svg" @click="visible = false" alt="">
+    custom-class="coresky-drawer cart-window" :withHeader="false">
+    <!-- <img class="account-close" src="../../../assets/images/icons/icon_account_close.svg" @click="visible = false" alt=""> -->
     <div class="shopping-cart-header">
       <div class="txt">
         {{ $t('shoppingCart.title') }}
       </div>
+      <el-icon @click="visible = false">
+        <Close />
+      </el-icon>
+
     </div>
     <div class="cart-line"></div>
     <div class="shopping-cart-content-head display-flex box-center-Y">
@@ -20,7 +24,7 @@
       </el-menu>
       <div class="right" @click="clearCart">
         <!-- <img src="@/assets/images/icons/icon_clearcart.svg" class="icon-clear" alt=""> -->
-        <span>{{ $t('shoppingCart.clearAll') }}</span>
+        <span>{{ $t('shoppingCart.clearAll') }} </span>
       </div>
     </div>
     <template v-if="activeIndex === '1'">
@@ -44,13 +48,13 @@
                 <template #reference>
                   <div class="price-value ellipsis">
                     <!-- <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" /> -->
-                    {{ $filters.milliFormat(getNftPrice(vc, true)) }}
+                    {{ $filters.milliFormat(getNftPrice(vc, true)) }} ETH
                   </div>
                 </template>
                 <template #default>
                   <div class="price-value">
                     <!-- <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" /> -->
-                    {{ $filters.milliFormat(getNftPrice(vc, true), false) }}
+                    {{ $filters.milliFormat(getNftPrice(vc, true), false) }} ETH
                   </div>
                 </template>
               </el-popover>
@@ -66,7 +70,7 @@
           <div class="title">{{ $t('shoppingCart.total') }}</div>
           <div class="total">
             <!-- <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" /> -->
-            {{ totalPriceShow }}
+            {{ totalPriceShow }} ETH
           </div>
         </div>
         <div>
@@ -633,6 +637,8 @@ export default {
     padding: 20px 0 !important;
     padding-right: 10px !important;
     overflow: inherit;
+    display: flex;
+    flex-direction: column;
   }
 }
 
@@ -675,7 +681,7 @@ export default {
     height: 39px;
     line-height: 39px;
     padding-left: 20px;
-
+    flex-shrink: 0;
     .txt {
       color: #000000;
     }
@@ -693,7 +699,7 @@ export default {
     background: #E6E8EC;
     margin-top: 15px;
     margin-bottom: 15px;
-
+    flex-shrink: 0;
   }
 
   .shopping-cart-content-head {
@@ -702,7 +708,7 @@ export default {
     font-weight: 500;
     font-size: 18px;
     color: #111111;
-
+    flex-shrink: 0;
     .left {
       color: $primaryColor;
     }
@@ -746,13 +752,18 @@ export default {
 
   }
 
+  .overflow-c {
+    overflow: auto;
+    height: 100%;
+  }
 
   .shopping-cart-content {
     padding-left: 20px;
     padding-right: 8px;
     margin-top: 18px;
     max-height: 450px;
-    overflow-y: scroll;
+    overflow-y: auto;
+
 
     // padding:0 -8px;
     .shopping-item {
@@ -857,6 +868,7 @@ export default {
 
   .shopping-cart-footer {
     padding: 10px 10px 0 20px;
+    flex-shrink: 0;
     .total-box {
       display: flex;
       justify-content: space-between;
@@ -890,7 +902,7 @@ export default {
       margin-top: 14px;
       width: 100%;
       height: 60px;
-      line-height: 60;
+      line-height: 60px;
       padding: 10px 0;
       border-radius: 12px;
       font-weight: 700;
@@ -920,5 +932,4 @@ export default {
   display: none;
 }
 </style>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
