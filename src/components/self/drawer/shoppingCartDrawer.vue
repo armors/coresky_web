@@ -43,18 +43,18 @@
               <el-popover placement="top-start" title="" :width="200" trigger="hover">
                 <template #reference>
                   <div class="price-value ellipsis">
-                    <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
+                    <!-- <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" /> -->
                     {{ $filters.milliFormat(getNftPrice(vc, true)) }}
                   </div>
                 </template>
                 <template #default>
                   <div class="price-value">
-                    <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
+                    <!-- <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" /> -->
                     {{ $filters.milliFormat(getNftPrice(vc, true), false) }}
                   </div>
                 </template>
               </el-popover>
-              <el-icon @click="deleteCart(v, vc.id)">
+              <el-icon class="list-del" @click="deleteCart(v, vc.id)">
                 <Delete />
               </el-icon>
             </div>
@@ -65,7 +65,7 @@
         <div class="total-box">
           <div class="title">{{ $t('shoppingCart.total') }}</div>
           <div class="total">
-            <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
+            <!-- <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" /> -->
             {{ totalPriceShow }}
           </div>
         </div>
