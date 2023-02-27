@@ -60,8 +60,8 @@ export function contractExplore (hash) {
 export function milliFormat (num, isK = true) {
   if (!num) return '--'
   if (isK) {
-    if (num > 10000) {
-      num = keepPoint(num / 10000, 1)
+    if (num > 1000) {
+      num = keepPoint(num / 1000, 1)
       return num && num.toString()
         .replace(/\d+/, (s) => s.replace(/(\d)(?=(\d{3})+$)/g, '$1,')) + 'K'
     } else {

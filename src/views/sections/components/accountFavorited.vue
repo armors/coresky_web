@@ -202,6 +202,7 @@ export default {
       return this.$filters.keepMaxPoint(this.$Web3.utils.fromWei(basePrice.toString()))
     },
     init() {
+      this.nftList = []
       this.queryParams.page = 1
       this.queryParams.followAddress = this.address
       this.pageHandle()
