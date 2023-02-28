@@ -119,37 +119,6 @@ export default {
 			}
 		}
 	},
-	async getOffersOpenseaCollect(asset) {
-		try {
-			const openseaSDK = await this.initOpenSea()
-			const assetInfo = await openseaSDK.api.getAsset({
-				tokenAddress: asset.assetContractAddress, // CryptoKitties
-				tokenId: asset.tokenId
-			})
-			console.log(assetInfo)
-			await this._sleep(2000)
-			const options = {
-				method: 'GET',
-				url: 'https://testnets-api.opensea.io/v2/offers/collection/' + assetInfo.collection.slug + '/all',
-				headers: {accept: 'application/json'}
-			};
-			axios
-				.request(options)
-				.then(function (response) {
-					console.log(response.data);
-				})
-				.catch(function (error) {
-					console.error(error);
-				});
-		} catch (e) {
-			return {
-				code: 500,
-				data: null,
-				message: e
-			}
-		}
-
-	},
 	async getOffersOpensea (asset) {
 		try {
 			const openseaSDK = await this.initOpenSea()
@@ -167,6 +136,48 @@ export default {
 					...orders[i],
 					...{
 						source: "opensea",
+					}
+				})
+			}
+			return {
+				data: orderN,
+				code: 200
+			}
+		} catch (e) {
+			return {
+				code: 500,
+				data: null,
+				message: e
+			}
+		}
+
+	},
+	async getOffersOpenseaCollect(asset) {
+		try {
+			const openseaSDK = await this.initOpenSea()
+			const assetInfo = await openseaSDK.api.getAsset({
+				tokenAddress: asset.assetContractAddress, // CryptoKitties
+				tokenId: asset.tokenId
+			})
+			console.log(assetInfo)
+			await this._sleep(2000)
+			const options = {
+				method: 'GET',
+				// url: 'https://testnets-api.opensea.io/v2/offers/collection/' + assetInfo.collection.slug + '/all',
+				url: 'https://testnets-api.opensea.io/v2/offers/collection/' + assetInfo.collection.slug,
+				headers: {accept: 'application/json'}
+			};
+			const response = await axios.request(options)
+			console.log(response.data);
+			let orders = response.data.offers
+			let orderN = []
+			for (let i = 0; i < orders.length; i++) {
+				orderN.push({
+					...orders[i],
+					...{
+						source: "opensea",
+						protocolData: orders[i].protocol_data,
+						orderHash: orders[i].order_hash
 					}
 				})
 			}

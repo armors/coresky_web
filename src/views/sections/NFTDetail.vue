@@ -446,24 +446,25 @@
                       <div class="list-th th25 ellipsis">
                         <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
                         <el-popover placement="top-start" title="" :width="200" trigger="hover"
-                          :content="nftPriceFun(v.currentPrice)">
+                          :content="nftPriceFun(v.protocolData.parameters.offer[0].startAmount)">
                           <template #reference>
-                            {{ nftPriceFun(v.currentPrice) }}
+                            {{ nftPriceFun(v.protocolData.parameters.offer[0].startAmount) }}
                           </template>
                         </el-popover>
                       </div>
                       <div class="list-th th25" v-if="tokenInfo.contractType === 1">
-                        {{ $filters.milliFormat(v.protocolData.parameters.consideration[0].startAmount) }}</div>
-                      <div class="list-th th25" :class="isExpired(v.expirationTime) ? 'expired' : ''">
-                        {{ $filters.timeFormatTime(v.expirationTime) }}</div>
-                      <div class="list-th th25 purple" @click="goExplore(v.maker.address)">
-                        {{ $filters.ellipsisAddress(v.maker.address, 4) }}</div>
+                        {{ $filters.milliFormat(v.protocolData.parameters.consideration[0].startAmount) }}
+                      </div>
+                      <div class="list-th th25" :class="isExpired(v.protocolData.parameters.endTime) ? 'expired' : ''">
+                        {{ $filters.timeFormatTime(v.protocolData.parameters.endTime) }}</div>
+                      <div class="list-th th25 purple" @click="goExplore(v.protocolData.parameters.offerer)">
+                        {{ $filters.ellipsisAddress(v.protocolData.parameters.offerer, 4) }}</div>
                       <div class="list-th th25 center">
-                        <el-button type="primary" :disabled="isExpired(v.expirationTime)" class="btnAccept"
-                          v-if="isSelfMakeOffer(v.maker.address)" :loading="v.orderHash === cancelIdOrHash"
+                        <el-button type="primary" :disabled="isExpired(v.protocolData.parameters.endTime)" class="btnAccept"
+                          v-if="isSelfMakeOffer(v.protocolData.parameters.offerer)" :loading="v.orderHash === cancelIdOrHash"
                           @click="cancelMakeOffer(v, true)">{{ $t('nftDetail.Cancel') }}</el-button>
                         <el-button type="primary" class="btnAccept" v-else
-                          :disabled="!isSelf || isExpired(v.expirationTime)" :loading="acceptDialogBtnLoading"
+                          :disabled="!isSelf || isExpired(v.protocolData.parameters.endTime)" :loading="acceptDialogBtnLoading"
                           @click="showAcceptOfferNFT(v, true)">{{ $t('nftDetail.Accept') }}</el-button>
                       </div>
                     </template>
@@ -1049,9 +1050,11 @@ export default {
       if (data.length === 0) return []
       function compare () { //这是比较函数
         return function (m, n) {
-          let mmprice = m.source === 'coresky' ? m.basePrice : m.currentPrice
+          // let mmprice = m.source === 'coresky' ? m.basePrice : m.currentPrice
+          let mmprice = m.source === 'coresky' ? m.basePrice : m.protocolData.parameters.consideration[0].startAmount
           let mprice = new BigNumber(mmprice)
-          let nnprice = n.source === 'coresky' ? n.basePrice : n.currentPrice
+          // let nnprice = n.source === 'coresky' ? n.basePrice : n.currentPrice
+          let nnprice = n.source === 'coresky' ? n.basePrice : n.protocolData.parameters.consideration[0].startAmount
           let nprice = new BigNumber(nnprice)
           if (mprice.isEqualTo(nprice)) {
             if (m.expirationTime > n.expirationTime) {
@@ -1182,8 +1185,23 @@ export default {
       if (openseaOffers.code === 200 && openseaListed.code === 200) {
         this.putTokenPrice(params)
       }
-      // await this.$sdk._sleep(2000)
-      // await this.$sdk.getOffersOpenseaCollect(this.asset)
+      await this.$sdk._sleep(2000)
+      const openseaOffersCollect = await this.$sdk.getOffersOpenseaCollect(this.asset)
+      if (openseaOffersCollect.code === 200) {
+        this.ckAuctionEntityList = [...this.ckAuctionEntityList, ...openseaOffersCollect.data]
+        this.ckAuctionEntityList = this.sortOrdersAndOffer(this.ckAuctionEntityList)
+        console.log('openseaOffersCollect.data', openseaOffersCollect.data)
+        if (openseaOffersCollect.data.length > 0) {
+          this.bestPrice = this.nftPriceFun(this.ckAuctionEntityList[0].source === 'opensea' ? this.ckAuctionEntityList[0].protocolData.parameters.offer[0].startAmount : this.ckAuctionEntityList[0].basePrice)
+          const filtersOffer = this.sortOrdersAndOffer(openseaOffersCollect.data)
+          params.osMaxOfferPrice = filtersOffer[0].protocolData.parameters.offer[0].startAmount
+          params.osExpirationTime = filtersOffer[0].protocolData.parameters.endTime
+        }
+      }
+      console.log(this.ckAuctionEntityList, this.ckOrdersEntityList)
+      if (openseaOffersCollect.code === 200 && openseaOffersCollect.code === 200) {
+        this.putTokenPrice(params)
+      }
     },
     getTokenEvent () {
       this.$api("collect.tokenActivity", this.tokenInfoParams).then((res) => {
@@ -1314,6 +1332,20 @@ export default {
       try {
         const openseaSDK = await this.$sdk.initOpenSea()
         console.log(openseaSDK)
+        const order = await openseaSDK.api.getOrder({
+          side: 'bid',
+          protocol: {
+            seaport: {
+              parameters: cancelItem.parameters
+            }
+          },
+          ...{
+            assetContractAddress: this.asset.assetContractAddress,
+            tokenId: this.asset.tokenId
+          }
+        })
+        console.log('order', order)
+        return
         const transactionHash = await openseaSDK.cancelOrder({
           order: cancelItem,
           accountAddress: this.user.coinbase
