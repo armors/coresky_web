@@ -85,7 +85,7 @@ export default {
   methods: {
     init () {
       this.timeInterval = setInterval(() => {
-        this.timeHH = moment().format('hh')
+        this.timeHH = moment().format('HH')
         this.timemm = moment().format('mm')
         this.timess = moment().format('ss')
       }, 1000);
