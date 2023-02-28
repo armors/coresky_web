@@ -1332,20 +1332,21 @@ export default {
       try {
         const openseaSDK = await this.$sdk.initOpenSea()
         console.log(openseaSDK)
-        const order = await openseaSDK.api.getOrder({
-          side: 'bid',
-          protocol: {
-            seaport: {
-              parameters: cancelItem.parameters
-            }
-          },
-          ...{
-            assetContractAddress: this.asset.assetContractAddress,
-            tokenId: this.asset.tokenId
-          }
-        })
-        console.log('order', order)
-        return
+        // const order = await openseaSDK.api.getOrder({
+        //   side: 'bid',
+        //   protocol: {
+        //     seaport: {
+        //       parameters: cancelItem.parameters
+        //     }
+        //   },
+        //   ...{
+        //     assetContractAddress: this.asset.assetContractAddress,
+        //     tokenId: this.asset.tokenId
+        //   }
+        // })
+        // console.log('order', order)
+        // return
+        // TODO 集合报价取消订单
         const transactionHash = await openseaSDK.cancelOrder({
           order: cancelItem,
           accountAddress: this.user.coinbase
