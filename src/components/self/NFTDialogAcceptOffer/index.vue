@@ -157,7 +157,7 @@ export default {
     },
     async initAcceptTokenInfoOpensea () {
       this.$parent.acceptDialogBtnLoading = false
-      this.nftPrice = this.$sdk.fromWeiNum(this.acceptInfo.currentPrice)
+      this.nftPrice = this.$sdk.fromWeiNum(this.acceptInfo.protocolData.parameters.offer[0].startAmount)
       try {
         const openseaSDK = await this.$sdk.initOpenSea()
         console.log(openseaSDK)
@@ -174,7 +174,7 @@ export default {
         this.floorDiff = this.tokenInfo.ckCollectionsInfoEntity.foolPrice !== 0
           ? (parseFloat(keepPoint(this.nftPrice * 100 / this.tokenInfo.ckCollectionsInfoEntity.foolPrice, 2)) + '%')
           : '--'
-        let basePrice = new BigNumber(this.$sdk.fromWeiNumOrigin(this.acceptInfo.currentPrice))
+        let basePrice = new BigNumber(this.$sdk.fromWeiNumOrigin(this.acceptInfo.protocolData.parameters.offer[0].startAmount))
         let creatorFee = basePrice.multipliedBy(royalty / 10000)
         let serviceFee = basePrice.multipliedBy((fee) / 10000)
         console.log(basePrice.minus(creatorFee).minus(serviceFee).valueOf())
@@ -449,11 +449,18 @@ export default {
       }
     },
 
-    async fulfillOrderOpensea () {
+    async fulfillOrderOpensea() {
       console.log(this.user.coinbase)
       try {
         const openseaSDK = await this.$sdk.initOpenSea()
         console.log(openseaSDK)
+        // const order = await openseaSDK.api.getOrder({
+        //   side: 'bid',
+        //   protocol: {
+        //     seaport: this.acceptInfo.protocol_data
+        //   }
+        // })
+        // console.log(order)
         const transactionHash = await openseaSDK.fulfillOrder({
           order: this.acceptInfo,
           accountAddress: this.user.coinbase
