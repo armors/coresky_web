@@ -28,6 +28,9 @@ export function fullImageUrl (url) {
 export function ethToUsdt (ethNum = 0, point = 4) {
   ethNum = ethNum.toString().split(',').join('')
   const ethPrice = store.state.ethPrice
+  if (isNaN(ethPrice)) {
+    return '--'
+  }
   return ethNum > 0 ? keepPoint(new BigNumber(ethNum).multipliedBy(ethPrice), point) : 0
 }
 export function ellipsisAddress (address, start = 7, end = -4) {

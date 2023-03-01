@@ -14,7 +14,7 @@
 				<div class="nft-box">
 					<image-box class="img-box" :src="tokenInfo.oriImage"></image-box>
 					<div class="box-center">
-						<span class="tokenid">{{ tokenInfo.name || '--' }} #{{ tokenInfo.tokenId }}</span>
+						<span class="tokenid">{{ tokenInfo.name || '' }} #{{ tokenInfo.tokenId }}</span>
 						<span class="collection-name">{{ tokenInfo.ckCollectionsInfoEntity.name || '--' }}
 							<img v-if="tokenInfo.ckCollectionsInfoEntity.isCertification === '1'" class="tag"
 								src="@/assets/images/icons/icon_tag.svg" alt="">
