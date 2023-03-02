@@ -21,7 +21,8 @@ module.exports = {
     Submit: 'Submit',
   },
   messageTip: {
-    PurchaseComplete: 'Your purchase is complete！',
+    PurchaseSucceeded: 'Your purchase is complete！',
+    PurchaseComplete: 'Purchase succeeded',
     PurchaseFailed: 'Purchase failed',
     ListingSucceeded: 'Listing succeeded',
     OfferSucceeded: 'Offer succeeded',

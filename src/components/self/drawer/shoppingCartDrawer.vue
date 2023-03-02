@@ -539,7 +539,7 @@ export default {
           this.buyBtnLoading = false
           return
         }
-        this.$tools.message('购买成功', 'success');
+        this.$tools.message(this.$t('messageTip.PurchaseComplete'), 'success');
         this.buyBtnLoading = false
         removeLocalStorage([this.cartName])
         let openseaCart = this.openseaCart
@@ -602,7 +602,7 @@ export default {
           order: this.openseaCart[0],
           accountAddress: this.user.coinbase
         })
-        this.$tools.message('购买成功', 'success');
+        this.$tools.message(this.$t('messageTip.PurchaseComplete'), 'success');
         this.buyOpenseaBtnLoading= false
 
         let coreskyCart = this.coreskyCart
