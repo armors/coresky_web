@@ -451,6 +451,7 @@ export default {
 
     async fulfillOrderOpensea() {
       console.log(this.user.coinbase)
+      console.log(this.acceptInfo)
       try {
         const openseaSDK = await this.$sdk.initOpenSea()
         console.log(openseaSDK)
@@ -460,11 +461,24 @@ export default {
         //     seaport: this.acceptInfo.protocol_data
         //   }
         // })
+        const transactionHash = await this.$sdk.fulfillOrderOpensea(this.acceptInfo.protocolData
+        //   {
+        //   "offer": {
+        //     "hash": this.acceptInfo.orderHash,
+        //     "chain": this.acceptInfo.chain,
+        //     "protocol_address": this.acceptInfo.protocol_address
+        //   },
+        //   "fulfiller": {
+        //     "address": this.user.coinbase
+        //   }
+        // }
+        , this.user.coinbase)
         // console.log(order)
-        const transactionHash = await openseaSDK.fulfillOrder({
-          order: this.acceptInfo,
-          accountAddress: this.user.coinbase
-        })
+        // const transactionHash = await openseaSDK.fulfillOrder({
+        //   order: this.acceptInfo,
+        //   accountAddress: this.user.coinbase
+        // })
+
         // {
         // 	// order: order.data.order,
         // 	order: orders,

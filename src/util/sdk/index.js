@@ -76,7 +76,47 @@ export default {
 		}
 		return window.openseaSDK
 	},
+	async fulfillOrderOpensea (data, address) {
+		console.log(data, address)
+		try {
+			// const options = {
+			// 	method: 'POST',
+			// 	url: 'https://testnets-api.opensea.io/v2/offers/fulfillment_data',
+			// 	headers: {'content-type': 'application/json'},
+			// 	data
+			// };
+			// const response = await axios.request(options)
 
+			const openseaSDK = await this.initOpenSea()
+			console.log({
+				...{
+					restrictedByZone: true,
+					allowPartialFills: true,
+				},
+				...data.parameters
+			})
+			const orderAction = await openseaSDK.seaport.createOrder({
+				...{
+					restrictedByZone: true,
+					allowPartialFills: true,
+				},
+				...data.parameters
+			}, address)
+			console.log(orderAction)
+			// const hash = await openseaSDK.api.postOrder(response.data.fulfillment_data.orders[0])
+			const order = await orderAction.executeAllActions();
+			console.log(order)
+			// return order
+			return await this.api.postOrder(order, {protocol: "seaport", side: "ask"});
+		}catch (e) {
+			return {
+				code: 500,
+				data: null,
+				message: e
+			}
+		}
+
+	},
 	async getOrdersOpensea (asset, coinbase, contractType = 0) {
 		try {
 			const openseaSDK = await this.initOpenSea()
