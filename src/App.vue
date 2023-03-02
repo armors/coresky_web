@@ -1,8 +1,15 @@
 <template>
   <!-- @scroll="pageScroll" -->
   <!-- <div class="app-wrapper" id="common-wraper" ref="appWrapperRef"> -->
-  <HeaderTemplate :isScrollTop="isScrollTop" />
-  <router-view style="min-height:calc(100vh - 276px)" />
+
+  <template v-if="$route.name !== 'launch'">
+    <HeaderTemplate />
+    <router-view style="min-height:calc(100vh - 276px)" />
+  </template>
+  <template v-else>
+    <router-view />
+  </template>
+
   <!-- </div> -->
 </template>
 
@@ -73,20 +80,7 @@ export default {
     clearInterval(this.$store.state.heartbeatTimer)
   },
   methods: {
-    pageScroll () {
-      let scrollTop = this.$refs.appWrapperRef.pageYOffset ||
-        this.$refs.appWrapperRef.scrollTop ||
-        document.body.scrollTop;
-      if (scrollTop) {
-        if (scrollTop > 3) {
-          this.isScrollTop = false
-        } else {
-          this.isScrollTop = true
-        }
-      } else if (scrollTop === 0) {
-        this.isScrollTop = true
-      }
-    },
+
     reload () {
       this.isRouterAlive = false;
       this.$store.dispatch("authinfo")
@@ -167,5 +161,4 @@ body {
 }
 </style>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

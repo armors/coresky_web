@@ -116,6 +116,11 @@ const routes = [
 		component: () => import(/* webpackChunkName: "reward" */ "../views/sections/reward"),
 	},
 	{
+		path: "/launch",
+		name: "launch",
+		component: () => import(/* webpackChunkName: "launch" */ "../views/sections/launch"),
+	},
+	{
 		path: "/:pathMatch(.*)",
 		name: "NoFound",
 		redirect: "/404",
