@@ -208,6 +208,8 @@ module.exports = {
     Buy: 'Buy',
     Add: 'Add',
     Sell: 'Sell',
+    Transfer: 'Transfer',
+    addressError: "Address Error",
     Cancel: 'Cancel',
     Accept: 'Accept',
     ListingTb: {

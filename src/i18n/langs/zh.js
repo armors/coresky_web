@@ -209,6 +209,8 @@ module.exports = {
     Buy: '购买',
     Add: '添加',
     Sell: '出售',
+    Transfer: '转移',
+    addressError: "地址异常",
     Cancel: '取消',
     Accept: '接受',
     ListingTb: {
