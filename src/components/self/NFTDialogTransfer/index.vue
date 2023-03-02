@@ -34,7 +34,7 @@
           Transfer To
         </div>
         <div class="price-wrap">
-          <el-input v-model="recivierAddress" placeholder="e.g. 0x1ed3... or destination.eth, destination.lens" class="input-with-select" size="large" />
+          <el-input v-model="recivierAddress" :placeholder="$t('nftDetail.EnterAddress')"  class="input-with-select" size="large" />
         </div>
       </div>
       <el-button type="primary" class="btnBuy" :loading="transferBtnLoading" @click="transferNft">{{ $t('nftDetail.Transfer') }}</el-button>

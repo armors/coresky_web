@@ -121,7 +121,7 @@ module.exports = {
     floorPrice: 'Floor Price',
     bestOffer: 'Best Offer',
     hrVolume: '24hr Volume',
-    totalVolume: 'Total volume',
+    totalVolume: 'Total Volume',
     owers: 'Owners'
   },
   profile: {
@@ -136,6 +136,7 @@ module.exports = {
     myPlatform: 'My social platform',
     UploadAvatar: 'Upload Avatar',
     tip2: 'Support PNG、JPG and GIF， 400*400 recommended, max size 1M',
+    editSuccess: 'Edit Success'
   },
   rewards: {
     title: 'Trade to get CT score',
@@ -212,6 +213,7 @@ module.exports = {
     addressError: "Address Error",
     Cancel: 'Cancel',
     Accept: 'Accept',
+    EnterAddress: 'Enter an address',
     ListingTb: {
       Market: 'Market',
       Price: 'Price',

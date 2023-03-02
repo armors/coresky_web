@@ -280,7 +280,7 @@ export default {
         "other": this.userFrom.medium,
         "intro": this.userFrom.bio
       }).then((res) => {
-        this.$tools.message('修改成功', 'success');
+        this.$tools.message(this.$t('profile.editSuccess'), 'success');
         this.getUserInfo()
         this.$store.dispatch("authinfo")
       });
@@ -321,7 +321,7 @@ export default {
       };
       this.$api("user.setprofile", temporary).then((res) => {
         if (this.$tools.checkResponse(res)) {
-          this.$tools.message("修改成功", "success");
+          this.$tools.message(this.$t('profile.editSuccess'), "success");
           this.$store.dispatch("authinfo");
           this.goBack();
         } else {

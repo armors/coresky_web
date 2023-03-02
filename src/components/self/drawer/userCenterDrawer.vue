@@ -19,7 +19,7 @@
           </div>
         </div>
         <!--        profile-->
-        <div class="token-address">View profile</div>
+        <!-- <div class="token-address">View profile</div> -->
       </div>
       <!-- <el-icon @click="visible=false">
         <Close />
