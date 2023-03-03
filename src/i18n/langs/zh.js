@@ -215,6 +215,8 @@ module.exports = {
     Cancel: '取消',
     Accept: '接受',
     EnterAddress: '请输入地址',
+    SelectExpiredDate:'请选择过期时间',
+    EnterCorrectPrice:"请输入正确的价格!",
     ListingTb: {
       Market: '平台',
       Price: '价格',

@@ -840,12 +840,12 @@ export default {
 			this.sellBtnLoading = true
 			const price = this.dataList[1].listPrice
 			if (!price || new BigNumber(price).isLessThan(0)) {
-				this.$tools.message('请输入正确的价格', 'warning');
+        this.$tools.message(this.$t('nftDetail.EnterCorrectPrice'),'warning');
 				this.sellBtnLoading = false
 				return
 			}
 			if (!this.form.time) {
-				this.$tools.message('请选择过期时间', 'warning');
+        this.$tools.message(this.$t('nftDetail.SelectExpiredDate'),'warning');
 				this.sellBtnLoading = false
 				return
 			}
@@ -901,12 +901,12 @@ export default {
 			this.sellBtnLoading = true
 			const price = this.dataList[1].listPrice
 			if (!price || new BigNumber(price).isLessThan(0)) {
-				this.$tools.message('请输入正确的价格', 'warning');
+        this.$tools.message(this.$t('nftDetail.EnterCorrectPrice'),'warning');
 				this.sellBtnLoading = false
 				return
 			}
 			if (!this.form.time) {
-				this.$tools.message('请选择过期时间', 'warning');
+				this.$tools.message(this.$t('nftDetail.SelectExpiredDate'),'warning');
 				this.sellBtnLoading = false
 				return
 			}

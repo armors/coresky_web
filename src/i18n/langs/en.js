@@ -21,8 +21,7 @@ module.exports = {
     Submit: 'Submit',
   },
   messageTip: {
-    PurchaseSucceeded: 'Your purchase is complete！',
-    PurchaseComplete: 'Purchase succeeded',
+    PurchaseComplete: 'Your purchase is complete！',
     PurchaseFailed: 'Purchase failed',
     ListingSucceeded: 'Listing succeeded',
     OfferSucceeded: 'Offer succeeded',
@@ -215,6 +214,8 @@ module.exports = {
     Cancel: 'Cancel',
     Accept: 'Accept',
     EnterAddress: 'Enter an address',
+    SelectExpiredDate:'Please select the expiration time!',
+    EnterCorrectPrice:"Please enter the correct price",
     ListingTb: {
       Market: 'Market',
       Price: 'Price',

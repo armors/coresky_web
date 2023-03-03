@@ -243,11 +243,11 @@ export default {
       console.log(this.form.price)
       console.log()
       if (!this.form.price || new BigNumber(this.form.price).isLessThan(0)) {
-        this.$tools.message('请输入正确的价格');
+        this.$tools.message(this.$t('nftDetail.EnterCorrectPrice'),'warning');
         return
       }
       if (!this.form.time) {
-        this.$tools.message('请选择过期时间');
+        this.$tools.message(this.$t('nftDetail.SelectExpiredDate'),'warning');
         return
       }
       console.log(typeof this.tokenInfo.tokenId)

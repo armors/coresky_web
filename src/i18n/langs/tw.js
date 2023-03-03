@@ -215,6 +215,8 @@ module.exports = {
     Cancel: '取消',
     Accept: '接受',
     EnterAddress: '請輸入地址',
+    SelectExpiredDate:'請選擇過期時間!',
+    EnterCorrectPrice:"請輸入正確的價格!",
     ListingTb: {
       Market: '平臺',
       Price: '價格',
