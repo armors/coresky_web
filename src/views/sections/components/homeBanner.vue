@@ -172,11 +172,11 @@ export default {
         color: var(--cs-color-grey-3);
       }
       .btn-more {
-        width: 140px;
-        height: 46px;
+        width: 180px;
+        height: 48px;
         background: var(--cs-color-grey-1);
         font-weight: 500;
-        font-size: 14px;
+        font-size: 16px;
         color: var(--cs-color-white);
         cursor: pointer;
         border-radius: 12px;
