@@ -215,7 +215,7 @@ module.exports = {
     Accept: 'Accept',
     EnterAddress: 'Enter an address',
     SelectExpiredDate:'Please select the expiration time!',
-    EnterCorrectPrice:"Please enter the correct price",
+    EnterCorrectPrice:"Please enter the correct price!",
     ListingTb: {
       Market: 'Market',
       Price: 'Price',
