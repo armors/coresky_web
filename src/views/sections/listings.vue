@@ -14,7 +14,7 @@
 				<div class="nft-box">
 					<image-box class="img-box" :src="tokenInfo.oriImage"></image-box>
 					<div class="box-center">
-						<span class="tokenid">{{ tokenInfo.name || '--' }} #{{ tokenInfo.tokenId }}</span>
+						<span class="tokenid">{{ tokenInfo.name ? tokenInfo.name : ('#' + tokenInfo.tokenId)}}</span>
 						<span class="collection-name">{{ tokenInfo.ckCollectionsInfoEntity.name || '--' }}
 							<img v-if="tokenInfo.ckCollectionsInfoEntity.isCertification === '1'" class="tag"
 								src="@/assets/images/icons/icon_tag.svg" alt="">
@@ -298,7 +298,7 @@ import { DEFAULT_ZONE_BY_NETWORK, OPENSEA_FEE_RECIPIENT } from "opensea-js/lib/c
 import { createSellOrderSDK } from "@/util/openseaCreateSellOrder/createSellOrder";
 import utils_web3 from "@/util/web3";
 import FooterTemplate from "@/views/layout/FooterTemplate";
-
+import {makeBigNumber} from "opensea-js/lib/utils/utils";
 export default {
 	mixins: [],
 	name: 'listings',
