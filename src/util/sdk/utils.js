@@ -161,6 +161,8 @@ function contractAbi(type) {
       file = require('./abi/launchpad.json')
 		case "ORACLE":
 			file = require('./abi/ORACLE.json')
+		case "OPENSEA_NFT":
+			file = require('./abi/OPENSEANFTOP.json')
 	}
 	return file || {};
 }

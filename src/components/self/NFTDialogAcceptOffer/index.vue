@@ -461,30 +461,31 @@ export default {
         //     seaport: this.acceptInfo.protocol_data
         //   }
         // })
-        const transactionHash = await this.$sdk.fulfillOrderOpensea(this.acceptInfo.protocolData
-        //   {
-        //   "offer": {
-        //     "hash": this.acceptInfo.orderHash,
-        //     "chain": this.acceptInfo.chain,
-        //     "protocol_address": this.acceptInfo.protocol_address
-        //   },
-        //   "fulfiller": {
-        //     "address": this.user.coinbase
-        //   }
-        // }
-        , this.user.coinbase)
-        // console.log(order)
-        // const transactionHash = await openseaSDK.fulfillOrder({
-        //   order: this.acceptInfo,
-        //   accountAddress: this.user.coinbase
-        // })
-
-        // {
-        // 	// order: order.data.order,
-        // 	order: orders,
-        // 		accountAddress: asset.tokenAddress
-        // }
+        this.acceptBtnLoading = true
+        const transactionHash = await this.$sdk.acceptOpenseaOffer(
+          {
+          // "offer": {
+          //   "hash": this.acceptInfo.orderHash,
+          //   "chain": this.acceptInfo.chain || (process.env.VUE_APP_NETWORKNAME),
+          //   "protocol_address": this.acceptInfo?.protocol_address || this.acceptInfo?.protocolAddress
+          // },
+          // "fulfiller": {
+          //   "address": this.user.coinbase
+          // }
+          "offer": {
+            "hash": this.acceptInfo.orderHash,
+            "chain": this.acceptInfo.chain || (process.env.VUE_APP_NETWORKNAME),
+            "protocol_address": this.acceptInfo?.protocol_address || this.acceptInfo?.protocolAddress
+          },
+          "fulfiller": {
+            "address": this.user.coinbase
+          }
+        }, this.user.coinbase)
         console.log(transactionHash)
+        if (typeof transactionHash == "object" && transactionHash.error) {
+          this.acceptBtnLoading = false
+          return transactionHash;
+        }
         this.hash = transactionHash
         this.isFinished = true
         this.acceptBtnLoading = false
@@ -497,6 +498,7 @@ export default {
         // })
         // console.log(balance)
       } catch (e) {
+        console.log(e)
         this.$tools.message(this.$filters.filterMsgOpenseaErr(e), 'warning');
         this.acceptBtnLoading = false
         console.log(e)

@@ -11,6 +11,8 @@ import {keepPoint} from "@/filters";
 import { isAddress } from '@ethersproject/address'
 import axios from 'axios'
 
+import {CROSS_CHAIN_SEAPORT_ADDRESS} from "@opensea/seaport-js/lib/constants";
+
 var Web3 = require("web3");
 const eth_util = require("ethereumjs-util");
 
@@ -40,7 +42,6 @@ export default {
 	isAddressVild(address) {
 		return isAddress(address)
 	},
-	// opensea start
 	_sleep(time = 1100) {
 		return new Promise((resolve) => {
 			setTimeout(() => {
@@ -53,6 +54,7 @@ export default {
 		// 	}, time)
 		// })
 	},
+	// opensea start
 	async initOpenSea () {
 		if (!window.openseaSDK) {
 			let web3 = await utils_web3.getWeb3();
@@ -234,6 +236,120 @@ export default {
 		}
 
 	},
+	toNumberStr(num,digits) {
+		// 正则匹配小数科学记数法
+		if (/^(\d+(?:\.\d+)?)(e)([\-]?\d+)$/.test(num)) {
+			// 正则匹配小数点最末尾的0
+			var temp=/^(\d{1,}(?:,\d{3})*\.(?:0*[1-9]+)?)(0*)?$/.exec(num.toFixed(digits)) ;
+			if(temp){
+				return temp[1];
+			}else{
+				return num.toFixed(digits)
+			}
+		}else{
+			return ""+num
+		}
+	},
+	scientificNotationToString(param) {
+		let strParam = String(param)
+		let flag = /e/.test(strParam)
+		if (!flag) return param
+
+		// 指数符号 true: 正，false: 负
+		let sysbol = true
+		if (/e-/.test(strParam)) {
+			sysbol = false
+		}
+		// 指数
+		let index = Number(strParam.match(/\d+$/)[0])
+		// 基数
+		let basis = strParam.match(/^[\d\.]+/)[0].replace(/\./, '')
+
+		if (sysbol) {
+			return basis.padEnd(index + 1, 0)
+		} else {
+			return basis.padStart(index + basis.length, 0).replace(/^0/, '0.')
+		}
+	},
+	async acceptOpenseaOffer (data, owner) {
+		console.log(data, owner)
+		try {
+			const options = {
+				method: 'POST',
+				url: 'https://testnets-api.opensea.io/v2/offers/fulfillment_data',
+				// url: 'https://api.opensea.io/v2/offers/fulfillment_data',
+				headers: {'content-type': 'application/json'},
+				data
+			};
+			const response = await axios.request(options)
+			console.log(response)
+
+			const input_data = response.data.fulfillment_data.orders[0]
+			// const order = input_data.order
+			const parameters = input_data.parameters
+			const offers = []
+			for (let i = 0; i < parameters.offer.length; i++) {
+				let offer = []
+				offer.push(parameters.offer[i].itemType)
+				offer.push(parameters.offer[i].token)
+				offer.push(parameters.offer[i].identifierOrCriteria)
+				offer.push(parameters.offer[i].startAmount)
+				offer.push(parameters.offer[i].endAmount)
+				offers.push(offer)
+
+			}
+			const considerations = []
+			for (let i = 0; i < parameters.consideration.length; i++) {
+				let consideration = []
+				consideration.push(parameters.consideration[i].itemType)
+				consideration.push(parameters.consideration[i].token)
+				consideration.push(parameters.consideration[i].identifierOrCriteria)
+				consideration.push(parameters.consideration[i].startAmount)
+				consideration.push(parameters.consideration[i].endAmount)
+				consideration.push(parameters.consideration[i].recipient)
+				considerations.push(consideration)
+			}
+			const params = [
+				parameters.offerer,
+				parameters.zone,
+				offers,
+				considerations,
+				parameters.orderType,
+				parameters.startTime,
+				parameters.endTime,
+				parameters.zoneHash,
+				parameters.salt,
+				parameters.conduitKey,
+				parameters.totalOriginalConsiderationItems
+			]
+			console.log(JSON.stringify([
+				params,
+				input_data.signature,
+			]))
+			console.log(params)
+			// let contract = await this.getOpenseaContract(response.data.fulfillment_data.transaction.to);
+			let contract = await this.getOpenseaContract(CROSS_CHAIN_SEAPORT_ADDRESS);
+			if (contract.error) return contract;
+			const hash = await contract.fulfillOrder(
+				[
+					params,
+					input_data.signature,
+				],
+				response.data.fulfillment_data.transaction.input_data.fulfillerConduitKey,
+				{
+					from: owner
+				})
+			return hash
+		} catch (e) {
+			console.log(e)
+			return {error: e.message || 'error'};
+		}
+	},
+	// opensea 操作合约
+	async getOpenseaContract(contractAddress) {
+		let abi = utils.contractAbi("OPENSEA_NFT");
+		return await utils.contractAt({abi}, contractAddress);
+	},
 	// opensea end
 
 	ZERO_HASH () {
@@ -287,9 +403,14 @@ export default {
 		return lastAnswer
 	},
 	async getEthPrice () {
-		const decimals = await this.getDecimals()
-		const lastAnswer = await this.getLastAnswer()
-		return this.getDecimalAmount(lastAnswer, -decimals).valueOf()
+		try {
+			const decimals = await this.getDecimals()
+			const lastAnswer = await this.getLastAnswer()
+			return this.getDecimalAmount(lastAnswer, -decimals).valueOf()
+		} catch (e) {
+			return 0
+		}
+
 	},
 	// 注册合约进行注册地址
 	async getOwnerProxy(address) {
