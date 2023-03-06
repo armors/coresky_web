@@ -11,13 +11,13 @@
         <div class="display-flex link-box">
           <div class="display-flex box-center-Y item-list">
             <a class="item-box" target="_blank" href="https://docs.coresky.com/">{{ $t("footer.itemDocs") }}</a>
-            <a class="item-box" target="_blank" href="/file/AuditReport.pdf">{{ $t("footer.itemAuditReport") }}</a>
+            <a class="item-box" target="_blank" href="https://f.coresky.com/file/AuditReport.pdf">{{ $t("footer.itemAuditReport") }}</a>
             <!-- <div class="item-box">{{$t('footer.itemJobs')}}</div> -->
             <!-- <div class="item-box">{{$t('footer.itemDeveloper')}}</div> -->
             <!-- <div class="item-box">{{$t('footer.itemAPI')}}</div> -->
             <!-- <div class="item-box">{{$t('footer.itemCommunity')}}</div> -->
-            <a href="/file/PrivacyPolicy.pdf" target="_blank" class="item-box">{{ $t("footer.itemPrivacyStatement") }}</a>
-            <a href="/file/terms.pdf" target="_blank" class="item-box">{{
+            <a href="https://f.coresky.com/file/PrivacyPolicy.pdf" target="_blank" class="item-box">{{ $t("footer.itemPrivacyStatement") }}</a>
+            <a href="https://f.coresky.com/file/TermsService.pdf" target="_blank" class="item-box">{{
               $t("footer.itemTermsService")
             }}</a>
           </div>
