@@ -11,7 +11,7 @@
         <div class="display-flex link-box">
           <div class="display-flex box-center-Y item-list">
             <a class="item-box" target="_blank" href="https://docs.coresky.com/">{{ $t("footer.itemDocs") }}</a>
-            <div class="item-box">{{ $t("footer.itemAuditReport") }}</div>
+            <a class="item-box" target="_blank" href="/file/CoreskyAuditReport.pdf">{{ $t("footer.itemAuditReport") }}</a>
             <!-- <div class="item-box">{{$t('footer.itemJobs')}}</div> -->
             <!-- <div class="item-box">{{$t('footer.itemDeveloper')}}</div> -->
             <!-- <div class="item-box">{{$t('footer.itemAPI')}}</div> -->
