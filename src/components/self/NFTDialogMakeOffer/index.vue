@@ -12,7 +12,7 @@
     <div class="nft-box">
       <image-box class="img-box" :src="makeOfferType === 1 ? tokenInfo.oriImage : tokenInfo.image"></image-box>
       <div class="box-center">
-        <span class="tokenid">#{{tokenInfo.tokenId}}</span>
+        <span class="tokenid" v-if="tokenInfo.tokenId">#{{tokenInfo.tokenId}}</span>
         <span class="collection-name">{{tokenInfo.name || '--'}}
           <img class="tag" v-if="tokenInfo.isCertification === '1'" src="@/assets/images/icons/icon_tag.svg" alt="">
         </span>

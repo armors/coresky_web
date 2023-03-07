@@ -137,10 +137,11 @@
       </div>
       <div class="tab-box-self">
         <collectionNFT :contract="contract" />
-<!--        <div class="btn-box">-->
-<!--          <el-button class="btnWhite"  @click="showMakeOfferCollect">Make Offer Collect</el-button>-->
-<!--        </div>-->
       </div>
+    </div>
+    <div class="btn-box">
+      <div class="sort">Make</div>
+      <div class="btn-blue"  @click="showMakeOfferCollect">Make Offer Collect</div>
     </div>
     <NFTDialogMakeOffer ref="NFTDialogMakeOffer" @makeOfferSuccess="makeOfferSuccess"></NFTDialogMakeOffer>
   </div>
@@ -499,37 +500,6 @@ export default {
   .tab-box-self {
     position: relative;
 
-    .btn-box {
-      top: -16px;
-      position: absolute;
-      right: 0;
-
-      button {
-        width: 210px;
-        height: 48px;
-        padding: 10px 0;
-        border-radius: 12px;
-        font-weight: 700;
-        border: none;
-        cursor: pointer;
-
-        &.btnBuy {
-          color: $color-white;
-          background: $mainLiner;
-        }
-
-        &.btnBlack {
-          color: $color-white;
-          background: $primaryColor;
-        }
-
-        &.btnWhite {
-          color: $primaryColor;
-          background: $color-white;
-          border: 1px solid $primaryColor;
-        }
-      }
-    }
 
     .btnWhite {}
   }
@@ -538,4 +508,64 @@ export default {
 .right-content {
   width: 100%;
 }
+.btn-box {
+  position: fixed;
+  right: 24px;
+  bottom: 90px;
+  z-index: 1000;
+  width: 51px;
+  height: 51px;
+  background: #000000;
+  overflow: hidden;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 51px;
+
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  color: #FFFFFF;
+  cursor: pointer;
+
+  &:hover{
+    transition: all 0.3s ease-in-out;
+    width: 181px;
+    height: 51px;
+    /* 品牌色 */
+    background: #1063E0;
+    border-radius: 40px;
+    .sort{
+      display: none;
+    }
+    .btn-blue{
+      width: 100%;
+      height: 100%;
+      line-height: 51px;
+    }
+  }
+  button {
+    width: 210px;
+    height: 48px;
+    padding: 10px 0;
+    border-radius: 12px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    &.btnBuy {
+      color: $color-white;
+      background: $mainLiner;
+    }
+    &.btnBlack {
+      color: $color-white;
+      background: $primaryColor;
+    }
+
+    &.btnWhite {
+      color: $primaryColor;
+      background: $color-white;
+      border: 1px solid $primaryColor;
+    }
+  }
+}
+
 </style>
