@@ -35,7 +35,7 @@ const nftPrice = (basePrice) => {
 }
 const oriImage = () => {
   if(props.item.oriImage.indexOf('?') == -1) { 
-    return props.item.oriImage + "?x-oss-process=image/resize,l_500"
+    return props.item.oriImage + "?x-oss-process=image/resize,l_300"
   } else {
     return props.item.oriImage
   }
