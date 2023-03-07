@@ -139,11 +139,12 @@ export default {
       this.tokenInfo = tokenInfo
       this.form = {
         price: undefined,
-        date: '',
+        date: 7,
         time: '',
         symbol: 'WETH',
         quantity: ''
       }
+      this.dateChange()
       this.rules = this.tokenInfo.contractType === 0 ? {
         price: [
           { required: true, message: this.$t('makeAnOffer.PleasePrice'), trigger: 'blur' },
