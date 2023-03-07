@@ -54,7 +54,7 @@ export default {
           tip:'website'
         },
         {
-          url: "https://discord.gg/ZbG5HrVFEE",
+          url: "https://discord.gg/coresky",
           name: "discord",
           tip:'website2'
         },
