@@ -106,22 +106,7 @@
         <div class="nft-list">
           <router-link :to="`/detail/${item.contract}/${item.tokenId}`" class="nft-card"
             v-for="(item,index) in dataList" :key="index">
-            <div class="nft-content">
-              <div class="card-top">
-                <div class="card-img">
-                  <!-- <div style="padding-bottom: 100%;"></div> -->
-                  <image-box :src="item.oriImage"></image-box>
-                </div>
-              </div>
-              <div class="card-bottom">
-                <div class="nft-txt">
-                  {{item.name?item.name:('#'+item.tokenId)}}
-                </div>
-                <div class="nft-price" v-if="item.basePrice && item.basePrice !== '0'">
-                  <span class="price">{{!!item.basePrice?nftPrice(item.basePrice):'-- '}} ETH</span>
-                </div>
-              </div>
-            </div>
+            <card-item :item = item :obj = this ></card-item>
           </router-link>
         </div>
         <!-- <div class="custom-pagination" v-if="listCount>queryParams.limit">
@@ -148,10 +133,13 @@
   </div>
 </template>
 <script>
+import CardItem from './components/common/Item.vue';
 export default {
   mixins: [],
   name: 'MarkterPlace',
-  components: {},
+  components: {
+    CardItem,
+  },
   props: {
     searchKeyword: {
       type: String,
@@ -237,6 +225,7 @@ export default {
     }
   },
 };
+ 
 </script>
 <style lang="scss" scoped>
 .main-wrapper {
