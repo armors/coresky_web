@@ -110,22 +110,7 @@
         <div class="nft-list">
           <router-link :to="`/detail/${item.contract}/${item.tokenId}`" class="nft-card" v-for="(item, index) in dataList"
             :key="index">
-            <div class="nft-content">
-              <div class="card-top">
-                <div class="card-img">
-                  <image-box :src="item.oriImage"></image-box>
-                </div>
-              </div>
-              <div class="card-bottom">
-                <div class="nft-txt">
-                  {{ item.name ? item.name : ('#' + item.tokenId) }}
-                </div>
-                <div class="nft-price" v-if="item.basePrice">
-                  <span class="price">{{ !!item.basePrice ? nftPrice(item.basePrice) : '-- ' }} </span>
-                  <span style="margin-left:4px">ETH</span>
-                </div>
-              </div>
-            </div>
+            <card-item :item = item :obj = this ></card-item>
           </router-link>
         </div>
         <div v-if="loadStatus === 'loading'">
@@ -145,11 +130,11 @@
 </template>
 
 <script>
-
+import CardItem from './common/Item.vue';
 export default {
   name: "collectionNFT",
   components: {
-
+    CardItem,
   },
   props: {
     contract: {
