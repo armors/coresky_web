@@ -104,10 +104,7 @@
       </div>
       <div>
         <div class="nft-list">
-          <router-link :to="`/detail/${item.contract}/${item.tokenId}`" class="nft-card"
-            v-for="(item,index) in dataList" :key="index">
-            <card-item :item = item :obj = this ></card-item>
-          </router-link>
+          <card-item :item=item v-for="(item,index) in dataList" :key="index"></card-item>
         </div>
         <!-- <div class="custom-pagination" v-if="listCount>queryParams.limit">
           <div class="content">
@@ -133,7 +130,7 @@
   </div>
 </template>
 <script>
-import CardItem from './components/common/Item.vue';
+import CardItem from './components/common/cardItem.vue';
 export default {
   mixins: [],
   name: 'MarkterPlace',

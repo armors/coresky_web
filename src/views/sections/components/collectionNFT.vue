@@ -108,10 +108,7 @@
       </div>
       <div>
         <div class="nft-list">
-          <router-link :to="`/detail/${item.contract}/${item.tokenId}`" class="nft-card" v-for="(item, index) in dataList"
-            :key="index">
-            <card-item :item = item :obj = this ></card-item>
-          </router-link>
+          <card-item :item=item v-for="(item,index) in dataList" :key="index"></card-item>
         </div>
         <div v-if="loadStatus === 'loading'">
           <p class="loading-txt">
@@ -130,7 +127,7 @@
 </template>
 
 <script>
-import CardItem from './common/Item.vue';
+import CardItem from './common/cardItem.vue';
 export default {
   name: "collectionNFT",
   components: {
