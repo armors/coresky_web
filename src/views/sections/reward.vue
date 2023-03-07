@@ -1,29 +1,31 @@
 <template>
   <div class="reward-wrapper">
     <div class="banner-wrap">
-      <div class="banner-txt">
-        <div class="txt1">{{$t('rewards.title')}} </div>
-        <div class="txt2">{{$t('rewards.subTitle')}}</div>
-        <div class="txt3">
-          <el-button class="btn" @click="$router.push('/markterplace')" type="primary">{{$t('rewards.goTrade')}}
-          </el-button>
+      <div class="banner-txt-box">
+        <div class="banner-txt">
+          <div class="txt1">{{ $t('rewards.title') }} </div>
+          <div class="txt2">{{ $t('rewards.subTitle') }}</div>
+          <div class="txt3">
+            <el-button class="btn" @click="$router.push('/markterplace')" type="primary">{{ $t('rewards.goTrade') }}
+            </el-button>
+          </div>
+          <!-- <img class="image" src="@/assets/images/reward.png" alt=""> -->
         </div>
-        <img class="image" src="@/assets/images/reward.png" alt="">
       </div>
     </div>
     <div class="page-center">
-      <div class="title1">{{$t('rewards.HotActivities')}}</div>
+      <div class="title1">{{ $t('rewards.HotActivities') }}</div>
       <div class="card-list">
         <div class="card-item">
-          <img class="image" src="@/assets/images/reward01.jpg" alt="">
+          <img class="image" src="@/assets/images/reward02.jpg" alt="">
         </div>
         <!-- <div class="card-item"></div>
         <div class="card-item"></div> -->
       </div>
     </div>
     <div class="page-center" style="margin-bottom:30px">
-      <div class="title1">{{$t('rewards.MyRewards')}}
-        <span class="sub-title"> ({{ score }} {{$t('rewards.CTScore')}})</span>
+      <div class="title1">{{ $t('rewards.MyRewards') }}
+        <span class="sub-title"> ({{ score }} {{ $t('rewards.CTScore') }})</span>
       </div>
 
       <el-tabs v-model="activeName" class="demo-tabs">
@@ -36,10 +38,10 @@
             </el-table-column>
             <el-table-column prop="event" :label="$t('rewards.Event')" width="300">
               <template #default="props">
-                <span v-if="props.row.type===0">{{$t('rewards.Event')}}</span>
-                <span v-if="props.row.type===1">{{$t('rewards.Sale')}}</span>
-                <span v-if="props.row.type===3">{{$t('rewards.Rewards')}}</span>
-                <span v-if="props.row.type===4">{{$t('rewards.ConvertTickets')}}</span>
+                <span v-if="props.row.type === 0">{{ $t('rewards.Event') }}</span>
+                <span v-if="props.row.type === 1">{{ $t('rewards.Sale') }}</span>
+                <span v-if="props.row.type === 3">{{ $t('rewards.Rewards') }}</span>
+                <span v-if="props.row.type === 4">{{ $t('rewards.ConvertTickets') }}</span>
               </template>
             </el-table-column>
             <el-table-column prop="itemName" :label="$t('rewards.Item')">
@@ -59,7 +61,7 @@
               </div>
             </template>
           </el-table>
-          <div class="custom-pagination" v-if="listCount>queryParams.limit">
+          <div class="custom-pagination" v-if="listCount > queryParams.limit">
             <div class="content">
               <el-pagination background v-model:current-page="queryParams.page" :page-size="queryParams.limit"
                 :page-="queryParams.limit" @current-change="queryData" layout="prev, pager, next" align="center"
@@ -146,13 +148,20 @@ export default {
 <style lang="scss" scoped>
 .reward-wrapper {
   .banner-wrap {
-    height: 260px;
-    background: linear-gradient(133deg, #ece4ff 0%, #ddf1f8 100%) #e9e6fe;
+    height: 197px;
+    background: linear-gradient(180deg, #ECEFFC 0%, rgba(231, 234, 245, 0) 100%);
+    // background: linear-gradient(133deg, #ece4ff 0%, #ddf1f8 100%) #e9e6fe;
     .btn {
       width: 140px;
       height: 48px;
       // background: #7d47ff;
       border-radius: 12px;
+    }
+    .banner-txt-box {
+      width: 1280px;
+      height: 197px;
+      margin: 0 auto;
+      background: url('@/assets/images/reward-bg.png') no-repeat;
     }
     .banner-txt {
       width: 1200px;
@@ -169,8 +178,8 @@ export default {
         line-height: 41px;
       }
       .txt2 {
-        margin-top: 18px;
-        margin-bottom: 32px;
+        margin-top: 10px;
+        margin-bottom: 20px;
         height: 18px;
         font-size: 14px;
         color: rgba(46, 46, 46, 0.6);
@@ -207,16 +216,16 @@ export default {
     grid-template-rows: auto auto;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     .card-item {
-      width: 390px;
-      height: 248px;
+      width: 1200px;
+      height: 393px;
       background: #ededed;
       border-radius: 12px;
       overflow: hidden;
       cursor: pointer;
       .image {
+        transition: all 0.3s ease-out;
         &:hover {
-          transform: scale(1.05);
-          transition: all 0.3s;
+          transform: scale(1.02);
         }
       }
     }
