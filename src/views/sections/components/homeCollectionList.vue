@@ -49,13 +49,12 @@
               </div>
             </div>
             <div class="w20">
-              <div class="floor-num" v-if="item.foolPrice">{{ prasePrice(item.foolPrice) }}&nbsp;ETH
+              <div class="floor-num" v-if="item.foolPrice">{{ prasePrice(item.foolPrice) }}&nbsp;
               </div>
             </div>
             <div class="w20">
               <div class="floor-num" v-if="collectionQuery.order === 1">
                 {{ $filters.keepMaxPoint(item.volume) }}
-                ETH
               </div>
               <div class="floor-num" v-else>
                 {{ $filters.keepMaxPoint(item.dayVol) }}
@@ -86,13 +85,13 @@
               </div>
             </div>
             <div class="w20">
-              <div class="floor-num" v-if="item.foolPrice">{{ prasePrice(item.foolPrice) }}&nbsp;ETH
+              <div class="floor-num" v-if="item.foolPrice">{{ prasePrice(item.foolPrice) }}&nbsp;
               </div>
             </div>
             <div class="w20">
               <div class="floor-num" v-if="collectionQuery.order === 1">
                 {{ $filters.keepMaxPoint(item.volume) }}
-                ETH
+                
               </div>
               <div class="floor-num" v-else>
                 {{ $filters.keepMaxPoint(item.dayVol) }}

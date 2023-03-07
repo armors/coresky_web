@@ -1,5 +1,5 @@
 <template>
-  <div class="account-wrap">
+  <div class="account-box">
     <accountHead :address="address" />
     <div class="account-page">
       <el-tabs v-model="activeName" class="demo-tabs" @tab-change="handleClick">
@@ -85,10 +85,13 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.account-box {
+  min-height: calc(100vh - 200px);
+  margin-bottom: 40px;
+}
 .account-page {
   // width: 1200px;
   margin: 0 40px;
-  margin-bottom: 40px;
   ::v-deep {
     .el-tabs__content{
       overflow: visible;

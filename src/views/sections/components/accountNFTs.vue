@@ -104,26 +104,7 @@
       </div>
       <div >
         <div class="nft-list">
-          <router-link :to="`/detail/${item.contract}/${item.tokenId}`" class="nft-card" v-for="(item,index) in nftList"
-            :key="index">
-            <div class="nft-content">
-              <div class="card-top">
-                <div class="card-img">
-                  <!-- <image-box src="https://storage.nfte.ai/asset/collection/featured/BEEWQLPGNIJCWCXJUDSRUWRWOWSOYCCT.jpg?x-oss-process=image/resize,m_fill,w_504,h_288,limit_0"></image-box> -->
-                  <image-box :src="item.oriImage"></image-box>
-                </div>
-              </div>
-              <div class="card-bottom">
-                <div class="nft-txt">
-                  {{item.name?item.name:('#'+item.tokenId)}}
-                </div>
-                <div class="nft-price" v-if="item && item.state !== 0">
-                  <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="">
-                  <span class="price">{{nftPrice(item.basePrice)}} ETH</span>
-                </div>
-              </div>
-            </div>
-          </router-link>
+          <card-item :item=item v-for="(item,index) in dataList" :key="index"></card-item>
         </div>
         <div v-if="loadStatus === 'loading'">
           <p class="loading-txt">
@@ -144,6 +125,7 @@
 
 <script>
 
+import CardItem from './common/cardItem.vue';
 export default {
   name: "accountNFTs",
   props: {
@@ -151,6 +133,9 @@ export default {
       type: String,
       default: ''
     },
+  },
+  components: {
+    CardItem,
   },
   // watch: {
   //   $route (to, from) {

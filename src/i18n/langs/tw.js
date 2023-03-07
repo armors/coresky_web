@@ -136,6 +136,7 @@ module.exports = {
     myPlatform: '我的社交平臺',
     UploadAvatar: '上傳頭像',
     tip2: '支持PNG、JPG、GIF等檔 推薦尺寸：400*400 推薦大小：<1M',
+    editSuccess: '修改成功'
   },
   rewards: {
     title: '交易獲得CT積分',
@@ -209,8 +210,13 @@ module.exports = {
     Buy: '購買',
     Add: '添加',
     Sell: '出售',
+    Transfer: '转移',
+    addressError: "地址異常",
     Cancel: '取消',
     Accept: '接受',
+    EnterAddress: '請輸入地址',
+    SelectExpiredDate:'請選擇過期時間!',
+    EnterCorrectPrice:"請輸入正確的價格!",
     ListingTb: {
       Market: '平臺',
       Price: '價格',

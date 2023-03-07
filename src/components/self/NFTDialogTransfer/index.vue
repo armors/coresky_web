@@ -3,7 +3,7 @@
     custom-class="custom-dialog transfer-box" destroy-on-close>
     <template #title>
       <div class="left">
-        <span>Transfer</span>
+        <span>{{ $t('nftDetail.Transfer') }}</span>
       </div>
       <el-icon @click="isShowTransferDialog=false">
         <Close />
@@ -34,10 +34,10 @@
           Transfer To
         </div>
         <div class="price-wrap">
-          <el-input v-model="recivierAddress" placeholder="e.g. 0x1ed3... or destination.eth, destination.lens" class="input-with-select" size="large" />
+          <el-input v-model="recivierAddress" :placeholder="$t('nftDetail.EnterAddress')"  class="input-with-select" size="large" />
         </div>
       </div>
-      <el-button type="primary" class="btnBuy" :loading="transferBtnLoading" @click="transferNft">Transfer</el-button>
+      <el-button type="primary" class="btnBuy" :loading="transferBtnLoading" @click="transferNft">{{ $t('nftDetail.Transfer') }}</el-button>
     </div>
     <div v-else>
       <div class="nft-box">
@@ -55,6 +55,7 @@
 </template>
 
 <script>
+
 export default {
   name: "index",
   data () {
@@ -106,7 +107,7 @@ export default {
         return
       }
       if (!this.$sdk.isAddressVild(this.recivierAddress)) {
-        this.$tools.message('地址异常');
+        this.$tools.message(this.$t('nftDetail.addressError'));
         return
       }
       this.transferBtnLoading = true

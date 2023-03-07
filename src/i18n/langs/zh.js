@@ -136,6 +136,7 @@ module.exports = {
     myPlatform: '我的社交平台',
     UploadAvatar: '上传头像',
     tip2: '支持PNG、JPG、GIF等文件 推荐尺寸：400*400 推荐大小：<1M',
+    editSuccess: '修改成功'
   },
   rewards: {
     title: '交易获得CT积分',
@@ -209,8 +210,13 @@ module.exports = {
     Buy: '购买',
     Add: '添加',
     Sell: '出售',
+    Transfer: '转移',
+    addressError: "地址异常",
     Cancel: '取消',
     Accept: '接受',
+    EnterAddress: '请输入地址',
+    SelectExpiredDate:'请选择过期时间',
+    EnterCorrectPrice:"请输入正确的价格!",
     ListingTb: {
       Market: '平台',
       Price: '价格',

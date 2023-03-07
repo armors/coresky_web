@@ -203,7 +203,7 @@
                   </el-button>
 
                   <el-button type="primary" :disabled="youSellAmount === youOwnAmount" class="btnBuy"
-                    @click="showTransferNft">Transfer</el-button>
+                    @click="showTransferNft">{{ $t('nftDetail.Transfer') }}</el-button>
 
                   <!--                <el-button type="primary" class="btnBuy" v-if="!tokenInfo.state || tokenInfo.contractType === 1"-->
                   <!--                  :loading="sellDialogBtnLoading" @click="showSellNft">Sell Now</el-button>-->
@@ -555,7 +555,7 @@
     <NFTDialogSell ref="NFTDialogSell" @sellCreateSuccess="sellCreateSuccess"></NFTDialogSell>
     <NFTDialogMakeOffer ref="NFTDialogMakeOffer" @makeOfferSuccess="makeOfferSuccess"></NFTDialogMakeOffer>
     <NFTDialogAcceptOffer ref="NFTDialogAcceptOffer" @acceptOfferSuccess="acceptOfferSuccess" />
-    <NFTDialogTransfer ref="NFTDialogTransfer" @transferSuccess="transferSuccess" />
+    <NFTDialogTransfer ref="NFTDialogTransfer" @transferSuccess="transferSuccess" ></NFTDialogTransfer>
     <div class="web-loading" v-if="loading" v-loading.fullscreen.lock="loading"></div>
   </div>
 </template>
