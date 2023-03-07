@@ -12262,10 +12262,10 @@
   "resolved" "https://registry.npmmirror.com/opener/-/opener-1.5.2.tgz"
   "version" "1.5.2"
 
-"opensea-js@^4.0.16":
-  "integrity" "sha512-TyPKtFuQKbO4BS8QnesGYZC2l6+ekvm4VTFOnyzIBZ5VRHFhS2gw1TEeOv385j41sRBhMDVVFdZQQNQZF9/55g=="
-  "resolved" "https://registry.npmjs.org/opensea-js/-/opensea-js-4.0.16.tgz"
-  "version" "4.0.16"
+"opensea-js@^4.0.18":
+  "integrity" "sha512-Yy+tJpsvbyv5jzMySp7TYlNPRKNObqQxCGxQFio1zLJAIf+X/fGOxrqsp43e1PT+/RA8KWwKNt5i+b8P182S1Q=="
+  "resolved" "https://registry.npmjs.org/opensea-js/-/opensea-js-4.0.18.tgz"
+  "version" "4.0.18"
   dependencies:
     "@opensea/seaport-js" "^1.0.10"
     "ajv" "^8.11.0"
