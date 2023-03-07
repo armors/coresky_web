@@ -14,6 +14,7 @@
           {{ I.name ? I.name : ('#' + I.tokenId) }}
         </div>
         <div class="nft-price" v-if="I.basePrice && I.basePrice !== '0'">
+          <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="">
           <span class="price"> {{ !!I.basePrice ? nftPrice(I.basePrice) : '-- '}} ETH</span>
         </div>
       </div>
