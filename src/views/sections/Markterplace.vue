@@ -202,8 +202,6 @@ export default {
       })
     },
     nftPrice (basePrice) {
-      console.log(this);
-      debugger
       return this.$filters.keepMaxPoint(this.$Web3.utils.fromWei(basePrice.toString()))
     },
     searchClick () {
