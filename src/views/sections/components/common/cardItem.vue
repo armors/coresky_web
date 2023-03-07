@@ -34,7 +34,8 @@ const nftPrice = (basePrice) => {
   return filters.keepMaxPoint(Web3.utils.fromWei(basePrice.toString()))
 }
 const oriImage = () => {
-  if(props.item.oriImage.indexOf('?') == -1) { 
+  let imgSrc = props.item.oriImage;
+  if(imgSrc.indexOf('?') == -1 && imgSrc.indexOf('base64') == -1) { 
     return props.item.oriImage + "?x-oss-process=image/resize,l_300"
   } else {
     return props.item.oriImage
