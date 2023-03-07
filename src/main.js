@@ -101,6 +101,9 @@ app.component("placeholder", Placeholder);
 
 app.component("no-found", NoFound);
 
+app.provide("filters",filters); 
+app.provide("Web3", Web3);
+
 app
   .use(store)
   .use(router)

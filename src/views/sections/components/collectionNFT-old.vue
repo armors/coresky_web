@@ -108,10 +108,7 @@
       </div>
       <div v-else>
         <div class="nft-list">
-          <router-link :to="`/detail/${item.contract}/${item.tokenId}`" class="nft-card"
-            v-for="(item,index) in dataList" :key="index">
-            <card-item :item = item :obj = this ></card-item>
-          </router-link>
+          <card-item :item=item v-for="(item,index) in dataList" :key="index"></card-item>
         </div>
         <div class="custom-pagination" v-if="listCount>queryParams.limit">
           <div class="content">
@@ -131,7 +128,7 @@
 </template>
 
 <script>
-import CardItem from './common/Item.vue';
+import CardItem from './common/cardItem.vue';
 export default {
   name: "collectionNFT",
   components: {

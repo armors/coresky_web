@@ -1,33 +1,44 @@
 <template>
-  <div class="item" 
-    :set="
-      (I = props.item)
-    ">
-    <div class="nft-content">
-      <div class="card-top">
-        <div class="card-img">
-          <image-box :src="I.oriImage"></image-box>
+  <router-link :to="`/detail/${item.contract}/${item.tokenId}`">
+    <div class="item">
+      <div class="nft-content">
+        <div class="card-top">
+          <div class="card-img">
+            <image-box :src="oriImage()"></image-box>
+          </div>
         </div>
-      </div>
-      <div class="card-bottom">
-        <div class="nft-txt">
-          {{ I.name ? I.name : ('#' + I.tokenId) }}
-        </div>
-        <div class="nft-price" v-if="I.basePrice && I.basePrice !== '0'">
-          <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="">
-          <span class="price"> {{ !!I.basePrice ? nftPrice(I.basePrice) : '-- '}} ETH</span>
+        <div class="card-bottom">
+          <div class="nft-txt">
+            {{ item.name ? item.name : ('#' + item.tokenId) }}
+          </div>
+          <div class="nft-price" v-if="item.basePrice && item.basePrice !== '0'">
+            <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="">
+            <span class="price"> {{ !!item.basePrice ? nftPrice(item.basePrice) : '-- '}} ETH</span>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </router-link>
 </template>
 <script setup>
+import { inject } from 'vue'
+
+const filters = inject('filters');
+const Web3 = inject('Web3');
+
 const props = defineProps({
-  item: {},
-  obj: {}
+  item: {}
 });
+
 const nftPrice = (basePrice) => {
-  return props.obj.$filters.keepMaxPoint(props.obj.$Web3.utils.fromWei(basePrice.toString()))
+  return filters.keepMaxPoint(Web3.utils.fromWei(basePrice.toString()))
+}
+const oriImage = () => {
+  if(props.item.oriImage.indexOf('?') == -1) { 
+    return props.item.oriImage + "?x-oss-process=image/resize,l_500"
+  } else {
+    return props.item.oriImage
+  }
 }
 
 </script>
