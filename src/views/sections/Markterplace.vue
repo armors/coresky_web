@@ -198,9 +198,6 @@ export default {
         }
       })
     },
-    nftPrice (basePrice) {
-      return this.$filters.keepMaxPoint(this.$Web3.utils.fromWei(basePrice.toString()))
-    },
     searchClick () {
       this.queryParams.page = 1
       this.dataList = []
