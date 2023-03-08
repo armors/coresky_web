@@ -1,85 +1,83 @@
-<template>
-  <div class="reward-wrapper">
-    <div class="banner-wrap">
-      <div class="banner-txt-box">
-        <div class="banner-txt">
-          <div class="txt1">{{ $t('rewards.title') }} </div>
-          <div class="txt2">{{ $t('rewards.subTitle') }}</div>
-          <div class="txt3">
-            <el-button class="btn" @click="$router.push('/markterplace')" type="primary">{{ $t('rewards.goTrade') }}
-            </el-button>
-          </div>
-          <!-- <img class="image" src="@/assets/images/reward.png" alt=""> -->
+<template><div class="reward-wrapper">
+  <div class="banner-wrap">
+    <div class="banner-txt-box">
+      <div class="banner-txt">
+        <div class="txt1">{{ $t('rewards.title') }} </div>
+        <div class="txt2">{{ $t('rewards.subTitle') }}</div>
+        <div class="txt3">
+          <el-button class="btn" @click="$router.push('/markterplace')" type="primary">{{ $t('rewards.goTrade') }}
+          </el-button>
         </div>
+        <!-- <img class="image" src="@/assets/images/reward.png" alt=""> -->
       </div>
-    </div>
-    <div class="page-center">
-      <div class="title1">{{ $t('rewards.HotActivities') }}</div>
-      <div class="card-list">
-        <div class="card-item">
-          <img class="image" src="@/assets/images/reward02.jpg" alt="">
-          <div class="item-content">
-            <span>TEADING MINING</span>
-            <img class="btn-right" src="@/assets/images/right.png" alt="">
-          </div>
-
-        </div>
-        <!-- <div class="card-item"></div>
-        <div class="card-item"></div> -->
-      </div>
-    </div>
-    <div class="page-center" style="margin-bottom:30px">
-      <div class="title1">{{ $t('rewards.MyRewards') }}
-        <span class="sub-title"> ({{ score }} {{ $t('rewards.CTScore') }})</span>
-      </div>
-
-      <el-tabs v-model="activeName" class="demo-tabs">
-        <el-tab-pane :label="$t('rewards.TransactionMining')" name="mining" :lazy="true">
-          <el-table :data="dataList" style="width: 100%" class="mytable" v-loading="isLoading">
-            <el-table-column prop="createTime" :label="$t('rewards.Time')" width="100">
-              <template #default="props">
-                {{ parseTime(props.row.createTime) }}
-              </template>
-            </el-table-column>
-            <el-table-column prop="event" :label="$t('rewards.Event')" align="right">
-              <template #default="props">
-                <span v-if="props.row.type === 0">{{ $t('rewards.Event') }}</span>
-                <span v-if="props.row.type === 1">{{ $t('rewards.Sale') }}</span>
-                <span v-if="props.row.type === 3">{{ $t('rewards.Rewards') }}</span>
-                <span v-if="props.row.type === 4">{{ $t('rewards.ConvertTickets') }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column prop="itemName" align="right" :label="$t('rewards.Item')">
-              <!-- <template #default="props">
-                Lazy Cubs Official #1231
-              </template> -->
-            </el-table-column>
-            <el-table-column prop="score" :label="$t('rewards.Rewards')" align="right">
-              <template #default="props">
-                {{ props.row.score }} CT
-              </template>
-            </el-table-column>
-            <template #empty>
-              <div class="empty-wrap">
-                <img src="@/assets/images/no-data.png" alt="">
-                <p class="txt">No Data</p>
-              </div>
-            </template>
-          </el-table>
-          <div class="custom-pagination" v-if="listCount > queryParams.limit">
-            <div class="content">
-              <el-pagination background v-model:current-page="queryParams.page" :page-size="queryParams.limit"
-                :page-="queryParams.limit" @current-change="queryData" layout="prev, pager, next" align="center"
-                :total="listCount" />
-            </div>
-          </div>
-        </el-tab-pane>
-      </el-tabs>
-
     </div>
   </div>
-  <FooterTemplate />
-</template>
+  <div class="page-center">
+    <div class="title1">{{ $t('rewards.HotActivities') }}</div>
+    <div class="card-list">
+      <div class="card-item">
+        <img class="image" src="@/assets/images/reward02.jpg" alt="">
+        <div class="item-content">
+          <span class="ml20">TRADING MINING</span>
+          <img class="btn-right" src="@/assets/images/right.png" alt="">
+        </div>
+
+      </div>
+      <!-- <div class="card-item"></div>
+        <div class="card-item"></div> -->
+    </div>
+  </div>
+  <div class="page-center" style="margin-bottom:30px">
+    <div class="title1">{{ $t('rewards.MyRewards') }}
+      <span class="sub-title"> ({{ score }} {{ $t('rewards.CTScore') }})</span>
+    </div>
+
+    <el-tabs v-model="activeName" class="demo-tabs">
+      <el-tab-pane :label="$t('rewards.TransactionMining')" name="mining" :lazy="true">
+        <el-table :data="dataList" style="width: 100%" class="mytable" v-loading="isLoading">
+          <el-table-column prop="createTime" :label="$t('rewards.Time')" width="160">
+              <template #default=" props">
+            {{ parseTime(props.row.createTime) }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="event" :label="$t('rewards.Event')" align="right" width="260">
+            <template #default="props">
+              <span v-if="props.row.type === 0">{{ $t('rewards.Event') }}</span>
+              <span v-if="props.row.type === 1">{{ $t('rewards.Sale') }}</span>
+              <span v-if="props.row.type === 3">{{ $t('rewards.Rewards') }}</span>
+              <span v-if="props.row.type === 4">{{ $t('rewards.ConvertTickets') }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="itemName" align="right" :label="$t('rewards.Item')">
+            <!-- <template #default="props">
+                Lazy Cubs Official #1231
+              </template> -->
+          </el-table-column>
+          <el-table-column prop="score" :label="$t('rewards.Rewards')" align="right">
+            <template #default="props">
+              {{ props.row.score }} CT
+            </template>
+          </el-table-column>
+          <template #empty>
+                        <div class="empty-wrap">
+                          <img src="@/assets/images/no-data.png" alt="">
+                          <p class="txt">No Data</p>
+                        </div>
+                    </template>
+        </el-table>
+        <div class="custom-pagination" v-if="listCount > queryParams.limit">
+          <div class="content">
+            <el-pagination background v-model:current-page="queryParams.page" :page-size="queryParams.limit"
+              :page-="queryParams.limit" @current-change="queryData" layout="prev, pager, next" align="center"
+              :total="listCount" />
+          </div>
+        </div>
+      </el-tab-pane>
+    </el-tabs>
+
+  </div>
+</div>
+<FooterTemplate /></template>
 <script>
 import BigNumber from "bignumber.js";
 import FooterTemplate from "@/views/layout/FooterTemplate";
@@ -243,8 +241,10 @@ export default {
         color: #04142A;
         display: flex;
         align-items: center;
+        transition: all 0.3s ease-out;
         z-index: 1;
         &:hover {
+          color: #1063E0;
           .btn-right {
             margin-left: 50px;
           }
