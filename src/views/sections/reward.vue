@@ -122,7 +122,7 @@ export default {
   },
   methods: {
     parseTime (time) {
-      return dayjs(time * 1000).format('YYYY-MM-DD hh:mm')
+      return dayjs(time * 1000).format('YYYY-MM-DD HH:mm')
     },
     init () {
       if (this.user && this.user.coinbase) {
