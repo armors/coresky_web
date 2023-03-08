@@ -18,6 +18,11 @@
       <div class="card-list">
         <div class="card-item">
           <img class="image" src="@/assets/images/reward02.jpg" alt="">
+          <div class="item-content">
+            <span>TEADING MINING</span>
+            <img class="btn-right" src="@/assets/images/right.png" alt="">
+          </div>
+
         </div>
         <!-- <div class="card-item"></div>
         <div class="card-item"></div> -->
@@ -31,12 +36,12 @@
       <el-tabs v-model="activeName" class="demo-tabs">
         <el-tab-pane :label="$t('rewards.TransactionMining')" name="mining" :lazy="true">
           <el-table :data="dataList" style="width: 100%" class="mytable" v-loading="isLoading">
-            <el-table-column prop="createTime" :label="$t('rewards.Time')" width="325">
+            <el-table-column prop="createTime" :label="$t('rewards.Time')" width="100">
               <template #default="props">
                 {{ parseTime(props.row.createTime) }}
               </template>
             </el-table-column>
-            <el-table-column prop="event" :label="$t('rewards.Event')" width="300">
+            <el-table-column prop="event" :label="$t('rewards.Event')" align="right">
               <template #default="props">
                 <span v-if="props.row.type === 0">{{ $t('rewards.Event') }}</span>
                 <span v-if="props.row.type === 1">{{ $t('rewards.Sale') }}</span>
@@ -44,20 +49,20 @@
                 <span v-if="props.row.type === 4">{{ $t('rewards.ConvertTickets') }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="itemName" :label="$t('rewards.Item')">
+            <el-table-column prop="itemName" align="right" :label="$t('rewards.Item')">
               <!-- <template #default="props">
                 Lazy Cubs Official #1231
               </template> -->
             </el-table-column>
-            <el-table-column prop="score" :label="$t('rewards.Rewards')" width="140">
+            <el-table-column prop="score" :label="$t('rewards.Rewards')" align="right">
               <template #default="props">
                 {{ props.row.score }} CT
               </template>
             </el-table-column>
             <template #empty>
               <div class="empty-wrap">
-                <p class="txt">No Data</p>
                 <img src="@/assets/images/no-data.png" alt="">
+                <p class="txt">No Data</p>
               </div>
             </template>
           </el-table>
@@ -201,11 +206,12 @@ export default {
   .title1 {
     margin: 40px 0;
     height: 29px;
-    font-size: 22px;
+    font-size: 30px;
     font-weight: 600;
     color: #000000;
-    line-height: 29px;
+    line-height: 35px;
     .sub-title {
+      font-size: 18px;
       margin-left: 5px;
       color: rgba(0, 0, 0, 0.3);
     }
@@ -216,17 +222,49 @@ export default {
     grid-template-rows: auto auto;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     .card-item {
+      position: relative;
       width: 1200px;
       height: 393px;
       background: #ededed;
       border-radius: 12px;
       overflow: hidden;
       cursor: pointer;
-      .image {
-        transition: all 0.3s ease-out;
+
+      .item-content {
+        width: 780px;
+        height: 62px;
+        margin: 0 auto;
+        margin-top: 145px;
+        position: relative;
+
+        font-weight: 800;
+        font-size: 50px;
+        line-height: 150%;
+        color: #04142A;
+        display: flex;
+        align-items: center;
+        z-index: 1;
         &:hover {
-          transform: scale(1.02);
+          .btn-right {
+            margin-left: 50px;
+          }
         }
+
+        .btn-right {
+          width: 50px;
+          height: 50px;
+          margin-left: 30px;
+          transition: all 0.3s ease-out;
+        }
+      }
+
+
+      .image {
+        position: absolute;
+        left: 0;
+        border: 0;
+        width: 100%;
+        height: 100%;
       }
     }
   }
@@ -254,9 +292,9 @@ export default {
     }
     .el-table__header th {
       height: 18px;
-      font-size: 14px;
+      font-size: 12px;
       font-weight: 600;
-      color: #000000;
+      color: #717A83;
       line-height: 18px;
     }
     .el-table__body-wrapper tr {
