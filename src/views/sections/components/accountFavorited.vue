@@ -109,7 +109,7 @@
       </div>
       <div>
         <div class="nft-list">
-          <card-item :item=item v-for="(item,index) in dataList" :key="index"></card-item>
+          <card-item :item=item v-for="(item,index) in nftList" :key="index"></card-item>
         </div>
         <!-- <div class="custom-pagination" v-if="queryParams.limit<listCount">
           <div class="content">

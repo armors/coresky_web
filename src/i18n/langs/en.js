@@ -140,7 +140,7 @@ module.exports = {
   },
   rewards: {
     title: 'Trade to get CT score',
-    subTitle: 'Druing the test, trade NFT on Coresky will get CT score rewards',
+    subTitle: 'Trade NFT on Coresky will get CT score rewards',
     HotActivities: 'Hot activities',
     MyRewards: 'My rewards',
     CTScore: 'CT score',
@@ -151,7 +151,7 @@ module.exports = {
     Rewards: 'Rewards',
     goTrade: 'Go to trade',
     RewardsListing: 'Rewards by Listing',
-    Sale: 'Sale',
+    Sale: 'Trade',
     Rewards: 'Rewards',
     ConvertTickets: 'Convert to Tickets',
     TransactionMining: 'Transaction mining'

@@ -1,80 +1,83 @@
-<template>
-  <div class="reward-wrapper">
-    <div class="banner-wrap">
-      <div class="banner-txt-box">
-        <div class="banner-txt">
-          <div class="txt1">{{ $t('rewards.title') }} </div>
-          <div class="txt2">{{ $t('rewards.subTitle') }}</div>
-          <div class="txt3">
-            <el-button class="btn" @click="$router.push('/markterplace')" type="primary">{{ $t('rewards.goTrade') }}
-            </el-button>
-          </div>
-          <!-- <img class="image" src="@/assets/images/reward.png" alt=""> -->
+<template><div class="reward-wrapper">
+  <div class="banner-wrap">
+    <div class="banner-txt-box">
+      <div class="banner-txt">
+        <div class="txt1">{{ $t('rewards.title') }} </div>
+        <div class="txt2">{{ $t('rewards.subTitle') }}</div>
+        <div class="txt3">
+          <el-button class="btn" @click="$router.push('/markterplace')" type="primary">{{ $t('rewards.goTrade') }}
+          </el-button>
         </div>
+        <!-- <img class="image" src="@/assets/images/reward.png" alt=""> -->
       </div>
-    </div>
-    <div class="page-center">
-      <div class="title1">{{ $t('rewards.HotActivities') }}</div>
-      <div class="card-list">
-        <div class="card-item">
-          <img class="image" src="@/assets/images/reward02.jpg" alt="">
-        </div>
-        <!-- <div class="card-item"></div>
-        <div class="card-item"></div> -->
-      </div>
-    </div>
-    <div class="page-center" style="margin-bottom:30px">
-      <div class="title1">{{ $t('rewards.MyRewards') }}
-        <span class="sub-title"> ({{ score }} {{ $t('rewards.CTScore') }})</span>
-      </div>
-
-      <el-tabs v-model="activeName" class="demo-tabs">
-        <el-tab-pane :label="$t('rewards.TransactionMining')" name="mining" :lazy="true">
-          <el-table :data="dataList" style="width: 100%" class="mytable" v-loading="isLoading">
-            <el-table-column prop="createTime" :label="$t('rewards.Time')" width="325">
-              <template #default="props">
-                {{ parseTime(props.row.createTime) }}
-              </template>
-            </el-table-column>
-            <el-table-column prop="event" :label="$t('rewards.Event')" width="300">
-              <template #default="props">
-                <span v-if="props.row.type === 0">{{ $t('rewards.Event') }}</span>
-                <span v-if="props.row.type === 1">{{ $t('rewards.Sale') }}</span>
-                <span v-if="props.row.type === 3">{{ $t('rewards.Rewards') }}</span>
-                <span v-if="props.row.type === 4">{{ $t('rewards.ConvertTickets') }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column prop="itemName" :label="$t('rewards.Item')">
-              <!-- <template #default="props">
-                Lazy Cubs Official #1231
-              </template> -->
-            </el-table-column>
-            <el-table-column prop="score" :label="$t('rewards.Rewards')" width="140">
-              <template #default="props">
-                {{ props.row.score }} CT
-              </template>
-            </el-table-column>
-            <template #empty>
-              <div class="empty-wrap">
-                <p class="txt">No Data</p>
-                <img src="@/assets/images/no-data.png" alt="">
-              </div>
-            </template>
-          </el-table>
-          <div class="custom-pagination" v-if="listCount > queryParams.limit">
-            <div class="content">
-              <el-pagination background v-model:current-page="queryParams.page" :page-size="queryParams.limit"
-                :page-="queryParams.limit" @current-change="queryData" layout="prev, pager, next" align="center"
-                :total="listCount" />
-            </div>
-          </div>
-        </el-tab-pane>
-      </el-tabs>
-
     </div>
   </div>
-  <FooterTemplate />
-</template>
+  <div class="page-center">
+    <div class="title1">{{ $t('rewards.HotActivities') }}</div>
+    <div class="card-list">
+      <div class="card-item">
+        <img class="image" src="@/assets/images/reward02.jpg" alt="">
+        <div class="item-content">
+          <span class="ml20">TRADING MINING</span>
+          <img class="btn-right" src="@/assets/images/right.png" alt="">
+        </div>
+
+      </div>
+      <!-- <div class="card-item"></div>
+        <div class="card-item"></div> -->
+    </div>
+  </div>
+  <div class="page-center" style="margin-bottom:30px">
+    <div class="title1">{{ $t('rewards.MyRewards') }}
+      <span class="sub-title"> ({{ score }} {{ $t('rewards.CTScore') }})</span>
+    </div>
+
+    <el-tabs v-model="activeName" class="demo-tabs">
+      <el-tab-pane :label="$t('rewards.TransactionMining')" name="mining" :lazy="true">
+        <el-table :data="dataList" style="width: 100%" class="mytable" v-loading="isLoading">
+          <el-table-column prop="createTime" :label="$t('rewards.Time')" width="160">
+              <template #default=" props">
+            {{ parseTime(props.row.createTime) }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="event" :label="$t('rewards.Event')" align="right" width="260">
+            <template #default="props">
+              <span v-if="props.row.type === 0">{{ $t('rewards.Event') }}</span>
+              <span v-if="props.row.type === 1">{{ $t('rewards.Sale') }}</span>
+              <span v-if="props.row.type === 3">{{ $t('rewards.Rewards') }}</span>
+              <span v-if="props.row.type === 4">{{ $t('rewards.ConvertTickets') }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="itemName" align="right" :label="$t('rewards.Item')">
+            <!-- <template #default="props">
+                Lazy Cubs Official #1231
+              </template> -->
+          </el-table-column>
+          <el-table-column prop="score" :label="$t('rewards.Rewards')" align="right">
+            <template #default="props">
+              {{ props.row.score }} CT
+            </template>
+          </el-table-column>
+          <template #empty>
+                        <div class="empty-wrap">
+                          <img src="@/assets/images/no-data.png" alt="">
+                          <p class="txt">No Data</p>
+                        </div>
+                    </template>
+        </el-table>
+        <div class="custom-pagination" v-if="listCount > queryParams.limit">
+          <div class="content">
+            <el-pagination background v-model:current-page="queryParams.page" :page-size="queryParams.limit"
+              :page-="queryParams.limit" @current-change="queryData" layout="prev, pager, next" align="center"
+              :total="listCount" />
+          </div>
+        </div>
+      </el-tab-pane>
+    </el-tabs>
+
+  </div>
+</div>
+<FooterTemplate /></template>
 <script>
 import BigNumber from "bignumber.js";
 import FooterTemplate from "@/views/layout/FooterTemplate";
@@ -117,7 +120,7 @@ export default {
   },
   methods: {
     parseTime (time) {
-      return dayjs(time * 1000).format('YYYY-MM-DD hh:mm')
+      return dayjs(time * 1000).format('YYYY-MM-DD HH:mm')
     },
     init () {
       if (this.user && this.user.coinbase) {
@@ -201,11 +204,12 @@ export default {
   .title1 {
     margin: 40px 0;
     height: 29px;
-    font-size: 22px;
+    font-size: 30px;
     font-weight: 600;
     color: #000000;
-    line-height: 29px;
+    line-height: 35px;
     .sub-title {
+      font-size: 18px;
       margin-left: 5px;
       color: rgba(0, 0, 0, 0.3);
     }
@@ -216,17 +220,51 @@ export default {
     grid-template-rows: auto auto;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     .card-item {
+      position: relative;
       width: 1200px;
       height: 393px;
       background: #ededed;
       border-radius: 12px;
       overflow: hidden;
       cursor: pointer;
-      .image {
+
+      .item-content {
+        width: 780px;
+        height: 62px;
+        margin: 0 auto;
+        margin-top: 145px;
+        position: relative;
+
+        font-weight: 800;
+        font-size: 50px;
+        line-height: 150%;
+        color: #04142A;
+        display: flex;
+        align-items: center;
         transition: all 0.3s ease-out;
+        z-index: 1;
         &:hover {
-          transform: scale(1.02);
+          color: #1063E0;
+          .btn-right {
+            margin-left: 50px;
+          }
         }
+
+        .btn-right {
+          width: 50px;
+          height: 50px;
+          margin-left: 30px;
+          transition: all 0.3s ease-out;
+        }
+      }
+
+
+      .image {
+        position: absolute;
+        left: 0;
+        border: 0;
+        width: 100%;
+        height: 100%;
       }
     }
   }
@@ -254,9 +292,9 @@ export default {
     }
     .el-table__header th {
       height: 18px;
-      font-size: 14px;
+      font-size: 12px;
       font-weight: 600;
-      color: #000000;
+      color: #717A83;
       line-height: 18px;
     }
     .el-table__body-wrapper tr {
