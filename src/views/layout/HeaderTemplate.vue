@@ -29,6 +29,9 @@
         <router-link class="nav-link" to="/allcollection">
           {{ $t("navigation.collection") }}
         </router-link>
+        <router-link class="nav-link" to="/coreCard">
+          CoreCard
+        </router-link>
         <el-popover placement="bottom" trigger="click" :show-arrow="false" width="200" popper-class="nav-popover"
           :offset="15">
           <template #reference>

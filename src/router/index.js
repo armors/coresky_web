@@ -115,6 +115,11 @@ const routes = [
 		name: "reward",
 		component: () => import(/* webpackChunkName: "reward" */ "../views/sections/reward"),
 	},
+  {
+		path: "/corecard",
+		name: "coreCard",
+		component: () => import(/* webpackChunkName: "reward" */ "../views/sections/components/coreCard"),
+	},
 	{
 		path: "/launch",
 		name: "launch",
