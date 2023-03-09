@@ -2,11 +2,13 @@
   <div class="core-card">
     <div class="banner"></div>
     <core-card-level></core-card-level>
+    <core-card-FAQ></core-card-FAQ>
   </div>
 </template>
 
 <script setup>
-import coreCardLevel from "./coreCardLevel.vue"
+import coreCardLevel from "./coreCardLevel.vue";
+import coreCardFAQ from "./coreCardFAQ.vue";
 </script>
 <style lang="scss" scoped>
   .core-card {
