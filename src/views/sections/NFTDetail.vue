@@ -729,7 +729,7 @@ export default {
       }
       let xAxisData = []
       let data = []
-      this.historyPrice.reverse().forEach(item => {
+      this.historyPrice.forEach(item => {
         xAxisData.push(this.$filters.timeToUTC(item.date, true))
         data.push(this.nftPriceFun(item.price))
       })
