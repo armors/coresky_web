@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="`/detail/${item.contract}/${item.tokenId}`">
+  <router-link :to="`/detail/${item.contract}/${item.tokenId}`" class="nft-card">
     <div class="item">
       <div class="nft-content">
         <div class="card-top">
@@ -45,79 +45,77 @@ const oriImage = () => {
 </script>
 
 <style lang="scss" scoped>  
-  .nft-content {
-    display: flex;
-    flex-direction: column;
-    border-radius: 12px;
-    overflow: hidden;
-    transition: all 0.23s;
-    background: $bg-white;
+.nft-card {
+    min-height: 1px;
     position: relative;
-    height: 100%;
-    .card-top {
-      z-index: 1;
-      position: relative;
-      .card-img {
-        &::before {
-          display: block;
-          content: '';
-          padding-bottom: 100%;
-        }
-        position: relative;
-        transition: all 0.23s;
-        img,
-        .cover-image {
-          position: absolute;
-          top: 0;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          display: flex;
-          height: 100%;
-          width: 100%;
-          align-items: center;
-          justify-content: center;
-          overflow: hidden;
-        }
-      }
+    display: block;
+    border-radius: 12px;
+    filter: drop-shadow(0px 0px 10px rgba(82, 77, 255, 0.05));
+    transition: all .3s;
+    &:hover {
+      box-shadow: 0 7px 16px -8px rgba(0, 0, 0, 0.15);
+      transform: translateY(-5px);
     }
-    .card-bottom {
-      flex: 1 1 0%;
-      padding: 12px 12px;
-      padding-right: 20px;
-      .nft-txt {
-        font-weight: 500;
-        font-size: 16px;
-        line-height: 24px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        color: $color-black3;
+    .nft-content {
+      display: flex;
+      flex-direction: column;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.23s;
+      background: $bg-white;
+      position: relative;
+      height: 100%;
+      .card-top {
+        z-index: 1;
+        position: relative;
+        .card-img {
+          &::before {
+            display: block;
+            content: '';
+            padding-bottom: 100%;
+          }
+          position: relative;
+          transition: all 0.23s;
+        }
       }
-
-      .nft-price {
-        display: flex;
-        height: 22px;
-        align-items: center;
-
-        .token-icon {
-          width: 10px;
-          height: 15px;
-          margin-right: 5px;
+      .card-bottom {
+        flex: 1 1 0%;
+        padding: 12px 12px;
+        padding-right: 20px;
+        .nft-txt {
+          font-weight: 500;
+          font-size: 16px;
+          line-height: 24px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          color: $color-black3;
         }
 
-        .price {
-          font-weight: 700;
-          font-size: 14px;
-          line-height: 22px;
-          color: $primaryColor;
-        }
+        .nft-price {
+          display: flex;
+          height: 22px;
+          align-items: center;
 
-        span {
-          font-weight: 700;
-          font-size: 14px;
-          line-height: 22px;
-          color: $primaryColor;
+          .token-icon {
+            width: 10px;
+            height: 15px;
+            margin-right: 5px;
+          }
+
+          .price {
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 22px;
+            color: $primaryColor;
+          }
+
+          span {
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 22px;
+            color: $primaryColor;
+          }
         }
       }
     }
