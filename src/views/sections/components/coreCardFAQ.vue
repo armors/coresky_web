@@ -1,6 +1,6 @@
 <template>
   <div class="FAQ-card">
-    <el-collapse v-model="activeNames" @change="handleChange" class="box-card" v-for="(item,i) in 4" :key="i">
+    <el-collapse class="box-card" v-for="(item,i) in 4" :key="i">
       <el-collapse-item :title="item.title || 'How do I get a RarePass and how much do they cost?'" :name="i" class="faq-item">
         <div class="answer">
           {{ item.content || '' }} 
@@ -14,13 +14,6 @@
   </div>
 </template>
 <script setup>
-import { ref } from 'vue'
-
-const activeNames = ref(['1'])
-const handleChange = (val) => {
-  console.log(val)
-}
-
 </script>
 <style lang="scss" scoped>
   .box-card {
