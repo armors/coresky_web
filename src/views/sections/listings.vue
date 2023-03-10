@@ -355,7 +355,8 @@ export default {
 			defaultTime: new Date(),
 			quantity: 1,
 			form: {
-				time: ''
+				time: '',
+				date: 7,
 			},
 			isShowDialog: false,
 			basePrice: '--',
@@ -393,6 +394,7 @@ export default {
 	mounted() {
 		this.getTokenInfo()
 		this.getOsTokenInfo()
+		this.dateChange()
 	},
 	computed: {
 		user() {
