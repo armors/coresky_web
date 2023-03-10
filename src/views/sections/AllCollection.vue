@@ -77,7 +77,7 @@ export default {
     };
   },
   watch: {
-    $route(to, from) {
+    $route (to, from) {
       if (this.$route.path == "/search") {
         this.query.search = this.$route.query.keyword;
         this.query.page = 1;
@@ -86,17 +86,17 @@ export default {
       }
     },
   },
-  created() {
+  created () {
     this.init();
   },
-  mounted() { },
+  mounted () { },
   computed: {
     disabledLoadMore: function () {
       return (
         this.loadStatus === "loading" || this.dataList.length >= this.listCount
       );
     },
-    showAddress() {
+    showAddress () {
       return (search) => {
         var res =
           search.address.slice(0, 11) + "..." + search.address.slice(-4);
@@ -109,11 +109,11 @@ export default {
     },
   },
   methods: {
-    init() {
+    init () {
       this.getCategoryList();
       this.search();
     },
-    getCategoryList() {
+    getCategoryList () {
       this.$api("collections.type").then((res) => {
         if (this.$tools.checkResponse(res)) {
           console.log("😺👉➡️", res);
@@ -121,12 +121,13 @@ export default {
         }
       });
     },
-    changeCategory(item) {
+    changeCategory (item) {
+      this.query.page = 1
       this.query.cid = item.id;
       this.dataList = [];
       this.search();
     },
-    search() {
+    search () {
       this.loadStatus = "loading";
       this.$api("collect.query", this.query).then((res) => {
         this.loadStatus = "over";
@@ -137,7 +138,7 @@ export default {
         }
       });
     },
-    loadMoreData() {
+    loadMoreData () {
       this.query.page += 1;
       this.search();
     },
@@ -226,7 +227,7 @@ export default {
 
       &:hover {
         box-shadow: 0 7px 16px -8px rgba(0, 0, 0, 0.15);
-        transform: translate(0,-5px);
+        transform: translate(0, -5px);
       }
 
       .collection-content {
@@ -299,14 +300,14 @@ export default {
           width: 60px;
           height: 60px;
           border-radius: 12px;
-        border: 1px solid rgba(113, 122, 131, 0.15);
+          border: 1px solid rgba(113, 122, 131, 0.15);
 
           ::v-deep img {
             &:hover {
-              transform:scale(1);
+              transform: scale(1);
             }
           }
-       
+
         }
       }
 
