@@ -143,6 +143,13 @@ export default {
       default: ''
     },
   },
+  watch: {
+    address () {
+      if (this.address) {
+        this.searchClick()
+      }
+    }
+  },
   computed: {
 
   },
@@ -235,7 +242,7 @@ export default {
   width: 285px;
   .gruop-wrap {
     margin-top: 0;
-    
+
     .type-item {
       margin-top: 10px;
       .attr-content {
@@ -249,7 +256,7 @@ export default {
           justify-content: space-between;
           color: $color-black3;
           border-radius: 12px;
-          &:hover{
+          &:hover {
             background-color: #FAFAF8;
           }
 

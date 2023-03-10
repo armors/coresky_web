@@ -4,25 +4,29 @@
     <div class="account-page">
       <el-tabs v-model="activeName" class="demo-tabs" @tab-change="handleClick">
         <el-tab-pane :label="$t('accountCenter.MyCollection')" name="Collected" :lazy="true">
-          <accountNFTs :address="address" />
+          <!-- <accountNFTs :address="address" /> -->
         </el-tab-pane>
         <!-- <el-tab-pane :label="$t('accountCenter.MyCollection')" name="Created" :lazy="true">
           <accountCollection :address="address" />
         </el-tab-pane> -->
         <el-tab-pane :label="$t('accountCenter.Favorite')" name="Favorited" :lazy="true">
-          <accountFavorited :address="address" />
+          <!-- <accountFavorited :address="address" /> -->
         </el-tab-pane>
         <el-tab-pane :label="$t('accountCenter.Watchlist')" name="Watchlist" :lazy="true">
-          <accountWatchlist :address="address" />
+          <!-- <accountWatchlist :address="address" /> -->
         </el-tab-pane>
         <el-tab-pane :label="$t('accountCenter.Activities')" name="Activities" :lazy="true">
-          <accountActivities :address="address" />
+          <!-- <accountActivities :address="address" /> -->
         </el-tab-pane>
       </el-tabs>
+
+      <accountNFTs :address="address" v-if="activeName === 'Collected'" />
+      <accountFavorited :address="address" v-if="activeName === 'Favorited'" />
+      <accountWatchlist :address="address" v-if="activeName === 'Watchlist'" />
+      <accountActivities :address="address" v-if="activeName === 'Activities'" />
     </div>
   </div>
   <FooterTemplate />
-
 </template>
 <script>
 
@@ -57,6 +61,9 @@ export default {
     tag (val) {
       this.init()
     },
+    address () {
+      this.init()
+    }
   },
   created () {
     this.init()
@@ -93,7 +100,7 @@ export default {
   // width: 1200px;
   margin: 0 40px;
   ::v-deep {
-    .el-tabs__content{
+    .el-tabs__content {
       overflow: visible;
     }
     .el-tabs__header.is-top {

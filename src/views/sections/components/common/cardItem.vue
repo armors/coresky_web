@@ -13,7 +13,7 @@
           </div>
           <div class="nft-price" v-if="item.basePrice && item.basePrice !== '0'">
             <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="">
-            <span class="price"> {{ !!item.basePrice ? nftPrice(item.basePrice) : '-- '}} ETH</span>
+            <span class="price"> {{ !!item.basePrice ? nftPrice(item.basePrice) : '-- ' }} ETH</span>
           </div>
         </div>
       </div>
@@ -35,7 +35,7 @@ const nftPrice = (basePrice) => {
 }
 const oriImage = () => {
   let imgSrc = props.item.oriImage;
-  if(imgSrc.indexOf('?') == -1 && imgSrc.indexOf('base64') == -1) { 
+  if (imgSrc.indexOf('?') == -1 && imgSrc.indexOf('base64') == -1) {
     return props.item.oriImage + "?x-oss-process=image/resize,l_300"
   } else {
     return props.item.oriImage
@@ -44,8 +44,8 @@ const oriImage = () => {
 
 </script>
 
-<style lang="scss" scoped>  
-.nft-card {
+<style lang="scss" scoped> 
+ .nft-card {
     min-height: 1px;
     position: relative;
     display: block;
@@ -76,6 +76,20 @@ const oriImage = () => {
           }
           position: relative;
           transition: all 0.23s;
+          img,
+          .cover-image {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            height: 100%;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+          }
         }
       }
       .card-bottom {
