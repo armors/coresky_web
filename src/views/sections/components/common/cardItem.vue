@@ -1,6 +1,6 @@
 <template>
-  <router-link :to="`/detail/${item.contract}/${item.tokenId}`">
-    <div class="nft-card">
+  <router-link :to="`/detail/${item.contract}/${item.tokenId}`" class="nft-card">
+    <div class="item">
       <div class="nft-content">
         <div class="card-top">
           <div class="card-img">
@@ -44,14 +44,14 @@ const oriImage = () => {
 
 </script>
 
-<style lang="scss" scoped>  .nft-card {
+<style lang="scss" scoped> 
+ .nft-card {
     min-height: 1px;
     position: relative;
     display: block;
     border-radius: 12px;
     filter: drop-shadow(0px 0px 10px rgba(82, 77, 255, 0.05));
     transition: all .3s;
-
     &:hover {
       box-shadow: 0 7px 16px -8px rgba(0, 0, 0, 0.15);
       transform: translateY(-5px);
