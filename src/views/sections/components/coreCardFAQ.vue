@@ -22,6 +22,7 @@
     background: #fff;
     margin: 20px auto;
     border-radius: 16px;
+    border:1px solid #E6E8EC !important;
     ::v-deep(.el-card__body) {
       padding: 0;
     }
