@@ -3,7 +3,7 @@
     :infinite-scroll-disabled="disabledLoadMore" :infinite-scroll-distance="50">
     <div class="filter-wrap" v-if="showFilterBox">
       <div class="filter-head">
-        <span class="left btnfilter" @click="showFilterBox=!showFilterBox">
+        <span class="left btnfilter" @click="showFilterBox = !showFilterBox">
           <el-icon>
             <img src="../../assets/images/icons/icon_filter_open.svg" alt="">
           </el-icon>{{ $t('common.Filter') }}
@@ -23,7 +23,7 @@
       <div class="filter-item border">
         <div class="flex filter-box">
           <span class="left">{{ $t('common.Price') }}</span>
-          <span class="right" @click="isOpenPriceFilter=!isOpenPriceFilter">
+          <span class="right" @click="isOpenPriceFilter = !isOpenPriceFilter">
             <el-icon style="font-size:16px" :class="{ 'down': isOpenPriceFilter }">
               <!-- <img src="../../assets/images/icons/icon_filter_up.svg" alt=""> -->
             </el-icon>
@@ -41,13 +41,13 @@
             <el-input-number v-model="queryParams.maxPrice" :placeholder="$t('common.Max')" :controls="false"
               :precision="4" :min="0.0001" :max="100000000000000" class="input-number" />
           </div>
-          <div class="btn-apply" @click="searchClick">{{$t('common.Application')  }}</div>
+          <div class="btn-apply" @click="searchClick">{{ $t('common.Application') }}</div>
         </template>
       </div>
       <div class="filter-item select-box">
         <div class="flex select-title">
-          <span class="left">{{$t('common.Collection')  }}</span>
-          <span class="right" @click="isOpenSearchCollection=!isOpenSearchCollection">
+          <span class="left">{{ $t('common.Collection') }}</span>
+          <span class="right" @click="isOpenSearchCollection = !isOpenSearchCollection">
             <el-icon style="font-size:16px" :class="{ 'down': isOpenSearchCollection }">
               <!-- <img src="../../assets/images/icons/icon_filter_up.svg" alt=""> -->
             </el-icon>
@@ -61,14 +61,14 @@
             </template>
           </el-input>
           <div class="list-wrap">
-            <router-link :to="`/collection/${item.contract}`" class="list-item" v-for="(item,index) in collectionList"
+            <router-link :to="`/collection/${item.contract}`" class="list-item" v-for="(item, index) in collectionList"
               :key="index">
               <div class="head-img">
                 <image-box :src="item.image"></image-box>
                 <!-- <img class="tag" src="../../assets/images/icons/icon_tag.svg" alt=""> -->
               </div>
               <div class="head-txt">
-                {{item.name}}
+                {{ item.name }}
                 <img class="tag" src="../../assets/images/icons/icon_list_blue.svg" alt="">
               </div>
             </router-link>
@@ -78,7 +78,7 @@
     </div>
     <div class="right-content">
       <div class="list-search-wrap">
-        <div class="btnfilter" v-if="!showFilterBox" @click="showFilterBox=!showFilterBox">
+        <div class="btnfilter" v-if="!showFilterBox" @click="showFilterBox = !showFilterBox">
           <img src="../../assets/images/icons/icon_filter_close.svg" alt="">
           {{ $t('common.Filter') }}
         </div>
@@ -88,7 +88,7 @@
             <div class="img-search"><img src="../../assets/images/icons/icon_search.svg" alt=""></div>
           </template>
         </el-input>
-        <el-select v-model="queryParams.order" placeholder="Recently listed" @change="searchClick" :teleported="false"
+        <el-select v-model="queryParams.order" placeholder="Recently listed" @change="changeOrder" :teleported="false"
           popper-class="select-popper" class="select-sort select-sort-right">
           <el-option :value="1" :label="$t('common.PriceLowToHigh')" />
           <el-option :value="2" :label="$t('common.PriceHighToLow')" />
@@ -104,7 +104,7 @@
       </div>
       <div>
         <div class="nft-list">
-          <card-item :item=item v-for="(item,index) in dataList" :key="index"></card-item>
+          <card-item :item=item v-for="(item, index) in dataList" :key="index"></card-item>
         </div>
         <!-- <div class="custom-pagination" v-if="listCount>queryParams.limit">
           <div class="content">
@@ -113,14 +113,14 @@
               :total="listCount" />
           </div>
         </div> -->
-        <div v-if="loadStatus==='loading'">
+        <div v-if="loadStatus === 'loading'">
           <p class="loading-txt">
             <el-icon class="my-loading">
               <Loading />
             </el-icon>
           </p>
         </div>
-        <div class="empty-wrap" v-if="dataList.length===0&& loadStatus!=='loading'">
+        <div class="empty-wrap" v-if="dataList.length === 0 && loadStatus !== 'loading'">
           <p class="txt">No Data</p>
           <img src="../../assets/images/no-data.png" alt="">
         </div>
@@ -141,6 +141,15 @@ export default {
     searchKeyword: {
       type: String,
       default: ''
+    },
+  },
+  watch: {
+    searchKeyword (val) {
+      this.dataList = []
+      this.queryParams.page = 0
+      this.queryParams.keyword = this.searchKeyword || ''
+      this.searchClick()
+      this.searchCollection()
     },
   },
   computed: {
@@ -173,6 +182,9 @@ export default {
   created () {
   },
   mounted () {
+    if (this.$route.query.sort && !isNaN(this.$route.query.sort)) {
+      this.queryParams.order = parseInt(this.$route.query.sort)
+    }
     this.dataList = []
     this.queryParams.page = 0
     this.queryParams.keyword = this.searchKeyword || ''
@@ -203,6 +215,14 @@ export default {
       this.dataList = []
       this.queryData()
     },
+    changeOrder () {
+      let path = this.$route.path
+      this.$router.push({
+        path,
+        query: { ...this.$route.query, sort: this.queryParams.order }
+      })
+      this.searchClick()
+    },
     queryData () {
       // this.dataList = []
       this.loadStatus = 'loading'
@@ -219,11 +239,11 @@ export default {
     }
   },
 };
- 
+
 </script>
 <style lang="scss" scoped>
 .main-wrapper {
-  padding: 40px 40px;
+  padding: 0 40px;
   width: 100%;
   max-width: 100%;
   display: flex;
@@ -232,10 +252,10 @@ export default {
   align-items: flex-start;
   .right-content {
     width: 100%;
-    margin-top: -10px;
+    // margin-top: -10px;
   }
 }
-#marketPlace{
+#marketPlace {
   // padding: 40px 0;
   // align-items: inherit;
 }

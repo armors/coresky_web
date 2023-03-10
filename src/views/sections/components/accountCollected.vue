@@ -144,13 +144,13 @@ export default {
 
 <style lang="scss" scoped>
 .accountCollected {
-  margin-top: 25px;
+  margin-top: 20px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-start;
 }
 .right-content{
-  margin-top: -10px;
+  // margin-top: -10px;
 }
 </style>

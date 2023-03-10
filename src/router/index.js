@@ -128,8 +128,10 @@ const routes = [
 ];
 
 const router = createRouter({
-	scrollBehavior () {
-		document.documentElement.scrollTop = 0
+	scrollBehavior (to, from) {
+		if (to.name !== from.name) {
+			document.documentElement.scrollTop = 0
+		}
 	},
 	history: createWebHistory(),
 	// scrollBehavior: () => ({ y: 0 }),
