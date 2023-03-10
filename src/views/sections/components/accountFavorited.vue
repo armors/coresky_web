@@ -172,7 +172,7 @@ export default {
         contract: '',
         minPrice: undefined,
         maxPrice: undefined,
-        order: 3,
+        order: 1,
         address: '',
         followAddress: ''
       },

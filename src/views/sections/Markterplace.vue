@@ -166,7 +166,7 @@ export default {
         buyNow: true,
         minPrice: undefined,
         maxPrice: undefined,
-        order: 3,
+        order: 1,
       },
       showFilterBox: true,
       isOpenPriceFilter: true,
