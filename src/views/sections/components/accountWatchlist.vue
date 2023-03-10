@@ -39,6 +39,13 @@ export default {
       default: ''
     },
   },
+  watch: {
+    address () {
+      if (this.address) {
+        this.init()
+      }
+    }
+  },
   data () {
     return {
       dataList: [],
