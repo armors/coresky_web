@@ -1,10 +1,11 @@
 <template>
   <div class="core-card">
     <div class="banner"></div>
+    <core-card-process></core-card-process>
     <core-card-level></core-card-level>
     <h3>Introduction to Pass</h3>
     <div class="introduction">
-      <img src="" alt="">
+      <img src="@/assets/core-card/image_156.png" alt="">
     </div>
     <h3>FAQ</h3>
     <core-card-FAQ></core-card-FAQ>
@@ -14,6 +15,7 @@
 <script setup>
 import coreCardLevel from "./coreCardLevel.vue";
 import coreCardFAQ from "./coreCardFAQ.vue";
+import coreCardProcess from "./coreCardProcess.vue"
 </script>
 <style lang="scss" scoped>
   .core-card {
@@ -33,6 +35,10 @@ import coreCardFAQ from "./coreCardFAQ.vue";
       background: #fff;
       border: 1px solid #E6E8EC;
       border-radius: 16px;
+      img {
+        width: 100%;
+        height: 100%;
+      }
     }
   }
 </style>
