@@ -147,6 +147,13 @@ export default {
       default: ''
     },
   },
+  watch: {
+    address () {
+      if (this.address) {
+        this.init()
+      }
+    }
+  },
   computed: {
     disabledLoadMore: function () {
       return this.loadStatus === 'loading' || this.nftList.length >= this.listCount

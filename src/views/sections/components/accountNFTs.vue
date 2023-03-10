@@ -134,15 +134,16 @@ export default {
       default: ''
     },
   },
+  watch: {
+    address () {
+      if (this.address) {
+        this.init()
+      }
+    }
+  },
   components: {
     CardItem,
   },
-  // watch: {
-  //   $route (to, from) {
-  //     this.init();
-  //     this.searchCollection()
-  //   },
-  // },
   computed: {
     disabledLoadMore: function () {
       return this.loadStatus === 'loading' || this.nftList.length >= this.listCount
