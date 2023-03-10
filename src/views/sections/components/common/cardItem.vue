@@ -21,17 +21,16 @@
   </router-link>
 </template>
 <script setup>
-import { inject } from 'vue'
+import { getCurrentInstance } from 'vue';
 
-const filters = inject('filters');
-const Web3 = inject('Web3');
+const { proxy } = getCurrentInstance();
 
 const props = defineProps({
   item: {}
 });
 
 const nftPrice = (basePrice) => {
-  return filters.keepMaxPoint(Web3.utils.fromWei(basePrice.toString()))
+  return proxy.$filters.keepMaxPoint(proxy.$Web3.utils.fromWei(basePrice.toString()))
 }
 const oriImage = () => {
   let imgSrc = props.item.oriImage;
