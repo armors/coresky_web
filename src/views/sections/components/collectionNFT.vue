@@ -92,7 +92,7 @@
             <div class="img-search"><img src="../../../assets/images/icons/icon_search.svg" alt=""></div>
           </template>
         </el-input>
-        <el-select v-model="queryParams.order" placeholder="Recently listed" @change="searchClick" :teleported="false"
+        <el-select v-model="queryParams.order" placeholder="Recently listed" @change="changeOrder" :teleported="false"
           popper-class="select-popper" class="select-sort">
           <el-option :value="1" :label="$t('common.PriceLowToHigh')" />
           <el-option :value="2" :label="$t('common.PriceHighToLow')" />
@@ -169,6 +169,9 @@ export default {
   created () {
   },
   mounted () {
+    if (this.$route.query.sort && !isNaN(this.$route.query.sort)) {
+      this.queryParams.order = parseInt(this.$route.query.sort)
+    }
     this.searchClick()
     this.initAttrList()
   },
@@ -180,6 +183,14 @@ export default {
       obj.isChecked = !obj.isChecked
       this.searchClick()
       // console.log(this.attrList)
+    },
+    changeOrder () {
+      let path = this.$route.path
+      this.$router.push({
+        path,
+        query: { ...this.$route.query, sort: this.queryParams.order }
+      })
+      this.searchClick()
     },
     initAttrList () {
       this.attrList = []
@@ -261,6 +272,6 @@ export default {
 
 .right-content {
   width: 100%;
-  margin-top: -10px;
+  // margin-top: -10px;
 }
 </style>
