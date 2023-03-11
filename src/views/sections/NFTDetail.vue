@@ -1113,9 +1113,9 @@ export default {
         this.ckOrdersEntityList = this.sortOrdersAndOffer(listed, true)
         this.bestPrice = this.ckAuctionEntityList.length > 0 ? this.nftPriceFun(this.ckAuctionEntityList[0].basePrice) : '--'
         this.nftPrice = this.ckOrdersEntityList.length > 0 ? this.nftPriceFun(this.ckOrdersEntityList[0].basePrice) : '--'
-        setTimeout(() => {
+        // setTimeout(() => {
           this.loading = false
-        }, 3000)
+        // }, 3000)
         await this.getOrdersAndOffers()
         if (this.ckOrdersEntityList.length > 0) {
           this.countDown()
