@@ -1,5 +1,5 @@
 <template>
-  <div class="CoreCardBind">
+  <div class="CoreCardMint">
     <div class="page-content">
       <div class="title">
         <span>Bind Corecard</span>
@@ -7,36 +7,33 @@
           <CloseBold />
         </el-icon>
       </div>
-      <div class="card-list">
-        <div class="card-item active">
+      <div class="card-list" v-loading="isLoading">
+        <div class="card-item" :class="{ 'active': item.pledge === 1 }" v-for="(item, index) in dataList" :key="index">
           <img src="@/assets/core-card/level1.png" class="card-img" alt="">
           <div class="card-info">
             <div class="card-name">
-              <span>Corecard #19990</span>
+              <span>{{ item.name }}</span>
               <el-icon class="" color="#35C955" size="20">
                 <SuccessFilled />
               </el-icon>
             </div>
             <div class="card-vip">
-              <img src="@/assets/core-card/vip0.png" class="vip-img" alt="">
+              <img :src="require(`@/assets/core-card/vip${item.level}.png`)" class="vip-img" alt="">
               <div class="vip-progress">
-                <div class="vip-val" :style="{ width: '22%' }"></div>
+                <div class="vip-val" :style="{ width: (item.ratio * 100) + '%' }"></div>
               </div>
-              <div class="vip-txt">22%</div>
+              <div class="vip-txt">{{ item.ratio * 100 }}%</div>
             </div>
             <div>
-              <el-button plain class="btnAccept">Bind</el-button>
+              <el-button type="primary" v-if="item.pledge === 1" class="btnAccept">UNbind</el-button>
+              <el-button v-if="item.pledge === 0" plain class="btnAccept">Bind</el-button>
             </div>
           </div>
         </div>
-        <div class="card-item">1</div>
-
-        <div class="card-item">1</div>
-
-        <div class="card-item">1</div>
-
-        <div class="card-item">1</div>
-
+      </div>
+      <div class="empty-wrap" v-if="dataList.length === 0 && isLoading === false">
+        <img src="../../assets/images/no-data.png" alt="" />
+        <p class="txt">No Data</p>
       </div>
     </div>
   </div>
@@ -51,26 +48,14 @@ import config from '@/config/index'
 import { rowProps } from 'element-plus';
 export default {
   mixins: [],
-  name: 'CoreCardBind',
+  name: 'CoreCardMint',
   components: {
     FooterTemplate
   },
   data () {
     return {
-      dataList: [
-        {
-          "level": 1,
-          "tokenId": 123123,
-          "avatarFrame": "http://ASDASD",
-          "pledge": 1
-        },
-        {
-          "level": 2,
-          "tokenId": 3123,
-          "avatarFrame": "http://ASDASD",
-          "pledge": 0
-        }
-      ]
+      isLoading: false,
+      dataList: []
     };
   },
   watch: {
@@ -86,24 +71,55 @@ export default {
     },
   },
   methods: {
-    parseTime (time) {
-      return dayjs(time * 1000).format('YYYY-MM-DD HH:mm')
-    },
     init () {
       if (this.user && this.user.coinbase) {
+        this.queryData()
       }
     },
     queryData () {
+
+      setTimeout(() => {
+        this.dataList = [
+          {
+            "name": "HAHAHA #123",
+            "experience": 123,
+            "mixScore": 100,
+            "maxScore": 1000,
+            "ratio": "0.1",
+            "level": 0,
+            "tokenId": 123123,
+            "avatarFrame": "http://ASDASD",
+            "pledge": 0
+          },
+          {
+            "name": "HAHAHA #123",
+            "experience": 123,
+            "mixScore": 100,
+            "maxScore": 1000,
+            "ratio": "0.3333",
+            "level": 1,
+            "tokenId": 123123,
+            "avatarFrame": "http://ASDASD",
+            "pledge": 1
+          },
+          {
+            "name": "HAHAHA #123",
+            "experience": 123,
+            "mixScore": 100,
+            "maxScore": 1000,
+            "ratio": "0.3333",
+            "level": 2,
+            "tokenId": 123123,
+            "avatarFrame": "http://ASDASD",
+            "pledge": 0
+          }
+        ]
+      })
+      return
       this.isLoading = true
-      this.$api("user.scoreDetail", this.queryParams).then((res) => {
+      this.$api("corecard.myCards", this.queryParams).then((res) => {
         this.isLoading = false
-        let data = res
-        if (this.$tools.checkResponse(data)) {
-          this.score = data.debug.score
-          this.listCount = data.debug.detail.listCount
-          this.dataList = data.debug.detail.listData
-          this.queryParams.page = data.debug.detail.curPage
-        }
+        this.dataList = res.data
       })
     },
   },
@@ -113,7 +129,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.CoreCardBind {
+.CoreCardMint {
   background-color: #E6E8EC;
   min-height: calc(100vh - $headerHeight - $bottomHeight);
   padding: 30px 0;
@@ -123,7 +139,7 @@ export default {
     background: #ffffff;
     box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08);
     border-radius: 16px;
-
+    overflow: hidden;
     .title {
       display: flex;
       justify-content: space-between;
@@ -146,6 +162,7 @@ export default {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 30px 20px;
+      margin-bottom: 50px;
       .card-item {
         display: flex;
         flex-direction: row;
