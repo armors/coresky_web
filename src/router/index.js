@@ -118,7 +118,7 @@ const routes = [
   {
 		path: "/corecard",
 		name: "coreCard",
-		component: () => import(/* webpackChunkName: "reward" */ "../views/sections/components/coreCard"),
+		component: () => import(/* webpackChunkName: "reward" */ "../views/sections/components/corecard/coreCard"),
 	},
 	{
 		path: "/coreCardBind",
@@ -138,8 +138,10 @@ const routes = [
 ];
 
 const router = createRouter({
-	scrollBehavior () {
-		document.documentElement.scrollTop = 0
+	scrollBehavior (to, from) {
+		if (to.name !== from.name) {
+			document.documentElement.scrollTop = 0
+		}
 	},
 	history: createWebHistory(),
 	// scrollBehavior: () => ({ y: 0 }),

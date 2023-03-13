@@ -1,23 +1,10 @@
 <template>
-  <div class="main-wrapper" v-infinite-scroll="loadMoreData" :infinite-scroll-disabled="disabledLoadMore"
+  <div class="search-wrapper" v-infinite-scroll="loadMoreData" :infinite-scroll-disabled="disabledLoadMore"
     :infinite-scroll-distance="50">
     <div class="account-page">
       <el-tabs v-model="activeName">
         <el-tab-pane :label="$t('common.Collection')" name="collection" :lazy="true">
-          <div class="list-search-wrap" style="margin-top:10px">
-            <el-input class="search-input-wrap" :placeholder="$t('common.SearchPlaceholder2')"
-              v-model="collectionQuery.keyword" @keyup.enter="searchCollection">
-              <template #prefix>
-                <div class="img-search"><img src="../../assets/images/icons/icon_search.svg" alt=""></div>
-              </template>
-            </el-input>
-            <!-- <div class="sort-wrap">
-              <span class="icon-wrap icon_filter01 active">
-              </span>
-              <span class="icon-wrap icon_filter02"></span>
-            </div> -->
-          </div>
-          <div>
+          <div style="padding-top: 10px;">
             <div class="collection-list-new">
               <router-link :to="`/collection/${item.contract}`" class="collection-card" v-for="(item, index) in dataList"
                 :key="index">
@@ -55,7 +42,7 @@
           </div>
         </el-tab-pane>
         <el-tab-pane label="NFT" name="nft" :lazy="true">
-          <markterplace ref="markterplaceRef" :searchKeyword="$route.query.keyword" style="padding-top:10px" />
+          <markterplace ref="markterplaceRef" :searchKeyword="this.collectionQuery.keyword"/>
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -82,17 +69,17 @@ export default {
     };
   },
   watch: {
-    '$route.query'(val) {
+    '$route.query' (val) {
       this.collectionQuery.keyword = val.keyword
       this.init()
     },
   },
-  mounted() {
+  mounted () {
     this.collectionQuery.keyword = this.$route.query.keyword || ''
     this.init()
   },
   computed: {
-    showAddress() {
+    showAddress () {
       return (search) => {
         var res =
           search.address.slice(0, 11) + "..." + search.address.slice(-4);
@@ -104,15 +91,16 @@ export default {
     },
   },
   methods: {
-    init() {
+    init () {
       this.activeName = 'collection'
       this.searchCollection();
     },
-    searchCollection() {
+    searchCollection () {
+      this.dataList = []
       this.collectionQuery.page = 1
       this.getCollectionData()
     },
-    getCollectionData() {
+    getCollectionData () {
       // this.dataList = []
       this.loadStatus = "loading";
       this.$api("collect.query", this.collectionQuery).then((res) => {
@@ -124,7 +112,7 @@ export default {
         }
       })
     },
-    loadMoreData() {
+    loadMoreData () {
       console.log('😺👉➡️', 11)
       this.collectionQuery.page += 1
       this.getCollectionData()
@@ -133,9 +121,10 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.main-wrapper {
+.search-wrapper {
   max-width: 100%;
-  padding: 40px 40px;
+  padding: 0 40px;
+  margin-top: 40px;
 }
 
 .title {
@@ -174,7 +163,7 @@ export default {
 
   // overflow:auto;
   ::v-deep {
-    .main-wrapper{
+    .main-wrapper {
       padding: 0;
     }
     .el-tabs__content {

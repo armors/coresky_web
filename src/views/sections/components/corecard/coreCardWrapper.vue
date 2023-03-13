@@ -1,0 +1,323 @@
+<template>
+	<div id="box">
+		<pre class="prev">prev</pre>
+		<pre class="next">next</pre>
+		<ul>
+			<li v-for="(item, i) in 6" :key="i">
+				<img :src="imagePngArr[i + 1]" />
+			</li>
+		</ul>
+	</div>
+</template>
+<script setup>
+import { onMounted } from 'vue';
+
+import image1Webp from '@/assets/core-card/img1.webp';
+import image2Webp from '@/assets/core-card/img2.webp';
+import image3Webp from '@/assets/core-card/img3.webp';
+import image4Webp from '@/assets/core-card/img4.webp';
+import image5Webp from '@/assets/core-card/img5.webp';
+import image6Webp from '@/assets/core-card/img6.webp';
+
+import image1Png from '@/assets/core-card/img1.png';
+import image2Png from '@/assets/core-card/img2.png';
+import image3Png from '@/assets/core-card/img3.png';
+import image4Png from '@/assets/core-card/img4.png';
+import image5Png from '@/assets/core-card/img5.png';
+import image6Png from '@/assets/core-card/img6.png';
+
+const imageWebpArr = [
+	image1Webp,
+	image2Webp,
+	image3Webp,
+	image4Webp,
+	image5Webp,
+	image6Webp,
+];
+
+const imagePngArr = [
+	image1Png,
+	image2Png,
+	image3Png,
+	image4Png,
+	image5Png,
+	image6Png,
+];
+
+function ZoomPic() {
+	this.initialize.apply(this, arguments);
+}
+ZoomPic.prototype = {
+	initialize: function(id) {
+		var _this = this;
+		this.wrap = typeof id === 'string' ? document.getElementById(id) : id;
+		this.oUl = this.wrap.getElementsByTagName('ul')[0];
+		this.aLi = this.wrap.getElementsByTagName('li');
+		this.prev = this.wrap.getElementsByTagName('pre')[0];
+		this.next = this.wrap.getElementsByTagName('pre')[1];
+		this.timer = null;
+		this.aSort = [];
+		this.iCenter = 3;
+		this._doPrev = function() {
+			return _this.doPrev.apply(_this);
+		};
+		this._doNext = function() {
+			return _this.doNext.apply(_this);
+		};
+		this.options = [
+			{ width: 65, height: 109, top: 71, left: 450, zIndex: 1 },
+			{ width: 65, height: 109, top: 61, left: 240, zIndex: 2 },
+			{ width: 98, height: 165, top: 37, left: 30, zIndex: 3 },
+			{ width: 264, height: 450, top: -100, left: 390, zIndex: 4 },
+			{ width: 98, height: 165, top: 37, left: 888, zIndex: 3 },
+			{ width: 65, height: 109, top: 61, left: 700, zIndex: 2 },
+		];
+		for (var i = 0; i < this.aLi.length; i++) this.aSort[i] = this.aLi[i];
+		this.aSort.unshift(this.aSort.pop());
+		this.setUp();
+		this.addEvent(this.prev, 'click', this._doPrev);
+		this.addEvent(this.next, 'click', this._doNext);
+		this.doImgClick();
+	},
+	doPrev: function() {
+		this.aSort.unshift(this.aSort.pop());
+		this.setUp();
+	},
+	doNext: function() {
+		this.aSort.push(this.aSort.shift());
+		this.setUp();
+	},
+	doImgClick: function() {
+		var _this = this;
+		for (var i = 0; i < this.aSort.length; i++) {
+			this.aSort[i].onclick = function() {
+				if (this.index > _this.iCenter) {
+					for (var i = 0; i < this.index - _this.iCenter; i++)
+						_this.aSort.push(_this.aSort.shift());
+					_this.setUp();
+				} else if (this.index < _this.iCenter) {
+					for (var i = 0; i < _this.iCenter - this.index; i++)
+						_this.aSort.unshift(_this.aSort.pop());
+					_this.setUp();
+				}
+			};
+		}
+	},
+	setUp: function() {
+		var _this = this;
+		var i = 0;
+		for (i = 0; i < this.aSort.length; i++)
+			this.oUl.appendChild(this.aSort[i]);
+		for (i = 0; i < this.aSort.length; i++) {
+			this.aSort[i].index = i;
+			if (i < 7) {
+				this.css(this.aSort[i], 'display', 'block');
+				this.doMove(this.aSort[i], this.options[i], function() {
+					_this.doMove(
+						_this.aSort[_this.iCenter].getElementsByTagName(
+							'img'
+						)[0],
+						{ opacity: 100 },
+						function() {
+							_this.doMove(
+								_this.aSort[_this.iCenter].getElementsByTagName(
+									'img'
+								)[0],
+								{ opacity: 100 }
+							);
+						}
+					);
+				});
+			} else {
+				this.css(this.aSort[i], 'display', 'none');
+				this.css(this.aSort[i], 'width', 0);
+				this.css(this.aSort[i], 'height', 0);
+				this.css(this.aSort[i], 'top', 37);
+				this.css(this.aSort[i], 'left', this.oUl.offsetWidth / 2);
+			}
+			if (i < this.iCenter || i > this.iCenter) {
+				this.aSort[i].getElementsByTagName('img')[0].src =
+					imagePngArr[i];
+				this.css(
+					this.aSort[i].getElementsByTagName('img')[0],
+					'opacity',
+					30
+				);
+				this.aSort[i].onmouseover = function() {
+					_this.doMove(this.getElementsByTagName('img')[0], {
+						opacity: 100,
+					});
+				};
+				this.aSort[i].onmouseout = function() {
+					_this.doMove(this.getElementsByTagName('img')[0], {
+						opacity: 35,
+					});
+				};
+				this.aSort[i].onmouseout();
+			} else {
+				this.aSort[i].onmouseover = this.aSort[i].onmouseout = null;
+				this.aSort[i].getElementsByTagName('img')[0].src =
+					imageWebpArr[i];
+			}
+		}
+	},
+	addEvent: function(oElement, sEventType, fnHandler) {
+		return oElement.addEventListener
+			? oElement.addEventListener(sEventType, fnHandler, false)
+			: oElement.attachEvent('on' + sEventType, fnHandler);
+	},
+	css: function(oElement, attr, value) {
+		if (arguments.length == 2) {
+			return oElement.currentStyle
+				? oElement.currentStyle[attr]
+				: getComputedStyle(oElement, null)[attr];
+		} else if (arguments.length == 3) {
+			switch (attr) {
+				case 'width':
+				case 'height':
+				case 'top':
+				case 'left':
+				case 'bottom':
+					oElement.style[attr] = value + 'px';
+					break;
+				case 'opacity':
+					oElement.style.filter = 'alpha(opacity=' + value + ')';
+					oElement.style.opacity = value / 100;
+					break;
+				default:
+					oElement.style[attr] = value;
+					break;
+			}
+		}
+	},
+	doMove: function(oElement, oAttr, fnCallBack) {
+		var _this = this;
+		clearInterval(oElement.timer);
+		oElement.timer = setInterval(function() {
+			var bStop = true;
+			for (var property in oAttr) {
+				var iCur = parseFloat(_this.css(oElement, property));
+				property == 'opacity' &&
+					(iCur = parseInt(iCur.toFixed(2) * 100));
+				var iSpeed = (oAttr[property] - iCur) / 5;
+				iSpeed = iSpeed > 0 ? Math.ceil(iSpeed) : Math.floor(iSpeed);
+
+				if (iCur != oAttr[property]) {
+					bStop = false;
+					_this.css(oElement, property, iCur + iSpeed);
+				}
+			}
+			if (bStop) {
+				clearInterval(oElement.timer);
+				fnCallBack && fnCallBack.apply(_this, arguments);
+			}
+		}, 30);
+	},
+};
+onMounted(() => {
+	function wrapper() {
+		new ZoomPic('box');
+	}
+	wrapper();
+});
+</script>
+<style lang="scss" scoped>
+body,
+div,
+ul,
+li,
+h4,
+p {
+	margin: 0;
+	padding: 0;
+}
+body {
+	font: 12px/1.8 arial;
+	color: #fff;
+	background: 50% 0 no-repeat #000;
+}
+a {
+	color: #fff;
+	text-decoration: none;
+	background: #666;
+	padding: 2px 5px;
+}
+a:hover {
+	background: #f90;
+}
+#box {
+	position: relative;
+	width: 997px;
+	height: 496px;
+	margin: 0 auto;
+	padding-top: 130px;
+}
+#box ul {
+	position: relative;
+	width: 919px;
+	height: 496px;
+}
+#box li {
+	position: absolute;
+	list-style: none;
+	width: 0;
+	height: 0;
+	top: 146px;
+	left: 377px;
+	z-index: 0;
+	cursor: pointer;
+	overflow: hidden;
+	border-radius: 3px;
+}
+#box li img {
+	width: 100%;
+	height: 100%;
+	vertical-align: top;
+}
+#box li div {
+	position: absolute;
+	bottom: -100px;
+	width: 100%;
+	height: 100px;
+	background: #000;
+	filter: alpha(opacity=70);
+	opacity: 0.7;
+}
+#box li div h4 {
+	margin: 0 10px;
+	font: 12px/24px arial;
+	border-bottom: 1px #333 solid;
+}
+#box li div h4 span {
+	color: red;
+	margin-left: 10px;
+}
+#box li div p {
+	margin: 5px 10px 0;
+	text-indent: 2em;
+}
+#box .prev,
+#box .next {
+	position: absolute;
+	top: 50%;
+	width: 39px;
+	height: 80px;
+	margin-top: -40px;
+	overflow: hidden;
+	text-indent: -999px;
+	cursor: pointer;
+	background: no-repeat;
+	color: #000;
+}
+#box .prev {
+	left: -60px;
+}
+#box .next {
+	right: -60px;
+	background-position: -39px 0;
+}
+#copyright {
+	padding-top: 10px;
+	text-align: center;
+}
+</style>

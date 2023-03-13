@@ -139,10 +139,10 @@
         <collectionNFT :contract="contract" />
       </div>
     </div>
-    <div class="btn-box">
-      <div class="sort">Make</div>
-      <div class="btn-blue"  @click="showMakeOfferCollect">Make Offer Collect</div>
-    </div>
+<!--    <div class="btn-box">-->
+<!--      <div class="sort">Make</div>-->
+<!--      <div class="btn-blue"  @click="showMakeOfferCollect">Make Offer Collect</div>-->
+<!--    </div>-->
     <NFTDialogMakeOffer ref="NFTDialogMakeOffer" @makeOfferSuccess="makeOfferSuccess"></NFTDialogMakeOffer>
   </div>
 </template>
