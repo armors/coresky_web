@@ -3,40 +3,47 @@
 		<pre class="prev">prev</pre>
 		<pre class="next">next</pre>
 		<ul>
-			<li
-				style="display: block; width: 65px; height: 109px; top: 71px; left: 131px; z-index: 1;"
-			>
-				<img src="@/assets/core-card/img1.png" />
-			</li>
-			<li
-				style="display: block; width: 65px; height: 109px; top: 61px; left: 2px; z-index: 2;"
-			>
-				<img src="@/assets/core-card/img2.png" />
-			</li>
-			<li
-				style="display: block; width: 98px; height: 165px; top: 37px; left: 114px; z-index: 3;"
-			>
-				<img src="@/assets/core-card/img3.png" />
-			</li>
-			<li
-				style="display: block; width: 264px; height: 450px; top: 0px; left: 267px; z-index: 4;"
-			>
-				<img src="@/assets/core-card/img4.png" />
-			</li>
-			<li
-				style="display: block; width: 98px; height: 165px; top: 37px; left: 472px; z-index: 3;"
-			>
-				<img src="@/assets/core-card/img5.png" />
-			</li>
-			<li
-				style="display: block; width: 65px; height: 109px;top: 61px; left: 617px; z-index: 2;"
-			>
-				<img src="@/assets/core-card/img6.png" />
+			<li v-for="(item, i) in 6" :key="i">
+				<img :src="imagePngArr[i + 1]" />
 			</li>
 		</ul>
 	</div>
 </template>
 <script setup>
+import { onMounted } from 'vue';
+
+import image1Webp from '@/assets/core-card/img1.webp';
+import image2Webp from '@/assets/core-card/img2.webp';
+import image3Webp from '@/assets/core-card/img3.webp';
+import image4Webp from '@/assets/core-card/img4.webp';
+import image5Webp from '@/assets/core-card/img5.webp';
+import image6Webp from '@/assets/core-card/img6.webp';
+
+import image1Png from '@/assets/core-card/img1.png';
+import image2Png from '@/assets/core-card/img2.png';
+import image3Png from '@/assets/core-card/img3.png';
+import image4Png from '@/assets/core-card/img4.png';
+import image5Png from '@/assets/core-card/img5.png';
+import image6Png from '@/assets/core-card/img6.png';
+
+const imageWebpArr = [
+	image1Webp,
+	image2Webp,
+	image3Webp,
+	image4Webp,
+	image5Webp,
+	image6Webp,
+];
+
+const imagePngArr = [
+	image1Png,
+	image2Png,
+	image3Png,
+	image4Png,
+	image5Png,
+	image6Png,
+];
+
 function ZoomPic() {
 	this.initialize.apply(this, arguments);
 }
@@ -58,12 +65,12 @@ ZoomPic.prototype = {
 			return _this.doNext.apply(_this);
 		};
 		this.options = [
-			{ width: 65, height: 109, top: 71, left: 134, zIndex: 1 },
-			{ width: 65, height: 109, top: 61, left: 0, zIndex: 2 },
-			{ width: 98, height: 165, top: 37, left: 110, zIndex: 3 },
-			{ width: 264, height: 450, top: -100, left: 262, zIndex: 4 },
-			{ width: 98, height: 165, top: 37, left: 468, zIndex: 3 },
-			{ width: 65, height: 109, top: 61, left: 620, zIndex: 2 },
+			{ width: 65, height: 109, top: 71, left: 450, zIndex: 1 },
+			{ width: 65, height: 109, top: 61, left: 240, zIndex: 2 },
+			{ width: 98, height: 165, top: 37, left: 30, zIndex: 3 },
+			{ width: 264, height: 450, top: -100, left: 390, zIndex: 4 },
+			{ width: 98, height: 165, top: 37, left: 888, zIndex: 3 },
+			{ width: 65, height: 109, top: 61, left: 700, zIndex: 2 },
 		];
 		for (var i = 0; i < this.aLi.length; i++) this.aSort[i] = this.aLi[i];
 		this.aSort.unshift(this.aSort.pop());
@@ -158,6 +165,8 @@ ZoomPic.prototype = {
 				this.css(this.aSort[i], 'left', this.oUl.offsetWidth / 2);
 			}
 			if (i < this.iCenter || i > this.iCenter) {
+				this.aSort[i].getElementsByTagName('img')[0].src =
+					imagePngArr[i];
 				this.css(
 					this.aSort[i].getElementsByTagName('img')[0],
 					'opacity',
@@ -176,6 +185,8 @@ ZoomPic.prototype = {
 				this.aSort[i].onmouseout();
 			} else {
 				this.aSort[i].onmouseover = this.aSort[i].onmouseout = null;
+				this.aSort[i].getElementsByTagName('img')[0].src =
+					imageWebpArr[i];
 			}
 		}
 	},
@@ -232,11 +243,13 @@ ZoomPic.prototype = {
 		}, 30);
 	},
 };
-window.onload = function() {
-	new ZoomPic('box');
-};
+onMounted(() => {
+	function wrapper() {
+		new ZoomPic('box');
+	}
+	wrapper();
+});
 </script>
-
 <style lang="scss" scoped>
 body,
 div,
@@ -263,15 +276,15 @@ a:hover {
 }
 #box {
 	position: relative;
-	width: 754px;
+	width: 997px;
 	height: 496px;
 	margin: 0 auto;
 	padding-top: 130px;
 }
 #box ul {
 	position: relative;
-	width: 754px;
-	height: 292px;
+	width: 919px;
+	height: 496px;
 }
 #box li {
 	position: absolute;
