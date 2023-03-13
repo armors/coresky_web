@@ -78,17 +78,6 @@ ZoomPic.prototype = {
 		this.addEvent(this.prev, 'click', this._doPrev);
 		this.addEvent(this.next, 'click', this._doNext);
 		this.doImgClick();
-		this.timer = setInterval(function() {
-			_this.doNext();
-		}, 3000);
-		this.wrap.onmouseover = function() {
-			clearInterval(_this.timer);
-		};
-		this.wrap.onmouseout = function() {
-			_this.timer = setInterval(function() {
-				_this.doNext();
-			}, 3000);
-		};
 	},
 	doPrev: function() {
 		this.aSort.unshift(this.aSort.pop());
@@ -134,25 +123,7 @@ ZoomPic.prototype = {
 								_this.aSort[_this.iCenter].getElementsByTagName(
 									'img'
 								)[0],
-								{ opacity: 100 },
-								function() {
-									_this.aSort[
-										_this.iCenter
-									].onmouseover = function() {
-										_this.doMove(
-											this.getElementsByTagName('div')[0],
-											{ bottom: 0 }
-										);
-									};
-									_this.aSort[
-										_this.iCenter
-									].onmouseout = function() {
-										_this.doMove(
-											this.getElementsByTagName('div')[0],
-											{ bottom: -100 }
-										);
-									};
-								}
+								{ opacity: 100 }
 							);
 						}
 					);
@@ -336,6 +307,7 @@ a:hover {
 	text-indent: -999px;
 	cursor: pointer;
 	background: no-repeat;
+	color: #000;
 }
 #box .prev {
 	left: -60px;
