@@ -1,11 +1,17 @@
 <template>
 	<div class="process">
+		<div class="level-info">
+			<img src="@/assets/core-card/small-img1.png" alt="" />
+			<div class="info-right">
+				<p>Corecard #19990</p>
+				<button class="add-level">Upgrade</button>
+			</div>
+		</div>
 		<div class="slider">
 			<p><strong>LV 1</strong><strong>LV 4</strong></p>
 			<el-slider v-model="value1" :min="0" :max="1000" />
 			<p><span>0</span><span>1000</span></p>
 		</div>
-		<button class="addLevel">Upgrade</button>
 	</div>
 </template>
 <script setup>
@@ -15,16 +21,17 @@ const value1 = ref(368);
 <style lang="scss" scoped>
 .process {
 	width: 960px;
-	height: 113px;
-	padding: 25px 52px 25px 59px;
+	height: 133px;
+	padding: 25px 40px 25px 50px;
 	margin: 0px auto 60px;
 	background: rgba(255, 255, 255, 0.35);
 	border-radius: 80px;
 	overflow: hidden;
 	.slider {
-		width: 669px;
-		margin-right: 40px;
+		width: 606px;
+		margin-left: 50px;
 		float: left;
+		padding-top: 3px;
 		::v-deep(.el-slider__runway) {
 			height: 20px;
 			border-radius: 23px;
@@ -70,16 +77,33 @@ const value1 = ref(368);
 			}
 		}
 	}
-	.addLevel {
-		width: 140px;
-		height: 57px;
+	.level-info {
+		width: 204px;
 		float: left;
-		background: #000000;
-		border-radius: 12px;
-		color: #ffffff;
-		border: none;
-		cursor: pointer;
-		margin-top: 3px;
+		img {
+			width: 49px;
+			height: 83px;
+			float: left;
+			margin-right: 15px;
+		}
+		.info-right {
+			width: 140px;
+			float: right;
+			p {
+				color: #04142a;
+				font-size: 16px;
+			}
+			.add-level {
+				width: 140px;
+				height: 57px;
+				background: #000000;
+				border-radius: 12px;
+				color: #ffffff;
+				border: none;
+				cursor: pointer;
+				margin-top: 3px;
+			}
+		}
 	}
 }
 </style>
