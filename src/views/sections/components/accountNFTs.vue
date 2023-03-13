@@ -232,7 +232,7 @@ export default {
 
 <style lang="scss" scoped>
 .accountNFTs {
-  margin-top: 25px;
+  margin-top: 20px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -240,6 +240,6 @@ export default {
 }
 .right-content {
   width: 100%;
-  margin-top: -10px;
+  // margin-top: -10px;
 }
 </style>
