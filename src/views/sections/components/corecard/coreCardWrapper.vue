@@ -1,9 +1,9 @@
 <template>
 	<div id="box">
-		<pre class="prev">prev</pre>
-		<pre class="next">next</pre>
+		<pre class="prev"><img src="@/assets/core-card/prev.png" alt=""></pre>
+		<pre class="next"><img src="@/assets/core-card/next.png" alt=""></pre>
 		<ul>
-			<li v-for="(item, i) in 6" :key="i" @click="handleSelect(i)">
+			<li v-for="(item, i) in 6" :key="i">
 				<img :src="getImageUrl(i, 'png')" />
 			</li>
 		</ul>
@@ -22,11 +22,6 @@ const getImageUrl = (i, type) => {
 const emits = defineEmits(['handleSelect']);
 
 let selectedIndex = 2;
-
-const handleSelect = (i) => {
-	selectedIndex = i;
-	emits('handleSelect', i);
-};
 
 function ZoomPic() {
 	this.initialize.apply(this, arguments);
@@ -61,14 +56,20 @@ ZoomPic.prototype = {
 		this.setUp();
 		this.addEvent(this.prev, 'click', this._doPrev);
 		this.addEvent(this.next, 'click', this._doNext);
-		this.doImgClick();
+		// this.doImgClick();
 	},
 	doPrev: function() {
+    let i = selectedIndex <= 0 ? 5 : selectedIndex - 1;
+    selectedIndex = this.aSort[i].index;
 		this.aSort.unshift(this.aSort.pop());
+    emits('handleSelect', selectedIndex);
 		this.setUp();
 	},
 	doNext: function() {
+    let i = selectedIndex >= 5 ? 0 : selectedIndex + 1;
+    selectedIndex = this.aSort[i].index;
 		this.aSort.push(this.aSort.shift());
+    emits('handleSelect', selectedIndex);
 		this.setUp();
 	},
 	doImgClick: function() {
@@ -90,10 +91,6 @@ ZoomPic.prototype = {
 	setUp: function() {
 		var _this = this;
 		var i = 0;
-		this.aSort[3].getElementsByTagName('img')[0].src = getImageUrl(
-			selectedIndex,
-			'webp'
-		);
 		for (i = 0; i < this.aSort.length; i++)
 			this.oUl.appendChild(this.aSort[i]);
 		for (i = 0; i < this.aSort.length; i++) {
@@ -143,7 +140,12 @@ ZoomPic.prototype = {
 			} else {
 				this.aSort[i].onmouseover = this.aSort[i].onmouseout = null;
 			}
+      
 		}
+    this.aSort[3].getElementsByTagName('img')[0].src = getImageUrl(
+			selectedIndex,
+			'webp'
+		);
 	},
 	addEvent: function(oElement, sEventType, fnHandler) {
 		return oElement.addEventListener
@@ -215,6 +217,7 @@ onMounted(() => {
 	position: relative;
 	width: 919px;
 	height: 360px;
+  margin: 0 auto;
 }
 #box li {
 	position: absolute;
@@ -259,20 +262,19 @@ onMounted(() => {
 #box .next {
 	position: absolute;
 	top: 50%;
-	width: 39px;
-	height: 80px;
+	width: 15px;
+	height: 30px;
 	margin-top: -40px;
 	overflow: hidden;
-	text-indent: -999px;
 	cursor: pointer;
 	background: no-repeat;
 	color: #000;
 }
 #box .prev {
-	left: -60px;
+	left: 0px;
 }
 #box .next {
-	right: -60px;
+	right: 0px;
 	background-position: -39px 0;
 }
 #copyright {
