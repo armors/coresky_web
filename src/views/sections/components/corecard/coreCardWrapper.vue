@@ -210,14 +210,15 @@ onMounted(() => {
 #box {
 	position: relative;
 	width: 997px;
-	height: 360px;
+	height: 540px;
 	margin: 0 auto;
 }
 #box ul {
 	position: relative;
 	width: 919px;
-	height: 360px;
+	height: 540px;
   margin: 0 auto;
+  top: 160px;
 }
 #box li {
 	position: absolute;
@@ -261,10 +262,10 @@ onMounted(() => {
 #box .prev,
 #box .next {
 	position: absolute;
-	top: 50%;
+	top: 450px;
 	width: 15px;
 	height: 30px;
-	margin-top: -40px;
+	margin-top: -120px;
 	overflow: hidden;
 	cursor: pointer;
 	background: no-repeat;

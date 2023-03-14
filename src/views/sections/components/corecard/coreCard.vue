@@ -1,24 +1,28 @@
 <template>
 	<div class="core-card" id="coreCard">
 		<div class="banner">
-			<div class="info">
-				<div class="info-shadow">
-					<div class="info-box">
-						<div class="lv-box">
-							<img src="@/assets/core-card/vip1.png" />
+			<div class="banner-box">
+				<div class="info">
+					<div class="info-shadow">
+						<div class="info-box">
+							<div class="lv-box">
+								<img :src="vipIcon" />
+							</div>
+							<a class="help"
+								><img src="@/assets/core-card/help.png" alt=""
+							/></a>
 						</div>
-						<a class="help"
-							><img src="@/assets/core-card/help.png" alt=""
-						/></a>
-					</div>
-					<div class="daily">
-						<p>Daily Lotte Output</p>
-						<strong>10</strong>
+						<div class="daily">
+							<p>Daily Lotte Output</p>
+							<strong>10</strong>
+						</div>
 					</div>
 				</div>
+				<core-card-wrapper
+					@handleSelect="handleSelect"
+				></core-card-wrapper>
+				<core-card-process></core-card-process>
 			</div>
-			<core-card-wrapper @handleSelect="handleSelect"></core-card-wrapper>
-			<core-card-process></core-card-process>
 		</div>
 		<core-card-level></core-card-level>
 		<h3>FAQ</h3>
@@ -53,10 +57,12 @@ function handleScroll() {
 
 const bgColor = ref('#C4CCD5');
 const bgBanner = ref('url(' + require(`@/assets/core-card/bg-3.png`) + ')');
+const vipIcon = ref(require(`@/assets/core-card/vip2.png`));
 
 const handleSelect = (i) => {
 	bgBanner.value =
 		'url(' + require(`@/assets/core-card/bg-${i + 1}.png`) + ')';
+	vipIcon.value = require(`@/assets/core-card/vip${i}.png`);
 	switch (i) {
 		case 0:
 			bgColor.value = '#E2E4E7';
@@ -93,24 +99,30 @@ onBeforeUnmount(() => {
 <style lang="scss" scoped>
 .core-card {
 	position: relative;
-	top: -76px;
+	width: 100%;
+	margin-top: -76px;
 	background: v-bind(bgColor);
 	padding-bottom: 100px;
 	.banner {
 		height: 826px;
 		background: v-bind(bgBanner);
-		padding-top: 270px;
 		background-size: 100% 100%;
 		position: relative;
+		.banner-box {
+			width: 1440px;
+			height: 826px;
+			margin: 0 auto;
+		}
 		.info {
 			width: 240px;
 			height: 100px;
 			background: url('@/assets/core-card/line.png') no-repeat;
 			background-size: cover;
 			padding: 8px 20px 30px 20px;
-			position: absolute;
-			left: 380px;
-			top: 160px;
+			position: relative;
+
+			left: 300px;
+			top: 180px;
 			.info-shadow {
 				border-radius: 16px;
 				background: radial-gradient(
