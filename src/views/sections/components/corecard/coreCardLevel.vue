@@ -76,7 +76,7 @@ const items = [
 	border-radius: 16px;
 	background: rgba(255, 255, 255, 0.5);
 	backdrop-filter: blur(10px);
-	margin: 60px auto;
+	margin: 0 auto;
 	padding: 30px;
 	h3 {
 		font-size: 30px;

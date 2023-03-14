@@ -16,7 +16,7 @@ const getImageUrl = (i, type) => {
 	// 根据索引生成图像URL
 	return type === 'webp'
 		? require(`@/assets/core-card/img${i + 1}.webp`)
-		: require(`@/assets/core-card/img${i + 1}.png`);
+		: require(`@/assets/core-card/v${i}.png`);
 };
 
 const emits = defineEmits(['handleSelect']);
@@ -49,7 +49,7 @@ ZoomPic.prototype = {
 			{ width: 65, height: 109, top: 71, left: 450, zIndex: 1 },
 			{ width: 65, height: 109, top: 101, left: 300, zIndex: 2 },
 			{ width: 98, height: 165, top: 107, left: 130, zIndex: 3 },
-			{ width: 304, height: 400, top: -140, left: 375, zIndex: 4 },
+			{ width: 405, height: 450, top: -140, left: 290, zIndex: 4 },
 			{ width: 98, height: 165, top: 107, left: 768, zIndex: 3 },
 			{ width: 65, height: 109, top: 101, left: 610, zIndex: 2 },
 		];

@@ -4,6 +4,7 @@
 			<img src="@/assets/core-card/small-img1.png" alt="" />
 			<div class="info-right">
 				<p>Corecard #19990</p>
+				<span>daily lotte output : 100</span>
 				<button class="add-level">Upgrade</button>
 			</div>
 		</div>
@@ -78,7 +79,7 @@ const value1 = ref(368);
 		}
 	}
 	.level-info {
-		width: 204px;
+		width: 210px;
 		float: left;
 		img {
 			width: 49px;
@@ -87,21 +88,25 @@ const value1 = ref(368);
 			margin-right: 15px;
 		}
 		.info-right {
-			width: 140px;
+			width: 146px;
 			float: right;
 			p {
 				color: #04142a;
 				font-size: 16px;
 			}
+			span {
+				color: #04142a;
+				font-size: 14px;
+			}
 			.add-level {
-				width: 140px;
-				height: 57px;
+				width: 146px;
+				height: 36px;
 				background: #000000;
-				border-radius: 12px;
+				border-radius: 8px;
 				color: #ffffff;
 				border: none;
 				cursor: pointer;
-				margin-top: 3px;
+				margin-top: 8px;
 			}
 		}
 	}
