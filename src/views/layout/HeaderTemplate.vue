@@ -1,28 +1,27 @@
 <template>
+	<el-collapse-transition>
+		<div class="system-msg" v-if="showCradTip">
+			<span>Congratulations on obtaining the mysterious CoreCard "VIP 3 Card"</span>
+			<div class="right">
+				<div href="" v-if="connected" class="btn-card" @click="goCoreCard">Receive And Bind</div>
+				<div v-if="!connected" @click="login" class="btn-card">查看</div>
+				<el-icon color="#ffffff" size="20" @click="closeTip">
+					<Close />
+				</el-icon>
+			</div>
+		</div>
+	</el-collapse-transition>
 	<div class="home-head" :class="{ homeIndex: isScrollTop && isHomeIndex }">
 		<div class="home-head-mask"></div>
 		<div class="home-head-content">
 			<router-link to="/" class="head-logo header-margin-r">
-				<img
-					fit="contain"
-					v-if="isScrollTop && isHomeIndex"
-					class="logo-image aa"
-					:src="require('../../assets/images/logo_white_new.svg')"
-				/>
-				<img
-					fit="contain"
-					v-else
-					class="logo-image"
-					:src="require('../../assets/images/bottom_logo.svg')"
-				/>
+				<img fit="contain" v-if="isScrollTop && isHomeIndex" class="logo-image aa"
+					:src="require('../../assets/images/logo_white_new.svg')" />
+				<img fit="contain" v-else class="logo-image" :src="require('../../assets/images/bottom_logo.svg')" />
 			</router-link>
 			<div class="header-search">
-				<el-input
-					class="search-input-wrap"
-					v-model="keyword"
-					@keyup.enter="searchClick"
-					:placeholder="$t('navigation.searchTip')"
-				>
+				<el-input class="search-input-wrap" v-model="keyword" @keyup.enter="searchClick"
+					:placeholder="$t('navigation.searchTip')">
 					<template #prefix>
 						<div class="img-search">
 							<!-- <img src="../../assets/images/icons/icon_search_w.svg" alt=""> -->
@@ -44,14 +43,8 @@
 				<router-link class="nav-link" to="/coreCard">
 					CoreCard
 				</router-link>
-				<el-popover
-					placement="bottom"
-					trigger="click"
-					:show-arrow="false"
-					width="200"
-					popper-class="nav-popover"
-					:offset="15"
-				>
+				<el-popover placement="bottom" trigger="click" :show-arrow="false" width="200" popper-class="nav-popover"
+					:offset="15">
 					<template #reference>
 						<div class="nav-link" to="/erc721">
 							<!-- <svg-icon class="head-icon mr8" icon-class="chain_eth" /> -->
@@ -60,10 +53,7 @@
 					</template>
 					<div>
 						<div class="chain-item active">
-							<svg-icon
-								class="head-icon mr8"
-								icon-class="chain_eth"
-							/>
+							<svg-icon class="head-icon mr8" icon-class="chain_eth" />
 							<div class="item-txt">Ethereum</div>
 							<div class="item-dot"></div>
 						</div>
@@ -74,33 +64,19 @@
             </div> -->
 					</div>
 				</el-popover>
-				<el-popover
-					placement="bottom"
-					trigger="click"
-					:show-arrow="false"
-					width="180"
-					popper-class="nav-popover"
-					:offset="15"
-				>
+				<el-popover placement="bottom" trigger="click" :show-arrow="false" width="180" popper-class="nav-popover"
+					:offset="15">
 					<template #reference>
 						<div class="nav-link" to="/erc721">
 							<svg-icon class="head-icon" icon-class="yuyan" />
 						</div>
 					</template>
 					<div>
-						<div
-							class="chain-item two"
-							@click="languageSelect('en')"
-							:class="{ active: language == 'en' }"
-						>
+						<div class="chain-item two" @click="languageSelect('en')" :class="{ active: language == 'en' }">
 							<div class="item-txt">English</div>
 							<div class="item-dot"></div>
 						</div>
-						<div
-							class="chain-item two"
-							@click="languageSelect('tw')"
-							:class="{ active: language == 'tw' }"
-						>
+						<div class="chain-item two" @click="languageSelect('tw')" :class="{ active: language == 'tw' }">
 							<div class="item-txt">繁体</div>
 							<div class="item-dot"></div>
 						</div>
@@ -110,51 +86,34 @@
             </div> -->
 					</div>
 				</el-popover>
-				<div
-					class="nav-link shopping-cart"
-					@click="
-						showShoppingCartDrawer = true;
-						showUserDrawer = false;
-					"
-				>
-					<div
-						class="notify-num"
-						v-if="
-							(shoppingCartList && shoppingCartList.length > 0) ||
-								(shoppingOpenseaCartList &&
-									shoppingOpenseaCartList.length > 0)
-						"
-					>
+				<div class="nav-link shopping-cart" @click="
+					showShoppingCartDrawer = true;
+				showUserDrawer = false;
+																				">
+					<div class="notify-num" v-if="
+						(shoppingCartList && shoppingCartList.length > 0) ||
+						(shoppingOpenseaCartList &&
+							shoppingOpenseaCartList.length > 0)
+					">
 						{{
 							shoppingCartList.length +
-								shoppingOpenseaCartList.length
+							shoppingOpenseaCartList.length
 						}}
 					</div>
 					<svg-icon class="head-icon" icon-class="gouwuche" />
 				</div>
-				<div
-					class="head-connect display-flex box-center"
-					v-if="!connected"
-					@click="login"
-				>
+				<div class="head-connect display-flex box-center" v-if="!connected" @click="login">
 					{{ $t('navigation.connectWallet') }}
 				</div>
-				<div
-					class="nav-link"
-					@click="
-						showUserDrawer = true;
-						showShoppingCartDrawer = false;
-					"
-					v-else
-				>
+				<div class="nav-link" @click="
+					showUserDrawer = true;
+				showShoppingCartDrawer = false;
+																				" v-else>
 					<div class="avatar-img">
-						<img
-							:src="
-								user.avatar ||
-									$filters.fullImageUrl(user.avatar)
-							"
-							alt=""
-						/>
+						<img :src="
+							user.avatar ||
+							$filters.fullImageUrl(user.avatar)
+						" alt="" />
 					</div>
 					<!--          <avatar class="avatar-img" :imageUrl="user.avatar || $filters.fullImageUrl(user.avatar)"-->
 					<!--            :address="user.coinbase" shape="circular">-->
@@ -162,13 +121,8 @@
 				</div>
 			</div>
 		</div>
-		<follow-popup
-			:show="showFollowing"
-			ftype="following"
-			@close="showFollowing = false"
-			v-if="connected"
-			:address="user.coinbase"
-		>
+		<follow-popup :show="showFollowing" ftype="following" @close="showFollowing = false" v-if="connected"
+			:address="user.coinbase">
 		</follow-popup>
 		<userCenterDrawer v-model:show="showUserDrawer" />
 		<shoppingCartDrawer v-model:show="showShoppingCartDrawer" />
@@ -195,7 +149,7 @@ export default {
 		userCenterDrawer,
 		shoppingCartDrawer,
 	},
-	data: function() {
+	data: function () {
 		return {
 			showUserDrawer: false,
 			showShoppingCartDrawer: false,
@@ -209,53 +163,54 @@ export default {
 			searchShow: false,
 			menuShow: false,
 			languagePopover: false,
+			showCradTip: true,
 		};
 	},
 	computed: {
-		notice() {
+		notice () {
 			return this.$store.state.notice;
 		},
-		connected() {
+		connected () {
 			return this.$store.state.connected;
 		},
-		user: function() {
+		user: function () {
 			var user = this.$store.state.user;
 			return user;
 		},
-		message() {
+		message () {
 			return this.$store.state.message;
 		},
-		language() {
+		language () {
 			console.log(this.$store.state.language);
 			return this.$store.state.language;
 		},
-		shoppingCartList() {
+		shoppingCartList () {
 			return this.$store.state.shoppingCartList;
 		},
-		shoppingOpenseaCartList() {
+		shoppingOpenseaCartList () {
 			return this.$store.state.shoppingOpenseaCartList;
 		},
-		isHomeIndex() {
+		isHomeIndex () {
 			return (
 				this.$route.name === 'home' || this.$route.name === 'coreCard'
 			);
 		},
-		isScrollTop() {
+		isScrollTop () {
 			return this.$store.state.isScrollTop;
 		},
 	},
-	created() {
+	created () {
 		this.isDark = useDark();
 	},
-	mounted() {
+	mounted () {
 		// this.login()
 		this.getCartInfo();
 	},
 	methods: {
-		getCartInfo() {
+		getCartInfo () {
 			this.$store.commit('initShoppingCart');
 		},
-		async login(value = 'metamask') {
+		async login (value = 'metamask') {
 			console.log('header connectSign');
 			this.$store.dispatch('connectAndSign', value).then((res) => {
 				if (res && this.$tools.checkResponse(res)) {
@@ -269,29 +224,29 @@ export default {
 				}
 			});
 		},
-		toggleDark() {
+		toggleDark () {
 			console.log('toggleDark');
 			const isDark = useDark();
 			useToggle(isDark);
 			this.isDark = !this.isDark;
 		},
-		async searchClick() {
+		async searchClick () {
 			this.$router.push({
 				name: 'Search',
 				query: { keyword: this.keyword },
 			});
 		},
-		goProfile() {
+		goProfile () {
 			if (!this.$tools.needLogin()) return;
 			this.$router.push('/profile');
 		},
-		goItems() {
+		goItems () {
 			this.$router.push({ name: 'Items' });
 		},
-		logout() {
+		logout () {
 			this.$web3.disconnect();
 		},
-		languageSelect(parameter) {
+		languageSelect (parameter) {
 			this.$store.state.language = parameter;
 			if (parameter == 'en') {
 				localStorage.setItem('locale', 'en');
@@ -305,6 +260,12 @@ export default {
 			}
 			this.languagePopover = false;
 		},
+		closeTip () {
+			this.showCradTip = false
+		},
+		goCoreCard () {
+			this.$router.push('/coreCardMint')
+		}
 	},
 };
 </script>
@@ -626,5 +587,38 @@ export default {
 	background: #e25555;
 	border: 1px solid #fff;
 	color: #fff;
+}
+</style>
+<style lang="scss" scoped>
+.system-msg {
+	display: flex;
+	align-items: center;
+	padding: 0px 40px;
+	height: 90px;
+	color: #ffffff;
+	background: linear-gradient(90deg, #03A5D8 0%, #3965FF 38.54%, #B439FF 100%);
+	.right {
+		margin-left: auto;
+		display: flex;
+		align-items: center;
+
+		.btn-card {
+			width: 185px;
+			height: 57px;
+			line-height: 57px;
+			margin: 0 8px;
+			background: rgba(255, 255, 255, 0.25);
+			border-radius: 12px;
+			font-weight: 500;
+			font-size: 16px;
+			color: #FFFFFF;
+			text-align: center;
+			cursor: pointer;
+		}
+		.el-icon {
+			margin-left: 10px;
+			cursor: pointer;
+		}
+	}
 }
 </style>
