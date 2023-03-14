@@ -460,21 +460,40 @@ export default {
 	},
 
 	getOpenseaTypeData(){},
-
+	async checkSignatureAccount () {
+		const token = `${window.localStorage.getItem(store.state.useAuthorization) || ''}`
+		console.log('signature token', token)
+		if (!token || token === 'undefined' || token === undefined) {
+			await store.dispatch("connectAndSign");
+		}
+		console.log(store.state.useAuthorization)
+		return new Promise(resolve => {
+			setTimeout(() => {
+				const token1 = `${window.localStorage.getItem(store.state.useAuthorization) || ''}`
+				console.log(token1)
+				if (!token1 || token1 === 'undefined' || token1 === undefined) {
+					resolve({
+						code: 500,
+						error: 'signature error'
+					})
+				} else {
+					resolve({
+						code: 200,
+						error: 'signature success'
+					})
+				}
+			}, 300)
+		})
+	},
 	/** sign 签名订单信息
 	 * @returns
 	 * @param order
 	 * @param walletAccount
 	 */
 	async signature(order, walletAccount) {
-		const token = `${window.localStorage.getItem(store.state.useAuthorization) || ''}`
-		console.log('signature token', token)
-		if (!token || token === 'undefined' || token === undefined) {
-			await store.dispatch("connectAndSign");
-		}
-		const token1 = `${window.localStorage.getItem(store.state.useAuthorization) || ''}`
-		if (!token1 || token1 === 'undefined' || token1 === undefined) {
-			return {error: 'signature error'};
+		const res = await this.checkSignatureAccount()
+		if(res.code !== 200) {
+			return res
 		}
 		const sender = web3.getSigner(walletAccount)
 		console.log(sender)
