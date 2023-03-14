@@ -45,11 +45,11 @@ ZoomPic.prototype = {
 		};
 		this.options = [
 			{ width: 65, height: 109, top: 71, left: 450, zIndex: 1 },
-			{ width: 65, height: 109, top: 101, left: 300, zIndex: 2 },
-			{ width: 98, height: 165, top: 107, left: 130, zIndex: 3 },
-			{ width: 405, height: 450, top: -140, left: 290, zIndex: 4 },
-			{ width: 98, height: 165, top: 107, left: 768, zIndex: 3 },
-			{ width: 65, height: 109, top: 101, left: 610, zIndex: 2 },
+			{ width: 65, height: 109, top: 101, left: 270, zIndex: 2 },
+			{ width: 98, height: 165, top: 97, left: 100, zIndex: 3 },
+			{ width: 405, height: 450, top: -140, left: 255, zIndex: 4 },
+			{ width: 98, height: 165, top: 97, left: 738, zIndex: 3 },
+			{ width: 65, height: 109, top: 101, left: 570, zIndex: 2 },
 		];
 		for (var i = 0; i < this.aLi.length; i++) this.aSort[i] = this.aLi[i];
 		this.aSort.unshift(this.aSort.pop());
