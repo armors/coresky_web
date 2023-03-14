@@ -1,4 +1,16 @@
 <template>
+  <el-collapse-transition>
+    <div class="system-msg" v-if="showCradTip">
+      <span>Congratulations on obtaining the mysterious CoreCard "VIP 3 Card"</span>
+      <div class="right">
+        <div href="" v-if="connected" class="btn-card" @click="goCoreCard">Receive And Bind</div>
+        <div v-if="!connected" @click="login" class="btn-card">查看</div>
+        <el-icon color="#ffffff" size="20" @click="closeTip">
+          <Close />
+        </el-icon>
+      </div>
+    </div>
+  </el-collapse-transition>
   <div class="home-head" :class="{ 'homeIndex': isScrollTop && isHomeIndex }">
     <div class="home-head-mask">
     </div>
@@ -136,6 +148,7 @@ export default {
       searchShow: false,
       menuShow: false,
       languagePopover: false,
+      showCradTip: true,
     };
   },
   computed: {
@@ -227,6 +240,12 @@ export default {
       }
       this.languagePopover = false;
     },
+    closeTip () {
+      this.showCradTip = false
+    },
+    goCoreCard(){
+      this.$router.push('/coreCardMint')
+    }
   },
 };
 </script>
@@ -276,7 +295,7 @@ export default {
           .el-input__inner {
             color: #111111;
           }
-          .img-search{
+          .img-search {
             background: url(../../assets/images/icons/icon_search.svg);
           }
         }
@@ -343,13 +362,11 @@ export default {
     color: $color-white;
   }
 }
-
 .head-navs {
   display: flex;
   align-items: center;
   justify-content: flex-end;
 }
-
 .head-menus {
   display: flex;
   align-items: center;
@@ -419,18 +436,10 @@ export default {
     line-height: 23px;
   }
 }
-
 .search-link {
   display: none;
 }
 .menu-link {
-  display: none;
-}
-
-.user-popover {
-  display: flex;
-}
-.user-dialog {
   display: none;
 }
 
@@ -470,31 +479,6 @@ export default {
   .el-icon {
     font-size: 30px;
     font-weight: 600;
-  }
-}
-.red-tip {
-  position: absolute;
-  cursor: pointer;
-  top: 8px;
-  height: 8px;
-  width: 8px;
-  right: -5px;
-  background: #dd3b3b;
-  border-radius: 5px;
-  font-size: 12px;
-  font-weight: bold;
-  color: #ffffff;
-  padding: 1px 3px;
-}
-.popover-menu-item {
-  display: flex;
-  flex: 1;
-  cursor: pointer;
-  padding: 5px 0;
-  font-size: 14px;
-  color: #666;
-  &.active {
-    color: $primaryColor;
   }
 }
 .chain-item {
@@ -550,5 +534,38 @@ export default {
   background: #e25555;
   border: 1px solid #fff;
   color: #fff;
+}
+</style>
+<style lang="scss" scoped>
+.system-msg {
+  display: flex;
+  align-items: center;
+  padding: 0px 40px;
+  height: 90px;
+  color: #ffffff;
+  background: linear-gradient(90deg, #03A5D8 0%, #3965FF 38.54%, #B439FF 100%);
+  .right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+
+    .btn-card {
+      width: 185px;
+      height: 57px;
+      line-height: 57px;
+      margin: 0 8px;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 12px;
+      font-weight: 500;
+      font-size: 16px;
+      color: #FFFFFF;
+      text-align: center;
+      cursor: pointer;
+    }
+    .el-icon {
+      margin-left: 10px;
+      cursor: pointer;
+    }
+  }
 }
 </style>
