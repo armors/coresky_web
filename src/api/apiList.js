@@ -459,5 +459,34 @@ export default {
     url: "/oss",
     method: "get",
   },
-
+  corecard: {
+    availableCard:{
+      url:'/corecard/availableCard',
+      method: "post",
+    },
+    bindCard:{
+      url:'/corecard/bindCard',
+      method: "post",
+    },
+    levelUp:{
+      url:'/corecard/levelUp',
+      method: "post",
+    },
+    myTwitterInfo:{
+      url:'/corecard/myTwitterInfo',
+      method: "post",
+    },
+    myCards:{
+      url:'/corecard/myCards',
+      method: "post",
+    },
+    relayTwitter:{
+      url:'/corecard/relayTwitter',
+      method: "post",
+    },
+    bindTwitter:{
+      url:'/corecard/bindTwitter',
+      method: "post",
+    }
+  }
 };

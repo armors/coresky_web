@@ -1,16 +1,5 @@
 <template>
-	<el-collapse-transition>
-		<div class="system-msg" v-if="showCradTip">
-			<span>Congratulations on obtaining the mysterious CoreCard "VIP 3 Card"</span>
-			<div class="right">
-				<div href="" v-if="connected" class="btn-card" @click="goCoreCard">Receive And Bind</div>
-				<div v-if="!connected" @click="login" class="btn-card">查看</div>
-				<el-icon color="#ffffff" size="20" @click="closeTip">
-					<Close />
-				</el-icon>
-			</div>
-		</div>
-	</el-collapse-transition>
+	<HeaderTip ref="headerTipRef" />
 	<div class="home-head" :class="{ homeIndex: isScrollTop && isHomeIndex }">
 		<div class="home-head-mask"></div>
 		<div class="home-head-content">
@@ -29,7 +18,6 @@
 					</template>
 				</el-input>
 			</div>
-
 			<div class="head-navs">
 				<!-- <router-link class="nav-link" to="/reward">
           {{ $t("navigation.rewards") }}
@@ -86,10 +74,11 @@
             </div> -->
 					</div>
 				</el-popover>
-				<div class="nav-link shopping-cart" @click="
-					showShoppingCartDrawer = true;
-				showUserDrawer = false;
-																				">
+				<div class="nav-link shopping-cart"
+					@click="
+						showShoppingCartDrawer = true;
+					showUserDrawer = false;
+																																																																																																																																																																																																																																										">
 					<div class="notify-num" v-if="
 						(shoppingCartList && shoppingCartList.length > 0) ||
 						(shoppingOpenseaCartList &&
@@ -105,10 +94,12 @@
 				<div class="head-connect display-flex box-center" v-if="!connected" @click="login">
 					{{ $t('navigation.connectWallet') }}
 				</div>
-				<div class="nav-link" @click="
-					showUserDrawer = true;
-				showShoppingCartDrawer = false;
-																				" v-else>
+				<div class="nav-link"
+					@click="
+						showUserDrawer = true;
+					showShoppingCartDrawer = false;
+																																																																																																																																																																																																																																										"
+					v-else>
 					<div class="avatar-img">
 						<img :src="
 							user.avatar ||
@@ -132,6 +123,7 @@
 import FollowPopup from '@/components/FollowPopup';
 import userCenterDrawer from '@/components/self/drawer/userCenterDrawer';
 import shoppingCartDrawer from '@/components/self/drawer/shoppingCartDrawer';
+import HeaderTip from './HeaderTip';
 
 import { useDark, useToggle } from '@vueuse/core';
 
@@ -148,6 +140,7 @@ export default {
 		FollowPopup,
 		userCenterDrawer,
 		shoppingCartDrawer,
+		HeaderTip
 	},
 	data: function () {
 		return {
@@ -165,6 +158,11 @@ export default {
 			languagePopover: false,
 			showCradTip: true,
 		};
+	},
+	watch: {
+		connected (val1, val2) {
+			this.getTipMessage()
+		}
 	},
 	computed: {
 		notice () {
@@ -204,9 +202,30 @@ export default {
 	},
 	mounted () {
 		// this.login()
+
 		this.getCartInfo();
 	},
 	methods: {
+		getTipMessage () {
+			if (localStorage.getItem('coresky-card-tip') === '1')
+				return
+			let option = {
+				message: '',
+				linkTxt: '',
+				linkClose: true,
+				closeHandle: () => this.tipClose(),
+				callBack: () => this.goCoreCard()
+			}
+			if (this.connected) {
+				option.message = '111'
+				option.linkTxt = '222'
+			}
+			else {
+				option.message = '333'
+				option.linkTxt = '444'
+			}
+			this.$refs.headerTipRef.show(option)
+		},
 		getCartInfo () {
 			this.$store.commit('initShoppingCart');
 		},
@@ -264,7 +283,11 @@ export default {
 			this.showCradTip = false
 		},
 		goCoreCard () {
+			this.tipClose()
 			this.$router.push('/coreCardMint')
+		},
+		tipClose () {
+			localStorage.setItem('coresky-card-tip', 1)
 		}
 	},
 };
@@ -334,7 +357,7 @@ export default {
 	.home-head-mask {
 		position: absolute;
 		overflow: hidden;
-		// background-color: rgb(255, 255, 255, 0.8);
+		background-color: rgb(255, 255, 255, 0.8);
 		backdrop-filter: blur(12px);
 		top: 0px;
 		height: $headerHeight;
@@ -589,7 +612,7 @@ export default {
 	color: #fff;
 }
 </style>
-<style lang="scss" scoped>
+<!-- <style lang="scss" scoped>
 .system-msg {
 	display: flex;
 	align-items: center;
@@ -621,4 +644,4 @@ export default {
 		}
 	}
 }
-</style>
+</style> -->
