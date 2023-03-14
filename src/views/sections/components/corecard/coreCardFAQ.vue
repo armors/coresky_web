@@ -27,6 +27,9 @@
 </template>
 <script setup></script>
 <style lang="scss" scoped>
+.FAQ-card {
+	margin-bottom: 100px;
+}
 .box-card {
 	padding: 30px 50px;
 	width: 900px;

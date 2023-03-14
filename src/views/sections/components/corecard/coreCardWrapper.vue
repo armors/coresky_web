@@ -3,46 +3,27 @@
 		<pre class="prev">prev</pre>
 		<pre class="next">next</pre>
 		<ul>
-			<li v-for="(item, i) in 6" :key="i">
-				<img :src="imagePngArr[i + 1]" />
+			<li v-for="(item, i) in 6" :key="i" @click="handleSelect(i)">
+				<img :src="getImageUrl(i, 'png')" />
 			</li>
 		</ul>
 	</div>
 </template>
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, defineEmits } from 'vue';
 
-import image1Webp from '@/assets/core-card/img1.webp';
-import image2Webp from '@/assets/core-card/img2.webp';
-import image3Webp from '@/assets/core-card/img3.webp';
-import image4Webp from '@/assets/core-card/img4.webp';
-import image5Webp from '@/assets/core-card/img5.webp';
-import image6Webp from '@/assets/core-card/img6.webp';
+const getImageUrl = (i, type) => {
+	// 根据索引生成图像URL
+	return type === 'webp'
+		? require(`@/assets/core-card/img${i + 1}.webp`)
+		: require(`@/assets/core-card/v${i}.png`);
+};
 
-import image1Png from '@/assets/core-card/img1.png';
-import image2Png from '@/assets/core-card/img2.png';
-import image3Png from '@/assets/core-card/img3.png';
-import image4Png from '@/assets/core-card/img4.png';
-import image5Png from '@/assets/core-card/img5.png';
-import image6Png from '@/assets/core-card/img6.png';
+const emits = defineEmits(['handleSelect']);
 
-const imageWebpArr = [
-	image1Webp,
-	image2Webp,
-	image3Webp,
-	image4Webp,
-	image5Webp,
-	image6Webp,
-];
-
-const imagePngArr = [
-	image1Png,
-	image2Png,
-	image3Png,
-	image4Png,
-	image5Png,
-	image6Png,
-];
+const handleSelect = (i) => {
+	emits('handleSelect', i);
+};
 
 function ZoomPic() {
 	this.initialize.apply(this, arguments);
@@ -66,11 +47,11 @@ ZoomPic.prototype = {
 		};
 		this.options = [
 			{ width: 65, height: 109, top: 71, left: 450, zIndex: 1 },
-			{ width: 65, height: 109, top: 61, left: 240, zIndex: 2 },
-			{ width: 98, height: 165, top: 37, left: 30, zIndex: 3 },
-			{ width: 264, height: 450, top: -100, left: 390, zIndex: 4 },
-			{ width: 98, height: 165, top: 37, left: 888, zIndex: 3 },
-			{ width: 65, height: 109, top: 61, left: 700, zIndex: 2 },
+			{ width: 65, height: 109, top: 101, left: 300, zIndex: 2 },
+			{ width: 98, height: 165, top: 107, left: 130, zIndex: 3 },
+			{ width: 405, height: 450, top: -140, left: 290, zIndex: 4 },
+			{ width: 98, height: 165, top: 107, left: 768, zIndex: 3 },
+			{ width: 65, height: 109, top: 101, left: 610, zIndex: 2 },
 		];
 		for (var i = 0; i < this.aLi.length; i++) this.aSort[i] = this.aLi[i];
 		this.aSort.unshift(this.aSort.pop());
@@ -136,8 +117,10 @@ ZoomPic.prototype = {
 				this.css(this.aSort[i], 'left', this.oUl.offsetWidth / 2);
 			}
 			if (i < this.iCenter || i > this.iCenter) {
-				this.aSort[i].getElementsByTagName('img')[0].src =
-					imagePngArr[i];
+				this.aSort[i].getElementsByTagName('img')[0].src = getImageUrl(
+					i,
+					'png'
+				);
 				this.css(
 					this.aSort[i].getElementsByTagName('img')[0],
 					'opacity',
@@ -156,8 +139,10 @@ ZoomPic.prototype = {
 				this.aSort[i].onmouseout();
 			} else {
 				this.aSort[i].onmouseover = this.aSort[i].onmouseout = null;
-				this.aSort[i].getElementsByTagName('img')[0].src =
-					imageWebpArr[i];
+				this.aSort[i].getElementsByTagName('img')[0].src = getImageUrl(
+					i,
+					'webp'
+				);
 			}
 		}
 	},
@@ -222,40 +207,16 @@ onMounted(() => {
 });
 </script>
 <style lang="scss" scoped>
-body,
-div,
-ul,
-li,
-h4,
-p {
-	margin: 0;
-	padding: 0;
-}
-body {
-	font: 12px/1.8 arial;
-	color: #fff;
-	background: 50% 0 no-repeat #000;
-}
-a {
-	color: #fff;
-	text-decoration: none;
-	background: #666;
-	padding: 2px 5px;
-}
-a:hover {
-	background: #f90;
-}
 #box {
 	position: relative;
 	width: 997px;
-	height: 496px;
+	height: 360px;
 	margin: 0 auto;
-	padding-top: 130px;
 }
 #box ul {
 	position: relative;
 	width: 919px;
-	height: 496px;
+	height: 360px;
 }
 #box li {
 	position: absolute;
