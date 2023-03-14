@@ -15,13 +15,16 @@ import { onMounted, defineEmits } from 'vue';
 const getImageUrl = (i, type) => {
 	// 根据索引生成图像URL
 	return type === 'webp'
-		? require(`@/assets/core-card/img${i + 1}.webp`)
+		? require(`@/assets/core-card/v${i}.webp`)
 		: require(`@/assets/core-card/v${i}.png`);
 };
 
 const emits = defineEmits(['handleSelect']);
 
+let selectedIndex = 2;
+
 const handleSelect = (i) => {
+	selectedIndex = i;
 	emits('handleSelect', i);
 };
 
@@ -87,6 +90,10 @@ ZoomPic.prototype = {
 	setUp: function() {
 		var _this = this;
 		var i = 0;
+		this.aSort[3].getElementsByTagName('img')[0].src = getImageUrl(
+			selectedIndex,
+			'webp'
+		);
 		for (i = 0; i < this.aSort.length; i++)
 			this.oUl.appendChild(this.aSort[i]);
 		for (i = 0; i < this.aSort.length; i++) {
@@ -117,10 +124,6 @@ ZoomPic.prototype = {
 				this.css(this.aSort[i], 'left', this.oUl.offsetWidth / 2);
 			}
 			if (i < this.iCenter || i > this.iCenter) {
-				this.aSort[i].getElementsByTagName('img')[0].src = getImageUrl(
-					i,
-					'png'
-				);
 				this.css(
 					this.aSort[i].getElementsByTagName('img')[0],
 					'opacity',
@@ -139,10 +142,6 @@ ZoomPic.prototype = {
 				this.aSort[i].onmouseout();
 			} else {
 				this.aSort[i].onmouseover = this.aSort[i].onmouseout = null;
-				this.aSort[i].getElementsByTagName('img')[0].src = getImageUrl(
-					i,
-					'webp'
-				);
 			}
 		}
 	},
@@ -186,7 +185,6 @@ ZoomPic.prototype = {
 					(iCur = parseInt(iCur.toFixed(2) * 100));
 				var iSpeed = (oAttr[property] - iCur) / 5;
 				iSpeed = iSpeed > 0 ? Math.ceil(iSpeed) : Math.floor(iSpeed);
-
 				if (iCur != oAttr[property]) {
 					bStop = false;
 					_this.css(oElement, property, iCur + iSpeed);

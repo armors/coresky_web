@@ -51,30 +51,30 @@ function handleScroll() {
 	store.commit('setScrollTop', isScrollTop);
 }
 
-const bgColor = ref('#DAD4CF');
-const bgBanner = ref('url(' + require(`@/assets/core-card/bg-1.png`) + ')');
+const bgColor = ref('#C4CCD5');
+const bgBanner = ref('url(' + require(`@/assets/core-card/bg-3.png`) + ')');
 
 const handleSelect = (i) => {
 	bgBanner.value =
 		'url(' + require(`@/assets/core-card/bg-${i + 1}.png`) + ')';
 	switch (i) {
 		case 0:
-			bgColor.value = '#DAD4CF';
+			bgColor.value = '#E2E4E7';
 			break;
 		case 1:
-			bgColor.value = '#C4CCD5';
+			bgColor.value = '#DAD4CF';
 			break;
 		case 2:
-			bgColor.value = '#EBDFC3';
+			bgColor.value = '#C4CCD5';
 			break;
 		case 3:
-			bgColor.value = '#B9D5EE';
+			bgColor.value = '#EBDFC3';
 			break;
 		case 4:
-			bgColor.value = '#E0DCF5';
+			bgColor.value = '#B9D5EE';
 			break;
 		case 5:
-			bgColor.value = '#E2E4E7';
+			bgColor.value = '#E0DCF5';
 			break;
 		default:
 			break;
