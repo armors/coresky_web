@@ -687,6 +687,7 @@ export default {
 			this.sellBtnLoading = true
 			const registryOwner = await this.getRegistryOwner()
 			if (typeof registryOwner == 'object' && registryOwner.error) {
+				this.sellBtnLoading = false
 				return
 			}
 			if (!this.isApproved) {
