@@ -621,6 +621,7 @@ export default {
 			}
 			this.registryOwner = registryOwner.proxiesAddress
 			console.log(registryOwner)
+			return this.registryOwner
 		},
 		// 授权
 		async setApproveAll() {
@@ -684,7 +685,10 @@ export default {
 			}
 			console.log(typeof this.tokenInfo.tokenId)
 			this.sellBtnLoading = true
-			await this.getRegistryOwner()
+			const registryOwner = await this.getRegistryOwner()
+			if (typeof registryOwner == 'object' && registryOwner.error) {
+				return
+			}
 			if (!this.isApproved) {
 				await this.setApproveAll()
 			}

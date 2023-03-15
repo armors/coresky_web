@@ -176,7 +176,7 @@
                   <div class="box-val">
                     <span class="value">{{ nftPrice }}</span>
                     <span class="value">ETH</span>
-                    <span class="value-u" v-if="nftPrice && nftPrice !== '--'"> ${{
+                    <span class="value-u" v-if="nftPrice && $filters.milliFormat($filters.ethToUsdt(nftPrice)) !== '--'"> ${{
                       $filters.milliFormat($filters.ethToUsdt(nftPrice)) }}</span>
                   </div>
                 </div>
@@ -189,7 +189,7 @@
                   <div class="box-val">
                     <span class="value">{{ bestPrice }}</span>
                     <span class="value">ETH</span>
-                    <span class="value-u" v-if="bestPrice && bestPrice !== '--'"> ${{
+                    <span class="value-u" v-if="bestPrice && $filters.milliFormat($filters.ethToUsdt(bestPrice)) !== '--'"> ${{
                       $filters.milliFormat($filters.ethToUsdt(bestPrice)) }}</span>
                   </div>
                 </div>
