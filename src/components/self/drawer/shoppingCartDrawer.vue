@@ -363,6 +363,11 @@ export default {
       }
     },
     async cartBuy () {
+      const resSign = await this.$sdk.checkSignatureAccount()
+      console.log(resSign)
+      if(resSign.code !== 200) {
+        return
+      }
       this.buyBtnLoading = true
       const res = await this.checkOrder()
       if (res.code !== 200) {
@@ -566,6 +571,11 @@ export default {
       }
     },
     async cartBuyOpensea () {
+      const resSign = await this.$sdk.checkSignatureAccount()
+      console.log(resSign)
+      if(resSign.code !== 200) {
+        return
+      }
       // isOrderFulfillable
       console.log(this.openseaCart)
       this.buyOpenseaBtnLoading = true
