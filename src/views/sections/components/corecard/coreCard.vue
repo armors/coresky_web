@@ -1,39 +1,53 @@
 <template>
 	<div class="core-card" id="coreCard">
+		<welcome-dialog :isShowWelcomeDialog="true"></welcome-dialog>
 		<div class="banner">
-			<div class="info">
-				<div class="info-shadow">
-					<div class="info-box">
-						<div class="lv-box">
-							<img src="@/assets/core-card/vip1.png" />
+			<div class="banner-box">
+				<div class="info">
+					<div class="info-shadow">
+						<div class="info-box">
+							<div class="lv-box">
+								<img :src="vipIcon" />
+							</div>
+							<a class="help"
+								><img src="@/assets/core-card/help.png" alt=""
+							/></a>
 						</div>
-						<a class="help"
-							><img src="@/assets/core-card/help.png" alt=""
-						/></a>
-					</div>
-					<div class="daily">
-						<p>Daily Lotte Output</p>
-						<strong>10</strong>
+						<div class="daily">
+							<p>Daily Lotte Output</p>
+							<strong>10</strong>
+						</div>
 					</div>
 				</div>
+				<core-card-wrapper
+					@handleSelect="handleSelect"
+				></core-card-wrapper>
+				<core-card-process
+					@handleUpgrade="handleUpgradeDialog"
+				></core-card-process>
 			</div>
-			<core-card-wrapper @handleSelect="handleSelect"></core-card-wrapper>
-			<core-card-process></core-card-process>
 		</div>
 		<core-card-level></core-card-level>
 		<h3>FAQ</h3>
 		<core-card-FAQ></core-card-FAQ>
+		<upgrade-dialog
+			:isShowUpgradeDialog="state.isShowUpgradeDialog"
+			@handleClosed="handleUpgradeDialog"
+		></upgrade-dialog>
 	</div>
 </template>
 
 <script setup>
-import { onMounted, onBeforeUnmount, ref, watch, computed } from 'vue';
+import { onMounted, onBeforeUnmount, ref, reactive } from 'vue';
 import { useStore } from 'vuex';
 import coreCardWrapper from './coreCardWrapper.vue';
 import coreCardLevel from './coreCardLevel.vue';
 import coreCardFAQ from './coreCardFAQ.vue';
 import coreCardProcess from './coreCardProcess.vue';
+import welcomeDialog from './welcomeDialog.vue';
+import upgradeDialog from './upgradeDialog.vue';
 
+const state = reactive({ isShowUpgradeDialog: false });
 const store = useStore();
 let isScrollTop = false;
 
@@ -51,36 +65,41 @@ function handleScroll() {
 	store.commit('setScrollTop', isScrollTop);
 }
 
-const bgColor = ref('#DAD4CF');
-const bgBanner = ref('url(' + require(`@/assets/core-card/bg-1.png`) + ')');
+const bgColor = ref('#C4CCD5');
+const bgBanner = ref('url(' + require(`@/assets/core-card/bg-3.png`) + ')');
+const vipIcon = ref(require(`@/assets/core-card/vip2.png`));
 
 const handleSelect = (i) => {
 	bgBanner.value =
 		'url(' + require(`@/assets/core-card/bg-${i + 1}.png`) + ')';
+	vipIcon.value = require(`@/assets/core-card/vip${i}.png`);
 	switch (i) {
 		case 0:
-			bgColor.value = '#DAD4CF';
+			bgColor.value = '#E2E4E7';
 			break;
 		case 1:
-			bgColor.value = '#C4CCD5';
+			bgColor.value = '#DAD4CF';
 			break;
 		case 2:
-			bgColor.value = '#EBDFC3';
+			bgColor.value = '#C4CCD5';
 			break;
 		case 3:
-			bgColor.value = '#B9D5EE';
+			bgColor.value = '#EBDFC3';
 			break;
 		case 4:
-			bgColor.value = '#E0DCF5';
+			bgColor.value = '#B9D5EE';
 			break;
 		case 5:
-			bgColor.value = '#E2E4E7';
+			bgColor.value = '#E0DCF5';
 			break;
 		default:
 			break;
 	}
 };
 
+const handleUpgradeDialog = () => {
+	state.isShowUpgradeDialog = !state.isShowUpgradeDialog;
+};
 onMounted(() => {
 	window.addEventListener('scroll', handleScroll);
 	handleScroll();
@@ -93,24 +112,30 @@ onBeforeUnmount(() => {
 <style lang="scss" scoped>
 .core-card {
 	position: relative;
-	top: -76px;
+	width: 100%;
+	margin-top: -76px;
 	background: v-bind(bgColor);
 	padding-bottom: 100px;
 	.banner {
 		height: 826px;
 		background: v-bind(bgBanner);
-		padding-top: 270px;
 		background-size: 100% 100%;
 		position: relative;
+		.banner-box {
+			width: 1440px;
+			height: 826px;
+			margin: 0 auto;
+		}
 		.info {
 			width: 240px;
 			height: 100px;
 			background: url('@/assets/core-card/line.png') no-repeat;
 			background-size: cover;
 			padding: 8px 20px 30px 20px;
-			position: absolute;
-			left: 380px;
-			top: 160px;
+			position: relative;
+
+			left: 300px;
+			top: 180px;
 			.info-shadow {
 				border-radius: 16px;
 				background: radial-gradient(

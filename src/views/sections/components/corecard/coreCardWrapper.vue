@@ -1,9 +1,9 @@
 <template>
 	<div id="box">
-		<pre class="prev">prev</pre>
-		<pre class="next">next</pre>
+		<pre class="prev"><img src="@/assets/core-card/prev.png" alt=""></pre>
+		<pre class="next"><img src="@/assets/core-card/next.png" alt=""></pre>
 		<ul>
-			<li v-for="(item, i) in 6" :key="i" @click="handleSelect(i)">
+			<li v-for="(item, i) in 6" :key="i">
 				<img :src="getImageUrl(i, 'png')" />
 			</li>
 		</ul>
@@ -15,15 +15,13 @@ import { onMounted, defineEmits } from 'vue';
 const getImageUrl = (i, type) => {
 	// 根据索引生成图像URL
 	return type === 'webp'
-		? require(`@/assets/core-card/img${i + 1}.webp`)
+		? require(`@/assets/core-card/v${i}.webp`)
 		: require(`@/assets/core-card/v${i}.png`);
 };
 
 const emits = defineEmits(['handleSelect']);
 
-const handleSelect = (i) => {
-	emits('handleSelect', i);
-};
+let selectedIndex = 2;
 
 function ZoomPic() {
 	this.initialize.apply(this, arguments);
@@ -47,25 +45,31 @@ ZoomPic.prototype = {
 		};
 		this.options = [
 			{ width: 65, height: 109, top: 71, left: 450, zIndex: 1 },
-			{ width: 65, height: 109, top: 101, left: 300, zIndex: 2 },
-			{ width: 98, height: 165, top: 107, left: 130, zIndex: 3 },
-			{ width: 405, height: 450, top: -140, left: 290, zIndex: 4 },
-			{ width: 98, height: 165, top: 107, left: 768, zIndex: 3 },
-			{ width: 65, height: 109, top: 101, left: 610, zIndex: 2 },
+			{ width: 65, height: 109, top: 101, left: 270, zIndex: 2 },
+			{ width: 98, height: 165, top: 97, left: 100, zIndex: 3 },
+			{ width: 405, height: 450, top: -140, left: 255, zIndex: 4 },
+			{ width: 98, height: 165, top: 97, left: 738, zIndex: 3 },
+			{ width: 65, height: 109, top: 101, left: 570, zIndex: 2 },
 		];
 		for (var i = 0; i < this.aLi.length; i++) this.aSort[i] = this.aLi[i];
 		this.aSort.unshift(this.aSort.pop());
 		this.setUp();
 		this.addEvent(this.prev, 'click', this._doPrev);
 		this.addEvent(this.next, 'click', this._doNext);
-		this.doImgClick();
+		// this.doImgClick();
 	},
 	doPrev: function() {
+    let i = selectedIndex <= 0 ? 5 : selectedIndex - 1;
+    selectedIndex = this.aSort[i].index;
 		this.aSort.unshift(this.aSort.pop());
+    emits('handleSelect', selectedIndex);
 		this.setUp();
 	},
 	doNext: function() {
+    let i = selectedIndex >= 5 ? 0 : selectedIndex + 1;
+    selectedIndex = this.aSort[i].index;
 		this.aSort.push(this.aSort.shift());
+    emits('handleSelect', selectedIndex);
 		this.setUp();
 	},
 	doImgClick: function() {
@@ -117,10 +121,6 @@ ZoomPic.prototype = {
 				this.css(this.aSort[i], 'left', this.oUl.offsetWidth / 2);
 			}
 			if (i < this.iCenter || i > this.iCenter) {
-				this.aSort[i].getElementsByTagName('img')[0].src = getImageUrl(
-					i,
-					'png'
-				);
 				this.css(
 					this.aSort[i].getElementsByTagName('img')[0],
 					'opacity',
@@ -139,12 +139,13 @@ ZoomPic.prototype = {
 				this.aSort[i].onmouseout();
 			} else {
 				this.aSort[i].onmouseover = this.aSort[i].onmouseout = null;
-				this.aSort[i].getElementsByTagName('img')[0].src = getImageUrl(
-					i,
-					'webp'
-				);
 			}
+      
 		}
+    this.aSort[3].getElementsByTagName('img')[0].src = getImageUrl(
+			selectedIndex,
+			'webp'
+		);
 	},
 	addEvent: function(oElement, sEventType, fnHandler) {
 		return oElement.addEventListener
@@ -186,7 +187,6 @@ ZoomPic.prototype = {
 					(iCur = parseInt(iCur.toFixed(2) * 100));
 				var iSpeed = (oAttr[property] - iCur) / 5;
 				iSpeed = iSpeed > 0 ? Math.ceil(iSpeed) : Math.floor(iSpeed);
-
 				if (iCur != oAttr[property]) {
 					bStop = false;
 					_this.css(oElement, property, iCur + iSpeed);
@@ -210,13 +210,15 @@ onMounted(() => {
 #box {
 	position: relative;
 	width: 997px;
-	height: 360px;
+	height: 540px;
 	margin: 0 auto;
 }
 #box ul {
 	position: relative;
 	width: 919px;
-	height: 360px;
+	// height: 540px;
+  margin: 0 auto;
+  top: 160px;
 }
 #box li {
 	position: absolute;
@@ -260,21 +262,20 @@ onMounted(() => {
 #box .prev,
 #box .next {
 	position: absolute;
-	top: 50%;
-	width: 39px;
-	height: 80px;
-	margin-top: -40px;
+	top: 450px;
+	width: 15px;
+	height: 30px;
+	margin-top: -120px;
 	overflow: hidden;
-	text-indent: -999px;
 	cursor: pointer;
 	background: no-repeat;
 	color: #000;
 }
 #box .prev {
-	left: -60px;
+	left: 0px;
 }
 #box .next {
-	right: -60px;
+	right: 0px;
 	background-position: -39px 0;
 }
 #copyright {
