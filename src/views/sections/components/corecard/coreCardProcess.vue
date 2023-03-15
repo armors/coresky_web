@@ -1,6 +1,37 @@
 <template>
 	<div class="process">
+		<div v-if="!state.connect" class="info-text">
+			<p>Please connect the wallet to manage the Core Card.</p>
+			<a @click="connectWallet">
+				<img src="@/assets/core-card/vector.png" alt="" />
+				<span>Connect Wallet</span>
+			</a>
+		</div>
+		<div v-if="state.connect && false" class="info-text">
+			<p>
+				You don't have a Core Card, please Mint a Core Card NFT first.
+			</p>
+			<a @click="goMint">
+				<img src="@/assets/core-card/union.png" alt="" />
+				<span>Mint</span>
+			</a>
+		</div>
 		<div v-if="false">
+			<div class="level-info">
+				<img src="@/assets/core-card/small-img1.png" alt="" />
+				<div class="info-right">
+					<p class="bind-tip">( none )</p>
+					<el-button type="primary" class="bind" @click="goBind">
+						Bind
+					</el-button>
+				</div>
+			</div>
+			<div class="slider bind-info">
+				<p>You have not bound a Core Card. Please bind a Core Card.</p>
+				<el-slider v-model="value1" :min="0" :max="1000" disabled />
+			</div>
+		</div>
+		<div v-if="state.connect && true">
 			<div class="level-info">
 				<img src="@/assets/core-card/small-img1.png" alt="" />
 				<div class="info-right">
@@ -13,45 +44,46 @@
 			</div>
 			<div class="slider">
 				<p><strong>LV 1</strong><strong>LV 4</strong></p>
-				<el-slider v-model="value1" :min="0" :max="1000" />
+				<el-slider v-model="value1" :min="0" :max="1000" disabled />
 				<p><span>0</span><span>1000</span></p>
 			</div>
-		</div>
-		<div v-if="false" class="info-text">
-			<p>Please connect the wallet to manage the Core Card.</p>
-			<a @click="connectWallet">
-				<img src="@/assets/core-card/vector.png" alt="" />
-				<span>Connect Wallet</span>
-			</a>
-		</div>
-		<div v-if="true" class="info-text">
-			<p>
-				You don't have a Core Card, please Mint a Core Card NFT first.
-			</p>
-			<a @click="goMint">
-				<img src="@/assets/core-card/union.png" alt="" />
-				<span>Mint</span>
-			</a>
 		</div>
 	</div>
 </template>
 <script setup>
-import { ref, defineEmits } from 'vue';
+import { ref, defineEmits, reactive, computed } from 'vue';
 import { useRouter } from 'vue-router';
-const router = useRouter();
-const value1 = ref(368);
+import { getCurrentInstance } from 'vue';
 
+const { proxy } = getCurrentInstance();
+const router = useRouter();
+const state = reactive({
+	connect: computed(() => proxy.$store.state.connected),
+});
+const value1 = ref(368);
 const emits = defineEmits(['handleUpgrade']);
 
 const handleUpgrade = () => {
 	emits('handleUpgrade');
 };
 
-const connectWallet = () => {};
+const connectWallet = async (value = 'metamask') => {
+	proxy.$store.dispatch('connectAndSign', value).then((res) => {
+		if (res && proxy.$tools.checkResponse(res)) {
+			console.log(res);
+		}
+	});
+};
 
 const goMint = () => {
 	router.push({
 		path: '/coreCardMint',
+	});
+};
+
+const goBind = () => {
+	router.push({
+		path: '/coreCardBind',
 	});
 };
 </script>
@@ -130,6 +162,9 @@ const goMint = () => {
 				color: #04142a;
 				font-size: 16px;
 			}
+			.bind-tip {
+				text-align: center;
+			}
 			span {
 				color: #04142a;
 				font-size: 14px;
@@ -144,6 +179,23 @@ const goMint = () => {
 				cursor: pointer;
 				margin-top: 8px;
 			}
+			.bind {
+				width: 140px;
+				height: 46px;
+				background: #1063e0;
+				border-radius: 12px;
+				cursor: pointer;
+				margin-top: 12px;
+			}
+		}
+	}
+	.bind-info {
+		p {
+			color: #717a83;
+			margin-bottom: 18px;
+		}
+		::v-deep(.el-slider__bar) {
+			background: none;
 		}
 	}
 }

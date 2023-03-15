@@ -15,7 +15,7 @@
 						</div>
 						<div class="daily">
 							<p>Daily Lotte Output</p>
-							<strong>10</strong>
+							<strong>{{ state.daily }}</strong>
 						</div>
 					</div>
 				</div>
@@ -27,7 +27,9 @@
 				></core-card-process>
 			</div>
 		</div>
-		<core-card-level></core-card-level>
+		<core-card-level
+			:cardConfigList="state.cardConfigList"
+		></core-card-level>
 		<h3>FAQ</h3>
 		<core-card-FAQ></core-card-FAQ>
 		<upgrade-dialog
@@ -46,9 +48,18 @@ import coreCardFAQ from './coreCardFAQ.vue';
 import coreCardProcess from './coreCardProcess.vue';
 import welcomeDialog from './welcomeDialog.vue';
 import upgradeDialog from './upgradeDialog.vue';
+import { getCurrentInstance } from 'vue';
 
-const state = reactive({ isShowUpgradeDialog: false });
+const { proxy } = getCurrentInstance();
+const state = reactive({
+	isShowUpgradeDialog: false,
+	cardConfigList: [],
+	daily: 0,
+});
 const store = useStore();
+const bgColor = ref('#C4CCD5');
+const bgBanner = ref('url(' + require(`@/assets/core-card/bg-3.png`) + ')');
+const vipIcon = ref(require(`@/assets/core-card/vip2.png`));
 let isScrollTop = false;
 
 function handleScroll() {
@@ -65,11 +76,8 @@ function handleScroll() {
 	store.commit('setScrollTop', isScrollTop);
 }
 
-const bgColor = ref('#C4CCD5');
-const bgBanner = ref('url(' + require(`@/assets/core-card/bg-3.png`) + ')');
-const vipIcon = ref(require(`@/assets/core-card/vip2.png`));
-
 const handleSelect = (i) => {
+	state.daily = state.cardConfigList[i].ticketIncome;
 	bgBanner.value =
 		'url(' + require(`@/assets/core-card/bg-${i + 1}.png`) + ')';
 	vipIcon.value = require(`@/assets/core-card/vip${i}.png`);
@@ -100,15 +108,28 @@ const handleSelect = (i) => {
 const handleUpgradeDialog = () => {
 	state.isShowUpgradeDialog = !state.isShowUpgradeDialog;
 };
+
+const getCoreCardList = () => {
+	proxy.$api('corecard.cardConfigs', {}).then((res) => {
+		if (proxy.$tools.checkResponse(res)) {
+			if (res.debug) {
+				state.cardConfigList = res.debug;
+			}
+		}
+	});
+};
+
 onMounted(() => {
 	window.addEventListener('scroll', handleScroll);
 	handleScroll();
+	getCoreCardList();
 });
 
 onBeforeUnmount(() => {
 	window.removeEventListener('scroll', handleScroll);
 });
 </script>
+
 <style lang="scss" scoped>
 .core-card {
 	position: relative;

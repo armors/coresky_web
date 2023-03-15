@@ -2,7 +2,11 @@
 	<div class="level">
 		<h3>CoreCard Level</h3>
 		<ul class="card-level-content">
-			<li class="level-item-card" v-for="(item, i) in items" :key="i">
+			<li
+				class="level-item-card"
+				v-for="(item, i) in cardConfigList.slice(0, 6)"
+				:key="i"
+			>
 				<img :src="getImageUrl(i, 'lv')" class="image" />
 				<div class="info">
 					<p>
@@ -11,10 +15,10 @@
 					</p>
 					<p>
 						Daily lottery output
-						<strong>{{ item.dailyOut }}</strong>
+						<strong>{{ item.ticketIncome }}</strong>
 					</p>
 					<p>
-						The number of consum <span>{{ item.consum }}</span>
+						The number of consum <span>{{ item.maxScore }}</span>
 					</p>
 				</div>
 			</li>
@@ -22,51 +26,21 @@
 	</div>
 </template>
 <script setup>
+import { defineProps } from 'vue';
+
+const props = defineProps({
+	cardConfigList: {
+		type: Array,
+		default: [],
+	},
+});
+
 const getImageUrl = (i, type) => {
 	// 根据索引生成图像URL
 	return type === 'lv'
 		? require(`@/assets/core-card/level${i + 1}.png`)
 		: require(`@/assets/core-card/vip${i}.png`);
 };
-
-const items = [
-	{
-		id: 1,
-		level: 1,
-		dailyOut: 10,
-		consum: 100,
-	},
-	{
-		id: 2,
-		level: 2,
-		dailyOut: 100,
-		consum: 500,
-	},
-	{
-		id: 3,
-		level: 3,
-		dailyOut: '1,000',
-		consum: '1,000',
-	},
-	{
-		id: 4,
-		level: 4,
-		dailyOut: '10,000',
-		consum: '5,000',
-	},
-	{
-		id: 5,
-		level: 5,
-		dailyOut: '100,000',
-		consum: '10,000',
-	},
-	{
-		id: 6,
-		level: 6,
-		dailyOut: '1,000,000',
-		consum: '50,000',
-	},
-];
 </script>
 <style lang="scss" scoped>
 .level {
