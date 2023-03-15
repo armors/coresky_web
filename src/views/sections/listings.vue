@@ -484,7 +484,7 @@ export default {
 						this.nftAmount1155 = amount
 					}
 				}
-				await this.getRegistryOwner()
+				// await this.getRegistryOwner()
 				console.log(this.tokenInfo.contractType)
 				let order = {
 					type: this.tokenInfo.contractType === 0 ? "IERC721" : "IERC1155",
@@ -684,6 +684,7 @@ export default {
 			}
 			console.log(typeof this.tokenInfo.tokenId)
 			this.sellBtnLoading = true
+			await this.getRegistryOwner()
 			if (!this.isApproved) {
 				await this.setApproveAll()
 			}
