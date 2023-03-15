@@ -9,7 +9,8 @@
       </div>
       <div class="card-list" v-loading="isLoading">
         <div class="card-item" :class="{ 'active': item.pledge === 1 }" v-for="(item, index) in dataList" :key="index">
-          <img src="@/assets/core-card/level1.png" class="card-img" alt="">
+          <!-- <img src="@/assets/core-card/level1.png" class="card-img" alt=""> -->
+          <img :src="item.avatarFrame" class="card-img" alt="">
           <div class="card-info">
             <div class="card-name">
               <span>{{ item.name }}</span>
@@ -25,16 +26,24 @@
               <div class="vip-txt">{{ item.ratio * 100 }}%</div>
             </div>
             <div>
-              <el-button type="primary" v-if="item.pledge === 1" class="btnAccept">UNbind</el-button>
-              <el-button v-if="item.pledge === 0" plain class="btnAccept">Bind</el-button>
+              <el-button type="primary" :loading="item.isloading" v-if="item.pledge === 1"
+                @click="unBindCard(item)">UnBind</el-button>
+              <el-button v-if="item.pledge === 0" :loading="item.isloading" @click="bindCard(item)" plain>Bind</el-button>
             </div>
           </div>
         </div>
+        <div class="card-item">
+          <img src="@/assets/core-card/vip_m_0.png" class="vip-img-0" alt="">
+          <div>
+            <div class="vip-txt-0">Mint Corecard VIP-0</div>
+            <el-button class="vip-btn-0" type="primary" @click="$router.push('/coreCardMint')">Mint</el-button>
+          </div>
+        </div>
       </div>
-      <div class="empty-wrap" v-if="dataList.length === 0 && isLoading === false">
+      <!-- <div class="empty-wrap" v-if="dataList.length === 0 && isLoading === false">
         <img src="../../assets/images/no-data.png" alt="" />
         <p class="txt">No Data</p>
-      </div>
+      </div> -->
     </div>
   </div>
   <FooterTemplate />
@@ -42,6 +51,7 @@
 <script>
 import BigNumber from "bignumber.js";
 import FooterTemplate from "@/views/layout/FooterTemplate";
+import ERC721Template from '@/util/sdk/ERC721Template'
 
 import dayjs from 'dayjs';
 import config from '@/config/index'
@@ -59,11 +69,20 @@ export default {
     };
   },
   watch: {
+    user: {
+      handler (val) {
+        if (this.user.id && this.isLoading === false) {
+          this.init();
+        }
+      },
+      immediate: true
+    }
   },
   created () {
-    this.init();
   },
-  mounted () { },
+  mounted () {
+
+  },
   computed: {
     user: function () {
       var user = this.$store.state.user;
@@ -77,51 +96,47 @@ export default {
       }
     },
     queryData () {
-
-      setTimeout(() => {
-        this.dataList = [
-          {
-            "name": "HAHAHA #123",
-            "experience": 123,
-            "mixScore": 100,
-            "maxScore": 1000,
-            "ratio": "0.1",
-            "level": 0,
-            "tokenId": 123123,
-            "avatarFrame": "http://ASDASD",
-            "pledge": 0
-          },
-          {
-            "name": "HAHAHA #123",
-            "experience": 123,
-            "mixScore": 100,
-            "maxScore": 1000,
-            "ratio": "0.3333",
-            "level": 1,
-            "tokenId": 123123,
-            "avatarFrame": "http://ASDASD",
-            "pledge": 1
-          },
-          {
-            "name": "HAHAHA #123",
-            "experience": 123,
-            "mixScore": 100,
-            "maxScore": 1000,
-            "ratio": "0.3333",
-            "level": 2,
-            "tokenId": 123123,
-            "avatarFrame": "http://ASDASD",
-            "pledge": 0
-          }
-        ]
-      })
-      return
       this.isLoading = true
       this.$api("corecard.myCards", this.queryParams).then((res) => {
         this.isLoading = false
-        this.dataList = res.data
+        this.dataList = res.debug.map(el => {
+          el.isloading = false
+          return el
+        })
       })
     },
+    async bindCard (item) {
+      for (let i = 0; i <= this.dataList.length; i++) {
+        if (this.dataList[i].pledge === 1) {
+          this.$tools.notification('', '只能绑定一张coreCrad', 'error');
+          return
+        }
+      }
+      item.isloading = true
+      const result = await ERC721Template.depositCard(item.tokenId, this.user.coinbase)
+      if (result && result.status === true && result.blockHash) {
+        this.$tools.notification('success', '');
+        setTimeout(() => {
+          this.init();
+        }, 1000);
+      } else if (result.error) {
+        this.$tools.notification('fail', result.error, 'error');
+      }
+      item.isloading = false
+    },
+    async unBindCard (item) {
+      item.isloading = true
+      const result = await ERC721Template.withdrawCard(item.tokenId, this.user.coinbase)
+      if (result && result.status === true && result.blockHash) {
+        this.$tools.notification('success', '');
+        setTimeout(() => {
+          this.init();
+        }, 1000);
+      } else if (result.error) {
+        this.$tools.notification('fail', result.error, 'error');
+      }
+      item.isloading = false
+    }
   },
   beforeUnmount () {
 
@@ -195,7 +210,6 @@ export default {
               display: none;
               margin-left: 22px;
             }
-
           }
           .card-vip {
             display: flex;
@@ -242,6 +256,23 @@ export default {
             font-size: 16px;
             // color: #04142A;
           }
+        }
+        .vip-img-0 {
+          width: 150px;
+          height: 150px;
+          margin-right: 30px;
+        }
+        .vip-txt-0 {
+          font-weight: 500;
+          font-size: 18px;
+          line-height: 21px;
+          color: #04142A;
+          margin-bottom: 15px;
+        }
+        .vip-btn-0 {
+          width: 240px;
+          height: 46px;
+          border-radius: 12px;
         }
       }
     }

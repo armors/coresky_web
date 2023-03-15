@@ -3,9 +3,9 @@
 
     <div class="page-content">
       <div class="content-head">
-        <img src="@/assets/core-card/vip_m_0.png" class="vip-img" alt="">
+        <img :src="require(`@/assets/core-card/vip_m_${viplevel}.png`)" class="vip-img" alt="">
         <div>
-          <div class="txt1">Your Corecard "kite" VIP 0</div>
+          <div class="txt1">Your Corecard "kite" VIP {{ viplevel }}</div>
           <div class="txt2">You must be in the Hunters On-Chain Discord server. You must also have at least one of the
             following roles:OG Lander, Early Lander</div>
         </div>
@@ -22,41 +22,50 @@
           <div class="job-list">
             <div class="job-item">
               <!-- <span class="icon-none"></span> -->
-              <el-icon color="#35C955" size="20" class="icon_success">
+              <el-icon color="#35C955" size="20" v-if="user.id" class="icon_success">
                 <SuccessFilled />
               </el-icon>
+              <span class="icon-none" v-else></span>
               <div class="job-content">
                 <img src="@/assets/core-card/icon_1.png" class="icon" alt="">
                 <span class="job-name">Connect wallet</span>
-                <el-button type="primary" disabled class="">Connect Wallet</el-button>
+                <el-button type="primary" :disabled="user.id !== ''" class="">Connect Wallet</el-button>
               </div>
             </div>
             <div class="job-item">
-              <span class="icon-none"></span>
+              <el-icon color="#35C955" size="20" v-if="isBindTwitter" class="icon_success">
+                <SuccessFilled />
+              </el-icon>
+              <span class="icon-none" v-else></span>
               <div class="job-content">
                 <img src="@/assets/core-card/icon_2.png" class="icon" alt="">
                 <span class="job-name">Bind to Twitter</span>
-                <el-button type="primary" class="">Connect</el-button>
+                <el-button type="primary" :disabled="isBindTwitter" @click="bindTwitter">Connect</el-button>
               </div>
             </div>
             <div class="job-item">
-              <span class="icon-none"></span>
+              <el-icon color="#35C955" size="20" v-if="isRelayTwitter" class="icon_success">
+                <SuccessFilled />
+              </el-icon>
+              <span class="icon-none" v-else></span>
               <div class="job-content">
                 <img src="@/assets/core-card/icon_3.png" class="icon" alt="">
-                <span class="job-name">Complete casting</span>
-                <el-button type="primary" class="">Casting</el-button>
+                <span class="job-name">Retweet Twitter</span>
+                <el-button type="primary" :disabled="isRelayTwitter" @click="relayTwitter">Casting</el-button>
               </div>
             </div>
           </div>
           <div>
-            <el-button class="btn-bind" disabled type="info">Cast and bind</el-button>
+            <el-button class="btn-mint" :loading="isMinting" :disabled="viplevel !== 0 && finishTask === false"
+              @click="cardMint" type="primary">Mint
+            </el-button>
           </div>
         </div>
         <div class="right">
           <img class="vip-card-img"
             src="https://i.seadn.io/gae/iGVQ_0I1nj4paQ1GJemfCwNqTm64XRMU3CO7y0bi-C-im7edte2YWf1hgNuShpRXC70xBoUVGFQCjTsyXkMD2tPX17VOJBn1wjQZ?auto=format&w=256"
             alt="">
-          <img class="vip-level" :src="require(`@/assets/core-card/vip0.png`)" alt="">
+          <img class="vip-level" :src="require(`@/assets/core-card/vip${viplevel}.png`)" alt="">
         </div>
       </div>
     </div>
@@ -65,11 +74,13 @@
 </template>
 <script>
 import BigNumber from "bignumber.js";
+import ERC721Template from '@/util/sdk/ERC721Template'
 import FooterTemplate from "@/views/layout/FooterTemplate";
-
+import Cookies from "js-cookie";
 import dayjs from 'dayjs';
 import config from '@/config/index'
 import { rowProps } from 'element-plus';
+import { getLocalStorage, removeLocalStorage } from "@/util/local-storage.js";
 export default {
   mixins: [],
   name: 'coreCardMint',
@@ -78,40 +89,100 @@ export default {
   },
   data () {
     return {
+      viplevel: 0,
       isLoading: false,
+      isMinting: false,
+      isBindTwitter: false,
+      bindTwitterURL: '',
+      isRelayTwitter: false,
+      relayTwitterURL: '',
       dataList: []
     };
   },
   watch: {
+    user: {
+      handler (val) {
+        if (this.user.id && this.isLoading === false && this.$store.state.useAuthorization) {
+          this.init();
+        }
+      },
+      immediate: true
+    }
   },
   created () {
-    this.init();
+
   },
-  mounted () { },
+  mounted () {
+  },
   computed: {
     user: function () {
       var user = this.$store.state.user;
       return user;
     },
+    finishTask () {
+      if (!this.user || !this.user.id)
+        return false
+      if (!this.isBindTwitter)
+        return false
+      if (!this.isRelayTwitter)
+        return false
+      return true
+    }
   },
   methods: {
     init () {
       if (this.user && this.user.coinbase) {
         this.queryData()
+        this.twitterInfo()
       }
     },
     queryData () {
-
-      setTimeout(() => {
-        this.dataList = []
-      })
-      return
       this.isLoading = true
-      this.$api("corecard.myCards", this.queryParams).then((res) => {
+      this.$api("corecard.availableCard", this.queryParams).then((res) => {
+        if (res.code === 200 && res.debug !== null) {
+          this.viplevel = 0
+          this.proot = res.debug.proot
+          this.tokenId = res.debug.tokenId
+          this.uri = res.debug.uri
+        }
+        else {
+          this.viplevel = 0
+        }
         this.isLoading = false
-        this.dataList = res.data
       })
     },
+    twitterInfo () {
+      this.$api("corecard.myTwitterInfo", this.queryParams).then((res) => {
+        if (res.code === 200 && res.debug !== null) {
+          this.isBindTwitter = res.debug.bind === 1
+          this.bindTwitterURL = res.debug.bindUrl
+          this.isRelayTwitter = res.debug.relay === 1
+          this.relayTwitterURL = res.debug.relayUrl
+        }
+      })
+    },
+    bindTwitter () {
+      let obj = getLocalStorage(this.$store.state.useAuthorization)
+      let token = obj[this.$store.state.useAuthorization];
+      Cookies.set("coresky_web_token", token);
+    },
+    relayTwitter () {
+      location.href = this.relayTwitterURL
+    },
+    async cardMint () {
+      this.isMinting = true
+      const result = await ERC721Template.selfMint(this.user.coinbase)
+      console.log(result)
+      if (result && result.status === true && result.blockHash) {
+        this.$tools.notification('success', '');
+        setTimeout(() => {
+          this.$router.push('/coreCardBind')
+        }, 1000);
+      } else if (result.error) {
+        this.$tools.notification('fail', result.error, 'error');
+      }
+      this.isMinting = false
+    }
   },
   beforeUnmount () {
 
@@ -225,6 +296,14 @@ export default {
               }
             }
           }
+        }
+        .btn-mint {
+          border-radius: 12px;
+          height: 60px;
+          width: 100%;
+          border: none;
+          font-size: 18px;
+          line-height: 120%;
         }
         .btn-bind {
           background: #D3D3D3;
