@@ -1,30 +1,58 @@
 <template>
 	<div class="process">
-		<div class="level-info">
-			<img src="@/assets/core-card/small-img1.png" alt="" />
-			<div class="info-right">
-				<p>Corecard #19990</p>
-				<span>daily lotte output : 100</span>
-				<button class="add-level" @click="handleUpgrade">
-					Upgrade
-				</button>
+		<div v-if="false">
+			<div class="level-info">
+				<img src="@/assets/core-card/small-img1.png" alt="" />
+				<div class="info-right">
+					<p>Corecard #19990</p>
+					<span>daily lotte output : 100</span>
+					<button class="add-level" @click="handleUpgrade">
+						Upgrade
+					</button>
+				</div>
+			</div>
+			<div class="slider">
+				<p><strong>LV 1</strong><strong>LV 4</strong></p>
+				<el-slider v-model="value1" :min="0" :max="1000" />
+				<p><span>0</span><span>1000</span></p>
 			</div>
 		</div>
-		<div class="slider">
-			<p><strong>LV 1</strong><strong>LV 4</strong></p>
-			<el-slider v-model="value1" :min="0" :max="1000" />
-			<p><span>0</span><span>1000</span></p>
+		<div v-if="false" class="info-text">
+			<p>Please connect the wallet to manage the Core Card.</p>
+			<a @click="connectWallet">
+				<img src="@/assets/core-card/vector.png" alt="" />
+				<span>Connect Wallet</span>
+			</a>
+		</div>
+		<div v-if="true" class="info-text">
+			<p>
+				You don't have a Core Card, please Mint a Core Card NFT first.
+			</p>
+			<a @click="goMint">
+				<img src="@/assets/core-card/union.png" alt="" />
+				<span>Mint</span>
+			</a>
 		</div>
 	</div>
 </template>
 <script setup>
 import { ref, defineEmits } from 'vue';
+import { useRouter } from 'vue-router';
+const router = useRouter();
 const value1 = ref(368);
 
 const emits = defineEmits(['handleUpgrade']);
 
 const handleUpgrade = () => {
 	emits('handleUpgrade');
+};
+
+const connectWallet = () => {};
+
+const goMint = () => {
+	router.push({
+		path: '/coreCardMint',
+	});
 };
 </script>
 <style lang="scss" scoped>
@@ -116,6 +144,34 @@ const handleUpgrade = () => {
 				cursor: pointer;
 				margin-top: 8px;
 			}
+		}
+	}
+}
+.info-text {
+	display: flex;
+	text-align: center;
+	justify-content: center;
+	padding: 20px 0;
+	p {
+		color: #717a83;
+		line-height: 40px;
+		margin-right: 50px;
+	}
+	a {
+		width: 170px;
+		height: 40px;
+		background: #1063e0;
+		border-radius: 12px;
+		display: flex;
+		justify-content: center;
+		padding: 11px 18px;
+		color: #fff;
+		cursor: pointer;
+		img {
+			width: 14px;
+			height: 12px;
+			margin-top: 4px;
+			margin-right: 10px;
 		}
 	}
 }
