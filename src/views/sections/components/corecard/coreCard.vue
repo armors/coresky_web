@@ -22,24 +22,32 @@
 				<core-card-wrapper
 					@handleSelect="handleSelect"
 				></core-card-wrapper>
-				<core-card-process></core-card-process>
+				<core-card-process
+					@handleUpgrade="handleUpgradeDialog"
+				></core-card-process>
 			</div>
 		</div>
 		<core-card-level></core-card-level>
 		<h3>FAQ</h3>
 		<core-card-FAQ></core-card-FAQ>
+		<upgrade-dialog
+			:isShowUpgradeDialog="state.isShowUpgradeDialog"
+			@handleClosed="handleUpgradeDialog"
+		></upgrade-dialog>
 	</div>
 </template>
 
 <script setup>
-import { onMounted, onBeforeUnmount, ref, watch, computed } from 'vue';
+import { onMounted, onBeforeUnmount, ref, reactive } from 'vue';
 import { useStore } from 'vuex';
 import coreCardWrapper from './coreCardWrapper.vue';
 import coreCardLevel from './coreCardLevel.vue';
 import coreCardFAQ from './coreCardFAQ.vue';
 import coreCardProcess from './coreCardProcess.vue';
 import welcomeDialog from './welcomeDialog.vue';
+import upgradeDialog from './upgradeDialog.vue';
 
+const state = reactive({ isShowUpgradeDialog: false });
 const store = useStore();
 let isScrollTop = false;
 
@@ -89,6 +97,9 @@ const handleSelect = (i) => {
 	}
 };
 
+const handleUpgradeDialog = () => {
+	state.isShowUpgradeDialog = !state.isShowUpgradeDialog;
+};
 onMounted(() => {
 	window.addEventListener('scroll', handleScroll);
 	handleScroll();

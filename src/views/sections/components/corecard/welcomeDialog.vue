@@ -48,17 +48,16 @@
 </template>
 
 <script setup>
-import { defineEmits, defineProps } from 'vue';
+import { defineProps } from 'vue';
 import { useRouter } from 'vue-router';
 const router = useRouter();
-// import  from ''
+
 const props = defineProps({
 	isShowWelcomeDialog: {
 		type: Boolean,
 		default: false,
 	},
 });
-// const emits = defineEmits[''];
 
 const goMint = () => {
 	props.isShowWelcomeDialog = false;

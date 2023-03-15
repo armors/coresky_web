@@ -216,7 +216,7 @@ onMounted(() => {
 #box ul {
 	position: relative;
 	width: 919px;
-	height: 540px;
+	// height: 540px;
   margin: 0 auto;
   top: 160px;
 }

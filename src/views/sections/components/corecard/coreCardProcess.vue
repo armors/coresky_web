@@ -5,7 +5,9 @@
 			<div class="info-right">
 				<p>Corecard #19990</p>
 				<span>daily lotte output : 100</span>
-				<button class="add-level">Upgrade</button>
+				<button class="add-level" @click="handleUpgrade">
+					Upgrade
+				</button>
 			</div>
 		</div>
 		<div class="slider">
@@ -16,8 +18,14 @@
 	</div>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { ref, defineEmits } from 'vue';
 const value1 = ref(368);
+
+const emits = defineEmits(['handleUpgrade']);
+
+const handleUpgrade = () => {
+	emits('handleUpgrade');
+};
 </script>
 <style lang="scss" scoped>
 .process {
