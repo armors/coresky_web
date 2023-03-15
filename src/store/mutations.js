@@ -142,10 +142,12 @@ export default {
     console.log('items.' + state.useAuthorization, items[state.useAuthorization], !items[state.useAuthorization] || items[state.useAuthorization] === 'undefined' || items[state.useAuthorization] === undefined)
     if (!items[state.useAuthorization] || items[state.useAuthorization] === 'undefined' || items[state.useAuthorization] === undefined) {
       console.log((new Date().getTime() - parseFloat(items[state.useAuthorizationTime])) > 24 * 60 * 60 * 1000)
+      state.token = null
     } else {
       if ((new Date().getTime() - parseFloat(items[state.useAuthorizationTime])) > 24 * 60 * 60 * 1000) {
         removeLocalStorage(state.useAuthorization);
         removeLocalStorage(state.useAuthorizationTime);
+        state.token = null
       } else {
         state.token = items[state.useAuthorization]
       }
