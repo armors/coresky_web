@@ -33,6 +33,7 @@
     "inobounce": "^0.2.1",
     "install": "^0.13.0",
     "jotai-immer": "^0.2.0",
+    "js-cookie": "^3.0.1",
     "lib-flexible": "^0.3.2",
     "lodash": "^4.17.21",
     "mersenne-twister": "^1.1.0",

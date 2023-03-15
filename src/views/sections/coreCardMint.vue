@@ -76,10 +76,11 @@
 import BigNumber from "bignumber.js";
 import ERC721Template from '@/util/sdk/ERC721Template'
 import FooterTemplate from "@/views/layout/FooterTemplate";
-
+import Cookies from "js-cookie";
 import dayjs from 'dayjs';
 import config from '@/config/index'
 import { rowProps } from 'element-plus';
+import { getLocalStorage, removeLocalStorage } from "@/util/local-storage.js";
 export default {
   mixins: [],
   name: 'coreCardMint',
@@ -161,7 +162,9 @@ export default {
       })
     },
     bindTwitter () {
-      location.href = this.bindTwitterURL
+      let obj = getLocalStorage(this.$store.state.useAuthorization)
+      let token = obj[this.$store.state.useAuthorization];
+      Cookies.set("coresky_web_token", token);
     },
     relayTwitter () {
       location.href = this.relayTwitterURL
@@ -169,6 +172,7 @@ export default {
     async cardMint () {
       this.isMinting = true
       const result = await ERC721Template.selfMint(this.user.coinbase)
+      console.log(result)
       if (result && result.status === true && result.blockHash) {
         this.$tools.notification('success', '');
         setTimeout(() => {
