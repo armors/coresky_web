@@ -1,5 +1,6 @@
 <template>
 	<div class="core-card" id="coreCard">
+		<welcome-dialog :isShowWelcomeDialog="true"></welcome-dialog>
 		<div class="banner">
 			<div class="banner-box">
 				<div class="info">
@@ -37,6 +38,7 @@ import coreCardWrapper from './coreCardWrapper.vue';
 import coreCardLevel from './coreCardLevel.vue';
 import coreCardFAQ from './coreCardFAQ.vue';
 import coreCardProcess from './coreCardProcess.vue';
+import welcomeDialog from './welcomeDialog.vue';
 
 const store = useStore();
 let isScrollTop = false;
