@@ -76,7 +76,7 @@
             ETH
           </div>
           <div class="price-box">
-            <div class="num">{{ balanceETH }}</div>
+            <div class="num">{{ $filters.milliFormat(balanceETH) }}</div>
             <div class="num2" v-if="$filters.ethToUsdt(balanceETH) !== '--'">${{ $filters.milliFormat($filters.ethToUsdt(balanceETH)) }}</div>
           </div>
           <div class="swap-icon" @click="showUniswap('ETH')"><img src="../../../assets/images/icons/icon_swap.svg" alt="">
@@ -93,7 +93,7 @@
             WETH
           </div>
           <div class="price-box">
-            <div class="num">{{ balanceWETH }}</div>
+            <div class="num">{{ $filters.milliFormat(balanceWETH) }}</div>
             <div class="num2" v-if="$filters.ethToUsdt(balanceWETH) !== '--'">${{ $filters.milliFormat($filters.ethToUsdt(balanceWETH)) }}</div>
           </div>
           <div class="swap-icon" @click="showUniswap('WETH')"><img src="../../../assets/images/icons/icon_swap.svg"
@@ -174,15 +174,14 @@ export default {
       this.$refs.uniswapDialog.showUniswap(type)
     },
     async initGetBalance() {
-      this.balanceETH = keepPoint(await this.$sdk.getBalance({
+      this.balanceETH = parseFloat(keepPoint(await this.$sdk.getBalance({
         address: this.$sdk.NULL_ADDRESS()
-      }, this.user.coinbase))
-
+      }, this.user.coinbase)))
       try {
         let balanceWETH = await this.$sdk.getBalance({
           address: process.env.VUE_APP_WETH
         }, this.user.coinbase)
-        this.balanceWETH = this.$sdk.fromWeiNum(balanceWETH)
+        this.balanceWETH = parseFloat(this.$sdk.fromWeiNum(balanceWETH))
       }
       catch (err) {
 

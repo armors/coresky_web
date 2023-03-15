@@ -98,7 +98,7 @@ export default {
       } else {
         if (connected) {
           this.$web3.changeNetwork(this.$tools.network())
-          let result = await this.$store.dispatch("connectAndSign");
+          let result = await this.$store.dispatch("connectAndSign", 'init');
           console.log(result)
           // 连接成功，则重新加载用户信息
           // this.$store.dispatch("reload");

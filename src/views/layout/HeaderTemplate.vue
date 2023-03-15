@@ -78,7 +78,7 @@
             {{ shoppingCartList.length + shoppingOpenseaCartList.length }}</div>
           <svg-icon class="head-icon" icon-class="gouwuche" />
         </div>
-        <div class="head-connect display-flex box-center" v-if="!connected" @click="login">
+        <div class="head-connect display-flex box-center" v-if="!connected || !token" @click="login">
           {{ $t("navigation.connectWallet") }}
         </div>
         <div class="nav-link" @click="showUserDrawer = true; showShoppingCartDrawer = false" v-else>
@@ -141,6 +141,10 @@ export default {
     },
     connected () {
       return this.$store.state.connected;
+    },
+    token () {
+      console.log('this.$store.state.token', this.$store.state.token)
+      return this.$store.state.token;
     },
     user: function () {
       var user = this.$store.state.user;
