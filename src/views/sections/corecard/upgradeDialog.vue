@@ -7,7 +7,7 @@
 			@closed="closed"
 			custom-class="custom-dialog"
 			destroy-on-close
-			:set="(B = props.bindData[0])"
+			:set="((B = props.bindData[0]), (U = state.userData))"
 		>
 			<template #title>
 				<div class="left">
@@ -35,29 +35,45 @@
 					<div class="max">
 						<div class="max-value">
 							<el-input
-								v-model="value1"
+								v-model="state.amount"
 								placeholder="Please input"
 								class="max-input"
 							/>
-							<span>MAX</span>
+							<span @click="setMax">MAX</span>
 						</div>
 						<p class="core-token">
-							Core Token in the wallet: 1,000
+							Core Token in the wallet: {{ U.score }}
 						</p>
 					</div>
 				</div>
 			</div>
-			<el-button type="primary" class="accept" @click="goMint"
+			<el-button
+				type="primary"
+				class="accept"
+				@click="levelUp"
+				v-loading="state.loading"
 				>Accept</el-button
 			>
 		</el-dialog>
 	</div>
 </template>
 <script setup>
-import { defineProps, defineEmits, ref } from 'vue';
+import {
+	defineProps,
+	defineEmits,
+	ref,
+	reactive,
+	computed,
+	getCurrentInstance,
+} from 'vue';
 const emits = defineEmits(['handleClosed']);
 
-const value1 = ref(368);
+const { proxy } = getCurrentInstance();
+const state = reactive({
+	userData: computed(() => proxy.$store.state.user),
+	amount: '',
+	loading: false,
+});
 
 const props = defineProps({
 	isShowUpgradeDialog: {
@@ -69,6 +85,27 @@ const props = defineProps({
 		default: [],
 	},
 });
+
+const setMax = () => {
+	state.amount = state.userData.score;
+};
+
+const levelUp = () => {
+	state.loading = true;
+	let params = { ctAmount: state.amount };
+	proxy.$api('corecard.levelUp', params).then((res) => {
+		proxy.$tools.checkResponse(res);
+		if (res.code === 200) {
+			proxy.$tools.message('更新成功', 'success');
+		} else {
+			proxy.$tools.message('更新失败', 'error');
+		}
+		state.loading = false;
+		setTimeout(() => {
+			closed();
+		}, 1000);
+	});
+};
 
 const closed = () => {
 	emits('handleClosed', false);

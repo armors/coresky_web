@@ -31,7 +31,7 @@
 			</div>
 			<div class="slider no-bind-info">
 				<p>You have not bound a Core Card. Please bind a Core Card.</p>
-				<el-slider v-model="value1" :min="0" :max="1000" disabled />
+				<el-slider :min="0" :max="1000" disabled />
 			</div>
 		</div>
 		<div v-else :set="(B = props.bindData[0])">
@@ -39,7 +39,7 @@
 				<img :src="B.avatarFrame" alt="" />
 				<div class="info-right">
 					<p>{{ B.name }}</p>
-					<span>daily lotte output : {{ B.ticketIncome }}</span>
+					<span>daily lotte output : {{ B.ticketIncome || 10 }}</span>
 					<button class="add-level" @click="handleUpgrade">
 						Upgrade
 					</button>
@@ -50,12 +50,21 @@
 					<strong>LV {{ B.level }}</strong
 					><strong>LV {{ B.level + 1 }}</strong>
 				</p>
+				<a
+					class="slider-text"
+					:style="{
+						left: (B.experience / B.maxScore) * 606 - 45 + 'px',
+						display: B.experience === 0 ? 'none' : 'block',
+					}"
+					>{{ B.experience }}</a
+				>
 				<el-slider
 					v-model="B.experience"
 					:min="B.mixScore"
 					:max="B.maxScore"
 					disabled
-				/>
+				>
+				</el-slider>
 				<p>
 					<span>{{ B.mixScore }}</span
 					><span>{{ B.maxScore }}</span>
@@ -71,6 +80,8 @@ import {
 	reactive,
 	computed,
 	getCurrentInstance,
+	ref,
+	watch,
 } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -89,7 +100,10 @@ const props = defineProps({
 		default: [],
 	},
 });
+const value1 = ref(35);
 const emits = defineEmits(['handleUpgrade']);
+const circleLeft = ref();
+const circleShow = ref(true);
 
 const handleUpgrade = () => {
 	emits('handleUpgrade');
@@ -101,6 +115,21 @@ const connectWallet = async (value = 'metamask') => {
 			console.log(res);
 		}
 	});
+};
+
+watch(
+	() => props.bindData[0],
+	(val) => {
+		cssLeft(val);
+	}
+);
+const cssLeft = (val) => {
+	let left = (val.experience / val.maxScore) * 606;
+	circleLeft.value = (left <= 14 ? 10 : left - 13) + 'px';
+	if (val.experience === 0) {
+		circleShow.value = false;
+	}
+	return left;
 };
 
 const goMint = () => {
@@ -121,12 +150,24 @@ const goBind = () => {
 	margin: 0px auto 60px;
 	background: rgba(255, 255, 255, 0.35);
 	border-radius: 80px;
-	overflow: hidden;
 	.slider {
 		width: 606px;
 		margin-left: 50px;
 		float: left;
 		padding-top: 3px;
+		position: relative;
+		.slider-text {
+			width: 83px;
+			height: 49px;
+			line-height: 45px;
+			color: #717a83;
+			font-size: 14px;
+			text-align: center;
+			background: url('@/assets/core-card/arrow.png') no-repeat;
+			position: absolute;
+			left: 0;
+			top: -35px;
+		}
 		::v-deep(.el-slider__runway) {
 			height: 20px;
 			border-radius: 23px;
@@ -145,10 +186,12 @@ const goBind = () => {
 			);
 		}
 		::v-deep(.el-slider__button-wrapper) {
+			display: v-bind(circleShow);
 			width: 20px;
 			height: 20px;
 			top: -2px;
-			margin-left: -12px;
+			margin-left: v-bind(circleLeft);
+			left: 0% !important;
 		}
 		::v-deep(.el-slider__button) {
 			width: 14px;
