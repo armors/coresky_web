@@ -17,7 +17,7 @@ export default {
       const contract = await utils.contractAt({ abi }, process.env.VUE_APP_CORE_CARD);
       const isApproved = await contract.isApprovedForAll(from, process.env.VUE_APP_CORE_CARD_ESCROW)
       if (isApproved === false) {
-        await contract.setApprovedForAll(process.env.VUE_APP_CORE_CARD_ESCROW, true, { from })
+        await contract.setApprovalForAll(process.env.VUE_APP_CORE_CARD_ESCROW, true, { from })
       }
       let abiEscrow = utils.contractAbi("Escrow");
       const contractEscrow = await utils.contractAt({ abi: abiEscrow }, process.env.VUE_APP_CORE_CARD_ESCROW);
