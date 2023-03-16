@@ -19,6 +19,9 @@ module.exports = {
     SearchPlaceholder2: 'Search by name',
     Properties: 'Properties',
     Submit: 'Submit',
+    Mint:'Mint',
+    LearnMore:'Learn more',
+    See:'See'
   },
   messageTip: {
     PurchaseComplete: 'Your purchase is complete！',
@@ -35,7 +38,9 @@ module.exports = {
     SetDuration: 'Set duration',
     loadingOSInfoWating: 'Pulling opensea data, please wait',
     platformOneQuotation: 'Each platform only supports one quotation. Please cancel the listing of {name} platform and re-list',
-    addedCart: 'Added to cart'
+    addedCart: 'Added to cart',
+    coreCardTip1:'Check CoreCard airdrop?',
+    coreCardTip2:'Congratulations on getting CoreCard "CoreCard V{name}"',
   },
   // 头部导航
   navigation: {
@@ -666,4 +671,21 @@ module.exports = {
     over: "Over",
     expired: "Expired",
   },
+  coreCardMint: {
+    title: 'You will Mint "CoreCard V{name}"',
+    subTitle: `CoreCard is Coresky's Membership NFT, a decentralized VIP governance system based on the Coresky ecosystem. Be one of the community members and enjoy various benefits of Coresky with the CoreCard!`,
+    connectWallet: 'Connect wallet',
+    connect: 'Connect',
+    bindtoTwitter: 'Link Twitter Account',
+    bind: 'Link',
+    retweetTwitter: 'Retweet Twitter',
+    retweet: 'Retweet',
+    mint:'Mint',
+  },
+  userCardList: {
+    Bundle: 'Bundle',
+    Unbundle: 'Unbundle',
+    Mint0: 'Mint CoreCard V0',
+    Mint: 'Mint'
+  }
 };

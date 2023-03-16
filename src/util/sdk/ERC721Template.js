@@ -10,6 +10,16 @@ export default {
       return { error: e.message };
     }
   },
+  async merkleMint (to, tokenid, uri, merkleProof, from) {
+    try {
+      let abi = utils.contractAbi("ERC721Template");
+      const contract = await utils.contractAt({ abi }, process.env.VUE_APP_CORE_CARD);
+      let result = await contract.merkleMint(to, tokenid, uri, merkleProof, { from })
+      return result
+    } catch (e) {
+      return { error: e.message };
+    }
+  },
   async depositCard (tokenId, from) {
     try {
       let result = ''

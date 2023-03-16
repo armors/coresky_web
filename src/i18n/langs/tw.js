@@ -19,6 +19,9 @@ module.exports = {
     SearchPlaceholder2: '搜索名稱',
     Properties: '屬性',
     Submit: '提交',
+    Mint:'鑄造',
+    LearnMore:'瞭解更多',
+    See:'查看'
   },
   messageTip: {
     PurchaseComplete: '購買成功',
@@ -35,7 +38,9 @@ module.exports = {
     SetDuration: '請選擇掛單時間',
     loadingOSInfoWating: '正在拉取opensea數據，請稍等',
     platformOneQuotation: '每個平臺僅支持一次報價，請取消{name}平臺掛單後重新掛售',
-    addedCart:'已經加入購物車'
+    addedCart: '已經加入購物車',
+    coreCardTip1:'查看是否有CoreCard空投？',
+    coreCardTip2:'恭喜您獲得CoreCard“CoreCard V{name}”',
   },
   navigation: {
     searchTip: "搜索NFT或合集",
@@ -196,9 +201,9 @@ module.exports = {
     TokenStandard: '協議',
     Contract: '合約',
     CreatorRebate: '版稅',
-    Tip:{
-      First:'該NFT系列的創建者將從每次銷售中',
-      Second:'獲得一定比例的金額'
+    Tip: {
+      First: '該NFT系列的創建者將從每次銷售中',
+      Second: '獲得一定比例的金額'
     },
     CurrentOwner: '持有者',
     CurrentPrice: '當前價格',
@@ -216,8 +221,8 @@ module.exports = {
     Cancel: '取消',
     Accept: '接受',
     EnterAddress: '請輸入地址',
-    SelectExpiredDate:'請選擇過期時間!',
-    EnterCorrectPrice:"請輸入正確的價格!",
+    SelectExpiredDate: '請選擇過期時間!',
+    EnterCorrectPrice: "請輸入正確的價格!",
     ListingTb: {
       Market: '平臺',
       Price: '價格',
@@ -279,4 +284,21 @@ module.exports = {
     over: "過期",
     expired: "過期",
   },
+  coreCardMint: {
+    title: '您將鑄造“CoreCard V{name}”',
+    subTitle: 'CoreCard是Coresky的會員NFT，是一個基於Coresky生態系統的去中心化VIP治理系統。 持有覈心卡自動使您成為Coresky社區的成員，您將享受Coresky平臺提供的各種福利。',
+    connectWallet: '連接錢包',
+    connect: '連接',
+    bindtoTwitter: '綁定Twitter',
+    bind: '綁定',
+    retweetTwitter: '轉發Twitter',
+    retweet: '轉發',
+    mint: '鑄造',
+  },
+  userCardList: {
+    Bundle: '綁定',
+    Unbundle: '解綁',
+    Mint0: '鑄造CoreCard V0',
+    Mint: '鑄造'
+  }
 };

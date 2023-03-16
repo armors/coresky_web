@@ -1,24 +1,22 @@
 <template>
   <div class="CoreCardBind">
-
     <div class="page-content">
       <div class="content-head">
         <img :src="require(`@/assets/core-card/vip_m_${viplevel}.png`)" class="vip-img" alt="">
         <div>
-          <div class="txt1">Your Corecard "kite" VIP {{ viplevel }}</div>
-          <div class="txt2">You must be in the Hunters On-Chain Discord server. You must also have at least one of the
-            following roles:OG Lander, Early Lander</div>
+          <div class="txt1"> {{ $t('coreCardMint.title', { name: viplevel }) }}</div>
+          <div class="txt2">{{ $t('coreCardMint.subTitle') }}</div>
         </div>
       </div>
       <div class="content-body">
         <div class="left">
-          <div class="txt1">
+          <!-- <div class="txt1">
             Corecard
           </div>
           <div class="txt2">
             You must be in the Hunters On-Chain Discord server. You must also have at least one of the following roles:OG
             Lander, Early Lander
-          </div>
+          </div> -->
           <div class="job-list">
             <div class="job-item">
               <!-- <span class="icon-none"></span> -->
@@ -28,8 +26,8 @@
               <span class="icon-none" v-else></span>
               <div class="job-content">
                 <img src="@/assets/core-card/icon_1.png" class="icon" alt="">
-                <span class="job-name">Connect wallet</span>
-                <el-button type="primary" :disabled="user.id !== ''" class="">Connect Wallet</el-button>
+                <span class="job-name">{{ $t('coreCardMint.connectWallet') }}</span>
+                <el-button type="primary" :disabled="user.id !== ''" class="">{{ $t('coreCardMint.connect') }}</el-button>
               </div>
             </div>
             <div class="job-item">
@@ -39,8 +37,9 @@
               <span class="icon-none" v-else></span>
               <div class="job-content">
                 <img src="@/assets/core-card/icon_2.png" class="icon" alt="">
-                <span class="job-name">Bind to Twitter</span>
-                <el-button type="primary" :disabled="isBindTwitter" @click="bindTwitter">Connect</el-button>
+                <span class="job-name">{{ $t('coreCardMint.bindtoTwitter') }}</span>
+                <el-button type="primary" :disabled="isBindTwitter" @click="bindTwitter">{{ $t('coreCardMint.bind')
+                }}</el-button>
               </div>
             </div>
             <div class="job-item">
@@ -50,22 +49,21 @@
               <span class="icon-none" v-else></span>
               <div class="job-content">
                 <img src="@/assets/core-card/icon_3.png" class="icon" alt="">
-                <span class="job-name">Retweet Twitter</span>
-                <el-button type="primary" :loading="reTweetLoading" :disabled="isRelayTwitter"
-                  @click="relayTwitter">Casting</el-button>
+                <span class="job-name">{{ $t('coreCardMint.retweetTwitter') }}</span>
+                <el-button type="primary" :loading="reTweetLoading" :disabled="isRelayTwitter" @click="relayTwitter">{{
+                  $t('coreCardMint.retweet') }}</el-button>
               </div>
             </div>
           </div>
           <div>
-            <el-button class="btn-mint" :loading="isMinting" :disabled="viplevel !== 0 && finishTask === false"
-              @click="cardMint" type="primary">Mint
+            <el-button class="btn-mint" :loading="isMinting"
+              :disabled="(viplevel !== 0 && finishTask === false) || isSuccess == true" @click="cardMint" type="primary">{{
+                $t('coreCardMint.mint') }}
             </el-button>
           </div>
         </div>
-        <div class="right">
-          <img class="vip-card-img"
-            src="https://i.seadn.io/gae/iGVQ_0I1nj4paQ1GJemfCwNqTm64XRMU3CO7y0bi-C-im7edte2YWf1hgNuShpRXC70xBoUVGFQCjTsyXkMD2tPX17VOJBn1wjQZ?auto=format&w=256"
-            alt="">
+        <div class="right" :class="'level' + viplevel">
+          <img class="vip-card-img" :src="require(`@/assets/core-card/v${viplevel}.webp`)" alt="">
           <img class="vip-level" :src="require(`@/assets/core-card/vip${viplevel}.png`)" alt="">
         </div>
       </div>
@@ -99,6 +97,7 @@ export default {
       relayTwitterURL: '',
       dataList: [],
       reTweetLoading: false,
+      isSuccess: false,
     };
   },
   watch: {
@@ -142,7 +141,7 @@ export default {
       this.isLoading = true
       this.$api("corecard.availableCard", this.queryParams).then((res) => {
         if (res.code === 200 && res.debug !== null) {
-          this.viplevel = 0
+          this.viplevel = res.debug.level
           this.proot = res.debug.proot
           this.tokenId = res.debug.tokenId
           this.uri = res.debug.uri
@@ -179,12 +178,23 @@ export default {
     },
     async cardMint () {
       this.isMinting = true
-      const result = await ERC721Template.selfMint(this.user.coinbase)
+      let result = null
+      if (this.viplevel === 0) {
+        result = await ERC721Template.selfMint(this.user.coinbase)
+      }
+      else {
+        let to = this.user.coinbase
+        let tokenid = this.tokenId
+        let uri = this.uri
+        let merkleProof = this.proot
+        result = await ERC721Template.merkleMint(to, tokenid, uri, merkleProof, this.user.coinbase)
+      }
       if (result && result.status === true && result.blockHash) {
         this.$tools.notification('success', '');
+        this.isSuccess = true
         setTimeout(() => {
-          this.$router.push('/coreCardBind')
-        }, 1000);
+          this.$router.push('/profile?tab=usercardlist')
+        }, 2000);
       } else if (result.error) {
         this.$tools.notification('fail', result.error, 'error');
       }
@@ -204,7 +214,7 @@ export default {
   .page-content {
     padding: 50px 100px;
     margin: 0 auto;
-    width: 1080px;
+    width: 1032px;
     background: #ffffff;
     box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08);
     border-radius: 16px;
@@ -241,6 +251,7 @@ export default {
 
       .left {
         margin-right: 40px;
+        width: 445px;
         .txt1 {
           font-weight: 500;
           font-size: 18px;
@@ -331,9 +342,12 @@ export default {
         overflow: hidden;
         flex-shrink: 0;
         position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         .vip-card-img {
-          width: 100%;
-          height: 100%;
+          height: 300px;
+          width: auto;
         }
         .vip-level {
           width: 83px;
@@ -341,6 +355,24 @@ export default {
           position: absolute;
           left: 26px;
           top: 22px;
+        }
+        &.level0 {
+          background: #E6E8EC;
+        }
+        &.level1 {
+          background: #ECEAE9;
+        }
+        &.level2 {
+          background: #E6E7E9;
+        }
+        &.level3 {
+          background: #F5F4E7;
+        }
+        &.level4 {
+          background: #E6EDF1;
+        }
+        &.level5 {
+          background: #E3E3EA;
         }
       }
     }

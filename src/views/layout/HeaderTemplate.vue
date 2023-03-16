@@ -4,26 +4,13 @@
 		<div class="home-head-mask"></div>
 		<div class="home-head-content">
 			<router-link to="/" class="head-logo header-margin-r">
-				<img
-					fit="contain"
-					v-if="isScrollTop && isHomeIndex"
-					class="logo-image aa"
-					:src="require('../../assets/images/logo_white_new.svg')"
-				/>
-				<img
-					fit="contain"
-					v-else
-					class="logo-image"
-					:src="require('../../assets/images/bottom_logo.svg')"
-				/>
+				<img fit="contain" v-if="isScrollTop && isHomeIndex" class="logo-image aa"
+					:src="require('../../assets/images/logo_white_new.svg')" />
+				<img fit="contain" v-else class="logo-image" :src="require('../../assets/images/bottom_logo.svg')" />
 			</router-link>
 			<div class="header-search">
-				<el-input
-					class="search-input-wrap"
-					v-model="keyword"
-					@keyup.enter="searchClick"
-					:placeholder="$t('navigation.searchTip')"
-				>
+				<el-input class="search-input-wrap" v-model="keyword" @keyup.enter="searchClick"
+					:placeholder="$t('navigation.searchTip')">
 					<template #prefix>
 						<div class="img-search">
 							<!-- <img src="../../assets/images/icons/icon_search_w.svg" alt=""> -->
@@ -44,14 +31,8 @@
 				<router-link class="nav-link" to="/coreCard">
 					CoreCard
 				</router-link>
-				<el-popover
-					placement="bottom"
-					trigger="click"
-					:show-arrow="false"
-					width="200"
-					popper-class="nav-popover"
-					:offset="15"
-				>
+				<el-popover placement="bottom" trigger="click" :show-arrow="false" width="200" popper-class="nav-popover"
+					:offset="15">
 					<template #reference>
 						<div class="nav-link" to="/erc721">
 							<!-- <svg-icon class="head-icon mr8" icon-class="chain_eth" /> -->
@@ -60,10 +41,7 @@
 					</template>
 					<div>
 						<div class="chain-item active">
-							<svg-icon
-								class="head-icon mr8"
-								icon-class="chain_eth"
-							/>
+							<svg-icon class="head-icon mr8" icon-class="chain_eth" />
 							<div class="item-txt">Ethereum</div>
 							<div class="item-dot"></div>
 						</div>
@@ -74,33 +52,19 @@
             </div> -->
 					</div>
 				</el-popover>
-				<el-popover
-					placement="bottom"
-					trigger="click"
-					:show-arrow="false"
-					width="180"
-					popper-class="nav-popover"
-					:offset="15"
-				>
+				<el-popover placement="bottom" trigger="click" :show-arrow="false" width="180" popper-class="nav-popover"
+					:offset="15">
 					<template #reference>
 						<div class="nav-link" to="/erc721">
 							<svg-icon class="head-icon" icon-class="yuyan" />
 						</div>
 					</template>
 					<div>
-						<div
-							class="chain-item two"
-							@click="languageSelect('en')"
-							:class="{ active: language == 'en' }"
-						>
+						<div class="chain-item two" @click="languageSelect('en')" :class="{ active: language == 'en' }">
 							<div class="item-txt">English</div>
 							<div class="item-dot"></div>
 						</div>
-						<div
-							class="chain-item two"
-							@click="languageSelect('tw')"
-							:class="{ active: language == 'tw' }"
-						>
+						<div class="chain-item two" @click="languageSelect('tw')" :class="{ active: language == 'tw' }">
 							<div class="item-txt">繁体</div>
 							<div class="item-dot"></div>
 						</div>
@@ -110,51 +74,34 @@
             </div> -->
 					</div>
 				</el-popover>
-				<div
-					class="nav-link shopping-cart"
-					@click="
-						showShoppingCartDrawer = true;
-						showUserDrawer = false;
-					"
-				>
-					<div
-						class="notify-num"
-						v-if="
-							(shoppingCartList && shoppingCartList.length > 0) ||
-								(shoppingOpenseaCartList &&
-									shoppingOpenseaCartList.length > 0)
-						"
-					>
+				<div class="nav-link shopping-cart" @click="
+					showShoppingCartDrawer = true;
+				showUserDrawer = false;
+																																								">
+					<div class="notify-num" v-if="
+						(shoppingCartList && shoppingCartList.length > 0) ||
+						(shoppingOpenseaCartList &&
+							shoppingOpenseaCartList.length > 0)
+					">
 						{{
 							shoppingCartList.length +
-								shoppingOpenseaCartList.length
+							shoppingOpenseaCartList.length
 						}}
 					</div>
 					<svg-icon class="head-icon" icon-class="gouwuche" />
 				</div>
-				<div
-					class="head-connect display-flex box-center"
-					v-if="!connected"
-					@click="login"
-				>
+				<div class="head-connect display-flex box-center" v-if="!connected" @click="login">
 					{{ $t('navigation.connectWallet') }}
 				</div>
-				<div
-					class="nav-link"
-					@click="
-						showUserDrawer = true;
-						showShoppingCartDrawer = false;
-					"
-					v-else
-				>
+				<div class="nav-link" @click="
+					showUserDrawer = true;
+				showShoppingCartDrawer = false;
+																																								" v-else>
 					<div class="avatar-img">
-						<img
-							:src="
-								user.avatar ||
-									$filters.fullImageUrl(user.avatar)
-							"
-							alt=""
-						/>
+						<img :src="
+							user.avatar ||
+							$filters.fullImageUrl(user.avatar)
+						" alt="" />
 					</div>
 					<!--          <avatar class="avatar-img" :imageUrl="user.avatar || $filters.fullImageUrl(user.avatar)"-->
 					<!--            :address="user.coinbase" shape="circular">-->
@@ -162,13 +109,8 @@
 				</div>
 			</div>
 		</div>
-		<follow-popup
-			:show="showFollowing"
-			ftype="following"
-			@close="showFollowing = false"
-			v-if="connected"
-			:address="user.coinbase"
-		>
+		<follow-popup :show="showFollowing" ftype="following" @close="showFollowing = false" v-if="connected"
+			:address="user.coinbase">
 		</follow-popup>
 		<userCenterDrawer v-model:show="showUserDrawer" />
 		<shoppingCartDrawer v-model:show="showShoppingCartDrawer" />
@@ -197,7 +139,7 @@ export default {
 		shoppingCartDrawer,
 		HeaderTip,
 	},
-	data: function() {
+	data: function () {
 		return {
 			showUserDrawer: false,
 			showShoppingCartDrawer: false,
@@ -215,74 +157,85 @@ export default {
 		};
 	},
 	watch: {
-		connected(val1, val2) {
+		connected (val1, val2) {
 			this.getTipMessage();
 		},
 	},
 	computed: {
-		notice() {
+		notice () {
 			return this.$store.state.notice;
 		},
-		connected() {
+		connected () {
 			return this.$store.state.connected;
 		},
-		user: function() {
+		user: function () {
 			var user = this.$store.state.user;
 			return user;
 		},
-		message() {
+		message () {
 			return this.$store.state.message;
 		},
-		language() {
+		language () {
 			console.log(this.$store.state.language);
 			return this.$store.state.language;
 		},
-		shoppingCartList() {
+		shoppingCartList () {
 			return this.$store.state.shoppingCartList;
 		},
-		shoppingOpenseaCartList() {
+		shoppingOpenseaCartList () {
 			return this.$store.state.shoppingOpenseaCartList;
 		},
-		isHomeIndex() {
+		isHomeIndex () {
 			return (
 				this.$route.name === 'home' || this.$route.name === 'coreCard'
 			);
 		},
-		isScrollTop() {
+		isScrollTop () {
 			return this.$store.state.isScrollTop;
 		},
 	},
-	created() {
+	created () {
 		this.isDark = useDark();
 	},
-	mounted() {
+	mounted () {
 		// this.login()
 
 		this.getCartInfo();
 	},
 	methods: {
-		getTipMessage() {
+		getTipMessage () {
 			if (localStorage.getItem('coresky-card-tip') === '1') return;
-			let option = {
-				message: '',
-				linkTxt: '',
-				linkClose: true,
-				closeHandle: () => this.tipClose(),
-				callBack: () => this.goCoreCard(),
-			};
+
 			if (this.connected) {
-				option.message = '111';
-				option.linkTxt = '222';
+				this.$api("corecard.availableCard", this.queryParams).then((res) => {
+					let viplevel = 0
+					if (res.code === 200 && res.debug !== null) {
+						viplevel = res.debug.level
+					}
+					let option = {
+						message: this.$t('messageTip.coreCardTip2', { name: viplevel }),
+						linkTxt: this.$t('common.Mint'),
+						linkClose: true,
+						closeHandle: () => this.tipClose(),
+						callBack: () => this.goCoreCard(),
+					};
+					this.$refs.headerTipRef.show(option);
+				})
 			} else {
-				option.message = '333';
-				option.linkTxt = '444';
+				let option = {
+					message: this.$t('messageTip.coreCardTip1'),
+					linkTxt: this.$t('common.See'),
+					linkClose: true,
+					closeHandle: () => this.tipClose(),
+					callBack: () => this.login(),
+				};
+				this.$refs.headerTipRef.show(option);
 			}
-			this.$refs.headerTipRef.show(option);
 		},
-		getCartInfo() {
+		getCartInfo () {
 			this.$store.commit('initShoppingCart');
 		},
-		async login(value = 'metamask') {
+		async login (value = 'metamask') {
 			console.log('header connectSign');
 			this.$store.dispatch('connectAndSign', value).then((res) => {
 				if (res && this.$tools.checkResponse(res)) {
@@ -296,29 +249,29 @@ export default {
 				}
 			});
 		},
-		toggleDark() {
+		toggleDark () {
 			console.log('toggleDark');
 			const isDark = useDark();
 			useToggle(isDark);
 			this.isDark = !this.isDark;
 		},
-		async searchClick() {
+		async searchClick () {
 			this.$router.push({
 				name: 'Search',
 				query: { keyword: this.keyword },
 			});
 		},
-		goProfile() {
+		goProfile () {
 			if (!this.$tools.needLogin()) return;
 			this.$router.push('/profile');
 		},
-		goItems() {
+		goItems () {
 			this.$router.push({ name: 'Items' });
 		},
-		logout() {
+		logout () {
 			this.$web3.disconnect();
 		},
-		languageSelect(parameter) {
+		languageSelect (parameter) {
 			this.$store.state.language = parameter;
 			if (parameter == 'en') {
 				localStorage.setItem('locale', 'en');
@@ -332,14 +285,14 @@ export default {
 			}
 			this.languagePopover = false;
 		},
-		closeTip() {
+		closeTip () {
 			this.showCradTip = false;
 		},
-		goCoreCard() {
+		goCoreCard () {
 			this.tipClose();
 			this.$router.push('/coreCardMint');
 		},
-		tipClose() {
+		tipClose () {
 			localStorage.setItem('coresky-card-tip', 1);
 		},
 	},

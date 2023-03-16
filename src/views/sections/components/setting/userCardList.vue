@@ -20,16 +20,16 @@
           </div>
           <div>
             <el-button type="primary" :loading="item.isloading" v-if="item.pledge === 1"
-              @click="unBindCard(item)">UnBind</el-button>
-            <el-button v-if="item.pledge === 0" :loading="item.isloading" @click="bindCard(item)" plain>Bind</el-button>
+              @click="unBindCard(item)">{{$t('userCardList.Unbundle')}}</el-button>
+            <el-button v-if="item.pledge === 0" :loading="item.isloading" @click="bindCard(item)" plain>{{$t('userCardList.Bundle')}}</el-button>
           </div>
         </div>
       </div>
       <div class="card-item">
-        <img src="@/assets/core-card/vip_m_0.png" class="vip-img-0" alt="">
+          <img src="@/assets/core-card/vip_m_0.png" class="vip-img-0" alt="">
         <div>
-          <div class="vip-txt-0">Mint Corecard VIP-0</div>
-          <el-button class="vip-btn-0" type="primary" @click="$router.push('/coreCardMint')">Mint</el-button>
+          <div class="vip-txt-0">{{$t('userCardList.Mint0')}}</div>
+          <el-button class="vip-btn-0" type="primary" @click="$router.push('/coreCardMint')">{{$t('userCardList.Mint')}}</el-button>
         </div>
       </div>
     </div>
@@ -58,7 +58,7 @@ export default {
   watch: {
     user: {
       handler (val) {
-        if (this.user.id && this.isLoading === false) {
+        if (this.user.id && this.isLoading === false && this.$store.state.useAuthorization) {
           this.init();
         }
       },
@@ -165,6 +165,7 @@ export default {
       .card-info {
         margin-left: 30px;
         height: 100%;
+        flex-grow: 1;
         .card-name {
           margin: 10px 0;
           display: flex;
@@ -185,14 +186,15 @@ export default {
           .vip-img {
             width: 83px;
             height: 40px;
-            margin-right: 40px;
+            margin-right: 30px;
           }
           .vip-progress {
-            width: 150px;
+            // width: 150px;
             background: #E6E8EC;
             border-radius: 29px;
             height: 10px;
             position: relative;
+            flex-grow: 1;
           }
           .vip-txt {
             font-weight: 400;
@@ -225,8 +227,9 @@ export default {
         }
       }
       .vip-img-0 {
-        width: 150px;
-        height: 150px;
+        width: 70px;
+        height: 70px;
+        margin-left: 30px;
         margin-right: 30px;
       }
       .vip-txt-0 {
