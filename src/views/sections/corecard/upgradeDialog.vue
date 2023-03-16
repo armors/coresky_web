@@ -24,7 +24,14 @@
 				<div class="info">
 					<p>{{ B.name }}</p>
 					<div class="vip-info">
-						<img src="@/assets/core-card/vip5.png" alt="" />
+						<img
+							:src="
+								require('@/assets/core-card/vip' +
+									B.level +
+									'.png')
+							"
+							alt=""
+						/>
 						<el-progress
 							:percentage="B.experience"
 							class="process"
@@ -129,6 +136,7 @@ const closed = () => {
 			width: 472px;
 			p {
 				color: #04142a;
+				font-size: 18px;
 			}
 			.vip-info {
 				display: flex;
