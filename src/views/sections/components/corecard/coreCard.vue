@@ -35,6 +35,7 @@
 		<h3>FAQ</h3>
 		<core-card-FAQ></core-card-FAQ>
 		<upgrade-dialog
+			:bindData="state.bindData"
 			:isShowUpgradeDialog="state.isShowUpgradeDialog"
 			@handleClosed="handleUpgradeDialog"
 		></upgrade-dialog>

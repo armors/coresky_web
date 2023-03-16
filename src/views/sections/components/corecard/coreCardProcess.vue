@@ -36,7 +36,7 @@
 		</div>
 		<div v-else :set="(B = props.bindData[0])">
 			<div class="level-info">
-				<img src="@/assets/core-card/small-img1.png" alt="" />
+				<img :src="B.avatarFrame" alt="" />
 				<div class="info-right">
 					<p>{{ B.name }}</p>
 					<span>daily lotte output : {{ B.ticketIncome }}</span>
