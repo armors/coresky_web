@@ -179,13 +179,14 @@ export default {
         address: this.$sdk.NULL_ADDRESS()
       }, this.user.coinbase)
 
-      this.balanceETH = parseFloat(keepPoint(balanceETH, balanceETH < 0.0001 ? 6 : 4))
+      this.balanceETH = parseFloat(keepPoint(balanceETH, balanceETH < 0.0001 ? 8 : 4))
       console.log(this.balanceETH)
       try {
         let balanceWETH = await this.$sdk.getBalance({
           address: process.env.VUE_APP_WETH
         }, this.user.coinbase)
-        this.balanceWETH = parseFloat(this.$sdk.fromWeiNum(balanceWETH, balanceWETH < 0.0001 ? 6 : 4))
+        console.log(balanceWETH)
+        this.balanceWETH = parseFloat(this.$sdk.fromWeiNum(balanceWETH, parseFloat(keepPoint(balanceWETH, balanceWETH < 0.0001 ? 8 : 4))? 8 : 4))
         console.log('this.balanceWETH', this.balanceWETH)
       } catch (err) {
         console.log('this.balanceWETH', err)
