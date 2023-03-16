@@ -76,7 +76,7 @@
             ETH
           </div>
           <div class="price-box">
-            <div class="num">{{ balanceETH < 0.0001 ? '<0.0001' : $filters.milliFormat(balanceETH) }}</div>
+            <div class="num">{{ balanceETH < 0.0001 ? '<0.0001' && balanceETH > 0 : $filters.milliFormat(balanceETH) }}</div>
             <div class="num2" v-if="$filters.ethToUsdt(balanceETH) !== '--' && balanceETH >= 0.0001">${{ $filters.milliFormat($filters.ethToUsdt(balanceETH)) }}</div>
           </div>
           <div class="swap-icon" @click="showUniswap('ETH')"><img src="../../../assets/images/icons/icon_swap.svg" alt="">
@@ -93,7 +93,7 @@
             WETH
           </div>
           <div class="price-box">
-            <div class="num">{{ balanceWETH < 0.0001 ? '<0.0001' : $filters.milliFormat(balanceWETH)}}</div>
+            <div class="num">{{ balanceWETH < 0.0001 && balanceWETH > 0 ? '<0.0001' : $filters.milliFormat(balanceWETH)}}</div>
             <div class="num2" v-if="$filters.ethToUsdt(balanceWETH) !== '--' && balanceWETH >= 0.0001">${{ $filters.milliFormat($filters.ethToUsdt(balanceWETH)) }}</div>
           </div>
           <div class="swap-icon" @click="showUniswap('WETH')"><img src="../../../assets/images/icons/icon_swap.svg"
