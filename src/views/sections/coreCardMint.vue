@@ -51,7 +51,8 @@
               <div class="job-content">
                 <img src="@/assets/core-card/icon_3.png" class="icon" alt="">
                 <span class="job-name">Retweet Twitter</span>
-                <el-button type="primary" :disabled="isRelayTwitter" @click="relayTwitter">Casting</el-button>
+                <el-button type="primary" :loading="reTweetLoading" :disabled="isRelayTwitter"
+                  @click="relayTwitter">Casting</el-button>
               </div>
             </div>
           </div>
@@ -96,7 +97,8 @@ export default {
       bindTwitterURL: '',
       isRelayTwitter: false,
       relayTwitterURL: '',
-      dataList: []
+      dataList: [],
+      reTweetLoading: false,
     };
   },
   watch: {
@@ -167,12 +169,17 @@ export default {
       Cookies.set("coresky_web_token", token);
     },
     relayTwitter () {
-      location.href = this.relayTwitterURL
+      this.reTweetLoading = true
+      setTimeout(() => {
+        this.reTweetLoading = false
+        this.isRelayTwitter = 1
+      }, 3000);
+      this.$api("corecard.relayTwitter")
+      window.open(this.relayTwitterURL, "_blank");
     },
     async cardMint () {
       this.isMinting = true
       const result = await ERC721Template.selfMint(this.user.coinbase)
-      console.log(result)
       if (result && result.status === true && result.blockHash) {
         this.$tools.notification('success', '');
         setTimeout(() => {
