@@ -76,8 +76,8 @@
             ETH
           </div>
           <div class="price-box">
-            <div class="num">{{ balanceETH }}</div>
-            <div class="num2">${{ $filters.milliFormat($filters.ethToUsdt(balanceETH)) }}</div>
+            <div class="num">{{ (balanceETH < 0.0001 && balanceETH > 0 ) ? '<0.0001': $filters.milliFormat(balanceETH) }}</div>
+            <div class="num2" v-if="$filters.ethToUsdt(balanceETH) !== '--' && balanceETH >= 0.0001">${{ $filters.milliFormat($filters.ethToUsdt(balanceETH)) }}</div>
           </div>
           <div class="swap-icon" @click="showUniswap('ETH')"><img src="../../../assets/images/icons/icon_swap.svg" alt="">
           </div>
@@ -93,8 +93,8 @@
             WETH
           </div>
           <div class="price-box">
-            <div class="num">{{ balanceWETH }}</div>
-            <div class="num2">${{ $filters.milliFormat($filters.ethToUsdt(balanceWETH)) }}</div>
+            <div class="num">{{ (balanceWETH < 0.0001 && balanceWETH > 0) ? '<0.0001' : $filters.milliFormat(balanceWETH)}}</div>
+            <div class="num2" v-if="$filters.ethToUsdt(balanceWETH) !== '--' && balanceWETH >= 0.0001">${{ $filters.milliFormat($filters.ethToUsdt(balanceWETH)) }}</div>
           </div>
           <div class="swap-icon" @click="showUniswap('WETH')"><img src="../../../assets/images/icons/icon_swap.svg"
               alt="">
@@ -174,18 +174,22 @@ export default {
       this.$refs.uniswapDialog.showUniswap(type)
     },
     async initGetBalance() {
-      this.balanceETH = keepPoint(await this.$sdk.getBalance({
+      console.log('initGetBalance')
+      const balanceETH = await this.$sdk.getBalance({
         address: this.$sdk.NULL_ADDRESS()
-      }, this.user.coinbase))
+      }, this.user.coinbase)
 
+      this.balanceETH = parseFloat(keepPoint(balanceETH, balanceETH < 0.0001 ? 8 : 4))
+      console.log(this.balanceETH)
       try {
         let balanceWETH = await this.$sdk.getBalance({
           address: process.env.VUE_APP_WETH
         }, this.user.coinbase)
-        this.balanceWETH = this.$sdk.fromWeiNum(balanceWETH)
-      }
-      catch (err) {
-
+        console.log(balanceWETH)
+        this.balanceWETH = parseFloat(this.$sdk.fromWeiNum(balanceWETH, parseFloat(keepPoint(balanceWETH, balanceWETH < 0.0001 ? 8 : 4))? 8 : 4))
+        console.log('this.balanceWETH', this.balanceWETH)
+      } catch (err) {
+        console.log('this.balanceWETH', err)
       }
       console.log(this.user)
     },

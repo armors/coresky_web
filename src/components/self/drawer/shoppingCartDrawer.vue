@@ -34,7 +34,7 @@
             <div class="shopping-info">
               <image-box :src="v.oriImage"></image-box>
               <div class="info-txt">
-                <div class="txt1 ellipsis">{{ v.name || '--' }}</div>
+                <div class="txt1 ellipsis">{{ v.name ? v.name :  '#' + v.tokenId }}</div>
                 <div class="txt2 display-flex box-center-Y">
                   <div>{{ v.ckCollectionsInfoEntity.name || '--' }}</div>
                   <img class="tag" v-if="v.ckCollectionsInfoEntity.isCertification === '1'"
@@ -85,7 +85,7 @@
           <div class="shopping-info">
             <image-box :src="v.makerAssetBundle.assets[0].imageUrl"></image-box>
             <div class="info-txt">
-              <div class="txt1 ellipsis">{{ v.makerAssetBundle.assets[0].name || '--' }}</div>
+              <div class="txt1 ellipsis">{{ v.makerAssetBundle.assets[0].name ? v.makerAssetBundle.assets[0].name :  '#' + v.makerAssetBundle.assets[0].tokenId }}</div>
               <div class="txt2 display-flex box-center-Y">
                 <div>{{ v.makerAssetBundle.assets[0].collection.name || '--' }}</div>
                 <svg-icon class="tag" icon-class="icon_tag" />
@@ -363,6 +363,11 @@ export default {
       }
     },
     async cartBuy () {
+      const resSign = await this.$sdk.checkSignatureAccount()
+      console.log(resSign)
+      if(resSign.code !== 200) {
+        return
+      }
       this.buyBtnLoading = true
       const res = await this.checkOrder()
       if (res.code !== 200) {
@@ -566,6 +571,11 @@ export default {
       }
     },
     async cartBuyOpensea () {
+      const resSign = await this.$sdk.checkSignatureAccount()
+      console.log(resSign)
+      if(resSign.code !== 200) {
+        return
+      }
       // isOrderFulfillable
       console.log(this.openseaCart)
       this.buyOpenseaBtnLoading = true

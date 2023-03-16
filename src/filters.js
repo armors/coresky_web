@@ -31,7 +31,7 @@ export function ethToUsdt (ethNum = 0, point = 4) {
   if (isNaN(ethPrice)) {
     return '--'
   }
-  return ethNum > 0 ? keepPoint(new BigNumber(ethNum).multipliedBy(ethPrice), point) : 0
+  return ethNum > 0 && ethNum !== 'Na' ? parseFloat(keepPoint(new BigNumber(ethNum).multipliedBy(ethPrice), point)) : '--'
 }
 export function ellipsisAddress (address, start = 7, end = -4) {
   if (!address) return '--'
@@ -62,7 +62,7 @@ export function contractExplore (hash) {
   }
 }
 export function milliFormat (num, isK = true) {
-  if (!num) return '--'
+  if (!num && Number(num) !== 0) return '--'
   if (isK) {
     if (num > 1000) {
       num = keepPoint(num / 1000, 1)

@@ -176,7 +176,7 @@
                   <div class="box-val">
                     <span class="value">{{ nftPrice }}</span>
                     <span class="value">ETH</span>
-                    <span class="value-u" v-if="nftPrice && nftPrice !== '--'"> ${{
+                    <span class="value-u" v-if="nftPrice && $filters.milliFormat($filters.ethToUsdt(nftPrice)) !== '--'"> ${{
                       $filters.milliFormat($filters.ethToUsdt(nftPrice)) }}</span>
                   </div>
                 </div>
@@ -189,7 +189,7 @@
                   <div class="box-val">
                     <span class="value">{{ bestPrice }}</span>
                     <span class="value">ETH</span>
-                    <span class="value-u" v-if="bestPrice && bestPrice !== '--'"> ${{
+                    <span class="value-u" v-if="bestPrice && $filters.milliFormat($filters.ethToUsdt(bestPrice)) !== '--'"> ${{
                       $filters.milliFormat($filters.ethToUsdt(bestPrice)) }}</span>
                   </div>
                 </div>
@@ -1005,7 +1005,11 @@ export default {
       console.log(orders.length > 0)
       return orders.length > 0
     },
-    addCartOpensea (v) {
+    async addCartOpensea (v) {
+      const res = await this.$sdk.checkSignatureAccount()
+      if(res.code !== 200) {
+        return
+      }
       if (!v) {
         return
       }
@@ -1038,7 +1042,11 @@ export default {
       })
       this.$store.commit('addShoppingCart', this.tokenInfo)
     },
-    addCartList (id) {
+    async addCartList (id) {
+      const res = await this.$sdk.checkSignatureAccount()
+      if(res.code !== 200) {
+        return
+      }
       if (this.tokenInfo.contractType === 0) {
         this.$store.commit('addShoppingCart', this.tokenInfo)
       } else {
@@ -1113,9 +1121,9 @@ export default {
         this.ckOrdersEntityList = this.sortOrdersAndOffer(listed, true)
         this.bestPrice = this.ckAuctionEntityList.length > 0 ? this.nftPriceFun(this.ckAuctionEntityList[0].basePrice) : '--'
         this.nftPrice = this.ckOrdersEntityList.length > 0 ? this.nftPriceFun(this.ckOrdersEntityList[0].basePrice) : '--'
-        setTimeout(() => {
+        // setTimeout(() => {
           this.loading = false
-        }, 3000)
+        // }, 3000)
         await this.getOrdersAndOffers()
         if (this.ckOrdersEntityList.length > 0) {
           this.countDown()
@@ -1204,7 +1212,11 @@ export default {
         console.log(this.tokenEventList, tokenEventType)
       })
     },
-    showSellNft () {
+    async showSellNft () {
+      const res = await this.$sdk.checkSignatureAccount()
+      if(res.code !== 200) {
+        return
+      }
       if (this.isSellCoresky && this.isSellOpensea) {
         this.$tools.message(this.$t('messageTip.platformOneQuotation'), 'warning');
         return
@@ -1219,6 +1231,10 @@ export default {
       this.$refs.NFTDialogTransfer.showTransfer(this.tokenInfo)
     },
     async cancelMakeOffer (v, isOpensea = false) {
+      const res = await this.$sdk.checkSignatureAccount()
+      if(res.code !== 200) {
+        return
+      }
       this.cancelIdOrHash = isOpensea ? v.orderHash : v.id
       if (isOpensea) {
         await this.cancelSellOpensea(v)
@@ -1259,6 +1275,10 @@ export default {
       }
     },
     async cancelSell (cancelItem = null, isOpensea = false) {
+      const res =await this.$sdk.checkSignatureAccount()
+      if(res.code !== 200) {
+        return
+      }
       this.cancelIdOrHash = isOpensea ? cancelItem.orderHash : cancelItem.id
       if (isOpensea) {
         this.cancelSellOpensea(cancelItem)
@@ -1333,7 +1353,11 @@ export default {
     showBuyNftNow () {
       this.showBuyNft()
     },
-    showBuyNft (v = null, isOpensea = false) {
+    async showBuyNft (v = null, isOpensea = false) {
+      const res =await this.$sdk.checkSignatureAccount()
+      if(res.code !== 200) {
+        return
+      }
       if (v === null) {
         let otherOrder = this.ckOrdersEntityList.filter(item => !((item.source === 'coresky' && item.maker === this.user.coinbase) || (item.source === 'opensea' && item.maker.address === this.user.coinbase)))
         if (otherOrder.length === 1 || (otherOrder.length > 1 && otherOrder[0].source === 'coresky')) {
@@ -1387,7 +1411,12 @@ export default {
     nftPriceFun (basePrice) {
       return (basePrice !== null && basePrice !== undefined) ? this.$filters.keepMaxPoint(this.$Web3.utils.fromWei(basePrice.toString())) : '--'
     },
-    showMakeOfferNFT () {
+    async showMakeOfferNFT () {
+      const res = await this.$sdk.checkSignatureAccount()
+      console.log(res)
+      if(res.code !== 200) {
+        return
+      }
       this.$refs.NFTDialogMakeOffer.showMakeOffer(this.tokenInfo)
     },
     showMakeOfferCollect () {
@@ -1413,15 +1442,24 @@ export default {
       console.log(v)
       this.getTokenInfo()
     },
-    showAcceptOfferNFT (v, isOpensea = false) {
+    async showAcceptOfferNFT (v, isOpensea = false) {
       // if (isOpensea) {
       //   this.fulfillOrderOpensea(v)
       //   return
       // }
       // this.acceptDialogBtnLoading = false
+      const res = await this.$sdk.checkSignatureAccount()
+      if(res.code !== 200) {
+        return
+      }
       this.$refs.NFTDialogAcceptOffer.show(this.tokenInfo, v, 1, isOpensea)
     },
-    followNft () {
+    async followNft () {
+      const res = await this.$sdk.checkSignatureAccount()
+      console.log(res)
+      if(res.code !== 200) {
+        return
+      }
       if (!this.tokenInfo.contract || !this.tokenInfo.tokenId) return
       const tokenColloctUrl = this.tokenInfo.followStatus ? "collect.tokenCancel" : "collect.tokenFollow"
       this.$api(tokenColloctUrl, {

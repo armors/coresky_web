@@ -273,7 +273,12 @@ export default {
   },
 
   methods: {
-    showMakeOfferCollect () {
+    async showMakeOfferCollect () {
+      const res = await this.$sdk.checkSignatureAccount()
+      console.log(res)
+      if(res.code !== 200) {
+        return
+      }
       this.$refs.NFTDialogMakeOffer.showMakeOffer(this.collectInfo, 2)
     },
     makeOfferSuccess (v) {
@@ -293,7 +298,12 @@ export default {
         this.collectInfo.bestPriceFrom = this.$sdk.fromWeiNum(this.collectInfo.bestPrice)
       })
     },
-    followContract () {
+    async followContract () {
+      const res = await this.$sdk.checkSignatureAccount()
+      console.log(res)
+      if(res.code !== 200) {
+        return
+      }
       const tokenColloctUrl = this.collectInfo.followStatus ? "collect.contractCancel" : "collect.contractFollow"
       this.$api(tokenColloctUrl, {
         "contract": this.contract,

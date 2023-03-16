@@ -1,7 +1,8 @@
 <template>
 	<HeaderTip ref="headerTipRef" />
-	<div class="home-head" :class="{ homeIndex: isScrollTop && isHomeIndex }">
-		<div class="home-head-mask"></div>
+	<div class="home-head" :class="{ 'homeIndex': isScrollTop && isHomeIndex }">
+		<div class="home-head-mask">
+		</div>
 		<div class="home-head-content">
 			<router-link to="/" class="head-logo header-margin-r">
 				<img fit="contain" v-if="isScrollTop && isHomeIndex" class="logo-image aa"
@@ -18,15 +19,16 @@
 					</template>
 				</el-input>
 			</div>
+
 			<div class="head-navs">
 				<!-- <router-link class="nav-link" to="/reward">
           {{ $t("navigation.rewards") }}
         </router-link> -->
 				<router-link class="nav-link" to="/markterplace">
-					{{ $t('navigation.marketplace') }}
+					{{ $t("navigation.marketplace") }}
 				</router-link>
 				<router-link class="nav-link" to="/allcollection">
-					{{ $t('navigation.collection') }}
+					{{ $t("navigation.collection") }}
 				</router-link>
 				<router-link class="nav-link" to="/coreCard">
 					CoreCard
@@ -60,11 +62,11 @@
 						</div>
 					</template>
 					<div>
-						<div class="chain-item two" @click="languageSelect('en')" :class="{ active: language == 'en' }">
+						<div class="chain-item two" @click="languageSelect('en')" :class="{ 'active': language == 'en' }">
 							<div class="item-txt">English</div>
 							<div class="item-dot"></div>
 						</div>
-						<div class="chain-item two" @click="languageSelect('tw')" :class="{ active: language == 'tw' }">
+						<div class="chain-item two" @click="languageSelect('tw')" :class="{ 'active': language == 'tw' }">
 							<div class="item-txt">繁体</div>
 							<div class="item-dot"></div>
 						</div>
@@ -74,34 +76,18 @@
             </div> -->
 					</div>
 				</el-popover>
-				<div class="nav-link shopping-cart" @click="
-					showShoppingCartDrawer = true;
-				showUserDrawer = false;
-																																								">
-					<div class="notify-num" v-if="
-						(shoppingCartList && shoppingCartList.length > 0) ||
-						(shoppingOpenseaCartList &&
-							shoppingOpenseaCartList.length > 0)
-					">
-						{{
-							shoppingCartList.length +
-							shoppingOpenseaCartList.length
-						}}
-					</div>
+				<div class="nav-link shopping-cart" @click="showShoppingCartDrawer = true; showUserDrawer = false">
+					<div class="notify-num"
+						v-if="shoppingCartList && shoppingCartList.length > 0 || shoppingOpenseaCartList && shoppingOpenseaCartList.length > 0">
+						{{ shoppingCartList.length + shoppingOpenseaCartList.length }}</div>
 					<svg-icon class="head-icon" icon-class="gouwuche" />
 				</div>
-				<div class="head-connect display-flex box-center" v-if="!connected" @click="login">
-					{{ $t('navigation.connectWallet') }}
+				<div class="head-connect display-flex box-center" v-if="!connected || !token" @click="login">
+					{{ $t("navigation.connectWallet") }}
 				</div>
-				<div class="nav-link" @click="
-					showUserDrawer = true;
-				showShoppingCartDrawer = false;
-																																								" v-else>
+				<div class="nav-link" @click="showUserDrawer = true; showShoppingCartDrawer = false" v-else>
 					<div class="avatar-img">
-						<img :src="
-							user.avatar ||
-							$filters.fullImageUrl(user.avatar)
-						" alt="" />
+						<img :src="user.avatar || $filters.fullImageUrl(user.avatar)" alt="">
 					</div>
 					<!--          <avatar class="avatar-img" :imageUrl="user.avatar || $filters.fullImageUrl(user.avatar)"-->
 					<!--            :address="user.coinbase" shape="circular">-->
@@ -117,27 +103,27 @@
 	</div>
 </template>
 <script>
-import FollowPopup from '@/components/FollowPopup';
-import userCenterDrawer from '@/components/self/drawer/userCenterDrawer';
-import shoppingCartDrawer from '@/components/self/drawer/shoppingCartDrawer';
+import FollowPopup from "@/components/FollowPopup";
+import userCenterDrawer from "@/components/self/drawer/userCenterDrawer";
+import shoppingCartDrawer from "@/components/self/drawer/shoppingCartDrawer";
 import HeaderTip from './HeaderTip';
 
-import { useDark, useToggle } from '@vueuse/core';
+import { useDark, useToggle } from '@vueuse/core'
 
 export default {
-	name: 'HeaderTemplate',
-	// props: {
-	//   isScrollTop: {
-	//     type: Boolean,
-	//     default: false
-	//   },
-	// },
-
+	name: "HeaderTemplate",
 	components: {
 		FollowPopup,
 		userCenterDrawer,
 		shoppingCartDrawer,
 		HeaderTip,
+	},
+	watch: {
+		token: {
+			handler (val) {
+				this.getTipMessage();
+			},
+		}
 	},
 	data: function () {
 		return {
@@ -145,7 +131,7 @@ export default {
 			showShoppingCartDrawer: false,
 			isDark: false,
 			style: {
-				backgroundColor: '',
+				backgroundColor: "",
 			},
 			keyword: this.$route.query.keyword,
 			showFollowing: false,
@@ -156,17 +142,16 @@ export default {
 			showCradTip: true,
 		};
 	},
-	watch: {
-		connected (val1, val2) {
-			this.getTipMessage();
-		},
-	},
 	computed: {
 		notice () {
 			return this.$store.state.notice;
 		},
 		connected () {
 			return this.$store.state.connected;
+		},
+		token () {
+			console.log('this.$store.state.token', this.$store.state.token)
+			return this.$store.state.token;
 		},
 		user: function () {
 			var user = this.$store.state.user;
@@ -176,7 +161,7 @@ export default {
 			return this.$store.state.message;
 		},
 		language () {
-			console.log(this.$store.state.language);
+			console.log(this.$store.state.language)
 			return this.$store.state.language;
 		},
 		shoppingCartList () {
@@ -186,27 +171,74 @@ export default {
 			return this.$store.state.shoppingOpenseaCartList;
 		},
 		isHomeIndex () {
-			return (
-				this.$route.name === 'home' || this.$route.name === 'coreCard'
-			);
+			return this.$route.name === 'home' || this.$route.name === 'coreCard'
 		},
 		isScrollTop () {
 			return this.$store.state.isScrollTop;
-		},
+		}
 	},
 	created () {
-		this.isDark = useDark();
+		this.isDark = useDark()
 	},
 	mounted () {
 		// this.login()
-
-		this.getCartInfo();
+		this.getCartInfo()
+		this.getTipMessage();
 	},
 	methods: {
+		getCartInfo () {
+			this.$store.commit('initShoppingCart')
+		},
+		async login (value = 'metamask') {
+			console.log('header connectSign')
+			this.$store.dispatch("connectAndSign", value).then(res => {
+				if (res && this.$tools.checkResponse(res)) {
+					console.log(res)
+					// var query = this.$route.query;
+					// if (query && query.redirect) {
+					//   this.$router.push(query.redirect);
+					// } else {
+					//   this.$router.push("/");
+					// }
+				}
+			});
+		},
+		toggleDark () {
+			console.log('toggleDark')
+			const isDark = useDark()
+			useToggle(isDark)
+			this.isDark = !this.isDark
+		},
+		async searchClick () {
+			this.$router.push({ name: "Search", query: { keyword: this.keyword } });
+		},
+		goProfile () {
+			if (!this.$tools.needLogin()) return;
+			this.$router.push("/profile");
+		},
+		goItems () {
+			this.$router.push({ name: "Items" });
+		},
+		logout () {
+			this.$web3.disconnect();
+		},
+		languageSelect (parameter) {
+			this.$store.state.language = parameter;
+			if (parameter == "en") {
+				localStorage.setItem("locale", "en");
+				this.$i18n.locale = localStorage.getItem("locale");
+			} else if (parameter == "zh") {
+				localStorage.setItem("locale", "zh");
+				this.$i18n.locale = localStorage.getItem("locale");
+			} else if (parameter == "tw") {
+				localStorage.setItem("locale", "tw");
+				this.$i18n.locale = localStorage.getItem("locale");
+			}
+			this.languagePopover = false;
+		},
 		getTipMessage () {
 			if (localStorage.getItem('coresky-card-tip') === '1') return;
-
-			if (this.connected) {
+			if (this.token) {
 				this.$api("corecard.availableCard", this.queryParams).then((res) => {
 					let viplevel = 0
 					if (res.code === 200 && res.debug !== null) {
@@ -225,65 +257,12 @@ export default {
 				let option = {
 					message: this.$t('messageTip.coreCardTip1'),
 					linkTxt: this.$t('common.See'),
-					linkClose: true,
+					linkClose: false,
 					closeHandle: () => this.tipClose(),
 					callBack: () => this.login(),
 				};
 				this.$refs.headerTipRef.show(option);
 			}
-		},
-		getCartInfo () {
-			this.$store.commit('initShoppingCart');
-		},
-		async login (value = 'metamask') {
-			console.log('header connectSign');
-			this.$store.dispatch('connectAndSign', value).then((res) => {
-				if (res && this.$tools.checkResponse(res)) {
-					console.log(res);
-					// var query = this.$route.query;
-					// if (query && query.redirect) {
-					//   this.$router.push(query.redirect);
-					// } else {
-					//   this.$router.push("/");
-					// }
-				}
-			});
-		},
-		toggleDark () {
-			console.log('toggleDark');
-			const isDark = useDark();
-			useToggle(isDark);
-			this.isDark = !this.isDark;
-		},
-		async searchClick () {
-			this.$router.push({
-				name: 'Search',
-				query: { keyword: this.keyword },
-			});
-		},
-		goProfile () {
-			if (!this.$tools.needLogin()) return;
-			this.$router.push('/profile');
-		},
-		goItems () {
-			this.$router.push({ name: 'Items' });
-		},
-		logout () {
-			this.$web3.disconnect();
-		},
-		languageSelect (parameter) {
-			this.$store.state.language = parameter;
-			if (parameter == 'en') {
-				localStorage.setItem('locale', 'en');
-				this.$i18n.locale = localStorage.getItem('locale');
-			} else if (parameter == 'zh') {
-				localStorage.setItem('locale', 'zh');
-				this.$i18n.locale = localStorage.getItem('locale');
-			} else if (parameter == 'tw') {
-				localStorage.setItem('locale', 'tw');
-				this.$i18n.locale = localStorage.getItem('locale');
-			}
-			this.languagePopover = false;
 		},
 		closeTip () {
 			this.showCradTip = false;
@@ -298,6 +277,7 @@ export default {
 	},
 };
 </script>
+
 
 <style lang="scss" scoped>
 .home-head {
@@ -365,11 +345,12 @@ export default {
 		overflow: hidden;
 		background-color: rgb(255, 255, 255, 0.8);
 		backdrop-filter: blur(12px);
+		box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+
 		top: 0px;
 		height: $headerHeight;
 		width: 100%;
 		transition: box-shadow 0.4s ease 0s;
-		box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
 	}
 	.home-head-content {
 		padding: 0px 40px;
@@ -619,36 +600,3 @@ export default {
 	color: #fff;
 }
 </style>
-<!-- <style lang="scss" scoped>
-.system-msg {
-	display: flex;
-	align-items: center;
-	padding: 0px 40px;
-	height: 90px;
-	color: #ffffff;
-	background: linear-gradient(90deg, #03A5D8 0%, #3965FF 38.54%, #B439FF 100%);
-	.right {
-		margin-left: auto;
-		display: flex;
-		align-items: center;
-
-		.btn-card {
-			width: 185px;
-			height: 57px;
-			line-height: 57px;
-			margin: 0 8px;
-			background: rgba(255, 255, 255, 0.25);
-			border-radius: 12px;
-			font-weight: 500;
-			font-size: 16px;
-			color: #FFFFFF;
-			text-align: center;
-			cursor: pointer;
-		}
-		.el-icon {
-			margin-left: 10px;
-			cursor: pointer;
-		}
-	}
-}
-</style> -->

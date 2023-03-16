@@ -122,6 +122,7 @@ export default {
     state.token = items[state.useAuthorization];
   },
   USERINFO (state, payload) {
+    console.log('USERINFO')
     if (payload.address) payload.address = payload.address.toLocaleLowerCase();
 
     state.user = Object.assign({}, state.user, {
@@ -136,6 +137,22 @@ export default {
       id: payload.id || "",
     });
     state.useAuthorization = `Coresky${state.user.coinbase}Authorization`
+    state.useAuthorizationTime = `Coresky${state.user.coinbase}AuthorizationTime`
+    var items = getLocalStorage(state.useAuthorization);
+    console.log('items.' + state.useAuthorization, items[state.useAuthorization], !items[state.useAuthorization] || items[state.useAuthorization] === 'undefined' || items[state.useAuthorization] === undefined)
+    if (!items[state.useAuthorization] || items[state.useAuthorization] === 'undefined' || items[state.useAuthorization] === undefined) {
+      console.log((new Date().getTime() - parseFloat(items[state.useAuthorizationTime])) > 24 * 60 * 60 * 1000)
+      state.token = null
+    } else {
+      if ((new Date().getTime() - parseFloat(items[state.useAuthorizationTime])) > 24 * 60 * 60 * 1000) {
+        removeLocalStorage(state.useAuthorization);
+        removeLocalStorage(state.useAuthorizationTime);
+        state.token = null
+      } else {
+        state.token = items[state.useAuthorization]
+      }
+    }
+    console.log('state.token', state.token)
   },
   NOTICE_UNREAD (state, payload) {
     state.notice_unread = payload;

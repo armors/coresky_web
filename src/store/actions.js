@@ -291,10 +291,11 @@ export default {
       console.log('items.'+ state.useAuthorization, items[state.useAuthorization])
       const ethPrice = await sdk.getEthPrice()
       await dispatch("updateEthPrice", ethPrice)
-      if (!items[state.useAuthorization] || items[state.useAuthorization] === 'undefined' || items[state.useAuthorization] === undefined) {
+      if (type !== 'init' && (!items[state.useAuthorization] || items[state.useAuthorization] === 'undefined' || items[state.useAuthorization] === undefined)) {
         result = await dispatch("signLogin", data);
         resolve(result);
       }else {
+        console.log('await dispatch("authinfo")')
         await dispatch("authinfo");
       }
     });
