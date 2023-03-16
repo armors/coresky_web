@@ -7,7 +7,10 @@
 				<span>Connect Wallet</span>
 			</a>
 		</div>
-		<div v-if="state.connect && false" class="info-text">
+		<div
+			v-else-if="state.connect && state.myCards.length === 0"
+			class="info-text"
+		>
 			<p>
 				You don't have a Core Card, please Mint a Core Card NFT first.
 			</p>
@@ -16,7 +19,7 @@
 				<span>Mint</span>
 			</a>
 		</div>
-		<div v-if="false">
+		<div v-else-if="state.connect && state.bindData.length === 0">
 			<div class="level-info">
 				<img src="@/assets/core-card/small-img1.png" alt="" />
 				<div class="info-right">
@@ -26,53 +29,111 @@
 					</el-button>
 				</div>
 			</div>
-			<div class="slider bind-info">
+			<div class="slider no-bind-info">
 				<p>You have not bound a Core Card. Please bind a Core Card.</p>
 				<el-slider v-model="value1" :min="0" :max="1000" disabled />
 			</div>
 		</div>
-		<div v-if="state.connect && true">
+		<div v-else :set="(B = state.bindData[0])">
 			<div class="level-info">
 				<img src="@/assets/core-card/small-img1.png" alt="" />
 				<div class="info-right">
-					<p>Corecard #19990</p>
-					<span>daily lotte output : 100</span>
+					<p>{{ B.name }}</p>
+					<span>daily lotte output : {{ B.ticketIncome }}</span>
 					<button class="add-level" @click="handleUpgrade">
 						Upgrade
 					</button>
 				</div>
 			</div>
 			<div class="slider">
-				<p><strong>LV 1</strong><strong>LV 4</strong></p>
-				<el-slider v-model="value1" :min="0" :max="1000" disabled />
-				<p><span>0</span><span>1000</span></p>
+				<p>
+					<strong>LV {{ B.level }}</strong
+					><strong>LV {{ B.level + 1 }}</strong>
+				</p>
+				<el-slider
+					v-model="B.experience"
+					:min="B.mixScore"
+					:max="B.maxScore"
+					disabled
+				/>
+				<p>
+					<span>{{ B.mixScore }}</span
+					><span>{{ B.maxScore }}</span>
+				</p>
 			</div>
 		</div>
 	</div>
 </template>
 <script setup>
-import { ref, defineEmits, reactive, computed } from 'vue';
+import {
+	defineProps,
+	defineEmits,
+	reactive,
+	computed,
+	onMounted,
+	getCurrentInstance,
+} from 'vue';
 import { useRouter } from 'vue-router';
-import { getCurrentInstance } from 'vue';
 
 const { proxy } = getCurrentInstance();
 const router = useRouter();
 const state = reactive({
 	connect: computed(() => proxy.$store.state.connected),
+	myCards: [],
+	bindData: [],
 });
-const value1 = ref(368);
+const props = defineProps({
+	myCards: {
+		type: Array,
+		default: [],
+	},
+	bindData: {
+		type: Array,
+		default: [],
+	},
+});
 const emits = defineEmits(['handleUpgrade']);
 
 const handleUpgrade = () => {
 	emits('handleUpgrade');
 };
 
+const checkBindStatus = () => {
+	state.bindData = state.myCards.filter((item) => {
+		return item.pledge === 1;
+	});
+};
 const connectWallet = async (value = 'metamask') => {
 	proxy.$store.dispatch('connectAndSign', value).then((res) => {
 		if (res && proxy.$tools.checkResponse(res)) {
 			console.log(res);
 		}
 	});
+};
+
+const getUserStatus = () => {
+	if (state.connect) {
+		proxy.$api('corecard.myCards').then((res) => {
+			proxy.$tools.checkResponse(res);
+			res.debug.push({
+				name: 'CoreCard #1',
+				experience: 30,
+				mixScore: 0,
+				maxScore: 100,
+				ratio: 0.0,
+				level: 0,
+				tokenId: 1,
+				avatarFrame:
+					'https://ipfs.io/ipfs/QmW8bdGCb8XhFDnn5crk7RJBM45eWNYe3LwMXXqLfc6Qnb/243.gif',
+				pledge: 1,
+				ticketIncome: 10,
+			});
+			state.myCards = res.debug;
+		});
+		if (state.myCards.length !== 0) {
+			checkBindStatus();
+		}
+	}
 };
 
 const goMint = () => {
@@ -86,6 +147,10 @@ const goBind = () => {
 		path: '/coreCardBind',
 	});
 };
+
+onMounted(() => {
+	getUserStatus();
+});
 </script>
 <style lang="scss" scoped>
 .process {
@@ -189,13 +254,22 @@ const goBind = () => {
 			}
 		}
 	}
-	.bind-info {
+	.no-bind-info {
 		p {
 			color: #717a83;
 			margin-bottom: 18px;
 		}
 		::v-deep(.el-slider__bar) {
 			background: none;
+		}
+		::v-deep(.el-slider__button) {
+			display: none;
+			width: 14px;
+			height: 14px;
+			border: none;
+			background: #ffffff;
+			box-shadow: 0px 0px 8px 3px rgba(255, 255, 255, 0.55);
+			margin: 3px 4px;
 		}
 	}
 }
