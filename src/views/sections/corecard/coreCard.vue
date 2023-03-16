@@ -187,7 +187,7 @@ onBeforeUnmount(() => {
 		background-size: 100% 100%;
 		position: relative;
 		.banner-box {
-			width: 1440px;
+			width: 997px;
 			height: 826px;
 			margin: 0 auto;
 		}
@@ -198,8 +198,7 @@ onBeforeUnmount(() => {
 			background-size: cover;
 			padding: 8px 20px 30px 20px;
 			position: relative;
-
-			left: 300px;
+			left: 130px;
 			top: 180px;
 			.info-shadow {
 				border-radius: 16px;
