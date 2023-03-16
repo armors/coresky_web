@@ -16,7 +16,6 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import HeaderTemplate from "./views/layout/HeaderTemplate";
-import HeaderTemplateNew from "./views/layout/HeaderTemplateNew";
 
 import BodyTemplate from "./views/layout/BodyTemplate";
 
@@ -52,7 +51,6 @@ export default {
   components: {
     HeaderTemplate,
     BodyTemplate,
-    HeaderTemplateNew,
   },
   watch: {
     $route (newRoute) {
