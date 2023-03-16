@@ -1454,7 +1454,12 @@ export default {
       }
       this.$refs.NFTDialogAcceptOffer.show(this.tokenInfo, v, 1, isOpensea)
     },
-    followNft () {
+    async followNft () {
+      const res = await this.$sdk.checkSignatureAccount()
+      console.log(res)
+      if(res.code !== 200) {
+        return
+      }
       if (!this.tokenInfo.contract || !this.tokenInfo.tokenId) return
       const tokenColloctUrl = this.tokenInfo.followStatus ? "collect.tokenCancel" : "collect.tokenFollow"
       this.$api(tokenColloctUrl, {
