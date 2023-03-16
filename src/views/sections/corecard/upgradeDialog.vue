@@ -82,6 +82,10 @@ const closed = () => {
 			height: 180px;
 			float: left;
 			margin-right: 30px;
+			img {
+				width: 100%;
+				height: 100%;
+			}
 		}
 		.info {
 			float: left;
