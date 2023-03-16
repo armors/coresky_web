@@ -666,4 +666,15 @@ module.exports = {
     over: "Over",
     expired: "Expired",
   },
+  coreCardMint: {
+    title: 'You will Mint "CoreCard V{name}"',
+    subTitle: `CoreCard is Coresky's Membership NFT, a decentralized VIP governance system based on the Coresky ecosystem. Be one of the community members and enjoy various benefits of Coresky with the CoreCard!`,
+    connectWallet: 'Connect wallet',
+    connect: 'Connect',
+    bindtoTwitter: 'Link Twitter Account',
+    bind: 'Link',
+    retweetTwitter: 'Retweet Twitter',
+    retweet: 'Retweet',
+    mint:'Mint',
+  }
 };
