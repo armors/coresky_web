@@ -35,7 +35,7 @@ module.exports = {
     SetDuration: 'Set duration',
     loadingOSInfoWating: 'Pulling opensea data, please wait',
     platformOneQuotation: 'Each platform only supports one quotation. Please cancel the listing of {name} platform and re-list',
-    addedCart:'Added to cart'
+    addedCart: 'Added to cart'
   },
   // 头部导航
   navigation: {
@@ -126,6 +126,7 @@ module.exports = {
   },
   profile: {
     editProfile: "General Settings",
+    userCardList: 'Manage CoreCard',
     Username: 'Username',
     placeholderName: 'Please input your username',
     UploadCover: 'Upload Cover',
@@ -194,18 +195,18 @@ module.exports = {
     TokenStandard: 'Token Standard',
     Contract: 'Contract',
     CreatorRebate: 'Creator Rebate',
-    Tip:{
-      First:'The creator of this collection will receive a certain ',
-      Second:'percentage of amout for every sale.'
+    Tip: {
+      First: 'The creator of this collection will receive a certain ',
+      Second: 'percentage of amout for every sale.'
     },
     CurrentOwner: 'Current owner',
     CurrentPrice: 'Current Price',
     TimeLeft: 'Time left',
     BestOffer: 'Best offer',
     MakeOffer: 'Make an Offer',
-    Owner:'Owner',
-    Item:'Item',
-    YouOwn:'You own',
+    Owner: 'Owner',
+    Item: 'Item',
+    YouOwn: 'You own',
     Buy: 'Buy',
     Add: 'Add',
     Sell: 'Sell',
@@ -214,8 +215,8 @@ module.exports = {
     Cancel: 'Cancel',
     Accept: 'Accept',
     EnterAddress: 'Enter an address',
-    SelectExpiredDate:'Please select the expiration time!',
-    EnterCorrectPrice:"Please enter the correct price!",
+    SelectExpiredDate: 'Please select the expiration time!',
+    EnterCorrectPrice: "Please enter the correct price!",
     ListingTb: {
       Market: 'Market',
       Price: 'Price',

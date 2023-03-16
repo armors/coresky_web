@@ -126,6 +126,7 @@ module.exports = {
   },
   profile: {
     editProfile: "常规设置",
+    userCardList: '管理CoreCard',
     Username: '昵称',
     placeholderName: '请输入你的用户名',
     UploadCover: '上传封面',
