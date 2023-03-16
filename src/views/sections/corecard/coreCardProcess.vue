@@ -60,13 +60,13 @@
 				>
 				<el-slider
 					v-model="B.experience"
-					:min="B.mixScore"
+					:min="B.minScore"
 					:max="B.maxScore"
 					disabled
 				>
 				</el-slider>
 				<p>
-					<span>{{ B.mixScore }}</span
+					<span>{{ B.minScore }}</span
 					><span>{{ B.maxScore }}</span>
 				</p>
 			</div>
@@ -100,10 +100,10 @@ const props = defineProps({
 		default: [],
 	},
 });
-const value1 = ref(35);
 const emits = defineEmits(['handleUpgrade']);
 const circleLeft = ref();
 const circleShow = ref(true);
+const runWay = ref();
 
 const handleUpgrade = () => {
 	emits('handleUpgrade');
@@ -125,6 +125,7 @@ watch(
 );
 const cssLeft = (val) => {
 	let left = (val.experience / val.maxScore) * 606;
+	runWay.value = left + 'px';
 	circleLeft.value = (left <= 14 ? 10 : left - 13) + 'px';
 	if (val.experience === 0) {
 		circleShow.value = false;
@@ -175,6 +176,7 @@ const goBind = () => {
 			opacity: 0.65;
 		}
 		::v-deep(.el-slider__bar) {
+			width: v-bind(runWay) !important;
 			background: none;
 			height: 20px;
 			border-radius: 23px;
