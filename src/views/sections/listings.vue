@@ -507,7 +507,7 @@ export default {
 			this.$api("collect.tokenInfo", this.tokenInfoParams).then((res) => {
 				this.tokenInfo = res.debug
 				this.dataList[0].listedPrice = this.$sdk.fromWeiNum(this.tokenInfo.listedPriceCs)
-				this.dataList[0].floorPrice = parseFloat(this.tokenInfo.ckCollectionsInfoEntity.foolPrice)
+				this.dataList[0].floorPrice = this.tokenInfo.ckCollectionsInfoEntity.foolPrice ? parseFloat(this.tokenInfo.ckCollectionsInfoEntity.foolPrice): '--'
 				console.log('this.tokenInfo.ckCollectionsInfoEntity.royalty', this.tokenInfo.ckCollectionsInfoEntity.royalty)
 				this.dataList[0].Royalties = this.$filters.feeFormat(this.tokenInfo.ckCollectionsInfoEntity.royalty)
 				this.dataList[0].fee = this.$filters.feeFormat(store.state.config.protocolFee)
@@ -537,7 +537,7 @@ export default {
 				console.log(openseaSDK)
 				const assetInfo = await openseaSDK.api.getAsset(this.asset)
 				console.log(assetInfo)
-				this.dataList[1].floorPrice = assetInfo.collection.stats.floor_price
+				this.dataList[1].floorPrice = assetInfo.collection.stats.floor_price || '--'
 				this.dataList[1].Royalties = this.$filters.feeFormat(assetInfo.assetContract.openseaSellerFeeBasisPoints)
 				this.dataList[1].fee = this.$filters.feeFormat(assetInfo.assetContract.sellerFeeBasisPoints)
 				this.dataList[1].RoyaltiesFee = assetInfo.assetContract.openseaSellerFeeBasisPoints
@@ -664,6 +664,10 @@ export default {
 		},
 		// 挂单
 		async getExchangeHashOrder() {
+			const res = await this.$sdk.checkSignatureAccount()
+			if(res.code !== 200) {
+				return
+			}
 			if (this.platformList.find(el => el.name === 'Coresky')) {
 				this.sellNftCoresky()
 			} else if (this.platformList.find(el => el.name === 'Opensea')) {
