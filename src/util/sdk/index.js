@@ -1092,8 +1092,8 @@ export default {
 		asset.abi = abi;
 		return asset;
 	},
-	fromWeiNum(value) {
-		return value !== null ? keepPoint(Web3.utils.fromWei(value.toString(), "ether")) : '--';
+	fromWeiNum(value, point = 4) {
+		return value !== null ? keepPoint(Web3.utils.fromWei(value.toString(), "ether"), point) : '--';
 	},
 	fromWeiNumOrigin(value) {
 		return value !== null ? Web3.utils.fromWei(value.toString(), "ether") : '--';
