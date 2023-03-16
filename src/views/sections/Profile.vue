@@ -52,6 +52,10 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.main-wrapper{
+  width: 1080px;
+  padding: 0 50px;
+}
 .profile-wrapper {
   display: flex;
   flex-direction: column;

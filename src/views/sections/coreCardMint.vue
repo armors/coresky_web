@@ -56,8 +56,9 @@
             </div>
           </div>
           <div>
-            <el-button class="btn-mint" :loading="isMinting" :disabled="viplevel !== 0 && finishTask === false"
-              @click="cardMint" type="primary">{{ $t('coreCardMint.mint') }}
+            <el-button class="btn-mint" :loading="isMinting"
+              :disabled="(viplevel !== 0 && finishTask === false) || isSuccess == true" @click="cardMint" type="primary">{{
+                $t('coreCardMint.mint') }}
             </el-button>
           </div>
         </div>
@@ -96,6 +97,7 @@ export default {
       relayTwitterURL: '',
       dataList: [],
       reTweetLoading: false,
+      isSuccess: false,
     };
   },
   watch: {
@@ -189,9 +191,10 @@ export default {
       }
       if (result && result.status === true && result.blockHash) {
         this.$tools.notification('success', '');
+        this.isSuccess = true
         setTimeout(() => {
-          this.$router.push('/coreCardBind')
-        }, 1000);
+          this.$router.push('/profile?tab=usercardlist')
+        }, 2000);
       } else if (result.error) {
         this.$tools.notification('fail', result.error, 'error');
       }

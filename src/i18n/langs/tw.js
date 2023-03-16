@@ -288,6 +288,12 @@ module.exports = {
     bind: '綁定',
     retweetTwitter: '轉發Twitter',
     retweet: '轉發',
-    mint:'鑄造',
+    mint: '鑄造',
+  },
+  userCardList: {
+    Bundle: '綁定',
+    Unbundle: '解綁',
+    Mint0: '鑄造CoreCard V0',
+    Mint: '鑄造'
   }
 };

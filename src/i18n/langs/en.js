@@ -676,5 +676,11 @@ module.exports = {
     retweetTwitter: 'Retweet Twitter',
     retweet: 'Retweet',
     mint:'Mint',
+  },
+  userCardList: {
+    Bundle: 'Bundle',
+    Unbundle: 'Unbundle',
+    Mint0: 'Mint CoreCard V0',
+    Mint: 'Mint'
   }
 };
