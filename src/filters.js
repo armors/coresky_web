@@ -62,7 +62,7 @@ export function contractExplore (hash) {
   }
 }
 export function milliFormat (num, isK = true) {
-  if (!num) return '--'
+  if (!num && Number(num) !== 0) return '--'
   if (isK) {
     if (num > 1000) {
       num = keepPoint(num / 1000, 1)

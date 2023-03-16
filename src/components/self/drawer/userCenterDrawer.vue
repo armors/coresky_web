@@ -174,6 +174,7 @@ export default {
       this.$refs.uniswapDialog.showUniswap(type)
     },
     async initGetBalance() {
+      console.log('initGetBalance')
       this.balanceETH = parseFloat(keepPoint(await this.$sdk.getBalance({
         address: this.$sdk.NULL_ADDRESS()
       }, this.user.coinbase)))
@@ -182,9 +183,9 @@ export default {
           address: process.env.VUE_APP_WETH
         }, this.user.coinbase)
         this.balanceWETH = parseFloat(this.$sdk.fromWeiNum(balanceWETH))
-      }
-      catch (err) {
-
+        console.log('this.balanceWETH', this.balanceWETH)
+      } catch (err) {
+        console.log('this.balanceWETH', err)
       }
       console.log(this.user)
     },
