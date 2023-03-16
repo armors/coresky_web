@@ -209,7 +209,12 @@ export default {
   },
 
   methods: {
-    showMakeOfferCollect() {
+    async showMakeOfferCollect() {
+      const res = await this.$sdk.checkSignatureAccount()
+      console.log(res)
+      if(res.code !== 200) {
+        return
+      }
       this.$refs.NFTDialogMakeOffer.showMakeOffer(this.collectInfo, 2)
     },
     makeOfferSuccess(v) {
