@@ -8,7 +8,7 @@
 			</a>
 		</div>
 		<div
-			v-else-if="state.connect && state.myCards.length === 0"
+			v-else-if="state.connect && props.myCards.length === 0"
 			class="info-text"
 		>
 			<p>
@@ -19,7 +19,7 @@
 				<span>Mint</span>
 			</a>
 		</div>
-		<div v-else-if="state.connect && state.bindData.length === 0">
+		<div v-else-if="state.connect && props.bindData.length === 0">
 			<div class="level-info">
 				<img src="@/assets/core-card/small-img1.png" alt="" />
 				<div class="info-right">
@@ -34,9 +34,9 @@
 				<el-slider v-model="value1" :min="0" :max="1000" disabled />
 			</div>
 		</div>
-		<div v-else :set="(B = state.bindData[0])">
+		<div v-else :set="(B = props.bindData[0])">
 			<div class="level-info">
-				<img src="@/assets/core-card/small-img1.png" alt="" />
+				<img :src="B.avatarFrame" alt="" />
 				<div class="info-right">
 					<p>{{ B.name }}</p>
 					<span>daily lotte output : {{ B.ticketIncome }}</span>
@@ -70,7 +70,6 @@ import {
 	defineEmits,
 	reactive,
 	computed,
-	onMounted,
 	getCurrentInstance,
 } from 'vue';
 import { useRouter } from 'vue-router';
@@ -79,8 +78,6 @@ const { proxy } = getCurrentInstance();
 const router = useRouter();
 const state = reactive({
 	connect: computed(() => proxy.$store.state.connected),
-	myCards: [],
-	bindData: [],
 });
 const props = defineProps({
 	myCards: {
@@ -98,42 +95,12 @@ const handleUpgrade = () => {
 	emits('handleUpgrade');
 };
 
-const checkBindStatus = () => {
-	state.bindData = state.myCards.filter((item) => {
-		return item.pledge === 1;
-	});
-};
 const connectWallet = async (value = 'metamask') => {
 	proxy.$store.dispatch('connectAndSign', value).then((res) => {
 		if (res && proxy.$tools.checkResponse(res)) {
 			console.log(res);
 		}
 	});
-};
-
-const getUserStatus = () => {
-	if (state.connect) {
-		proxy.$api('corecard.myCards').then((res) => {
-			proxy.$tools.checkResponse(res);
-			res.debug.push({
-				name: 'CoreCard #1',
-				experience: 30,
-				mixScore: 0,
-				maxScore: 100,
-				ratio: 0.0,
-				level: 0,
-				tokenId: 1,
-				avatarFrame:
-					'https://ipfs.io/ipfs/QmW8bdGCb8XhFDnn5crk7RJBM45eWNYe3LwMXXqLfc6Qnb/243.gif',
-				pledge: 1,
-				ticketIncome: 10,
-			});
-			state.myCards = res.debug;
-		});
-		if (state.myCards.length !== 0) {
-			checkBindStatus();
-		}
-	}
 };
 
 const goMint = () => {
@@ -143,14 +110,8 @@ const goMint = () => {
 };
 
 const goBind = () => {
-	router.push({
-		path: '/coreCardBind',
-	});
+	router.push('/profile?tab=usercardlist');
 };
-
-onMounted(() => {
-	getUserStatus();
-});
 </script>
 <style lang="scss" scoped>
 .process {

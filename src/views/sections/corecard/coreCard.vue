@@ -23,6 +23,8 @@
 					@handleSelect="handleSelect"
 				></core-card-wrapper>
 				<core-card-process
+					:myCards="state.myCards"
+					:bindData="state.bindData"
 					@handleUpgrade="handleUpgradeDialog"
 				></core-card-process>
 			</div>
@@ -33,6 +35,7 @@
 		<h3>FAQ</h3>
 		<core-card-FAQ></core-card-FAQ>
 		<upgrade-dialog
+			:bindData="state.bindData"
 			:isShowUpgradeDialog="state.isShowUpgradeDialog"
 			@handleClosed="handleUpgradeDialog"
 		></upgrade-dialog>
@@ -40,7 +43,14 @@
 </template>
 
 <script setup>
-import { onMounted, onBeforeUnmount, ref, reactive } from 'vue';
+import {
+	onMounted,
+	onBeforeUnmount,
+	ref,
+	reactive,
+	computed,
+	watch,
+} from 'vue';
 import { useStore } from 'vuex';
 import coreCardWrapper from './coreCardWrapper.vue';
 import coreCardLevel from './coreCardLevel.vue';
@@ -55,6 +65,9 @@ const state = reactive({
 	isShowUpgradeDialog: false,
 	cardConfigList: [],
 	daily: 0,
+	connect: computed(() => proxy.$store.state.connected),
+	myCards: [],
+	bindData: [],
 });
 const store = useStore();
 const bgColor = ref('#C4CCD5');
@@ -62,6 +75,13 @@ const bgBanner = ref('url(' + require(`@/assets/core-card/bg-3.png`) + ')');
 const vipIcon = ref(require(`@/assets/core-card/vip2.png`));
 let isScrollTop = false;
 let firstStatus = ref(false);
+
+watch(
+	() => state.connect,
+	() => {
+		getUserStatus();
+	}
+);
 
 function handleScroll() {
 	let scrollTop = document.documentElement.scrollTop;
@@ -120,10 +140,29 @@ const getCoreCardList = () => {
 	});
 };
 
+const checkBindStatus = () => {
+	state.bindData = state.myCards.filter((item) => {
+		return item.pledge === 1;
+	});
+};
+
+const getUserStatus = () => {
+	if (state.connect) {
+		proxy.$api('corecard.myCards').then((res) => {
+			proxy.$tools.checkResponse(res);
+			state.myCards = res.debug;
+			if (state.myCards.length !== 0) {
+				checkBindStatus();
+			}
+		});
+	}
+};
+
 onMounted(() => {
 	window.addEventListener('scroll', handleScroll);
 	handleScroll();
 	getCoreCardList();
+	getUserStatus();
 	if (localStorage.getItem('firstEnter') === null) {
 		firstStatus = true;
 		localStorage.setItem('firstEnter', firstStatus);

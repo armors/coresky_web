@@ -7,6 +7,7 @@
 			@closed="closed"
 			custom-class="custom-dialog"
 			destroy-on-close
+			:set="(B = props.bindData[0])"
 		>
 			<template #title>
 				<div class="left">
@@ -18,18 +19,18 @@
 			</template>
 			<div class="content">
 				<div class="img-box">
-					<img src="@/assets/core-card/upgrade-img.png" alt="" />
+					<img :src="B.avatarFrame" alt="" />
 				</div>
 				<div class="info">
-					<p>Corecard #19990</p>
+					<p>{{ B.name }}</p>
 					<div class="vip-info">
 						<img src="@/assets/core-card/vip5.png" alt="" />
 						<el-progress
-							:percentage="80"
+							:percentage="B.experience"
 							class="process"
 							:show-text="false"
 						></el-progress>
-						<span>1,500 / 3,000</span>
+						<span>{{ B.mixScore }} / {{ B.maxScore }}</span>
 					</div>
 					<div class="max">
 						<div class="max-value">
@@ -63,6 +64,10 @@ const props = defineProps({
 		type: Boolean,
 		default: false,
 	},
+	bindData: {
+		type: Array,
+		default: [],
+	},
 });
 
 const closed = () => {
@@ -77,6 +82,10 @@ const closed = () => {
 			height: 180px;
 			float: left;
 			margin-right: 30px;
+			img {
+				width: 100%;
+				height: 100%;
+			}
 		}
 		.info {
 			float: left;
