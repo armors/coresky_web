@@ -60,10 +60,15 @@ const props = defineProps({
 });
 
 const goMint = () => {
+	localStorage.setItem('firstEnter', false);
 	props.isShowWelcomeDialog = false;
 	router.push({
 		path: '/coreCardMint',
 	});
+};
+
+const closed = () => {
+	localStorage.setItem('firstEnter', false);
 };
 </script>
 

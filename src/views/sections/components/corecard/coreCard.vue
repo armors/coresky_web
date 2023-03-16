@@ -1,6 +1,6 @@
 <template>
 	<div class="core-card" id="coreCard">
-		<welcome-dialog :isShowWelcomeDialog="true"></welcome-dialog>
+		<welcome-dialog :isShowWelcomeDialog="firstStatus"></welcome-dialog>
 		<div class="banner">
 			<div class="banner-box">
 				<div class="info">
@@ -61,6 +61,7 @@ const bgColor = ref('#C4CCD5');
 const bgBanner = ref('url(' + require(`@/assets/core-card/bg-3.png`) + ')');
 const vipIcon = ref(require(`@/assets/core-card/vip2.png`));
 let isScrollTop = false;
+let firstStatus = ref(false);
 
 function handleScroll() {
 	let scrollTop = document.documentElement.scrollTop;
@@ -123,6 +124,10 @@ onMounted(() => {
 	window.addEventListener('scroll', handleScroll);
 	handleScroll();
 	getCoreCardList();
+	if (localStorage.getItem('firstEnter') === null) {
+		firstStatus = true;
+		localStorage.setItem('firstEnter', firstStatus);
+	}
 });
 
 onBeforeUnmount(() => {
