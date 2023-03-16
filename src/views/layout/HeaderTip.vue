@@ -61,8 +61,10 @@ export default {
   display: flex;
   align-items: center;
   padding: 0px 40px;
-  height: 90px;
+  height: 75px;
   color: #ffffff;
+  font-size: 18px;
+  line-height: 21px;
   background: linear-gradient(90deg, #03A5D8 0%, #3965FF 38.54%, #B439FF 100%);
   .right {
     margin-left: auto;
@@ -70,9 +72,10 @@ export default {
     align-items: center;
 
     .btn-card {
-      width: 185px;
-      height: 57px;
-      line-height: 57px;
+      // width: 185px;
+      padding: 0 30px;
+      height: 50px;
+      line-height: 50px;
       margin: 0 8px;
       background: rgba(255, 255, 255, 0.25);
       border-radius: 12px;

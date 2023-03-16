@@ -19,6 +19,9 @@ module.exports = {
     SearchPlaceholder2: 'Search by name',
     Properties: 'Properties',
     Submit: 'Submit',
+    Mint:'Mint',
+    LearnMore:'Learn more',
+    See:'See'
   },
   messageTip: {
     PurchaseComplete: 'Your purchase is complete！',
@@ -35,7 +38,9 @@ module.exports = {
     SetDuration: 'Set duration',
     loadingOSInfoWating: 'Pulling opensea data, please wait',
     platformOneQuotation: 'Each platform only supports one quotation. Please cancel the listing of {name} platform and re-list',
-    addedCart: 'Added to cart'
+    addedCart: 'Added to cart',
+    coreCardTip1:'Check CoreCard airdrop?',
+    coreCardTip2:'Congratulations on getting CoreCard "CoreCard V{name}"',
   },
   // 头部导航
   navigation: {

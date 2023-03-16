@@ -19,6 +19,9 @@ module.exports = {
     SearchPlaceholder2: '搜索名稱',
     Properties: '屬性',
     Submit: '提交',
+    Mint:'鑄造',
+    LearnMore:'瞭解更多',
+    See:'查看'
   },
   messageTip: {
     PurchaseComplete: '購買成功',
@@ -35,7 +38,9 @@ module.exports = {
     SetDuration: '請選擇掛單時間',
     loadingOSInfoWating: '正在拉取opensea數據，請稍等',
     platformOneQuotation: '每個平臺僅支持一次報價，請取消{name}平臺掛單後重新掛售',
-    addedCart: '已經加入購物車'
+    addedCart: '已經加入購物車',
+    coreCardTip1:'查看是否有CoreCard空投？',
+    coreCardTip2:'恭喜您獲得CoreCard“CoreCard V{name}”',
   },
   navigation: {
     searchTip: "搜索NFT或合集",
