@@ -355,7 +355,7 @@ export default {
 	&.homeIndex {
 		.home-head-mask {
 			background-color: transparent;
-			box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+			box-shadow: none;
 		}
 		.nav-link {
 			color: rgba(255, 255, 255, 1);
