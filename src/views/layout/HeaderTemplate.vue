@@ -37,9 +37,9 @@
 				<el-popover placement="bottom" trigger="click" :show-arrow="false" width="200" popper-class="nav-popover"
 					:offset="15">
 					<template #reference>
-						<div class="nav-link" to="/erc721">
-							<!-- <svg-icon class="head-icon mr8" icon-class="chain_eth" /> -->
-							Ethereum
+						<div class="nav-link-chain" to="/erc721">
+							<svg-icon class="head-icon mr8" icon-class="eth_01" />
+							<!-- Ethereum -->
 						</div>
 					</template>
 					<div>
@@ -303,6 +303,9 @@ export default {
 				}
 			}
 		}
+		.nav-link-chain {
+			border: 2px solid #939393;
+		}
 		.search-input-wrap {
 			background: rgba(255, 255, 255, 0.1);
 			border: none;
@@ -474,7 +477,11 @@ export default {
 	border-radius: 50%;
 	border: 2px solid #ffffff;
 	background-color: #2249D6;
-
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 0 10px;
+	cursor: pointer;
 }
 
 .search-link {
