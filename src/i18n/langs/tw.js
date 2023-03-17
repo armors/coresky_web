@@ -22,6 +22,7 @@ module.exports = {
 		Mint: '鑄造',
 		LearnMore: '瞭解更多',
 		See: '查看',
+		Rewards:'獎勵'
 	},
 	messageTip: {
 		PurchaseComplete: '購買成功',
