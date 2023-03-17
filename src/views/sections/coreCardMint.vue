@@ -38,7 +38,8 @@
               <div class="job-content">
                 <img src="@/assets/core-card/icon_2.png" class="icon" alt="">
                 <span class="job-name">{{ $t('coreCardMint.bindtoTwitter') }}</span>
-                <el-button type="primary" :disabled="isBindTwitter" @click="bindTwitter">{{ $t('coreCardMint.bind')
+                <el-button type="primary" :disabled="isBindTwitter || !token" @click="bindTwitter">{{
+                  $t('coreCardMint.bind')
                 }}</el-button>
               </div>
             </div>
@@ -50,14 +51,16 @@
               <div class="job-content">
                 <img src="@/assets/core-card/icon_3.png" class="icon" alt="">
                 <span class="job-name">{{ $t('coreCardMint.retweetTwitter') }}</span>
-                <el-button type="primary" :loading="reTweetLoading" :disabled="isRelayTwitter" @click="relayTwitter">{{
-                  $t('coreCardMint.retweet') }}</el-button>
+                <el-button type="primary" :loading="reTweetLoading" :disabled="isRelayTwitter || !token"
+                  @click="relayTwitter">{{
+                    $t('coreCardMint.retweet') }}</el-button>
               </div>
             </div>
           </div>
           <div>
             <el-button class="btn-mint" :loading="isMinting"
-              :disabled="(viplevel !== 0 && finishTask === false) || isSuccess == true" @click="cardMint" type="primary">{{
+              :disabled="(viplevel !== 0 && finishTask === false) || isSuccess == true || !token" @click="cardMint"
+              type="primary">{{
                 $t('coreCardMint.mint') }}
             </el-button>
           </div>
@@ -117,8 +120,8 @@ export default {
   },
   computed: {
     token () {
-			return this.$store.state.token;
-		},
+      return this.$store.state.token;
+    },
     user: function () {
       var user = this.$store.state.user;
       return user;

@@ -1,6 +1,6 @@
 <template>
-  <div class="main-wrapper">
-    <div class="profile-wrapper display-flex box-column">
+  <div class="profile-page">
+    <div class="profile-wrapper">
       <div class="top">
         <div class="top-Row1" :class="{ 'active': tabName === 'general' }" @click="setTab('general')">{{
           $t('profile.editProfile') }}</div>
@@ -12,6 +12,7 @@
 
     </div>
   </div>
+  <FooterTemplate />
 </template>
 
 <script>
@@ -21,11 +22,14 @@ import store from "@/store";
 import general from './components/setting/general'
 import userCardList from './components/setting/userCardList'
 import { throwStatement } from '@babel/types';
+import FooterTemplate from "@/views/layout/FooterTemplate";
+
 export default {
   name: "Profile",
   components: {
     general,
-    userCardList
+    userCardList,
+    FooterTemplate
   },
   data: function () {
     return {
@@ -52,29 +56,27 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.main-wrapper{
-  width: 1080px;
-  padding: 0 50px;
+.profile-page {
+  background-color: #E6E8EC;
+  min-height: calc(100vh - $headerHeight - $bottomHeight);
+  padding: 30px 0;
 }
 .profile-wrapper {
+  width: 1080px;
+  margin: 0 auto;
+  background: #FFFFFF;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  height: 100%;
+  padding:20px 50px;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  padding-bottom: 100px;
 }
 
 .top {
-  margin-top: 20px;
   padding-bottom: 10px;
   border-bottom: 1px solid $borderBg;
   display: flex;
-}
-
-.go-back {
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 48px;
 }
 
 .top-Row1 {
