@@ -21,6 +21,7 @@ module.exports = {
     Submit: '提交',
   },
   messageTip: {
+    openseaWarnTip: "This transaction is from Opensea, cannot trade mining on Coresky.",
     PurchaseComplete: '購買成功',
     PurchaseFailed: '購買失敗',
     ListingSucceeded: '掛單成功',

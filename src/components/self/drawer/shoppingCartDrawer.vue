@@ -135,7 +135,7 @@
         </div>
         <div class="warn-opensea display-flex box-center">
           <div class="icon-warn"><img src="../../../assets/images/icons/icon_warn_yellow.svg" alt=""></div>
-          <div>This transaction is from Opensea, cannot trade mining on Coresky.</div>
+          <div>{{ $t('messageTip.openseaWarnTip') }}</div>
         </div>
         <div>
           <el-button type="primary" :disabled="openseaCart.length < 1" class="btnOption" :loading="buyOpenseaBtnLoading"
