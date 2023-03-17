@@ -41,7 +41,7 @@
 				<img :src="B.avatarFrame" alt="" />
 				<div class="info-right">
 					<p>{{ B.name }}</p>
-					<span>daily lotte output : {{ B.ticketIncome || 10 }}</span>
+					<span>daily lotte output : {{ B.ticketIncome }}</span>
 					<button class="add-level" @click="handleUpgrade">
 						Upgrade
 					</button>

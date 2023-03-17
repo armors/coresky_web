@@ -136,6 +136,7 @@ const handleSelect = (i) => {
 
 const handleUpgradeDialog = () => {
 	state.isShowUpgradeDialog = !state.isShowUpgradeDialog;
+	getUserStatus();
 };
 
 const getCoreCardList = () => {
