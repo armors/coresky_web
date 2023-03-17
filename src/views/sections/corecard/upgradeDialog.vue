@@ -54,11 +54,7 @@
 					</div>
 				</div>
 			</div>
-			<el-button
-				type="primary"
-				class="accept"
-				@click="levelUp"
-				v-loading="state.loading"
+			<el-button type="primary" class="accept" @click="levelUp"
 				>Accept</el-button
 			>
 		</el-dialog>
@@ -98,7 +94,7 @@ const setMax = () => {
 };
 
 const levelUp = () => {
-	state.loading = true;
+	emits('handleClosed', false);
 	let params = { ctAmount: state.amount };
 	proxy.$api('corecard.levelUp', params).then((res) => {
 		proxy.$tools.checkResponse(res);
@@ -107,10 +103,6 @@ const levelUp = () => {
 		} else {
 			proxy.$tools.message('更新失败', 'error');
 		}
-		state.loading = false;
-		setTimeout(() => {
-			closed();
-		}, 1000);
 	});
 };
 
