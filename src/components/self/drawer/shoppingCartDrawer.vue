@@ -133,6 +133,10 @@
             {{ totalOpenseaPriceShow }} ETH
           </div>
         </div>
+        <div class="warn-opensea display-flex box-center">
+          <div class="icon-warn"><img src="../../../assets/images/icons/icon_warn_yellow.svg" alt=""></div>
+          <div>This transaction is from Opensea, cannot trade mining on Coresky.</div>
+        </div>
         <div>
           <el-button type="primary" :disabled="openseaCart.length < 1" class="btnOption" :loading="buyOpenseaBtnLoading"
             @click="cartBuyOpensea">{{ $t('shoppingCart.purchase') }}</el-button>
@@ -915,7 +919,14 @@ export default {
         color: $primaryColor;
       }
     }
-
+    .warn-opensea{
+      margin-top: 24px;
+      color: $gray-black;
+      font-size: 12px;
+      .icon-warn{
+        margin-right: 12px;
+      }
+    }
     .btnOption {
       margin-top: 14px;
       width: 100%;
