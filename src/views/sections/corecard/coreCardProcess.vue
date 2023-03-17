@@ -55,7 +55,7 @@
 				<a
 					class="slider-text"
 					:style="{
-						left: (B.experience / B.maxScore) * 606 - 45 + 'px',
+						left: B.ratio * 606 - 45 + 'px',
 						display: B.experience === 0 ? 'none' : 'block',
 					}"
 					>{{ B.experience }}</a
@@ -127,7 +127,7 @@ watch(
 	}
 );
 const cssLeft = (val) => {
-	let left = (val.experience / val.maxScore) * 606;
+	let left = val.ratio * 606;
 	runWay.value = left + 'px';
 	circleLeft.value = (left <= 14 ? 10 : left - 13) + 'px';
 	if (val.experience === 0) {
