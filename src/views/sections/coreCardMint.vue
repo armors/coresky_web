@@ -166,6 +166,7 @@ export default {
       let obj = getLocalStorage(this.$store.state.useAuthorization)
       let token = obj[this.$store.state.useAuthorization];
       Cookies.set("coresky_web_token", token);
+      location.href = this.bindTwitterURL
     },
     relayTwitter () {
       this.reTweetLoading = true
