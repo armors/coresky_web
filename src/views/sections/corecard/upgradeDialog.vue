@@ -44,7 +44,7 @@
 								v-model="state.amount"
 								placeholder="Please input"
 								:controls="false"
-								@input="inputValidata(state.amount)"
+								v-input-limit="'9,4'"
 								class="max-input"
 							/>
 							<span @click="setMax">MAX</span>
@@ -94,24 +94,6 @@ const setMax = () => {
 	state.amount = state.userData.score;
 };
 
-const inputValidata = (val) => {
-	let checkPlan = val;
-
-	checkPlan = checkPlan
-		.replace(/[^\d.]/g, '') // 清除“数字”和“.”以外的字符
-		.replace(/\.{2,}/g, '.') // 只保留第一个. 清除多余的
-		.replace(/^\./g, '') // 保证第一个为数字而不是.
-		.replace('.', '$#$')
-		.replace(/\./g, '')
-		.replace('$#$', '.');
-	if (checkPlan.indexOf('.') < 0 && checkPlan !== '') {
-		checkPlan = parseFloat(checkPlan) + '';
-	} else if (checkPlan.indexOf('.') >= 0) {
-		checkPlan = checkPlan.replace(/^()*(\d+)\.(\d\d\d\d).*$/, '$1$2.$3'); // 只能输入两个小数
-	}
-
-	return checkPlan;
-};
 const levelUp = () => {
 	let params = { ctAmount: state.amount };
 	proxy.$api('corecard.levelUp', params).then((res) => {
