@@ -66,18 +66,26 @@ const state = reactive({
 	cardConfigList: [],
 	daily: 4,
 	connect: computed(() => proxy.$store.state.connected),
+	token: computed(() => proxy.$store.state.token),
 	myCards: [],
 	bindData: [],
 });
 const store = useStore();
 const bgColor = ref('#C4CCD5');
-const bgBanner = ref('url(' + require(`@/assets/core-card/bg-3.png`) + ')');
+const bgBanner = ref('url(' + require(`@/assets/core-card/bg-3.webp`) + ')');
 const vipIcon = ref(require(`@/assets/core-card/vip2.png`));
 let isScrollTop = false;
 let firstStatus = ref(false);
 
 watch(
 	() => state.connect,
+	() => {
+		getUserStatus();
+	}
+);
+
+watch(
+	() => state.token,
 	() => {
 		getUserStatus();
 	}
@@ -100,7 +108,7 @@ function handleScroll() {
 const handleSelect = (i) => {
 	state.daily = state.cardConfigList[i].ticketIncome;
 	bgBanner.value =
-		'url(' + require(`@/assets/core-card/bg-${i + 1}.png`) + ')';
+		'url(' + require(`@/assets/core-card/bg-${i + 1}.webp`) + ')';
 	vipIcon.value = require(`@/assets/core-card/vip${i}.png`);
 	switch (i) {
 		case 0:
