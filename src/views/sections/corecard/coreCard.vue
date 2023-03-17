@@ -66,6 +66,7 @@ const state = reactive({
 	cardConfigList: [],
 	daily: 4,
 	connect: computed(() => proxy.$store.state.connected),
+	token: computed(() => proxy.$store.state.token),
 	myCards: [],
 	bindData: [],
 });
@@ -78,6 +79,13 @@ let firstStatus = ref(false);
 
 watch(
 	() => state.connect,
+	() => {
+		getUserStatus();
+	}
+);
+
+watch(
+	() => state.token,
 	() => {
 		getUserStatus();
 	}

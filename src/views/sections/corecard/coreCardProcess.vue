@@ -1,6 +1,6 @@
 <template>
 	<div class="process">
-		<div v-if="!state.connect" class="info-text">
+		<div v-if="!state.connect || !state.token" class="info-text">
 			<p>Please connect the wallet to manage the Core Card.</p>
 			<a @click="connectWallet">
 				<img src="@/assets/core-card/vector.png" alt="" />
@@ -8,7 +8,9 @@
 			</a>
 		</div>
 		<div
-			v-else-if="state.connect && props.myCards.length === 0"
+			v-else-if="
+				state.connect && state.token && props.myCards.length === 0
+			"
 			class="info-text"
 		>
 			<p>
@@ -89,6 +91,7 @@ const { proxy } = getCurrentInstance();
 const router = useRouter();
 const state = reactive({
 	connect: computed(() => proxy.$store.state.connected),
+	token: computed(() => proxy.$store.state.token),
 });
 const props = defineProps({
 	myCards: {
