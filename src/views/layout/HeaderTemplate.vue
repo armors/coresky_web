@@ -22,6 +22,7 @@
 
 			<div class="head-navs">
 				<router-link class="nav-link" to="/reward" v-if="connected && token">
+					<svg-icon icon-class="fire" style="width:24px" />
 					{{ $t("navigation.rewards") }}
 				</router-link>
 				<router-link class="nav-link" to="/markterplace">
@@ -466,6 +467,14 @@ export default {
 		border-bottom: 2px solid #333;
 		line-height: 23px;
 	}
+}
+.nav-link-chain {
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	border: 2px solid #ffffff;
+	background-color: #2249D6;
+
 }
 
 .search-link {
