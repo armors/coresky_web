@@ -192,7 +192,7 @@ onBeforeUnmount(() => {
 			margin: 0 auto;
 		}
 		.info {
-			width: 240px;
+			width: 260px;
 			height: 100px;
 			background: url('@/assets/core-card/line.png') no-repeat;
 			background-size: cover;
@@ -209,7 +209,7 @@ onBeforeUnmount(() => {
 				);
 			}
 			.info-box {
-				width: 200px;
+				width: 240px;
 				height: 40px;
 				overflow: hidden;
 				img {
@@ -232,7 +232,7 @@ onBeforeUnmount(() => {
 				}
 			}
 			.daily {
-				width: 200px;
+				width: 240px;
 				height: 49px;
 				p {
 					width: 120px;
