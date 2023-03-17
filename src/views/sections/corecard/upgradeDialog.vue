@@ -4,7 +4,6 @@
 			:model-value="isShowUpgradeDialog"
 			:show-close="false"
 			:close-on-click-modal="false"
-			@closed="closed"
 			custom-class="custom-dialog"
 			destroy-on-close
 			:set="((B = props.bindData[0]), (U = state.userData))"
@@ -13,7 +12,7 @@
 				<div class="left">
 					<span>Invest in energy storage</span>
 				</div>
-				<el-icon @click="isShowUpgradeDialog = false">
+				<el-icon @click="closed">
 					<Close />
 				</el-icon>
 			</template>
@@ -33,7 +32,7 @@
 							alt=""
 						/>
 						<el-progress
-							:percentage="(B.experience / B.maxScore) * 100"
+							:percentage="B.ratio * 100"
 							class="process"
 							:show-text="false"
 						></el-progress>
@@ -94,7 +93,6 @@ const setMax = () => {
 };
 
 const levelUp = () => {
-	emits('handleClosed', false);
 	let params = { ctAmount: state.amount };
 	proxy.$api('corecard.levelUp', params).then((res) => {
 		proxy.$tools.checkResponse(res);
@@ -103,11 +101,14 @@ const levelUp = () => {
 		} else {
 			proxy.$tools.message('更新失败', 'error');
 		}
+		state.amount = '';
+		closed();
 	});
 };
 
 const closed = () => {
-	emits('handleClosed', false);
+	emits('handleReload');
+	emits('handleClosed', !props.isShowUpgradeDialog);
 };
 </script>
 <style lang="scss" scoped>

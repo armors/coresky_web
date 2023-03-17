@@ -56,7 +56,7 @@
 					class="slider-text"
 					:style="{
 						left: B.ratio * 606 - 45 + 'px',
-						display: B.experience === 0 ? 'none' : 'block',
+						display: B.ratio === 0 ? 'none' : 'block',
 					}"
 					>{{ B.experience }}</a
 				>
@@ -130,7 +130,7 @@ const cssLeft = (val) => {
 	let left = val.ratio * 606;
 	runWay.value = left + 'px';
 	circleLeft.value = (left <= 14 ? 10 : left - 13) + 'px';
-	if (val.experience === 0) {
+	if (val.ratio === 0) {
 		circleShow.value = false;
 	}
 	return left;

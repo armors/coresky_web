@@ -38,6 +38,7 @@
 			:bindData="state.bindData"
 			:isShowUpgradeDialog="state.isShowUpgradeDialog"
 			@handleClosed="handleUpgradeDialog"
+			@handleReload="handleReload"
 		></upgrade-dialog>
 	</div>
 </template>
@@ -136,9 +137,11 @@ const handleSelect = (i) => {
 
 const handleUpgradeDialog = () => {
 	state.isShowUpgradeDialog = !state.isShowUpgradeDialog;
-	getUserStatus();
 };
 
+const handleReload = () => {
+	getUserStatus();
+};
 const getCoreCardList = () => {
 	proxy.$api('corecard.cardConfigs', {}).then((res) => {
 		if (proxy.$tools.checkResponse(res)) {
