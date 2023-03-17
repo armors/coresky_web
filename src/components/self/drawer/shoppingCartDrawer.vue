@@ -34,7 +34,7 @@
             <div class="shopping-info">
               <image-box :src="v.oriImage"></image-box>
               <div class="info-txt">
-                <div class="txt1 ellipsis">{{ v.name ? v.name :  '#' + v.tokenId }}</div>
+                <div class="txt1 ellipsis">{{ v.name ? v.name : '#' + v.tokenId }}</div>
                 <div class="txt2 display-flex box-center-Y">
                   <div>{{ v.ckCollectionsInfoEntity.name || '--' }}</div>
                   <img class="tag" v-if="v.ckCollectionsInfoEntity.isCertification === '1'"
@@ -85,7 +85,8 @@
           <div class="shopping-info">
             <image-box :src="v.makerAssetBundle.assets[0].imageUrl"></image-box>
             <div class="info-txt">
-              <div class="txt1 ellipsis">{{ v.makerAssetBundle.assets[0].name ? v.makerAssetBundle.assets[0].name :  '#' + v.makerAssetBundle.assets[0].tokenId }}</div>
+              <div class="txt1 ellipsis">{{ v.makerAssetBundle.assets[0].name ? v.makerAssetBundle.assets[0].name : '#' +
+                v.makerAssetBundle.assets[0].tokenId }}</div>
               <div class="txt2 display-flex box-center-Y">
                 <div>{{ v.makerAssetBundle.assets[0].collection.name || '--' }}</div>
                 <svg-icon class="tag" icon-class="icon_tag" />
@@ -365,7 +366,7 @@ export default {
     async cartBuy () {
       const resSign = await this.$sdk.checkSignatureAccount()
       console.log(resSign)
-      if(resSign.code !== 200) {
+      if (resSign.code !== 200) {
         return
       }
       this.buyBtnLoading = true
@@ -573,7 +574,7 @@ export default {
     async cartBuyOpensea () {
       const resSign = await this.$sdk.checkSignatureAccount()
       console.log(resSign)
-      if(resSign.code !== 200) {
+      if (resSign.code !== 200) {
         return
       }
       // isOrderFulfillable
@@ -613,7 +614,7 @@ export default {
           accountAddress: this.user.coinbase
         })
         this.$tools.message(this.$t('messageTip.PurchaseComplete'), 'success');
-        this.buyOpenseaBtnLoading= false
+        this.buyOpenseaBtnLoading = false
 
         let coreskyCart = this.coreskyCart
         let hasCoresky = coreskyCart.filter(v => {
@@ -646,6 +647,9 @@ export default {
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08);
   border-radius: 16px;
   // height: 740px !important;
+  &.el-drawer.rtl {
+    height: calc(100% - $headerHeight - 50px);
+  }
 
   .el-drawer__body {
     padding: 20px 0 !important;
@@ -675,9 +679,7 @@ export default {
 
 .coresky-drawer {
   width: 406px;
-  &.el-drawer.rtl {
-    height: calc(100% - $headerHeight - 50px);
-  }
+
   margin-top: $headerHeight;
 
   .el-drawer__body {
