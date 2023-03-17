@@ -44,7 +44,7 @@ const getImageUrl = (i, type) => {
 </script>
 <style lang="scss" scoped>
 .level {
-	width: 900px;
+	width: 904px;
 	height: 716px;
 	border: 1px solid #e6e8ec;
 	border-radius: 16px;
@@ -60,7 +60,7 @@ const getImageUrl = (i, type) => {
 		overflow: hidden;
 		.level-item-card {
 			float: left;
-			width: 409px;
+			width: 411px;
 			height: 177px;
 			padding: 30px;
 			background: #ffffff;
@@ -76,7 +76,7 @@ const getImageUrl = (i, type) => {
 				margin-right: 20px;
 			}
 			.info {
-				width: 258px;
+				width: 260px;
 				float: left;
 				p {
 					overflow: hidden;
