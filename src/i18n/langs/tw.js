@@ -151,7 +151,7 @@ module.exports = {
 		subTitle: '在Coresky交易NFT可獲得CT積分獎勵！',
 		HotActivities: '熱門活動',
 		MyRewards: '我的獎勵',
-		CTScore: 'CT積分',
+		CTScore: 'Coresky 積分',
 		RewardsHistory: '獎勵記錄',
 		Time: '時間',
 		Event: '事件',

@@ -152,7 +152,7 @@ module.exports = {
 		subTitle: 'Trade NFT on Coresky will get CT score rewards',
 		HotActivities: 'Hot activities',
 		MyRewards: 'My rewards',
-		CTScore: 'CT score',
+		CTScore: 'Coresky points',
 		RewardsHistory: 'Rewards history',
 		Time: 'Time',
 		Event: 'Event',
