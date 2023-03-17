@@ -44,9 +44,14 @@
 		height: auto;
 		line-height: 20px;
 		color: #717a83;
+		font-size: 18px;
+		font-weight: 500;
 	}
 	::v-deep(.el-collapse-item__header.is-active) {
 		background: none !important;
+		.el-collapse-item__arrow {
+			transform: rotate(90deg);
+		}
 	}
 	::v-deep(.el-collapse-item__content) {
 		margin-top: 20px;
@@ -55,8 +60,22 @@
 	::v-deep(.el-collapse-item__wrap) {
 		border-bottom: none;
 	}
+	::v-deep(.el-collapse-item__arrow) {
+		width: 20px;
+		height: 20px;
+		transform: rotate(-90deg);
+	}
+	::v-deep(.el-icon) svg {
+		width: 20px;
+		height: 20px;
+		font-weight: bold;
+		color: #04142a;
+	}
+
 	.answer {
 		line-height: 30px;
+		font-size: 16px;
+		font-weight: 400;
 	}
 }
 .clearfix:before,

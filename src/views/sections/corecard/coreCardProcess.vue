@@ -3,7 +3,7 @@
 		<div v-if="!state.connect || !state.token" class="info-text">
 			<p>Please connect the wallet to manage the Core Card.</p>
 			<a @click="connectWallet">
-				<img src="@/assets/core-card/vector.png" alt="" />
+				<svg-icon icon-class="vector" />
 				<span>Connect Wallet</span>
 			</a>
 		</div>
@@ -16,8 +16,8 @@
 			<p>
 				You don't have a Core Card, please Mint a Core Card NFT first.
 			</p>
-			<a @click="goMint">
-				<img src="@/assets/core-card/union.png" alt="" />
+			<a @click="goMint" class="connect-icon">
+				<svg-icon icon-class="union" />
 				<span>Mint</span>
 			</a>
 		</div>
@@ -41,7 +41,7 @@
 				<img :src="B.avatarFrame" alt="" />
 				<div class="info-right">
 					<p>{{ B.name }}</p>
-					<span>daily lotte output : {{ B.ticketIncome || 10 }}</span>
+					<span>daily lotte output : {{ B.ticketIncome }}</span>
 					<button class="add-level" @click="handleUpgrade">
 						Upgrade
 					</button>
@@ -302,7 +302,7 @@ const goBind = () => {
 		padding: 11px 18px;
 		color: #fff;
 		cursor: pointer;
-		img {
+		svg {
 			width: 14px;
 			height: 12px;
 			margin-top: 4px;

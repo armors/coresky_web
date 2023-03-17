@@ -10,7 +10,7 @@
 				<img :src="getImageUrl(i, 'lv')" class="image" />
 				<div class="info">
 					<p>
-						VIP level (centralization)
+						VIP level <sub>(centralization)</sub>
 						<img :src="getImageUrl(i, 'vip')" alt="" />
 					</p>
 					<p>
@@ -83,6 +83,8 @@ const getImageUrl = (i, type) => {
 					text-align: left;
 					color: #717a83;
 					line-height: 40px;
+					font-size: 16px;
+					font-weight: 400;
 					&:last-child {
 						margin-bottom: 0;
 					}
@@ -91,13 +93,18 @@ const getImageUrl = (i, type) => {
 						height: 40px;
 						float: right;
 					}
+					sub {
+						font-size: 12px;
+						bottom: 0;
+					}
 					strong {
 						color: #1063e0;
 						float: right;
+						font-weight: 700;
 					}
 					span {
 						float: right;
-						font-weight: 500;
+						font-weight: 700;
 					}
 				}
 			}
