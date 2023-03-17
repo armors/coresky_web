@@ -21,9 +21,9 @@
 			</div>
 
 			<div class="head-navs">
-				<!-- <router-link class="nav-link" to="/reward">
-          {{ $t("navigation.rewards") }}
-        </router-link> -->
+				<router-link class="nav-link" to="/reward" v-if="connected && token">
+					{{ $t("navigation.rewards") }}
+				</router-link>
 				<router-link class="nav-link" to="/markterplace">
 					{{ $t("navigation.marketplace") }}
 				</router-link>

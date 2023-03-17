@@ -17,10 +17,10 @@
     <div class="card-list">
       <div class="card-item">
         <img class="image" src="@/assets/images/reward02.jpg" alt="">
-        <div class="item-content">
+        <a href="https://docs.coresky.com/doc/20/" target="_blank" class="item-content">
           <span class="ml20">TRADING MINING</span>
           <img class="btn-right" src="@/assets/images/right.png" alt="">
-        </div>
+        </a>
 
       </div>
       <!-- <div class="card-item"></div>
