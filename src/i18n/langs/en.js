@@ -88,7 +88,7 @@ module.exports = {
 		favorites: 'Favorites',
 		setting: 'Setting',
 		quit: 'Quit',
-		score: 'Score',
+		score: 'Coresky points',
 		details: 'Details',
 	},
 	accountCenter: {

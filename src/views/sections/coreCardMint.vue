@@ -20,7 +20,7 @@
           <div class="job-list">
             <div class="job-item">
               <!-- <span class="icon-none"></span> -->
-              <el-icon color="#35C955" size="20" v-if="user.id" class="icon_success">
+              <el-icon color="#35C955" size="20" v-if="token" class="icon_success">
                 <SuccessFilled />
               </el-icon>
               <span class="icon-none" v-else></span>
@@ -116,6 +116,9 @@ export default {
   mounted () {
   },
   computed: {
+    token () {
+			return this.$store.state.token;
+		},
     user: function () {
       var user = this.$store.state.user;
       return user;
