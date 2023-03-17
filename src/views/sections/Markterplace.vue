@@ -20,6 +20,12 @@
           <el-switch v-model="queryParams.buyNow" @change="searchClick" class="ml-2" />
         </span>
       </div>
+      <div class="filter-item filter-item-buy flex border">
+        <span class="left">{{ $t('common.Rewards') }}</span>
+        <span class="right">
+          <el-switch v-model="queryParams.rewards" @change="searchClick" class="ml-2" />
+        </span>
+      </div>
       <div class="filter-item border">
         <div class="flex filter-box">
           <span class="left">{{ $t('common.Price') }}</span>
@@ -164,6 +170,7 @@ export default {
         limit: 20,
         keyword: "",
         buyNow: true,
+        rewards:true,
         minPrice: undefined,
         maxPrice: undefined,
         order: 1,

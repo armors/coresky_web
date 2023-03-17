@@ -22,6 +22,7 @@ module.exports = {
 		Mint: 'Mint',
 		LearnMore: 'Learn more',
 		See: 'See',
+		Rewards:'Rewards'
 	},
 	messageTip: {
 		PurchaseComplete: 'Your purchase is complete！',

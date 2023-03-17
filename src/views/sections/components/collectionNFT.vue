@@ -19,6 +19,12 @@
           </span>
         </div>
         <div class="filter-line"></div>
+        <div class="filter-item filter-item-buy flex border">
+          <span class="left">{{ $t('common.Rewards') }}</span>
+          <span class="right">
+            <el-switch v-model="queryParams.rewards" @change="searchClick" class="ml-2" />
+          </span>
+        </div>
         <div class="filter-item border">
           <div class="flex filter-box">
             <span class="left">{{ $t('common.Price') }}</span>
@@ -108,7 +114,7 @@
       </div>
       <div>
         <div class="nft-list">
-          <card-item :item=item v-for="(item,index) in dataList" :key="index"></card-item>
+          <card-item :item=item v-for="(item, index) in dataList" :key="index"></card-item>
         </div>
         <div v-if="loadStatus === 'loading'">
           <p class="loading-txt">
@@ -151,6 +157,7 @@ export default {
         limit: 20,
         keyword: "",
         buyNow: true,
+        rewards: true,
         minPrice: undefined,
         maxPrice: undefined,
         order: 1,
