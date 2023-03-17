@@ -221,7 +221,7 @@ export default {
       if (!user || !user.coinbase) user = state.user;
 
       let signature = await util_web3.loginWallet(user.coinbase);
-
+      console.log(signature)
       if (signature.error) {
         tools.messageBox(i18n.global.t("global.errSignature"), signature.error);
         return resolve();

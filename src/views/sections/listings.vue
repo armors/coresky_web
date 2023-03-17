@@ -664,8 +664,13 @@ export default {
 		},
 		// 挂单
 		async getExchangeHashOrder() {
+			if (this.sellBtnLoading) {
+				return
+			}
+			this.sellBtnLoading = true
 			const res = await this.$sdk.checkSignatureAccount()
 			if(res.code !== 200) {
+				this.sellBtnLoading = false
 				return
 			}
 			if (this.platformList.find(el => el.name === 'Coresky')) {
@@ -680,10 +685,12 @@ export default {
 		async sellNftCoresky() {
 			const price = this.dataList[0].listPrice
 			if (!price || new BigNumber(price).isLessThan(0)) {
+				this.sellBtnLoading = false
 				this.$tools.message(this.$t('messageTip.SetPriceItem'), 'warning');
 				return
 			}
 			if (!this.form.time) {
+				this.sellBtnLoading = false
 				this.$tools.message(this.$t('messageTip.SetDuration'), 'warning');
 				return
 			}

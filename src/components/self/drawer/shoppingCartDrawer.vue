@@ -614,12 +614,16 @@ export default {
         })
         this.$tools.message(this.$t('messageTip.PurchaseComplete'), 'success');
         this.buyOpenseaBtnLoading= false
-
         let coreskyCart = this.coreskyCart
         let hasCoresky = coreskyCart.filter(v => {
-          let openseaI = this.openseaCart.forEach(item => { !(item.makerAssetBundle.assets[0].tokenAddress === v.contract && item.makerAssetBundle.assets[0].tokenId === v.tokenId) })
-          return openseaI === null
+          let openseaI = this.openseaCart.filter(item => !(
+            item.makerAssetBundle.assets[0].tokenAddress === v.contract
+            && item.makerAssetBundle.assets[0].tokenId === v.tokenId
+          ))
+          console.log(openseaI)
+          return openseaI.length > 0
         })
+        console.log(hasCoresky)
         if (hasCoresky.length !== coreskyCart.length) {
           coreskyCart = hasCoresky
         }
