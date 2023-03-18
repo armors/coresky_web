@@ -98,10 +98,17 @@ ZoomPic.prototype = {
 		for (i = 0; i < this.aSort.length; i++)
 			this.oUl.appendChild(this.aSort[i]);
 		for (i = 0; i < this.aSort.length; i++) {
-      this.aSort[i].getElementsByTagName('img')[0].src = getImageUrl(
-        this.aSort[i].id,
-        'png'
-      );
+      if( i === 3 ){
+        this.aSort[i].getElementsByTagName('img')[0].src = getImageUrl(
+          this.aSort[i].id,
+          'webp'
+        );
+      } else {
+        this.aSort[i].getElementsByTagName('img')[0].src = getImageUrl(
+          this.aSort[i].id,
+          'png'
+        );
+      }
 			this.aSort[i].index = i;
 			if (i < 7) {
 				this.css(this.aSort[i], 'display', 'block');
@@ -153,12 +160,7 @@ ZoomPic.prototype = {
 				);
 				this.aSort[i].onmouseover = this.aSort[i].onmouseout = null;
 			}
-      
 		}
-    this.aSort[3].getElementsByTagName('img')[0].src = getImageUrl(
-			this.aSort[3].id,
-			'webp'
-		);
 	},
 	addEvent: function(oElement, sEventType, fnHandler) {
 		return oElement.addEventListener
