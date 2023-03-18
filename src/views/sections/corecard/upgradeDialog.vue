@@ -36,7 +36,7 @@
 							class="process"
 							:show-text="false"
 						></el-progress>
-						<span>{{ B.minScore }} / {{ B.maxScore }}</span>
+						<span>{{ B.experience }} / {{ B.maxScore }}</span>
 					</div>
 					<div class="max">
 						<div class="max-value">
