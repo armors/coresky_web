@@ -3,7 +3,7 @@
 		<pre class="prev"><img src="@/assets/core-card/prev.png" alt=""></pre>
 		<pre class="next"><img src="@/assets/core-card/next.png" alt=""></pre>
 		<ul>
-			<li v-for="(item, i) in 6" :key="i">
+			<li v-for="(item, i) in 6" :key="i" :id="i">
 				<img :src="getImageUrl(i, 'png')" />
 			</li>
 		</ul>
@@ -22,6 +22,10 @@ const getImageUrl = (i, type) => {
 const emits = defineEmits(['handleSelect']);
 
 let selectedIndex = 2;
+
+function handleSelect (index) {
+  emits('handleSelect', index);
+}
 
 function ZoomPic() {
 	this.initialize.apply(this, arguments);
@@ -62,14 +66,14 @@ ZoomPic.prototype = {
     let i = selectedIndex <= 0 ? 5 : selectedIndex - 1;
     selectedIndex = this.aSort[i].index;
 		this.aSort.unshift(this.aSort.pop());
-    emits('handleSelect', selectedIndex);
+    handleSelect(selectedIndex);
 		this.setUp();
 	},
 	doNext: function() {
     let i = selectedIndex >= 5 ? 0 : selectedIndex + 1;
     selectedIndex = this.aSort[i].index;
 		this.aSort.push(this.aSort.shift());
-    emits('handleSelect', selectedIndex);
+    handleSelect(selectedIndex);
 		this.setUp();
 	},
 	doImgClick: function() {
@@ -94,6 +98,10 @@ ZoomPic.prototype = {
 		for (i = 0; i < this.aSort.length; i++)
 			this.oUl.appendChild(this.aSort[i]);
 		for (i = 0; i < this.aSort.length; i++) {
+      this.aSort[i].getElementsByTagName('img')[0].src = getImageUrl(
+        this.aSort[i].id,
+        'png'
+      );
 			this.aSort[i].index = i;
 			if (i < 7) {
 				this.css(this.aSort[i], 'display', 'block');
@@ -138,12 +146,17 @@ ZoomPic.prototype = {
 				};
 				this.aSort[i].onmouseout();
 			} else {
+        this.css(
+					this.aSort[i].getElementsByTagName('img')[0],
+					'opacity',
+					100
+				);
 				this.aSort[i].onmouseover = this.aSort[i].onmouseout = null;
 			}
       
 		}
     this.aSort[3].getElementsByTagName('img')[0].src = getImageUrl(
-			selectedIndex,
+			this.aSort[3].id,
 			'webp'
 		);
 	},
