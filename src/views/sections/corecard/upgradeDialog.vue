@@ -95,17 +95,21 @@ const setMax = () => {
 };
 
 const levelUp = () => {
-	let params = { ctAmount: state.amount };
-	proxy.$api('corecard.levelUp', params).then((res) => {
-		proxy.$tools.checkResponse(res);
-		if (res.code === 200) {
-			proxy.$tools.message('更新成功', 'success');
-		} else {
-			proxy.$tools.message('更新失败', 'error');
-		}
-		state.amount = '';
-		closed();
-	});
+	if (state.amount) {
+		let params = { ctAmount: state.amount };
+		proxy.$api('corecard.levelUp', params).then((res) => {
+			proxy.$tools.checkResponse(res);
+			if (res.code === 200) {
+				proxy.$tools.message('更新成功', 'success');
+			} else {
+				proxy.$tools.message('更新失败', 'error');
+			}
+			state.amount = '';
+			closed();
+		});
+	} else {
+		proxy.$tools.message('请输入积分', 'warning');
+	}
 };
 
 const closed = () => {
