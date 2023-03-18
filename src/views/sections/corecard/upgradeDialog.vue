@@ -43,6 +43,8 @@
 							<el-input
 								v-model="state.amount"
 								placeholder="Please input"
+								:controls="false"
+								v-input-limit="'9,4'"
 								class="max-input"
 							/>
 							<span @click="setMax">MAX</span>
