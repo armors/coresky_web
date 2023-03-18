@@ -141,6 +141,7 @@ const closed = () => {
 				display: flex;
 				height: 40px;
 				margin-top: 20px;
+				justify-content: space-between;
 				img {
 					width: 83px;
 					height: 40px;
@@ -148,7 +149,6 @@ const closed = () => {
 				.process {
 					width: 248px;
 					height: 10px;
-					margin-left: 40px;
 					margin-top: 19px;
 					::v-deep(.el-progress-bar__inner) {
 						background: linear-gradient(
