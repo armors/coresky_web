@@ -42,7 +42,7 @@
 				<div class="info-right">
 					<p>{{ B.name }}</p>
 					<span
-						>{{ $t('coreCard.totalWeekly') }}:
+						>{{ $t('coreCard.ticketsWeek') }}:
 						{{ B.ticketIncome }}</span
 					>
 					<button class="add-level" @click="handleUpgrade">

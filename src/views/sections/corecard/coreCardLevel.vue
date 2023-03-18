@@ -14,7 +14,7 @@
 						<img :src="getImageUrl(i, 'vip')" alt="" />
 					</p>
 					<p>
-						{{ $t('coreCard.totalTicketWeekly') }}
+						{{ $t('coreCard.ticketsWeek') }}
 						<strong>{{ item.ticketIncome }}</strong>
 					</p>
 					<p>
