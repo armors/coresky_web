@@ -22,9 +22,7 @@
 				<core-card-wrapper
 					@handleSelect="handleSelect"
 					:bindData="state.bindData[0]"
-					:selectedIndex="
-						state.bindData[0] ? state.bindData[0].level : 2
-					"
+					:initLevel="state.bindData[0] ? state.bindData[0].level : 2"
 				></core-card-wrapper>
 				<core-card-process
 					:myCards="state.myCards"

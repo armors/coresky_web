@@ -10,7 +10,30 @@
 	</div>
 </template>
 <script setup>
-import { onMounted, defineEmits } from 'vue';
+import { onMounted, defineEmits,defineProps,watch ,ref} from 'vue';
+
+
+let selectedIndex = ref();
+const emits = defineEmits(['handleSelect']);
+const props = defineProps({
+  initLevel: {
+    type: Number,
+    default: 0
+  }
+})
+
+watch( 
+  () => props.initLevel,
+  (val)=>{
+    // Todo 优化
+    selectedIndex.value = 2;
+    wrapper();
+  }
+)
+
+function handleSelect (index) {
+  emits('handleSelect', index);
+}
 
 const getImageUrl = (i, type) => {
 	// 根据索引生成图像URL
@@ -19,13 +42,6 @@ const getImageUrl = (i, type) => {
 		: require(`@/assets/core-card/v${i}.png`);
 };
 
-const emits = defineEmits(['handleSelect']);
-
-let selectedIndex = 2;
-
-function handleSelect (index) {
-  emits('handleSelect', index);
-}
 
 function ZoomPic() {
 	this.initialize.apply(this, arguments);
@@ -62,18 +78,18 @@ ZoomPic.prototype = {
 		this.addEvent(this.next, 'click', this._doNext);
 		// this.doImgClick();
 	},
-	doPrev: function() {
-    let i = selectedIndex <= 0 ? 5 : selectedIndex - 1;
-    selectedIndex = this.aSort[i].index;
+	doPrev: function(type) {
+    let i = selectedIndex.value <= 0 ? 5 : selectedIndex.value - 1;
+    selectedIndex.value = this.aSort[i].index;
 		this.aSort.unshift(this.aSort.pop());
-    handleSelect(selectedIndex);
+    handleSelect(selectedIndex.value);
 		this.setUp();
 	},
-	doNext: function() {
-    let i = selectedIndex >= 5 ? 0 : selectedIndex + 1;
-    selectedIndex = this.aSort[i].index;
-		this.aSort.push(this.aSort.shift());
-    handleSelect(selectedIndex);
+	doNext: function(type) {
+    let i = selectedIndex.value >= 5 ? 0 : selectedIndex.value + 1;
+    selectedIndex.value = this.aSort[i].index;
+    this.aSort.push(this.aSort.shift());
+    handleSelect(selectedIndex.value);
 		this.setUp();
 	},
 	doImgClick: function() {
@@ -98,18 +114,7 @@ ZoomPic.prototype = {
 		for (i = 0; i < this.aSort.length; i++)
 			this.oUl.appendChild(this.aSort[i]);
 		for (i = 0; i < this.aSort.length; i++) {
-      if( i === 3 ){
-        this.aSort[i].getElementsByTagName('img')[0].src = getImageUrl(
-          this.aSort[i].id,
-          'webp'
-        );
-      } else {
-        this.aSort[i].getElementsByTagName('img')[0].src = getImageUrl(
-          this.aSort[i].id,
-          'png'
-        );
-      }
-			this.aSort[i].index = i;
+      this.aSort[i].index = i;
 			if (i < 7) {
 				this.css(this.aSort[i], 'display', 'block');
 				this.doMove(this.aSort[i], this.options[i], function() {
@@ -152,6 +157,10 @@ ZoomPic.prototype = {
 					});
 				};
 				this.aSort[i].onmouseout();
+        this.aSort[i].getElementsByTagName('img')[0].src = getImageUrl(
+          this.aSort[i].id,
+          'png'
+        );
 			} else {
         this.css(
 					this.aSort[i].getElementsByTagName('img')[0],
@@ -159,6 +168,10 @@ ZoomPic.prototype = {
 					100
 				);
 				this.aSort[i].onmouseover = this.aSort[i].onmouseout = null;
+        this.aSort[i].getElementsByTagName('img')[0].src = getImageUrl(
+          this.aSort[i].id,
+          'webp'
+        );
 			}
 		}
 	},
@@ -214,11 +227,12 @@ ZoomPic.prototype = {
 		}, 30);
 	},
 };
+  function wrapper() {
+    new ZoomPic('box');
+  }
 onMounted(() => {
-	function wrapper() {
-		new ZoomPic('box');
-	}
-	wrapper();
+	
+	// wrapper();
 });
 </script>
 <style lang="scss" scoped>
