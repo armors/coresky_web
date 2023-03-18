@@ -5,7 +5,7 @@
         <div class="txt1">{{ $t('rewards.title') }} </div>
         <div class="txt2">{{ $t('rewards.subTitle') }}</div>
         <div class="txt3">
-          <el-button class="btn" @click="$router.push('/markterplace')" type="primary">{{ $t('rewards.goTrade') }}
+          <el-button class="btn" @click="$router.push('/markterplace?rewards=1')" type="primary">{{ $t('rewards.goTrade') }}
           </el-button>
         </div>
         <!-- <img class="image" src="@/assets/images/reward.png" alt=""> -->

@@ -148,8 +148,8 @@ module.exports = {
 		editSuccess: 'Edit Success',
 	},
 	rewards: {
-		title: 'Trade to get CT score',
-		subTitle: 'Trade NFT on Coresky will get CT score rewards',
+		title: 'Trade to get Coresky score',
+		subTitle: 'Trade NFT on Coresky will get Coresky score rewards',
 		HotActivities: 'Hot activities',
 		MyRewards: 'My rewards',
 		CTScore: 'Coresky points',
