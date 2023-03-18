@@ -1,6 +1,6 @@
 <template>
 	<div class="level">
-		<h3>CoreCard Level</h3>
+		<h3>{{ $t('coreCard.cardLevel') }}</h3>
 		<ul class="card-level-content">
 			<li
 				class="level-item-card"
@@ -14,11 +14,12 @@
 						<img :src="getImageUrl(i, 'vip')" alt="" />
 					</p>
 					<p>
-						Daily lottery output
+						{{ $t('coreCard.totalTicketWeekly') }}
 						<strong>{{ item.ticketIncome }}</strong>
 					</p>
 					<p>
-						The number of consum <span>{{ item.maxScore }}</span>
+						{{ $t('coreCard.coreskPoints')
+						}}<span>{{ item.maxScore }}</span>
 					</p>
 				</div>
 			</li>

@@ -14,7 +14,7 @@
 							/></a>
 						</div>
 						<div class="daily">
-							<p>Daily Lotte Output</p>
+							<p>{{ $t('coreCard.totalTicketWeekly') }}</p>
 							<strong>{{ state.daily }}</strong>
 						</div>
 					</div>

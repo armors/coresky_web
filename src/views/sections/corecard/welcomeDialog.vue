@@ -10,7 +10,7 @@
 		>
 			<template #title>
 				<div class="left">
-					<span>Corecard benefits</span>
+					<span>{{ $t('coreCard.mintTitle') }}</span>
 				</div>
 				<el-icon @click="isShowWelcomeDialog = false">
 					<Close />
@@ -24,25 +24,22 @@
 					<ul>
 						<li>
 							<img src="@/assets/core-card/step.png" alt="" />
-							<p>Participate in transaction mining</p>
+							<p>{{ $t('coreCard.mintP1') }}</p>
 						</li>
 						<li>
 							<img src="@/assets/core-card/step.png" alt="" />
-							<p>
-								Obtain the qualification for new registration
-								and participate in NFT new registration
-							</p>
+							<p>{{ $t('coreCard.mintP2') }}</p>
 						</li>
 						<li>
 							<img src="@/assets/core-card/step.png" alt="" />
-							<p>Free lottery tickets</p>
+							<p>{{ $t('coreCard.mintP3') }}</p>
 						</li>
 					</ul>
 				</div>
 			</div>
-			<el-button type="primary" class="receive" @click="goMint"
-				>Receive Corecard</el-button
-			>
+			<el-button type="primary" class="receive" @click="goMint">{{
+				$t('coreCard.mint')
+			}}</el-button>
 		</el-dialog>
 	</div>
 </template>

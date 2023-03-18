@@ -1,31 +1,38 @@
 <template>
 	<div class="FAQ-card">
-		<el-collapse class="box-card" v-for="(item, i) in 4" :key="i">
-			<el-collapse-item
-				:title="
-					item.title ||
-						'How do I get a RarePass and how much do they cost?'
-				"
-				:name="i"
-				class="faq-item"
-			>
+		<el-collapse class="box-card" v-for="(item, i) in FAQList" :key="i">
+			<el-collapse-item :title="item.title" :name="i" class="faq-item">
 				<div class="answer">
 					{{ item.content || '' }}
-					RarePass #1 will be available to the public beginning with a
-					24 hr timed auction on SuperRare that starts November 15th,
-					2022 at 10:00 AM E.T. Once the RarePass #1 auction
-					concludes, the winning bid will set the starting price of
-					the Dutch Auction on rarepass. superrare.com. The Dutch
-					Auction on rarepass.superrare.com will start at 1:00 PM E.T.
-					on November 16th 2022. Once the auction begins, the price of
-					the passes will decrease every 15 mins for 6 hours until
-					hitting a floor price of $0 at 7:00 PM E.T.
 				</div>
 			</el-collapse-item>
 		</el-collapse>
 	</div>
 </template>
-<script setup></script>
+<script setup>
+const FAQList = [
+	{
+		title: 'What is CoreCard?',
+		content:
+			"CoreCard is Coresky's Membership NFT, a decentralized VIP governance system based on the Coresky ecosystem. Holding CoreCard automatically makes you a member of the Coresky community, and you will enjoy various benefits offered by the Coresky platform. CoreCard holders will receive Tickets regularly put out by the Coresky platform, which are used as tickets to participate in Coresky Launchpad.",
+	},
+	{
+		title: 'How many levels does CoreCard have?',
+		content:
+			'CoreCard is divided into six levels of equity, from level 0 to level 5. They are respectively called: CoreCardV0 Kite, CoreCardV1 Balloon, CoreCardV2 Biplane, CoreCardV3 Jet, CoreCardV4 Satellite, and CoreCardV5 Spacecraft.',
+	},
+	{
+		title: 'What are the differences between different levels of CoreCard?',
+		content:
+			'Different levels of CoreCard will generate a different number of Tickets weekly, and the higher the level of CoreCard held by the user, the more Ticket deposits they will receive.',
+	},
+	{
+		title: 'How to upgrade CoreCard?',
+		content:
+			'Increasing CoreCard levels can be done by burning platform token $CT or completing other tasks set by the platform. Coresky encourages users to upgrade CoreCard to get more Tickets.',
+	},
+];
+</script>
 <style lang="scss" scoped>
 .FAQ-card {
 	margin-bottom: 100px;

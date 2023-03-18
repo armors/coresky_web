@@ -10,7 +10,7 @@
 		>
 			<template #title>
 				<div class="left">
-					<span>Invest in energy storage</span>
+					<span>{{ $t('coreCard.energy') }}</span>
 				</div>
 				<el-icon @click="closed">
 					<Close />
@@ -50,14 +50,14 @@
 							<span @click="setMax">MAX</span>
 						</div>
 						<p class="core-token">
-							Core Token in the wallet: {{ U.score }}
+							{{ $t('coreCard.availableCoresky') }}: {{ U.score }}
 						</p>
 					</div>
 				</div>
 			</div>
-			<el-button type="primary" class="accept" @click="levelUp"
-				>Accept</el-button
-			>
+			<el-button type="primary" class="accept" @click="levelUp">{{
+				$t('coreCard.input')
+			}}</el-button>
 		</el-dialog>
 	</div>
 </template>

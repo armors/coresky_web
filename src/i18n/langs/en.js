@@ -22,7 +22,7 @@ module.exports = {
 		Mint: 'Mint',
 		LearnMore: 'Learn more',
 		See: 'See',
-		Rewards:'Rewards'
+		Rewards: 'Rewards',
 	},
 	messageTip: {
 		PurchaseComplete: 'Your purchase is complete！',
@@ -692,17 +692,25 @@ module.exports = {
 		Mint0: 'Mint CoreCard V0',
 		Mint: 'Mint',
 	},
-	coreCardHome: {
-		mintTitle: 'Mint your CoreCard',
-		mintP1: 'Get tickets every week',
+	coreCard: {
+		mintTitle: 'Claim your Corecard',
+		mintP1: 'Receive Tickets every week',
 		mintP2: 'Participate in future NFT activities',
-		mintP3: 'Apply for membership of Coresky',
-		mint: 'Mint',
-		output: 'Tickets output per week',
-		connectText: 'Please connect the wallet to manage the CoreCard',
+		mintP3: 'Apply for Coresky Membership',
+		mint: 'Claim Now',
+		totalTicketWeekly: 'Total Tickets available per week',
+		connectText: 'Please connect your wallet to access your CoreCard',
 		connectWallet: 'Connect Wallet',
-		goMintInfo:
-			"You don't have a CoreCard, please Mint a CoreCard NFT first.",
+		goMintInfo: "Oops! You don't have a CoreCard, please Claim one first.",
+		goMint: 'Claim',
 		goBindInfo: 'You have not bound a CoreCard. Please bundle a CoreCard.',
+		goBind: 'bundle',
+		totalWeekly: 'Total weekly Tickets available',
+		upgrade: 'Upgrade',
+		cardLevel: 'CoreCard level',
+		coreskPoints: 'Coresky points',
+		energy: 'Energy storage upgrade',
+		availableCoresky: 'Available Coresky points',
+		input: 'Input',
 	},
 };

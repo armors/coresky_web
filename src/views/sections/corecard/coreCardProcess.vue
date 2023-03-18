@@ -1,10 +1,10 @@
 <template>
 	<div class="process">
 		<div v-if="!state.connect || !state.token" class="info-text">
-			<p>Please connect the wallet to manage the Core Card.</p>
+			<p>{{ $t('coreCard.connectText') }}</p>
 			<a @click="connectWallet">
 				<svg-icon icon-class="vector" />
-				<span>Connect Wallet</span>
+				<span>{{ $t('coreCard.connectWallet') }}</span>
 			</a>
 		</div>
 		<div
@@ -14,11 +14,11 @@
 			class="info-text"
 		>
 			<p>
-				You don't have a Core Card, please Mint a Core Card NFT first.
+				{{ $t('coreCard.goMintInfo') }}
 			</p>
 			<a @click="goMint" class="connect-icon">
 				<svg-icon icon-class="union" />
-				<span>Mint</span>
+				<span>{{ $t('coreCard.goMint') }}</span>
 			</a>
 		</div>
 		<div v-else-if="state.connect && props.bindData.length === 0">
@@ -32,7 +32,7 @@
 				</div>
 			</div>
 			<div class="slider no-bind-info">
-				<p>You have not bound a Core Card. Please bind a Core Card.</p>
+				<p>{{ $t('coreCard.goBindInfo') }}</p>
 				<el-slider :min="0" :max="1000" disabled />
 			</div>
 		</div>
@@ -41,16 +41,21 @@
 				<img :src="B.avatarFrame" alt="" />
 				<div class="info-right">
 					<p>{{ B.name }}</p>
-					<span>daily lotte output : {{ B.ticketIncome }}</span>
+					<span
+						>{{ $t('coreCard.totalWeekly') }}:
+						{{ B.ticketIncome }}</span
+					>
 					<button class="add-level" @click="handleUpgrade">
-						Upgrade
+						{{ $t('coreCard.upgrade') }}
 					</button>
 				</div>
 			</div>
 			<div class="slider">
 				<p>
 					<strong>LV {{ B.level }}</strong
-					><strong>LV {{ B.level + 1 }}</strong>
+					><strong
+						>LV {{ B.level === 5 ? B.level : B.level + 1 }}</strong
+					>
 				</p>
 				<a
 					class="slider-text"

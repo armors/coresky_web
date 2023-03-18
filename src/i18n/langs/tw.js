@@ -22,7 +22,7 @@ module.exports = {
 		Mint: '鑄造',
 		LearnMore: '瞭解更多',
 		See: '查看',
-		Rewards:'獎勵'
+		Rewards: '獎勵',
 	},
 	messageTip: {
 		PurchaseComplete: '購買成功',
@@ -304,12 +304,25 @@ module.exports = {
 		Mint0: '鑄造CoreCard V0',
 		Mint: '鑄造',
 	},
-	coreCardHome: {
+	coreCard: {
 		mintTitle: '鑄造你的CoreCard',
 		mintP1: '每周獲得券',
 		mintP2: '參與未來的NFT活動',
 		mintP3: '成為Coresky尊貴的會員',
 		mint: '鑄造',
-		output: '每週產出券',
+		totalTicketWeekly: '每週產出券',
+		connectText: '請連接錢包管理CoreCard。',
+		connectWallet: '連接',
+		goMintInfo: '您沒有CoreCard，請先鑄造一張CoreCard NFT。',
+		goMint: '鑄造',
+		goBindInfo: '您尚未綁定CoreCard。 請綁定CoreCard。',
+		goBind: '绑定',
+		totalWeekly: '每週產出券',
+		upgrade: '陞級',
+		cardLevel: '卡片等級',
+		coreskPoints: '累計Coresky 積分',
+		energy: '儲能陞級',
+		availableCoresky: 'Coresky 積分餘額',
+		input: '輸入',
 	},
 };
