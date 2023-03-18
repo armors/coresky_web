@@ -51,6 +51,7 @@ import {
 	reactive,
 	computed,
 	watch,
+	nextTick,
 } from 'vue';
 import { useStore } from 'vuex';
 import coreCardWrapper from './coreCardWrapper.vue';
@@ -60,6 +61,7 @@ import coreCardProcess from './coreCardProcess.vue';
 import welcomeDialog from './welcomeDialog.vue';
 import upgradeDialog from './upgradeDialog.vue';
 import { getCurrentInstance } from 'vue';
+import { address } from '../../../wallet';
 
 const { proxy } = getCurrentInstance();
 const state = reactive({
@@ -68,6 +70,7 @@ const state = reactive({
 	daily: 4,
 	connect: computed(() => proxy.$store.state.connected),
 	token: computed(() => proxy.$store.state.token),
+	user: computed(() => proxy.$store.state.user),
 	myCards: [],
 	bindData: [],
 });
@@ -89,6 +92,15 @@ watch(
 	() => state.token,
 	() => {
 		getUserStatus();
+	}
+);
+
+watch(
+	() => state.myCards,
+	() => {
+		nextTick(() => {
+			checkBindStatus();
+		});
 	}
 );
 
@@ -165,9 +177,26 @@ const getUserStatus = () => {
 			state.myCards = res.debug;
 			if (state.myCards.length !== 0) {
 				checkBindStatus();
+				getUserinfo();
 			}
 		});
 	}
+};
+
+const getUserinfo = () => {
+	let params = {
+		address: state.user.coinbase,
+	};
+	proxy.$api('user.info', params).then((res) => {
+		if (proxy.$tools.checkResponse(res)) {
+			let _data = Object.assign({}, res.debug, {
+				address: state.user.coinbase,
+			});
+			proxy.$store.commit('USERINFO', _data);
+		} else {
+			proxy.$tools.message(res.errmsg);
+		}
+	});
 };
 
 onMounted(() => {
@@ -175,6 +204,7 @@ onMounted(() => {
 	handleScroll();
 	getCoreCardList();
 	getUserStatus();
+	getUserinfo();
 	if (localStorage.getItem('firstEnter') === null) {
 		firstStatus = true;
 		localStorage.setItem('firstEnter', firstStatus);
