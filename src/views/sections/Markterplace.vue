@@ -170,7 +170,7 @@ export default {
         limit: 20,
         keyword: "",
         buyNow: true,
-        rewards:true,
+        rewards: false,
         minPrice: undefined,
         maxPrice: undefined,
         order: 1,
@@ -191,6 +191,9 @@ export default {
   mounted () {
     if (this.$route.query.sort && !isNaN(this.$route.query.sort)) {
       this.queryParams.order = parseInt(this.$route.query.sort)
+    }
+    if (this.$route.query.rewards === '1') {
+      this.queryParams.rewards = true
     }
     this.dataList = []
     this.queryParams.page = 0

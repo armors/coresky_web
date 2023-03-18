@@ -147,8 +147,8 @@ module.exports = {
 		editSuccess: '修改成功',
 	},
 	rewards: {
-		title: '交易獲得CT積分',
-		subTitle: '在Coresky交易NFT可獲得CT積分獎勵！',
+		title: '交易獲得Coresky積分',
+		subTitle: '在Coresky交易NFT可獲得Coresky積分獎勵！',
 		HotActivities: '熱門活動',
 		MyRewards: '我的獎勵',
 		CTScore: 'Coresky 積分',
