@@ -684,7 +684,7 @@ module.exports = {
 		connect: 'Connect',
 		bindtoTwitter: 'Connect Twitter',
 		bind: 'Connect',
-		retweetTwitter: 'RT any tweet of @coresky',
+		retweetTwitter: "RT any tweet of {'@'}coresky",
 		retweet: 'Retweet',
 		mint: 'Claim',
 	},
