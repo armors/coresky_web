@@ -26,8 +26,9 @@ watch(
 	() => props.initLevel,
 	(val) => {
 		// Todo 优化
-		selectedIndex.value = 4;
+		selectedIndex.value = val;
 		wrapper();
+    handleSelect(val);
 	}
 )
 
@@ -54,7 +55,6 @@ ZoomPic.prototype = {
 		this.aLi = this.wrap.getElementsByTagName('li');
 		this.prev = this.wrap.getElementsByTagName('pre')[0];
 		this.next = this.wrap.getElementsByTagName('pre')[1];
-		this.initLevel = props.initLevel ? props.initLevel : 2;
 		this.timer = null;
 		this.aSort = [];
 		this.iCenter = 3;
@@ -73,8 +73,8 @@ ZoomPic.prototype = {
 			{ width: 65, height: 109, top: 101, left: 570, zIndex: 2 },
 		];
 		for (var i = 0; i < this.aLi.length; i++) this.aSort[i] = this.aLi[i];
-		let defalutIndex = 5
-		let forIndex = 3
+		let defalutIndex = props.initLevel;
+		let forIndex = 3;
 		if ((3 - defalutIndex) > 0) {
 			forIndex = 3 - defalutIndex
 		}
@@ -84,20 +84,19 @@ ZoomPic.prototype = {
 		for (var i = 0; i < forIndex; i++) {
 			this.aSort.unshift(this.aSort.pop());
 		}
-
 		this.setUp();
 		this.addEvent(this.prev, 'click', this._doPrev);
 		this.addEvent(this.next, 'click', this._doNext);
 		// this.doImgClick();
 	},
-	doPrev: function (type) {
+	doPrev: function (tye) {
 		let i = selectedIndex.value <= 0 ? 5 : selectedIndex.value - 1;
 		selectedIndex.value = this.aSort[i].index;
 		this.aSort.unshift(this.aSort.pop());
 		handleSelect(selectedIndex.value);
 		this.setUp();
 	},
-	doNext: function (type) {
+	doNext: function () {
 		let i = selectedIndex.value >= 5 ? 0 : selectedIndex.value + 1;
 		selectedIndex.value = this.aSort[i].index;
 		this.aSort.push(this.aSort.shift());
