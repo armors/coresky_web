@@ -10,29 +10,29 @@
 	</div>
 </template>
 <script setup>
-import { onMounted, defineEmits,defineProps,watch ,ref} from 'vue';
+import { onMounted, defineEmits, defineProps, watch, ref } from 'vue';
 
 
 let selectedIndex = ref();
 const emits = defineEmits(['handleSelect']);
 const props = defineProps({
-  initLevel: {
-    type: Number,
-    default: 0
-  }
+	initLevel: {
+		type: Number,
+		default: 0
+	}
 })
 
-watch( 
-  () => props.initLevel,
-  (val)=>{
-    // Todo 优化
-    selectedIndex.value = 2;
-    wrapper();
-  }
+watch(
+	() => props.initLevel,
+	(val) => {
+		// Todo 优化
+		selectedIndex.value = 4;
+		wrapper();
+	}
 )
 
 function handleSelect (index) {
-  emits('handleSelect', index);
+	emits('handleSelect', index);
 }
 
 const getImageUrl = (i, type) => {
@@ -43,24 +43,25 @@ const getImageUrl = (i, type) => {
 };
 
 
-function ZoomPic() {
+function ZoomPic () {
 	this.initialize.apply(this, arguments);
 }
 ZoomPic.prototype = {
-	initialize: function(id) {
+	initialize: function (id) {
 		var _this = this;
 		this.wrap = typeof id === 'string' ? document.getElementById(id) : id;
 		this.oUl = this.wrap.getElementsByTagName('ul')[0];
 		this.aLi = this.wrap.getElementsByTagName('li');
 		this.prev = this.wrap.getElementsByTagName('pre')[0];
 		this.next = this.wrap.getElementsByTagName('pre')[1];
+		this.initLevel = props.initLevel ? props.initLevel : 2;
 		this.timer = null;
 		this.aSort = [];
 		this.iCenter = 3;
-		this._doPrev = function() {
+		this._doPrev = function () {
 			return _this.doPrev.apply(_this);
 		};
-		this._doNext = function() {
+		this._doNext = function () {
 			return _this.doNext.apply(_this);
 		};
 		this.options = [
@@ -72,24 +73,35 @@ ZoomPic.prototype = {
 			{ width: 65, height: 109, top: 101, left: 570, zIndex: 2 },
 		];
 		for (var i = 0; i < this.aLi.length; i++) this.aSort[i] = this.aLi[i];
-		this.aSort.unshift(this.aSort.pop());
+		let defalutIndex = 5
+		let forIndex = 3
+		if ((3 - defalutIndex) > 0) {
+			forIndex = 3 - defalutIndex
+		}
+		else {
+			forIndex = 3 - defalutIndex + 6
+		}
+		for (var i = 0; i < forIndex; i++) {
+			this.aSort.unshift(this.aSort.pop());
+		}
+
 		this.setUp();
 		this.addEvent(this.prev, 'click', this._doPrev);
 		this.addEvent(this.next, 'click', this._doNext);
 		// this.doImgClick();
 	},
-	doPrev: function(type) {
-    let i = selectedIndex.value <= 0 ? 5 : selectedIndex.value - 1;
-    selectedIndex.value = this.aSort[i].index;
+	doPrev: function (type) {
+		let i = selectedIndex.value <= 0 ? 5 : selectedIndex.value - 1;
+		selectedIndex.value = this.aSort[i].index;
 		this.aSort.unshift(this.aSort.pop());
-    handleSelect(selectedIndex.value);
+		handleSelect(selectedIndex.value);
 		this.setUp();
 	},
-	doNext: function(type) {
-    let i = selectedIndex.value >= 5 ? 0 : selectedIndex.value + 1;
-    selectedIndex.value = this.aSort[i].index;
-    this.aSort.push(this.aSort.shift());
-    handleSelect(selectedIndex.value);
+	doNext: function (type) {
+		let i = selectedIndex.value >= 5 ? 0 : selectedIndex.value + 1;
+		selectedIndex.value = this.aSort[i].index;
+		this.aSort.push(this.aSort.shift());
+		handleSelect(selectedIndex.value);
 		this.setUp();
 	},
 	// doImgClick: function() {
@@ -108,22 +120,22 @@ ZoomPic.prototype = {
 	// 		};
 	// 	}
 	// },
-	setUp: function() {
+	setUp: function () {
 		var _this = this;
 		var i = 0;
 		for (i = 0; i < this.aSort.length; i++)
 			this.oUl.appendChild(this.aSort[i]);
 		for (i = 0; i < this.aSort.length; i++) {
-      this.aSort[i].index = i;
+			this.aSort[i].index = i;
 			if (i < 7) {
 				this.css(this.aSort[i], 'display', 'block');
-				this.doMove(this.aSort[i], this.options[i], function() {
+				this.doMove(this.aSort[i], this.options[i], function () {
 					_this.doMove(
 						_this.aSort[_this.iCenter].getElementsByTagName(
 							'img'
 						)[0],
 						{ opacity: 100 },
-						function() {
+						function () {
 							_this.doMove(
 								_this.aSort[_this.iCenter].getElementsByTagName(
 									'img'
@@ -146,41 +158,41 @@ ZoomPic.prototype = {
 					'opacity',
 					30
 				);
-				this.aSort[i].onmouseover = function() {
+				this.aSort[i].onmouseover = function () {
 					_this.doMove(this.getElementsByTagName('img')[0], {
 						opacity: 100,
 					});
 				};
-				this.aSort[i].onmouseout = function() {
+				this.aSort[i].onmouseout = function () {
 					_this.doMove(this.getElementsByTagName('img')[0], {
 						opacity: 35,
 					});
 				};
 				this.aSort[i].onmouseout();
-        this.aSort[i].getElementsByTagName('img')[0].src = getImageUrl(
-          this.aSort[i].id,
-          'png'
-        );
+				this.aSort[i].getElementsByTagName('img')[0].src = getImageUrl(
+					this.aSort[i].id,
+					'png'
+				);
 			} else {
-        this.css(
+				this.css(
 					this.aSort[i].getElementsByTagName('img')[0],
 					'opacity',
 					100
 				);
 				this.aSort[i].onmouseover = this.aSort[i].onmouseout = null;
-        this.aSort[i].getElementsByTagName('img')[0].src = getImageUrl(
-          this.aSort[i].id,
-          'webp'
-        );
+				this.aSort[i].getElementsByTagName('img')[0].src = getImageUrl(
+					this.aSort[i].id,
+					'webp'
+				);
 			}
 		}
 	},
-	addEvent: function(oElement, sEventType, fnHandler) {
+	addEvent: function (oElement, sEventType, fnHandler) {
 		return oElement.addEventListener
 			? oElement.addEventListener(sEventType, fnHandler, false)
 			: oElement.attachEvent('on' + sEventType, fnHandler);
 	},
-	css: function(oElement, attr, value) {
+	css: function (oElement, attr, value) {
 		if (arguments.length == 2) {
 			return oElement.currentStyle
 				? oElement.currentStyle[attr]
@@ -204,10 +216,10 @@ ZoomPic.prototype = {
 			}
 		}
 	},
-	doMove: function(oElement, oAttr, fnCallBack) {
+	doMove: function (oElement, oAttr, fnCallBack) {
 		var _this = this;
 		clearInterval(oElement.timer);
-		oElement.timer = setInterval(function() {
+		oElement.timer = setInterval(function () {
 			var bStop = true;
 			for (var property in oAttr) {
 				var iCur = parseFloat(_this.css(oElement, property));
@@ -227,11 +239,11 @@ ZoomPic.prototype = {
 		}, 30);
 	},
 };
-  function wrapper() {
-    new ZoomPic('box');
-  }
+function wrapper () {
+	new ZoomPic('box');
+}
 onMounted(() => {
-	
+
 	// wrapper();
 });
 </script>
@@ -246,8 +258,8 @@ onMounted(() => {
 	position: relative;
 	width: 919px;
 	// height: 540px;
-  margin: 0 auto;
-  top: 160px;
+	margin: 0 auto;
+	top: 160px;
 }
 #box li {
 	position: absolute;
