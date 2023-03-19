@@ -186,16 +186,17 @@ export default {
     async cardMint () {
       this.isMinting = true
       let result = null
-      if (this.viplevel === 0) {
-        result = await ERC721Template.selfMint(this.user.coinbase)
-      }
-      else {
-        let to = this.user.coinbase
-        let tokenid = this.tokenId
-        let uri = this.uri
-        let merkleProof = this.proot
-        result = await ERC721Template.merkleMint(to, tokenid, uri, merkleProof, this.user.coinbase)
-      }
+      result = await ERC721Template.selfMint(this.user.coinbase)
+      // if (this.viplevel === 0) {
+      //   result = await ERC721Template.selfMint(this.user.coinbase)
+      // }
+      // else {
+      //   let to = this.user.coinbase
+      //   let tokenid = this.tokenId
+      //   let uri = this.uri
+      //   let merkleProof = this.proot
+      //   result = await ERC721Template.merkleMint(to, tokenid, uri, merkleProof, this.user.coinbase)
+      // }
       if (result && result.status === true && result.blockHash) {
         this.$tools.notification('success', '');
         this.isSuccess = true

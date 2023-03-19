@@ -43,6 +43,7 @@ module.exports = {
 		addedCart: '已經加入購物車',
 		coreCardTip1: '查看是否有CoreCard空投？',
 		coreCardTip2: '恭喜您獲得CoreCard“CoreCard V{name}”',
+		coreCardBindCheck:'只能綁定一張CoreCard。請解綁重試'
 	},
 	navigation: {
 		searchTip: '搜索NFT或合集',
