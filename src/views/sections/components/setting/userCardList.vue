@@ -20,16 +20,18 @@
           </div>
           <div>
             <el-button type="primary" :loading="item.isloading" v-if="item.pledge === 1"
-              @click="unBindCard(item)">{{$t('userCardList.Unbundle')}}</el-button>
-            <el-button v-if="item.pledge === 0" :loading="item.isloading" @click="bindCard(item)" plain>{{$t('userCardList.Bundle')}}</el-button>
+              @click="unBindCard(item)">{{ $t('userCardList.Unbundle') }}</el-button>
+            <el-button v-if="item.pledge === 0" :loading="item.isloading" @click="bindCard(item)"
+              plain>{{ $t('userCardList.Bundle') }}</el-button>
           </div>
         </div>
       </div>
       <div class="card-item">
-          <img src="@/assets/core-card/vip_m_0.png" class="vip-img-0" alt="">
+        <img src="@/assets/core-card/vip_m_0.png" class="vip-img-0" alt="">
         <div>
-          <div class="vip-txt-0">{{$t('userCardList.Mint0')}}</div>
-          <el-button class="vip-btn-0" type="primary" @click="$router.push('/coreCardMint')">{{$t('userCardList.Mint')}}</el-button>
+          <div class="vip-txt-0">{{ $t('userCardList.Mint0') }}</div>
+          <el-button class="vip-btn-0" type="primary"
+            @click="$router.push('/coreCardMint')">{{ $t('userCardList.Mint') }}</el-button>
         </div>
       </div>
     </div>
@@ -95,7 +97,7 @@ export default {
     async bindCard (item) {
       for (let i = 0; i < this.dataList.length; i++) {
         if (this.dataList[i].pledge === 1) {
-          this.$tools.notification('', '只能绑定一张coreCrad', 'error');
+          this.$tools.notification('', this.$t('messageTip.coreCardBindCheck'), 'error');
           return
         }
       }
