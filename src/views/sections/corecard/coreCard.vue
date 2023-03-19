@@ -22,7 +22,7 @@
 				<core-card-wrapper
 					@handleSelect="handleSelect"
 					:bindData="state.bindData[0]"
-					:initLevel="state.bindData[0] ? state.bindData[0].level : 2"
+					:initLevel="state.initLevel"
 				></core-card-wrapper>
 				<core-card-process
 					:myCards="state.myCards"
@@ -75,11 +75,12 @@ const state = reactive({
 	user: computed(() => proxy.$store.state.user),
 	myCards: [],
 	bindData: [],
+	initLevel: 0,
 });
 const store = useStore();
 const bgColor = ref('#C4CCD5');
 const bgBanner = ref('url(' + require(`@/assets/core-card/bg-3.webp`) + ')');
-const vipIcon = ref(require(`@/assets/core-card/vip2.png`));
+const vipIcon = ref(require(`@/assets/core-card/vip0.png`));
 let isScrollTop = false;
 let firstStatus = ref(false);
 
@@ -100,9 +101,7 @@ watch(
 watch(
 	() => state.myCards,
 	() => {
-		nextTick(() => {
-			checkBindStatus();
-		});
+		checkBindStatus();
 	}
 );
 
@@ -121,7 +120,9 @@ function handleScroll() {
 }
 
 const handleSelect = (i) => {
-	state.daily = state.cardConfigList[i].ticketIncome;
+	if (state.cardConfigList.length) {
+		state.daily = state.cardConfigList[i].ticketIncome;
+	}
 	bgBanner.value =
 		'url(' + require(`@/assets/core-card/bg-${i + 1}.webp`) + ')';
 	vipIcon.value = require(`@/assets/core-card/vip${i}.png`);
@@ -170,6 +171,7 @@ const checkBindStatus = () => {
 	state.bindData = state.myCards.filter((item) => {
 		return item.pledge === 1;
 	});
+	state.initLevel = state.bindData[0] ? state.bindData[0].level : 0;
 };
 
 const getUserStatus = () => {

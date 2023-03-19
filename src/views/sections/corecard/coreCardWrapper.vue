@@ -10,27 +10,29 @@
 	</div>
 </template>
 <script setup>
-import { onMounted, defineEmits, defineProps, watch, ref } from 'vue';
+import { onMounted, defineEmits, defineProps, watch, ref, reactive ,computed,getCurrentInstance} from 'vue';
 
 
-let selectedIndex = ref();
+let selectedIndex = ref(null);
 const emits = defineEmits(['handleSelect']);
+const state = reactive({
+	connect: computed(() => proxy.$store.state.connected),
+	token: computed(() => proxy.$store.state.token),
+	myCards: [],
+	bindData: [],
+	initLevel: 0,
+});
 const props = defineProps({
+  bindData: {
+    type: Object,
+    default: {}
+  },
 	initLevel: {
 		type: Number,
 		default: 0
 	}
 })
-
-watch(
-	() => props.initLevel,
-	(val) => {
-		// Todo 优化
-		selectedIndex.value = val;
-		wrapper();
-    handleSelect(val);
-	}
-)
+const { proxy } = getCurrentInstance();
 
 function handleSelect (index) {
 	emits('handleSelect', index);
@@ -41,6 +43,29 @@ const getImageUrl = (i, type) => {
 	return type === 'webp'
 		? require(`@/assets/core-card/v${i}.webp`)
 		: require(`@/assets/core-card/v${i}.png`);
+};
+
+const checkBindStatus = () => {
+	state.bindData = state.myCards.filter((item) => {
+		return item.pledge === 1;
+	});
+	state.initLevel = state.bindData[0] ? state.bindData[0].level : 0;
+};
+
+
+const getUserStatus = () => {
+	if (state.connect) {
+		proxy.$api('corecard.myCards').then((res) => {
+			proxy.$tools.checkResponse(res);
+			state.myCards = res.debug;
+			if (state.myCards.length !== 0) {
+				checkBindStatus();
+			}
+      selectedIndex.value = state.bindData[0] ? state.bindData[0].level : 0;
+      handleSelect(selectedIndex.value);
+      wrapper();
+		});
+	}
 };
 
 
@@ -73,7 +98,7 @@ ZoomPic.prototype = {
 			{ width: 65, height: 109, top: 101, left: 570, zIndex: 2 },
 		];
 		for (var i = 0; i < this.aLi.length; i++) this.aSort[i] = this.aLi[i];
-		let defalutIndex = props.initLevel;
+		let defalutIndex = selectedIndex.value ;
 		let forIndex = 3;
 		if ((3 - defalutIndex) > 0) {
 			forIndex = 3 - defalutIndex
@@ -242,8 +267,7 @@ function wrapper () {
 	new ZoomPic('box');
 }
 onMounted(() => {
-
-	// wrapper();
+  getUserStatus();
 });
 </script>
 <style lang="scss" scoped>
