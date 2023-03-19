@@ -92,22 +92,22 @@ ZoomPic.prototype = {
     handleSelect(selectedIndex.value);
 		this.setUp();
 	},
-	doImgClick: function() {
-		var _this = this;
-		for (var i = 0; i < this.aSort.length; i++) {
-			this.aSort[i].onclick = function() {
-				if (this.index > _this.iCenter) {
-					for (var i = 0; i < this.index - _this.iCenter; i++)
-						_this.aSort.push(_this.aSort.shift());
-					_this.setUp();
-				} else if (this.index < _this.iCenter) {
-					for (var i = 0; i < _this.iCenter - this.index; i++)
-						_this.aSort.unshift(_this.aSort.pop());
-					_this.setUp();
-				}
-			};
-		}
-	},
+	// doImgClick: function() {
+	// 	var _this = this;
+	// 	for (var i = 0; i < this.aSort.length; i++) {
+	// 		this.aSort[i].onclick = function() {
+	// 			if (this.index > _this.iCenter) {
+	// 				for (var i = 0; i < this.index - _this.iCenter; i++)
+	// 					_this.aSort.push(_this.aSort.shift());
+	// 				_this.setUp();
+	// 			} else if (this.index < _this.iCenter) {
+	// 				for (var i = 0; i < _this.iCenter - this.index; i++)
+	// 					_this.aSort.unshift(_this.aSort.pop());
+	// 				_this.setUp();
+	// 			}
+	// 		};
+	// 	}
+	// },
 	setUp: function() {
 		var _this = this;
 		var i = 0;
