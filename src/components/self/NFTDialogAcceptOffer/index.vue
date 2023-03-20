@@ -66,6 +66,10 @@
           <span>${{$filters.milliFormat($filters.ethToUsdt(totalRevenue))}}</span>
         </div>
       </div>
+      <div class="warn-opensea display-flex box-center" v-if="isOpensea">
+        <div class="icon-warn"><img src="../../../assets/images/icons/icon_warn_yellow.svg" alt=""></div>
+        <div>{{ $t('messageTip.openseaWarnTip') }}</div>
+      </div>
       <el-button type="primary" class="btnBuy" v-if="isApproved" :loading="acceptBtnLoading" @click="acceptOffer">
         {{ $t('AcceptOffer.btn1') }}
       </el-button>
@@ -487,6 +491,14 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  .warn-opensea{
+    margin-top: 30px;
+    color: $gray-black;
+    font-size: 16px;
+    .icon-warn{
+      margin-right: 12px;
+    }
+  }
 .nft-box {
   display: flex;
   padding: 16px;

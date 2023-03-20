@@ -10,7 +10,7 @@
 				<img :src="getImageUrl(i, 'lv')" class="image" />
 				<div class="info">
 					<p>
-						VIP level <sub>(centralization)</sub>
+						CoreCard V{{ i }}
 						<img :src="getImageUrl(i, 'vip')" alt="" />
 					</p>
 					<p>
