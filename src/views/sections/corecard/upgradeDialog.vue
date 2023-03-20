@@ -104,7 +104,6 @@ const levelUp = () => {
 			} else {
 				proxy.$tools.message('更新失败', 'error');
 			}
-			state.amount = '';
 			closed();
 		});
 	} else {
@@ -113,6 +112,7 @@ const levelUp = () => {
 };
 
 const closed = () => {
+	state.amount = '';
 	emits('handleReload');
 	emits('handleClosed', !props.isShowUpgradeDialog);
 };
