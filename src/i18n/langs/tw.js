@@ -89,7 +89,7 @@ module.exports = {
 		myCollection: '我的NFT',
 		favorites: '我的喜歡',
 		setting: '設置',
-		MyCoreCard: '我的CoreCard',
+		MyCoreCard: '管理CoreCard',
 		quit: '退出',
 		score: '積分',
 		rewards:'券',
@@ -137,7 +137,7 @@ module.exports = {
 	},
 	profile: {
 		editProfile: '常規設置',
-		userCardList: '我的CoreCard',
+		userCardList: '管理CoreCard',
 		Username: '昵稱',
 		placeholderName: '請輸入你的用戶名',
 		UploadCover: '上傳封面',

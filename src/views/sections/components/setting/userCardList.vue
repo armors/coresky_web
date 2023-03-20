@@ -2,16 +2,17 @@
   <div class="userCardList">
     <div class="card-list" v-loading="isLoading">
       <div class="card-item" :class="{ 'active': item.pledge === 1 }" v-for="(item, index) in dataList" :key="index">
-        <img :src="require(`@/assets/core-card/v${item.level}.png`)" class="card-img" alt="">
+        <img :src="require(`@/assets/core-card/v${item.level}.png`)" @click="goDetail(item)" class="card-img" alt="">
         <!-- <img :src="item.avatarFrame" class="card-img" alt=""> -->
         <div class="card-info">
-          <div class="card-name">
+          <div class="card-name" @click="goDetail(item)">
             <span>{{ item.name }}</span>
             <el-icon class="" color="#35C955" size="20">
               <SuccessFilled />
             </el-icon>
           </div>
           <div class="card-vip">
+
             <img :src="require(`@/assets/core-card/vip${item.level}.png`)" class="vip-img" alt="">
             <div class="vip-progress">
               <div class="vip-val" :style="{ width: (item.ratio * 100) + '%' }"></div>
@@ -85,6 +86,10 @@ export default {
       if (this.user && this.user.coinbase) {
         this.queryData()
       }
+    },
+    goDetail (item) {
+      let address = process.env.VUE_APP_CORE_CARD
+      this.$router.push(`/detail/${address}/${item.tokenId}`)
     },
     queryData () {
       this.isLoading = true
@@ -167,6 +172,7 @@ export default {
         width: auto;
         border-radius: 0;
         height: 152px;
+        cursor: pointer;
       }
       .card-info {
         margin-left: 30px;
@@ -180,6 +186,10 @@ export default {
           font-size: 18px;
           line-height: 21px;
           color: #04142A;
+          cursor: pointer;
+          &:hover{
+            color: #1063E0;
+          }
           .el-icon {
             display: none;
             margin-left: 22px;
