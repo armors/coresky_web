@@ -46,7 +46,8 @@ module.exports = {
 		addedCart: 'Added to cart',
 		coreCardTip1: 'Check my CoreCard Airdrop Eligibility',
 		coreCardTip2: 'Congratulations! You got a "CoreCard V{name}"',
-		coreCardBindCheck: 'Only one CoreCard can be bound. Please unbind and try again'
+		coreCardBindCheck:
+			'Only one CoreCard can be bound. Please unbind and try again',
 	},
 	// 头部导航
 	navigation: {
@@ -169,7 +170,7 @@ module.exports = {
 		Rewards: 'Rewards',
 		ConvertTickets: 'Convert to Tickets',
 		TransactionMining: 'Mining records',
-		RewardsRules: 'Rewards Rules'
+		RewardsRules: 'Rewards Rules',
 	},
 	shoppingCart: {
 		title: 'Shopping cart',

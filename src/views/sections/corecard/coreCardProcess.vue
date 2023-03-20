@@ -27,7 +27,7 @@
 				<div class="info-right">
 					<!-- <p class="bind-tip">( none )</p> -->
 					<el-button type="primary" class="bind" @click="goBind">
-						Bind
+						{{ $t('coreCard.goBind') }}
 					</el-button>
 				</div>
 			</div>
