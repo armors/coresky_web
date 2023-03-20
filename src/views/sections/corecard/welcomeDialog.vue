@@ -58,7 +58,7 @@ const props = defineProps({
 const emits = defineEmits(['handleClose']);
 
 const goMint = () => {
-	localStorage.setItem('firstEnter', false);
+	localStorage.setItem('userFirst', false);
 	router.push({
 		path: '/coreCardMint',
 	});
@@ -67,7 +67,7 @@ const goMint = () => {
 
 const closed = () => {
 	emits('handleClose', false);
-	localStorage.setItem('firstEnter', false);
+	localStorage.setItem('userFirst', false);
 };
 </script>
 

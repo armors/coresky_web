@@ -25,7 +25,7 @@
 			<div class="level-info">
 				<img src="@/assets/core-card/small-img1.png" alt="" />
 				<div class="info-right">
-					<p class="bind-tip">( none )</p>
+					<!-- <p class="bind-tip">( none )</p> -->
 					<el-button type="primary" class="bind" @click="goBind">
 						Bind
 					</el-button>

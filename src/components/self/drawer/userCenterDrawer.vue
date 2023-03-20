@@ -54,6 +54,10 @@
         <img class="icon" src="@/assets/images/icons/icon_transaction.svg" alt="">
         <span>Activities</span>
       </div> -->
+      <div class="nav-item" @click="goCoreCard">
+        <img class="icon" src="@/assets/images/icons/icon_class_card.svg" alt="">
+        {{ $t('userCenter.MyCoreCard') }}
+      </div>
       <div class="nav-item" @click="goProfile">
         <img class="icon" src="@/assets/images/icons/icon_class_setting.svg" alt="">
         {{ $t('userCenter.setting') }}
@@ -217,6 +221,11 @@ export default {
     goProfile () {
       this.visible = false
       this.$router.push({ path: '/profile' });
+      this.handleClose()
+    },
+    goCoreCard () {
+      this.visible = false
+      this.$router.push('/profile?tab=usercardlist');
       this.handleClose()
     },
     goView (path) {
