@@ -650,11 +650,15 @@ export default {
 				if (typeof result == "object" && result.error) {
 					return result;
 				}
-				this.isApproved = await this.$sdk.isApprovedForAll(
+				const isApprovedRes = await this.$sdk.isApprovedForAll(
 					order,
 					this.user.coinbase,
 					this.registryOwner,
 				);
+				if (typeof isApprovedRes == "object" && isApprovedRes.error) {
+					this.isApproved = false
+					return result;
+				}
 				this.sellBtnLoading = false
 				console.log(result)
 			} else {
@@ -697,12 +701,34 @@ export default {
 			console.log(typeof this.tokenInfo.tokenId)
 			this.sellBtnLoading = true
 			const registryOwner = await this.getRegistryOwner()
+			console.log(registryOwner)
 			if (typeof registryOwner == 'object' && registryOwner.error) {
 				this.sellBtnLoading = false
 				return
 			}
-			if (!this.isApproved) {
-				await this.setApproveAll()
+			console.log(this.isApproved)
+			if (!this.isApproved || typeof this.isApproved == 'object') {
+				const approveRes = await this.setApproveAll()
+				if (typeof approveRes == 'object' && approveRes.error) {
+					this.sellBtnLoading = false
+					return
+				}
+			}
+			let order = {
+				type: this.tokenInfo.contractType === 0 ? "IERC721" : "IERC1155",
+				address: this.tokenInfo.contract,
+				tokenId: this.tokenInfo.tokenId,
+			};
+			let isApproved = await this.$sdk.isApprovedForAll(
+				order,
+				this.user.coinbase,
+				this.registryOwner,
+			);
+			console.log(isApproved)
+			if (!isApproved || typeof isApproved == "object") {
+				this.isApproved = false
+				this.sellBtnLoading = false
+				return;
 			}
 			this.sellBtnLoading = true
 			let seller = this.$sdk.makeOrder({
