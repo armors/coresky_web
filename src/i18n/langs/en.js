@@ -47,7 +47,7 @@ module.exports = {
 		coreCardTip1: 'Check my CoreCard Airdrop Eligibility',
 		coreCardTip2: 'Congratulations! You got a "CoreCard V{name}"',
 		coreCardBindCheck:
-			'Only one CoreCard can be bound. Please unbind and try again',
+			'Only one CoreCard can be bound. Please unbundle and try again',
 	},
 	// 头部导航
 	navigation: {
@@ -713,8 +713,12 @@ module.exports = {
 		upgrade: 'Upgrade',
 		cardLevel: 'CoreCard level',
 		coreskPoints: 'Accumulated points',
-		energy: 'Energy storage upgrade',
+		energy: 'Upgrade your Corecard',
 		availableCoresky: 'Available Coresky points',
-		input: 'Input',
+		input: 'Upgrade',
+		succeedUpgrade: 'Successfully upgraded CoreCard',
+		faildUpgrade: 'The upgrade of CoreCard failed. Please try again later',
+		pleaseInput: 'Please enter the number of input points',
+		placeholderInput: 'Please input points',
 	},
 };

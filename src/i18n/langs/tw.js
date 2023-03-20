@@ -25,8 +25,9 @@ module.exports = {
 		Rewards: '獎勵',
 	},
 	messageTip: {
-    openseaWarnTip: "This transaction is from Opensea, cannot trade mining on Coresky.",
-    PurchaseComplete: '購買成功',
+		openseaWarnTip:
+			'This transaction is from Opensea, cannot trade mining on Coresky.',
+		PurchaseComplete: '購買成功',
 		PurchaseFailed: '購買失敗',
 		ListingSucceeded: '掛單成功',
 		OfferSucceeded: '報價成功',
@@ -44,7 +45,7 @@ module.exports = {
 		addedCart: '已經加入購物車',
 		coreCardTip1: '查看是否有CoreCard空投？',
 		coreCardTip2: '恭喜您獲得CoreCard“CoreCard V{name}”',
-		coreCardBindCheck:'只能綁定一張CoreCard。請解綁重試'
+		coreCardBindCheck: '只能綁定一張CoreCard。請解綁重試',
 	},
 	navigation: {
 		searchTip: '搜索NFT或合集',
@@ -91,7 +92,7 @@ module.exports = {
 		setting: '設置',
 		quit: '退出',
 		score: '積分',
-		rewards:'券',
+		rewards: '券',
 		details: '查看更多',
 	},
 	accountCenter: {
@@ -326,5 +327,9 @@ module.exports = {
 		energy: '儲能陞級',
 		availableCoresky: 'Coresky 積分餘額',
 		input: '輸入',
+		succeedUpgrade: 'CoreCard 陞級成功',
+		faildUpgrade: 'CoreCard 陞級失敗，請稍後重試',
+		pleaseInput: '請輸入投入積分數量',
+		placeholderInput: '請輸入投入積分數量',
 	},
 };
