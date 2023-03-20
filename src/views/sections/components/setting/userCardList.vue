@@ -2,8 +2,8 @@
   <div class="userCardList">
     <div class="card-list" v-loading="isLoading">
       <div class="card-item" :class="{ 'active': item.pledge === 1 }" v-for="(item, index) in dataList" :key="index">
-        <!-- <img src="@/assets/core-card/level1.png" class="card-img" alt=""> -->
-        <img :src="item.avatarFrame" class="card-img" alt="">
+        <img :src="require(`@/assets/core-card/v${item.level}.png`)" class="card-img" alt="">
+        <!-- <img :src="item.avatarFrame" class="card-img" alt=""> -->
         <div class="card-info">
           <div class="card-name">
             <span>{{ item.name }}</span>
@@ -16,22 +16,24 @@
             <div class="vip-progress">
               <div class="vip-val" :style="{ width: (item.ratio * 100) + '%' }"></div>
             </div>
-            <div class="vip-txt">{{ item.ratio * 100 }}%</div>
+            <div class="vip-txt">{{ item.newRatio }}%</div>
           </div>
-          <div>
-            <el-button type="primary" :loading="item.isloading" v-if="item.pledge === 1"
-              @click="unBindCard(item)">{{ $t('userCardList.Unbundle') }}</el-button>
-            <el-button v-if="item.pledge === 0" :loading="item.isloading" @click="bindCard(item)"
-              plain>{{ $t('userCardList.Bundle') }}</el-button>
+          <div class="btn-wrap">
+            <el-button type="primary" class="btn-Unbundle" color="#04142A" :loading="item.isloading"
+              v-if="item.pledge === 1" @click="unBindCard(item)">{{
+                $t('userCardList.Unbundle') }}</el-button>
+            <el-button type="primary" v-if="item.pledge === 1" @click="$router.push('/coreCard')">{{
+              $t('userCardList.Upgrade') }}</el-button>
+            <el-button v-if="item.pledge === 0" :loading="item.isloading" @click="bindCard(item)" plain>{{
+              $t('userCardList.Bundle') }}</el-button>
           </div>
         </div>
       </div>
       <div class="card-item">
         <img src="@/assets/core-card/vip_m_0.png" class="vip-img-0" alt="">
-        <div>
-          <div class="vip-txt-0">{{ $t('userCardList.Mint0') }}</div>
-          <el-button class="vip-btn-0" type="primary"
-            @click="$router.push('/coreCardMint')">{{ $t('userCardList.Mint') }}</el-button>
+        <div style="flex-grow:1">
+          <el-button class="vip-btn-0" type="primary" @click="$router.push('/coreCardMint')">{{ $t('userCardList.Mint0')
+          }}</el-button>
         </div>
       </div>
     </div>
@@ -90,6 +92,7 @@ export default {
         this.isLoading = false
         this.dataList = res.debug.map(el => {
           el.isloading = false
+          el.newRatio = (parseFloat(el.ratio) * 100).toFixed(2)
           return el
         })
       })
@@ -161,7 +164,8 @@ export default {
         }
       }
       .card-img {
-        width: 90px;
+        width: auto;
+        border-radius: 0;
         height: 152px;
       }
       .card-info {
@@ -204,6 +208,8 @@ export default {
             line-height: 19px;
             color: #717A83;
             margin-left: 8px;
+            width: 50px;
+            text-align: right;
           }
           .vip-val {
             position: absolute;
@@ -213,6 +219,9 @@ export default {
             background: linear-gradient(270deg, #1063E0 0%, #7190FF 100%);
             border-radius: 29px;
           }
+        }
+        .btn-wrap {
+          display: flex;
         }
         button {
           width: 100%;
@@ -226,6 +235,9 @@ export default {
           transition: all .2s;
           font-size: 16px;
           // color: #04142A;
+        }
+        .btn-Unbundle {
+          flex: 0 0 120px;
         }
       }
       .vip-img-0 {
@@ -242,7 +254,7 @@ export default {
         margin-bottom: 15px;
       }
       .vip-btn-0 {
-        width: 240px;
+        width: 100%;
         height: 46px;
         border-radius: 12px;
       }

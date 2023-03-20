@@ -9,7 +9,6 @@
       </div>
       <general v-if="tabName === 'general'" />
       <userCardList v-if="tabName === 'usercardlist'" />
-
     </div>
   </div>
   <FooterTemplate />
@@ -38,19 +37,37 @@ export default {
     };
   },
   created () {
-    let tab = this.$route.query.corecard
-    if (this.$route.query.tab === 'usercardlist') {
-      this.tabName = this.$route.query.tab
-    }
+    this.init()
+  },
+  watch: {
+    tag (val) {
+      this.init()
+    },
   },
   computed: {
+    tag () {
+      return this.$route.query.tab
+    },
     user () {
       return this.$store.state.user;
     },
   },
   methods: {
     setTab (name) {
+      let path = this.$route.path
+      this.$router.push({
+        path,
+        query: { tab: name }
+      })
       this.tabName = name
+    },
+    init () {
+      if (this.$route.query.tab === 'usercardlist') {
+        this.tabName = this.$route.query.tab
+      }
+      else {
+        this.tabName = 'general'
+      }
     }
   },
 };
@@ -68,7 +85,7 @@ export default {
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08);
   border-radius: 16px;
   height: 100%;
-  padding:20px 50px;
+  padding: 20px 50px;
   display: flex;
   flex-direction: column;
 }

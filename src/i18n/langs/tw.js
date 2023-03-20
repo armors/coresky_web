@@ -88,6 +88,7 @@ module.exports = {
 		myCollection: '我的NFT',
 		favorites: '我的喜歡',
 		setting: '設置',
+		MyCoreCard: '我的CoreCard',
 		quit: '退出',
 		score: '積分',
 		rewards:'券',
@@ -135,7 +136,7 @@ module.exports = {
 	},
 	profile: {
 		editProfile: '常規設置',
-		userCardList: '管理CoreCard',
+		userCardList: '我的CoreCard',
 		Username: '昵稱',
 		placeholderName: '請輸入你的用戶名',
 		UploadCover: '上傳封面',
@@ -303,6 +304,7 @@ module.exports = {
 	userCardList: {
 		Bundle: '綁定',
 		Unbundle: '解綁',
+		Upgrade: '陞級',
 		Mint0: '鑄造CoreCard V0',
 		Mint: '鑄造',
 	},

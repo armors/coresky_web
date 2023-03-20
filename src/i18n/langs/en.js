@@ -45,7 +45,7 @@ module.exports = {
 		addedCart: 'Added to cart',
 		coreCardTip1: 'Check my CoreCard Airdrop Eligibility',
 		coreCardTip2: 'Congratulations! You got a "CoreCard V{name}"',
-		coreCardBindCheck:'Only one CoreCard can be bound. Please unbind and try again'
+		coreCardBindCheck: 'Only one CoreCard can be bound. Please unbind and try again'
 	},
 	// 头部导航
 	navigation: {
@@ -90,9 +90,10 @@ module.exports = {
 		myCollection: 'My Collection',
 		favorites: 'Favorites',
 		setting: 'Setting',
+		MyCoreCard: 'My CoreCard',
 		quit: 'Quit',
 		score: 'Coresky points',
-		rewards:'Ticket',
+		rewards: 'Ticket',
 		details: 'Details',
 	},
 	accountCenter: {
@@ -137,7 +138,7 @@ module.exports = {
 	},
 	profile: {
 		editProfile: 'General Settings',
-		userCardList: 'Manage CoreCard',
+		userCardList: 'My CoreCard',
 		Username: 'Username',
 		placeholderName: 'Please input your username',
 		UploadCover: 'Upload Cover',
@@ -691,6 +692,7 @@ module.exports = {
 	},
 	userCardList: {
 		Bundle: 'Bundle',
+		Upgrade: 'Upgrade',
 		Unbundle: 'Unbundle',
 		Mint0: 'Claim CoreCard V0',
 		Mint: 'Claim',

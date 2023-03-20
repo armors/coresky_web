@@ -18,7 +18,7 @@
       <div class="card-item">
         <img class="image" src="@/assets/images/reward02.jpg" alt="">
         <a href="https://docs.coresky.com/doc/20/" target="_blank" class="item-content">
-          <span class="ml20">TRADING MINING</span>
+          <span class="ml20">Reward Rules</span>
           <img class="btn-right" src="@/assets/images/right.png" alt="">
         </a>
 
