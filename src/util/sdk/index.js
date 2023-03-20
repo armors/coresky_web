@@ -894,6 +894,7 @@ export default {
 		try {
 			return await contract.isApprovedForAll(owner, operator);
 		} catch (e) {
+			console.log('获取nft是否授权', e)
 			return {error: e.message};
 		}
 	},

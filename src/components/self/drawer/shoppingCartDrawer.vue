@@ -34,7 +34,7 @@
             <div class="shopping-info">
               <image-box :src="v.oriImage"></image-box>
               <div class="info-txt">
-                <div class="txt1 ellipsis">{{ v.name ? v.name : '#' + v.tokenId }}</div>
+                <div class="txt1 ellipsis">{{ v.name ? v.name :  '#' + v.tokenId }}</div>
                 <div class="txt2 display-flex box-center-Y">
                   <div>{{ v.ckCollectionsInfoEntity.name || '--' }}</div>
                   <img class="tag" v-if="v.ckCollectionsInfoEntity.isCertification === '1'"
@@ -85,8 +85,7 @@
           <div class="shopping-info">
             <image-box :src="v.makerAssetBundle.assets[0].imageUrl"></image-box>
             <div class="info-txt">
-              <div class="txt1 ellipsis">{{ v.makerAssetBundle.assets[0].name ? v.makerAssetBundle.assets[0].name : '#' +
-                v.makerAssetBundle.assets[0].tokenId }}</div>
+              <div class="txt1 ellipsis">{{ v.makerAssetBundle.assets[0].name ? v.makerAssetBundle.assets[0].name :  '#' + v.makerAssetBundle.assets[0].tokenId }}</div>
               <div class="txt2 display-flex box-center-Y">
                 <div>{{ v.makerAssetBundle.assets[0].collection.name || '--' }}</div>
                 <svg-icon class="tag" icon-class="icon_tag" />
@@ -133,6 +132,10 @@
             <!-- <img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" /> -->
             {{ totalOpenseaPriceShow }} ETH
           </div>
+        </div>
+        <div class="warn-opensea display-flex box-center">
+          <div class="icon-warn"><img src="../../../assets/images/icons/icon_warn_yellow.svg" alt=""></div>
+          <div>{{ $t('messageTip.openseaWarnTip') }}</div>
         </div>
         <div>
           <el-button type="primary" :disabled="openseaCart.length < 1" class="btnOption" :loading="buyOpenseaBtnLoading"
@@ -614,13 +617,17 @@ export default {
           accountAddress: this.user.coinbase
         })
         this.$tools.message(this.$t('messageTip.PurchaseComplete'), 'success');
-        this.buyOpenseaBtnLoading = false
-
+        this.buyOpenseaBtnLoading= false
         let coreskyCart = this.coreskyCart
         let hasCoresky = coreskyCart.filter(v => {
-          let openseaI = this.openseaCart.forEach(item => { !(item.makerAssetBundle.assets[0].tokenAddress === v.contract && item.makerAssetBundle.assets[0].tokenId === v.tokenId) })
-          return openseaI === null
+          let openseaI = this.openseaCart.filter(item => !(
+            item.makerAssetBundle.assets[0].tokenAddress === v.contract
+            && item.makerAssetBundle.assets[0].tokenId === v.tokenId
+          ))
+          console.log(openseaI)
+          return openseaI.length > 0
         })
+        console.log(hasCoresky)
         if (hasCoresky.length !== coreskyCart.length) {
           coreskyCart = hasCoresky
         }
@@ -913,7 +920,14 @@ export default {
         color: $primaryColor;
       }
     }
-
+    .warn-opensea{
+      margin-top: 24px;
+      color: $gray-black;
+      font-size: 12px;
+      .icon-warn{
+        margin-right: 12px;
+      }
+    }
     .btnOption {
       margin-top: 14px;
       width: 100%;

@@ -4,7 +4,7 @@ import i18n from "@/i18n/i18n";
 import tools from "@/util/tools.js";
 import {removeLocalStorage} from "@/util/local-storage.js";
 import {providers, getDefaultProvider} from 'ethers'
-
+let isLoginWalleting = false
 const promisify = (inner) =>
 	new Promise((resolve, reject) =>
 		inner((err, res) => {
@@ -116,16 +116,23 @@ export default {
 	async loginWallet(address) {
 		let timestamp = parseInt(new Date().getTime());
 		var message = store.state.config.loginMessage.replace('{{address}}', address)
+		if (isLoginWalleting) {
+			return
+		}
+		isLoginWalleting = true
 		try {
 			console.log(message, address)
 			let signature = await this.sign(message, address);
+			isLoginWalleting = false
+			console.log('isLoginWalleting', isLoginWalleting)
 			if (signature.error) return signature;
-
 			return {
 				signature: signature,
 				timestamp: timestamp,
 			};
 		} catch (e) {
+			isLoginWalleting = false
+			console.log('isLoginWalleting', isLoginWalleting)
 			return {error: e.message};
 		}
 	},

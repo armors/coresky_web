@@ -25,7 +25,8 @@ module.exports = {
 		Rewards: '獎勵',
 	},
 	messageTip: {
-		PurchaseComplete: '購買成功',
+    openseaWarnTip: "This transaction is from Opensea, cannot trade mining on Coresky.",
+    PurchaseComplete: '購買成功',
 		PurchaseFailed: '購買失敗',
 		ListingSucceeded: '掛單成功',
 		OfferSucceeded: '報價成功',

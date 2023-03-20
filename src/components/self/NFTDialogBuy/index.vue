@@ -41,6 +41,11 @@
            <div class="total">${{$filters.milliFormat($filters.ethToUsdt(nftPrice))}}</div>
         </div>
       </div>
+
+      <div class="warn-opensea display-flex box-center" v-if="isOpensea">
+        <div class="icon-warn"><img src="../../../assets/images/icons/icon_warn_yellow.svg" alt=""></div>
+        <div>{{ $t('messageTip.openseaWarnTip') }}</div>
+      </div>
       <el-button type="primary" class="btnBuy" :loading="buyBtnLoading" @click="buyNft">Buy</el-button>
     </div>
     <div v-else>
@@ -347,6 +352,14 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  .warn-opensea{
+    margin-top: 24px;
+    color: $gray-black;
+    font-size: 16px;
+    .icon-warn{
+      margin-right: 12px;
+    }
+  }
 .nft-box {
   display: flex;
   padding: 16px;
