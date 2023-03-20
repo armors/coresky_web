@@ -23,7 +23,6 @@ module.exports = {
 		LearnMore: 'Learn more',
 		See: 'See',
 		Rewards: 'Rewards',
-
 	},
 	messageTip: {
 		PurchaseComplete: 'Your purchase is complete！',
@@ -45,7 +44,8 @@ module.exports = {
 		addedCart: 'Added to cart',
 		coreCardTip1: 'Check my CoreCard Airdrop Eligibility',
 		coreCardTip2: 'Congratulations! You got a "CoreCard V{name}" CoreCard',
-		coreCardBindCheck:'Only one CoreCard can be bound. Please unbind and try again'
+		coreCardBindCheck:
+			'Only one CoreCard can be bound. Please unbind and try again',
 	},
 	// 头部导航
 	navigation: {
@@ -709,7 +709,7 @@ module.exports = {
 		goBind: 'bundle',
 		upgrade: 'Upgrade',
 		cardLevel: 'CoreCard level',
-		coreskPoints: 'Coresky points',
+		coreskPoints: 'Accumulated points',
 		energy: 'Energy storage upgrade',
 		availableCoresky: 'Available Coresky points',
 		input: 'Input',

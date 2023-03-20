@@ -39,6 +39,7 @@ export default {
 			isRouterAlive: true,
 			isScrollTop: true,
 			firstStatus: false,
+			address: [],
 		};
 	},
 	computed: {
@@ -69,15 +70,32 @@ export default {
 		},
 		user(val1, val2) {
 			if (val1.coinbase != val2.coinbase && this.user.coinbase) {
+				let localAdd = JSON.parse(localStorage.getItem('address'));
+				if (localAdd.includes(val1.coinbase)) {
+					localStorage.setItem('userFirst', false);
+				} else {
+					localStorage.removeItem('userFirst');
+					this.firstStatus = true;
+				}
 				this.reload();
 			}
 		},
 	},
-	mounted() {
-		if (localStorage.getItem('firstEnter') === null) {
-			this.firstStatus = true;
-			localStorage.setItem('firstEnter', this.firstStatus);
+	updated() {
+		let localAdd = localStorage.getItem('address')
+			? JSON.parse(localStorage.getItem('address'))
+			: [];
+		if (!localAdd.includes(this.user.coinbase)) {
+			localAdd.push(this.user.coinbase);
 		}
+		localStorage.setItem('address', JSON.stringify(localAdd));
+	},
+	mounted() {
+		if (localStorage.getItem('userFirst') === null) {
+			localStorage.setItem('userFirst', true);
+			this.firstStatus = true;
+		}
+
 		this['changeCurrentRouteTo'](this.$route);
 		this['setCurrentView'](this.$route);
 		setTimeout(() => {
