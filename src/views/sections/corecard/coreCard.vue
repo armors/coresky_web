@@ -19,8 +19,8 @@
 					</div>
 				</div>
 				<core-card-wrapper
+					:bindData="state.bindData"
 					@handleSelect="handleSelect"
-					:bindData="state.bindData[0]"
 					:initLevel="state.initLevel"
 				></core-card-wrapper>
 				<core-card-process
@@ -52,7 +52,6 @@ import {
 	reactive,
 	computed,
 	watch,
-	nextTick,
 } from 'vue';
 import { useStore } from 'vuex';
 import coreCardWrapper from './coreCardWrapper.vue';
@@ -88,17 +87,13 @@ watch(
 	}
 );
 
+/**
+ *  监听钱包地址切换
+ */
 watch(
 	() => state.token,
 	() => {
 		getUserStatus();
-	}
-);
-
-watch(
-	() => state.myCards,
-	() => {
-		checkBindStatus();
 	}
 );
 
@@ -164,12 +159,14 @@ const getCoreCardList = () => {
 	});
 };
 
-const checkBindStatus = () => {
-	state.bindData = state.myCards.filter((item) => {
-		return item.pledge === 1;
-	});
-	state.initLevel = state.bindData[0] ? state.bindData[0].level : 0;
-};
+// const getUserBindData = () => {
+// 	if (state.token) {
+// 		proxy.$api('corecard.bindCard').then((res) => {
+// 			proxy.$tools.checkResponse(res);
+// 			state.bindData = res.debug;
+// 		});
+// 	}
+// };
 
 const getUserStatus = () => {
 	if (state.connect) {
@@ -177,7 +174,9 @@ const getUserStatus = () => {
 			proxy.$tools.checkResponse(res);
 			state.myCards = res.debug;
 			if (state.myCards.length !== 0) {
-				checkBindStatus();
+				state.bindData = state.myCards.filter((item) => {
+					return item.pledge === 1;
+				});
 				getUserinfo();
 			}
 		});
