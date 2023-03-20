@@ -120,6 +120,17 @@
                 <div class="num">{{ user && user.score }}</div>
               </div>
             </div>
+            <div class="wallet-item" style="border-bottom: 2px solid #E6E8EC;">
+              <div class="coin-box">
+                <img src="../../../assets/images/icons/score.svg" alt="">
+              </div>
+              <div class="coin-name">
+                {{ $t('userCenter.rewards') }}
+              </div>
+              <div class="price-box">
+                <div class="num">{{ user && user.rewards }}</div>
+              </div>
+            </div>
             <div class="wallet-item" style="background-color: #FAFCFE;">
               <el-link :underline="false" type="primary" @click="goView('/reward')" class="btnDetail">
                 {{ $t('userCenter.details') }}</el-link>
@@ -225,7 +236,7 @@ export default {
   margin-top: calc($headerHeight + 10px) !important;
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08);
   border-radius: 16px;
-  height: 660px !important;
+  height: 720px !important;
 
   .el-drawer__body {
     padding: 20px 0 !important;

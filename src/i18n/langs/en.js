@@ -44,7 +44,7 @@ module.exports = {
 			'Each platform only supports one quotation. Please cancel the listing of {name} platform and re-list',
 		addedCart: 'Added to cart',
 		coreCardTip1: 'Check my CoreCard Airdrop Eligibility',
-		coreCardTip2: 'Congratulations! You got a "CoreCard V{name}" CoreCard',
+		coreCardTip2: 'Congratulations! You got a "CoreCard V{name}"',
 		coreCardBindCheck:'Only one CoreCard can be bound. Please unbind and try again'
 	},
 	// 头部导航
@@ -92,6 +92,7 @@ module.exports = {
 		setting: 'Setting',
 		quit: 'Quit',
 		score: 'Coresky points',
+		rewards:'Ticket',
 		details: 'Details',
 	},
 	accountCenter: {
@@ -150,8 +151,8 @@ module.exports = {
 		editSuccess: 'Edit Success',
 	},
 	rewards: {
-		title: 'Trade to get Coresky score',
-		subTitle: 'Trade NFT on Coresky will get Coresky score rewards',
+		title: 'Trade to get Coresky points',
+		subTitle: 'Trade NFT on Coresky will get Coresky points rewards',
 		HotActivities: 'Hot activities',
 		MyRewards: 'My rewards',
 		CTScore: 'Coresky points',

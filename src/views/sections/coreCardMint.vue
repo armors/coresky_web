@@ -27,7 +27,8 @@
               <div class="job-content">
                 <img src="@/assets/core-card/icon_1.png" class="icon" alt="">
                 <span class="job-name">{{ $t('coreCardMint.connectWallet') }}</span>
-                <el-button type="primary" :disabled="user.id !== ''" class="">{{ $t('coreCardMint.connect') }}</el-button>
+                <el-button type="primary" @click="login" :disabled="token" class="">{{ $t('coreCardMint.connect')
+                }}</el-button>
               </div>
             </div>
             <div class="job-item">
@@ -104,11 +105,9 @@ export default {
     };
   },
   watch: {
-    user: {
+    token: {
       handler (val) {
-        if (this.user.id && this.isLoading === false && this.$store.state.useAuthorization) {
-          this.init();
-        }
+        this.init();
       },
       immediate: true
     }
@@ -137,10 +136,20 @@ export default {
     }
   },
   methods: {
+    login () {
+      this.$store.dispatch("connectAndSign")
+    },
     init () {
-      if (this.user && this.user.coinbase) {
+      if (this.token) {
         this.queryData()
         this.twitterInfo()
+      }
+      else {
+        this.viplevel = 0
+        this.isMinting = false
+        this.isBindTwitter = false
+        this.isRelayTwitter = false
+        this.isSuccess = false
       }
     },
     queryData () {
@@ -187,16 +196,6 @@ export default {
       this.isMinting = true
       let result = null
       result = await ERC721Template.selfMint(this.user.coinbase)
-      // if (this.viplevel === 0) {
-      //   result = await ERC721Template.selfMint(this.user.coinbase)
-      // }
-      // else {
-      //   let to = this.user.coinbase
-      //   let tokenid = this.tokenId
-      //   let uri = this.uri
-      //   let merkleProof = this.proot
-      //   result = await ERC721Template.merkleMint(to, tokenid, uri, merkleProof, this.user.coinbase)
-      // }
       if (result && result.status === true && result.blockHash) {
         this.$tools.notification('success', '');
         this.isSuccess = true

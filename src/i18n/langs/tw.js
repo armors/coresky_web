@@ -90,6 +90,7 @@ module.exports = {
 		setting: '設置',
 		quit: '退出',
 		score: '積分',
+		rewards:'券',
 		details: '查看更多',
 	},
 	accountCenter: {
@@ -263,14 +264,14 @@ module.exports = {
 	},
 	footer: {
 		projectDesc: 'OUR SLOGAN xxxxxxxxxxxxxxxxxx',
-		itemDocs: 'Docs',
-		itemAuditReport: 'Audit Report',
+		itemDocs: '檔案',
+		itemAuditReport: '稽核報告',
 		itemJobs: 'Jobs',
 		itemDeveloper: 'Developer',
 		itemAPI: 'API',
-		itemCommunity: 'Community',
-		itemPrivacyStatement: 'Privacy Policy',
-		itemTermsService: 'Terms of Service',
+		itemCommunity: '社交媒體',
+		itemPrivacyStatement: '隱私協定',
+		itemTermsService: '使用者協定',
 		joinCommunity: 'Join the community',
 	},
 	time: {

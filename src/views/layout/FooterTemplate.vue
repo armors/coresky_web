@@ -11,18 +11,20 @@
         <div class="display-flex link-box">
           <div class="display-flex box-center-Y item-list">
             <a class="item-box" target="_blank" href="https://docs.coresky.com/">{{ $t("footer.itemDocs") }}</a>
-            <a class="item-box" target="_blank" href="https://f.coresky.com/file/AuditReport.pdf">{{ $t("footer.itemAuditReport") }}</a>
+            <a class="item-box" target="_blank" href="https://f.coresky.com/file/AuditReport.pdf">{{
+              $t("footer.itemAuditReport") }}</a>
             <!-- <div class="item-box">{{$t('footer.itemJobs')}}</div> -->
             <!-- <div class="item-box">{{$t('footer.itemDeveloper')}}</div> -->
             <!-- <div class="item-box">{{$t('footer.itemAPI')}}</div> -->
             <!-- <div class="item-box">{{$t('footer.itemCommunity')}}</div> -->
-            <a href="https://f.coresky.com/file/PrivacyPolicy.pdf" target="_blank" class="item-box">{{ $t("footer.itemPrivacyStatement") }}</a>
+            <a href="https://f.coresky.com/file/PrivacyPolicy.pdf" target="_blank" class="item-box">{{
+              $t("footer.itemPrivacyStatement") }}</a>
             <a href="https://f.coresky.com/file/TermsService.pdf" target="_blank" class="item-box">{{
               $t("footer.itemTermsService")
             }}</a>
           </div>
           <div class="display-flex box-center-Y link-right">
-            <div>Community</div>
+            <div>{{ $t("footer.itemCommunity") }}</div>
             <div class="media-list display-flex box-center-Y">
               <a class="media-item" v-for="(v, i) in mediaList" :key="`media-item-${i}`" :href="v.url" target="_blank">
                 <!-- <el-tooltip class="item" effect="dark" :content="v.tip" placement="top"> -->
@@ -51,17 +53,17 @@ export default {
         {
           url: "https://twitter.com/Coreskyofficial",
           name: "twitter",
-          tip:'website'
+          tip: 'website'
         },
         {
           url: "https://discord.gg/coresky",
           name: "discord",
-          tip:'website2'
+          tip: 'website2'
         },
         {
           url: "mailto:info@coresky.com",
           name: "email",
-          tip:'website'
+          tip: 'website'
         },
         // 'ins',
         // 'reddit',
