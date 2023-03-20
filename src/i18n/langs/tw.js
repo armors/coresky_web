@@ -168,6 +168,7 @@ module.exports = {
 		Rewards: '積分獎勵',
 		ConvertTickets: '兌換彩票',
 		TransactionMining: '交易挖礦',
+		RewardsRules: '獎勵規則'
 	},
 	shoppingCart: {
 		title: '購物車',
