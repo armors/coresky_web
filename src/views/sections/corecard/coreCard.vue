@@ -85,6 +85,13 @@ let isScrollTop = false;
 let firstStatus = ref(false);
 
 watch(
+	() => state.connect,
+	() => {
+		getUserStatus();
+	}
+);
+
+watch(
 	() => state.token,
 	() => {
 		getUserStatus();
