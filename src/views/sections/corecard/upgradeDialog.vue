@@ -42,7 +42,7 @@
 						<div class="max-value">
 							<el-input
 								v-model="state.amount"
-								placeholder="Please input"
+								:placeholder="$t('coreCard.placeholderInput')"
 								:controls="false"
 								v-input-limit="'9,4'"
 								class="max-input"
@@ -100,19 +100,25 @@ const levelUp = () => {
 		proxy.$api('corecard.levelUp', params).then((res) => {
 			proxy.$tools.checkResponse(res);
 			if (res.code === 200) {
-				proxy.$tools.message('更新成功', 'success');
+				proxy.$tools.message(
+					proxy.$t('coreCard.succeedUpgrade'),
+					'success'
+				);
 			} else {
-				proxy.$tools.message('更新失败', 'error');
+				proxy.$tools.message(
+					proxy.$t('coreCard.faildUpgrade'),
+					'error'
+				);
 			}
-			state.amount = '';
 			closed();
 		});
 	} else {
-		proxy.$tools.message('请输入积分', 'warning');
+		proxy.$tools.message(proxy.$t('coreCard.pleaseInput'), 'warning');
 	}
 };
 
 const closed = () => {
+	state.amount = '';
 	emits('handleReload');
 	emits('handleClosed', !props.isShowUpgradeDialog);
 };
