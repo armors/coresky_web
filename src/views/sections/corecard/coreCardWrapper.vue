@@ -10,7 +10,7 @@
 	</div>
 </template>
 <script setup>
-import { onMounted, defineEmits, defineProps, watch, ref, reactive ,computed,getCurrentInstance} from 'vue';
+import { onMounted, defineEmits, defineProps,ref, reactive ,computed,getCurrentInstance,} from 'vue';
 
 
 let selectedIndex = ref(null);
@@ -33,6 +33,7 @@ const props = defineProps({
 	}
 })
 const { proxy } = getCurrentInstance();
+
 
 function handleSelect (index) {
 	emits('handleSelect', index);
@@ -98,7 +99,7 @@ ZoomPic.prototype = {
 			{ width: 65, height: 109, top: 101, left: 570, zIndex: 2 },
 		];
 		for (var i = 0; i < this.aLi.length; i++) this.aSort[i] = this.aLi[i];
-		let defalutIndex = selectedIndex.value ;
+		let defalutIndex = selectedIndex.value;
 		let forIndex = 3;
 		if ((3 - defalutIndex) > 0) {
 			forIndex = 3 - defalutIndex
@@ -266,9 +267,11 @@ ZoomPic.prototype = {
 function wrapper () {
 	new ZoomPic('box');
 }
+
 onMounted(() => {
   getUserStatus();
 });
+
 </script>
 <style lang="scss" scoped>
 #box {
