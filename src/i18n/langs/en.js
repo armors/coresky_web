@@ -21,7 +21,7 @@ module.exports = {
 		Submit: 'Submit',
 		Mint: 'Claim',
 		LearnMore: 'Learn more',
-		See: 'See',
+		See: 'Check',
 		Rewards: 'Rewards',
 	},
 	messageTip: {
