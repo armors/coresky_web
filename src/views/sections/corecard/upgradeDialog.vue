@@ -46,6 +46,7 @@
 								:controls="false"
 								v-input-limit="'9,4'"
 								class="max-input"
+								@blur="inputLimit"
 							/>
 							<span @click="setMax">MAX</span>
 						</div>
@@ -94,8 +95,20 @@ const setMax = () => {
 	state.amount = state.userData.score;
 };
 
+const inputLimit = (e) => {
+	if (e.target.value.indexOf('.') > 0) {
+		let str = e.target.value.slice(
+			e.target.value.indexOf('.'),
+			e.target.value.length
+		);
+		if (str / 1 <= 0) {
+			state.amount = e.target.value.replace(str, '');
+		}
+	}
+};
+
 const levelUp = () => {
-	if (state.amount) {
+	if (state.amount !== '' && state.amount != '0') {
 		let params = { ctAmount: state.amount };
 		proxy.$api('corecard.levelUp', params).then((res) => {
 			proxy.$tools.checkResponse(res);
