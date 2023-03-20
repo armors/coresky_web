@@ -69,9 +69,9 @@ export default {
 				// networkName: Network.Main,
 				// apiKey: process.env.VUE_APP_OPENSEA_KEY
 			}
-			// if (process.env.VUE_APP_CHAINID === '1') {
-			// 	params.apiKey = process.env.VUE_APP_OPENSEA_KEY
-			// }
+			if (process.env.VUE_APP_CHAINID === '1') {
+				params.apiKey = process.env.VUE_APP_OPENSEA_KEY
+			}
 			window.openseaSDK = new OpenSeaSDK(window.web3.currentProvider, params)
 		}
 		return window.openseaSDK
