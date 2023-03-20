@@ -39,7 +39,7 @@ const props = defineProps({
 const getImageUrl = (i, type) => {
 	// 根据索引生成图像URL
 	return type === 'lv'
-		? require(`@/assets/core-card/level${i + 1}.png`)
+		? require(`@/assets/core-card/v${i}.png`)
 		: require(`@/assets/core-card/vip${i}.png`);
 };
 </script>

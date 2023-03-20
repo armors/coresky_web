@@ -1,6 +1,5 @@
 <template>
 	<div class="core-card" id="coreCard">
-		<welcome-dialog :isShowWelcomeDialog="firstStatus"></welcome-dialog>
 		<div class="banner">
 			<div class="banner-box">
 				<div class="info">
@@ -60,7 +59,6 @@ import coreCardWrapper from './coreCardWrapper.vue';
 import coreCardLevel from './coreCardLevel.vue';
 import coreCardFAQ from './coreCardFAQ.vue';
 import coreCardProcess from './coreCardProcess.vue';
-import welcomeDialog from './welcomeDialog.vue';
 import upgradeDialog from './upgradeDialog.vue';
 import { getCurrentInstance } from 'vue';
 import { address } from '../../../wallet';
@@ -82,7 +80,6 @@ const bgColor = ref('#C4CCD5');
 const bgBanner = ref('url(' + require(`@/assets/core-card/bg-3.webp`) + ')');
 const vipIcon = ref(require(`@/assets/core-card/vip0.png`));
 let isScrollTop = false;
-let firstStatus = ref(false);
 
 watch(
 	() => state.connect,
@@ -209,10 +206,6 @@ onMounted(() => {
 	getCoreCardList();
 	getUserStatus();
 	getUserinfo();
-	if (localStorage.getItem('firstEnter') === null) {
-		firstStatus = true;
-		localStorage.setItem('firstEnter', firstStatus);
-	}
 });
 
 onBeforeUnmount(() => {

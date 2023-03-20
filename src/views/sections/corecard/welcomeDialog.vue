@@ -12,7 +12,7 @@
 				<div class="left">
 					<span>{{ $t('coreCard.mintTitle') }}</span>
 				</div>
-				<el-icon @click="isShowWelcomeDialog = false">
+				<el-icon @click="closed()">
 					<Close />
 				</el-icon>
 			</template>
@@ -45,7 +45,7 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
+import { defineProps, defineEmits } from 'vue';
 import { useRouter } from 'vue-router';
 const router = useRouter();
 
@@ -55,16 +55,18 @@ const props = defineProps({
 		default: false,
 	},
 });
+const emits = defineEmits(['handleClose']);
 
 const goMint = () => {
 	localStorage.setItem('firstEnter', false);
-	props.isShowWelcomeDialog = false;
 	router.push({
 		path: '/coreCardMint',
 	});
+	closed();
 };
 
 const closed = () => {
+	emits('handleClose', false);
 	localStorage.setItem('firstEnter', false);
 };
 </script>
