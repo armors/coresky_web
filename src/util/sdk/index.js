@@ -57,15 +57,16 @@ export default {
 		if (!window.openseaSDK) {
 			let web3 = await utils_web3.getWeb3();
 			const gasPrice = await web3.eth.getGasPrice()
-			console.log(gasPrice)
-			console.log({
-				networkName: process.env.VUE_APP_CHAINID === '1' ? Network.Main : Network.Goerli,
-				apiKey: process.env.VUE_APP_OPENSEA_KEY,
-				gasPrice: new BigNumber(gasPrice * 1.5)
-			})
+			// console.log(gasPrice)
+			// console.log({
+			// 	networkName: process.env.VUE_APP_CHAINID === '1' ? Network.Main : Network.Goerli,
+			// 	apiKey: process.env.VUE_APP_OPENSEA_KEY,
+			// 	gasPrice: new BigNumber(gasPrice * 1.5)
+			// })
 			const params = {
 				networkName: process.env.VUE_APP_CHAINID === '1' ? Network.Main : Network.Goerli,
 				gasPrice: new BigNumber(gasPrice * 1.5),
+				apiBaseUrl: process.env.VUE_APP_OPENSEA_BASE_URL
 				// networkName: Network.Main,
 				// apiKey: process.env.VUE_APP_OPENSEA_KEY
 			}
