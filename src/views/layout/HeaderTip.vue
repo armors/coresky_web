@@ -1,10 +1,10 @@
 <template>
   <el-collapse-transition>
     <div class="header-tip" v-if="showCradTip">
-      <span>{{ message }}</span>
+      <span>{{ message() }}</span>
       <div class="right">
         <!-- <div href="" v-if="connected" class="btn-card" @click="goCoreCard">Receive And Bind</div> -->
-        <div @click="linkClick" class="btn-card">{{ linkTxt }}</div>
+        <div @click="linkClick" class="btn-card">{{ linkTxt() }}</div>
         <el-icon color="#ffffff" size="20" @click="closeTip">
           <Close />
         </el-icon>

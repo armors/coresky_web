@@ -240,14 +240,15 @@ export default {
 		getTipMessage () {
 			if (localStorage.getItem('coresky-card-tip') === '1') return;
 			if (this.token) {
+				console.log(this.$api)
 				this.$api("corecard.availableCard", this.queryParams).then((res) => {
 					let viplevel = 0
 					if (res.code === 200 && res.debug !== null) {
 						viplevel = res.debug.level
 					}
 					let option = {
-						message: this.$t('messageTip.coreCardTip2', { name: viplevel }),
-						linkTxt: this.$t('common.Mint'),
+						message: () => this.$t('messageTip.coreCardTip2', { name: viplevel }),
+						linkTxt: () => this.$t('common.See'),
 						linkClose: true,
 						closeHandle: () => this.tipClose(),
 						callBack: () => this.goCoreCard(),
@@ -256,8 +257,8 @@ export default {
 				})
 			} else {
 				let option = {
-					message: this.$t('messageTip.coreCardTip1'),
-					linkTxt: this.$t('common.See'),
+					message: () => this.$t('messageTip.coreCardTip1'),
+					linkTxt: () => this.$t('common.See'),
 					linkClose: false,
 					closeHandle: () => this.tipClose(),
 					callBack: () => this.login(),
