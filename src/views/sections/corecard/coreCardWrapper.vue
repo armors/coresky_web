@@ -10,7 +10,7 @@
 	</div>
 </template>
 <script setup>
-import { onMounted, defineEmits, defineProps,ref, reactive ,computed,getCurrentInstance,} from 'vue';
+import { onMounted, defineEmits, defineProps,ref, reactive ,computed,getCurrentInstance,watch} from 'vue';
 
 
 let selectedIndex = ref(null);
@@ -34,6 +34,15 @@ const props = defineProps({
 })
 const { proxy } = getCurrentInstance();
 
+watch(
+	() => state.token,
+	(n) => {
+		if (n) {
+			getUserStatus();
+		}
+	}
+);
+
 
 function handleSelect (index) {
 	emits('handleSelect', index);
@@ -55,8 +64,7 @@ const checkBindStatus = () => {
 
 
 const getUserStatus = () => {
-	if (state.connect) {
-		proxy.$api('corecard.myCards').then((res) => {
+	proxy.$api('corecard.myCards').then((res) => {
 			proxy.$tools.checkResponse(res);
 			state.myCards = res.debug;
 			if (state.myCards.length !== 0) {
@@ -66,7 +74,6 @@ const getUserStatus = () => {
       handleSelect(selectedIndex.value);
       wrapper();
 		});
-	}
 };
 
 
