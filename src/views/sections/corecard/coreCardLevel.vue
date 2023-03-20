@@ -1,6 +1,11 @@
 <template>
 	<div class="level">
-		<h3>{{ $t('coreCard.cardLevel') }}</h3>
+		<h3>
+			<span>{{ $t('coreCard.cardLevel') }}</span>
+			<span @click="goSet"
+				><svg-icon class="setting_core" icon-class="setting_core"
+			/></span>
+		</h3>
 		<ul class="card-level-content">
 			<li
 				class="level-item-card"
@@ -28,7 +33,8 @@
 </template>
 <script setup>
 import { defineProps } from 'vue';
-
+import { useRouter } from 'vue-router';
+const router = useRouter();
 const props = defineProps({
 	cardConfigList: {
 		type: Array,
@@ -41,6 +47,10 @@ const getImageUrl = (i, type) => {
 	return type === 'lv'
 		? require(`@/assets/core-card/v${i}.png`)
 		: require(`@/assets/core-card/vip${i}.png`);
+};
+
+const goSet = () => {
+	router.push('/profile?tab=usercardlist');
 };
 </script>
 <style lang="scss" scoped>
@@ -56,6 +66,11 @@ const getImageUrl = (i, type) => {
 	h3 {
 		font-size: 30px;
 		line-height: 35px;
+		display: flex;
+		justify-content: space-between;
+		svg {
+			cursor: pointer;
+		}
 	}
 	.card-level-content {
 		overflow: hidden;
