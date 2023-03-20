@@ -10,7 +10,7 @@
 	</div>
 </template>
 <script setup>
-import { onMounted, defineEmits, defineProps,ref, reactive ,computed,getCurrentInstance,watch} from 'vue';
+import { onMounted, defineEmits, ref, reactive ,computed,getCurrentInstance,watch} from 'vue';
 
 
 let selectedIndex = ref(null);
@@ -18,31 +18,18 @@ const emits = defineEmits(['handleSelect']);
 const state = reactive({
 	connect: computed(() => proxy.$store.state.connected),
 	token: computed(() => proxy.$store.state.token),
-	myCards: [],
-	bindData: [],
-	initLevel: 0,
+  user: computed(() => proxy.$store.state.user),
+	bindData: {},
 });
-const props = defineProps({
-  bindData: {
-    type: Object,
-    default: {}
-  },
-	initLevel: {
-		type: Number,
-		default: 0
-	}
-})
+
 const { proxy } = getCurrentInstance();
 
 watch(
 	() => state.token,
 	(n) => {
-		if (n) {
-			getUserStatus();
-		}
+		getUserStatus();
 	}
 );
-
 
 function handleSelect (index) {
 	emits('handleSelect', index);
@@ -55,27 +42,16 @@ const getImageUrl = (i, type) => {
 		: require(`@/assets/core-card/v${i}.png`);
 };
 
-const checkBindStatus = () => {
-	state.bindData = state.myCards.filter((item) => {
-		return item.pledge === 1;
-	});
-	state.initLevel = state.bindData[0] ? state.bindData[0].level : 0;
-};
-
 
 const getUserStatus = () => {
-	proxy.$api('corecard.myCards').then((res) => {
-			proxy.$tools.checkResponse(res);
-			state.myCards = res.debug;
-			if (state.myCards.length !== 0) {
-				checkBindStatus();
-			}
-      selectedIndex.value = state.bindData[0] ? state.bindData[0].level : 0;
-      handleSelect(selectedIndex.value);
+    proxy.$api('corecard.bindCard').then((res) => {
+      proxy.$tools.checkResponse(res);
+      state.bindData = res.debug;
+      selectedIndex.value = state.bindData.level ?  state.bindData.level : 0;
       wrapper();
-		});
+      handleSelect(selectedIndex.value);
+    });
 };
-
 
 function ZoomPic () {
 	this.initialize.apply(this, arguments);
@@ -122,7 +98,7 @@ ZoomPic.prototype = {
 		this.addEvent(this.next, 'click', this._doNext);
 		// this.doImgClick();
 	},
-	doPrev: function (tye) {
+	doPrev: function () {
 		let i = selectedIndex.value <= 0 ? 5 : selectedIndex.value - 1;
 		selectedIndex.value = this.aSort[i].index;
 		this.aSort.unshift(this.aSort.pop());
@@ -276,8 +252,11 @@ function wrapper () {
 }
 
 onMounted(() => {
+  selectedIndex.value = 0;
   getUserStatus();
 });
+
+
 
 </script>
 <style lang="scss" scoped>
