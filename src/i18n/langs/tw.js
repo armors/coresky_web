@@ -25,8 +25,7 @@ module.exports = {
 		Rewards: '獎勵',
 	},
 	messageTip: {
-		openseaWarnTip:
-			'這筆交易來自Opensea，不參與Coresky交易挖礦。',
+		openseaWarnTip: '這筆交易來自Opensea，不參與Coresky交易挖礦。',
 		PurchaseComplete: '購買成功',
 		PurchaseFailed: '購買失敗',
 		ListingSucceeded: '掛單成功',
@@ -44,7 +43,7 @@ module.exports = {
 			'每個平臺僅支持一次報價，請取消{name}平臺掛單後重新掛售',
 		addedCart: '已經加入購物車',
 		coreCardTip1: '查看是否有CoreCard空投？',
-		coreCardTip2: '恭喜您獲得“CoreCard V{name}”',
+		coreCardTip2: '恭喜您獲得“ V{name}”',
 		coreCardBindCheck: '只能綁定一張CoreCard。請解綁重試',
 	},
 	navigation: {
@@ -168,7 +167,7 @@ module.exports = {
 		Rewards: '積分獎勵',
 		ConvertTickets: '兌換彩票',
 		TransactionMining: '交易挖礦',
-		RewardsRules: '獎勵規則'
+		RewardsRules: '獎勵規則',
 	},
 	shoppingCart: {
 		title: '購物車',
@@ -334,5 +333,18 @@ module.exports = {
 		faildUpgrade: 'CoreCard 陞級失敗，請稍後重試',
 		pleaseInput: '請輸入投入積分數量',
 		placeholderInput: '請輸入投入積分數量',
+		faq: '問題',
+		q0: '什麼是CoreCard?',
+		a0:
+			'CoreCard是Coresky的會員NFT，基於Coresky生態系統的去中心化VIP治理系統。持有CoreCard將自動成為Coresky社區的會員，並享有Coresky平臺提供的一系列權益。CoreCard持有者可以通過在Coresky平臺上質押他們的CoreCard來獲得tickets。一旦滿足24/7質押時間條件，他們將收到由Coresky平臺發行的tickets，這些tickets可以用作參加Coresky Launchpad的入場券。',
+		q1: ' CoreCard有幾個等級？',
+		a1:
+			'CoreCard分為六個不同的等級，分別從0級到5級。這些等級分別被稱為：CoreCardV0 Kite, CoreCardV1 Balloon, CoreCardV2 Biplane, CoreCardV3 Jet, CoreCardV4 Satellite, and CoreCardV5 Spacecraft。',
+		q2: '不同等級的CoreCard有何區別？',
+		a2:
+			'不同等級的CoreCard每周將生成不同數量的門票。持有較高等級CoreCard的用戶將比持有較低等級的用戶收到更多的tickets發放。請注意，用戶可以鑄造多個CoreCard，但一次只能選擇一個進行綁定操作。',
+		q3: '如何升級CoreCard？',
+		a3:
+			'用戶可以通過燃燒Coresky積分或完成平台設置的其他任務來提升其CoreCard級別。Coresky強烈建議用戶升級其CoreCard，以便獲得更多的tickets。',
 	},
 };

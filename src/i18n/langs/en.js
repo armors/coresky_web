@@ -723,5 +723,18 @@ module.exports = {
 		faildUpgrade: 'The upgrade of CoreCard failed. Please try again later',
 		pleaseInput: 'Please enter the number of input points',
 		placeholderInput: 'Please input points',
+		faq: 'FAQ',
+		q0: 'What is CoreCard?',
+		a0:
+			"CoreCard is Coresky's membership NFT, a decentralized VIP governance system based on the Coresky ecosystem. Holding CoreCard automatically grants you membership to the Coresky community and entitles you to a range of benefits offered by the Coresky platform. CoreCard holders can receive tickets by staking their CoreCard on the Coresky platform. Once the 24/7 staking time condition is met, they will receive tickets issued by the Coresky platform which can be used as entry passes for participating in the Coresky Launchpad.",
+		q1: 'How many levels does CoreCard have?',
+		a1:
+			'CoreCard is divided into six levels of equity, ranging from level 0 to level 5. These levels are respectively called: CoreCardV0 Kite, CoreCardV1 Balloon, CoreCardV2 Biplane, CoreCardV3 Jet, CoreCardV4 Satellite, and CoreCardV5 Spacecraft.',
+		q2: 'What are the differences between different levels of CoreCard',
+		a2:
+			'Different levels of CoreCard will generate varying numbers of tickets on a weekly basis. Users who hold higher levels of CoreCard will receive more ticket deposits than those with lower levels. Please note that users are able to mint multiple CoreCards but can only select one for binding operation at a time.',
+		q3: 'How to upgrade CoreCard?',
+		a3:
+			'Users can increase their CoreCard levels either by burning Coresky points or by completing other tasks set by the platform. Coresky strongly encourages users to upgrade their CoreCards in order to receive more tickets.',
 	},
 };

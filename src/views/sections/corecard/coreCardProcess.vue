@@ -23,7 +23,7 @@
 		</div>
 		<div v-else-if="state.connect && props.bindData.length === 0">
 			<div class="level-info">
-				<img src="@/assets/core-card/small-img1.png" alt="" />
+				<img src="@/assets/core-card/v0.png" alt="" />
 				<div class="info-right">
 					<!-- <p class="bind-tip">( none )</p> -->
 					<el-button type="primary" class="bind" @click="goBind">
@@ -38,7 +38,12 @@
 		</div>
 		<div v-else :set="(B = props.bindData[0])">
 			<div class="level-info">
-				<img :src="B.avatarFrame" alt="" />
+				<img
+					:src="
+						require(`@/assets/core-card/v${props.bindData[0].level}.png`)
+					"
+					alt=""
+				/>
 				<div class="info-right">
 					<p>{{ B.name }}</p>
 					<span

@@ -47,9 +47,9 @@ const getUserStatus = () => {
     proxy.$api('corecard.bindCard').then((res) => {
       proxy.$tools.checkResponse(res);
       state.bindData = res.debug;
-      selectedIndex.value = state.bindData ?  state.bindData["level"] : 0;
-      wrapper();
-      handleSelect(selectedIndex.value);
+      // selectedIndex.value = state.bindData ?  state.bindData["level"] : 0;
+      // wrapper();
+      // handleSelect(selectedIndex.value);
     });
 };
 
@@ -254,6 +254,8 @@ function wrapper () {
 onMounted(() => {
   selectedIndex.value = 0;
   getUserStatus();
+  wrapper();
+  handleSelect(selectedIndex.value);
 });
 
 </script>
