@@ -24,8 +24,8 @@
 					/>
 				</div>
 				<div class="info">
-					<p>{{ B.name }}</p>
-					<div class="vip-info">
+					<div class="info-title">
+						<p>{{ B.name }}</p>
 						<img
 							:src="
 								require('@/assets/core-card/vip' +
@@ -34,6 +34,17 @@
 							"
 							alt=""
 						/>
+					</div>
+
+					<div class="vip-info">
+						<!-- <img
+							:src="
+								require('@/assets/core-card/vip' +
+									B.level +
+									'.png')
+							"
+							alt=""
+						/> -->
 						<el-progress
 							:percentage="B.ratio * 100"
 							class="process"
@@ -155,21 +166,28 @@ const closed = () => {
 		.info {
 			float: left;
 			width: 472px;
-			p {
-				color: #04142a;
-				font-size: 18px;
-			}
-			.vip-info {
+			.info-title {
 				display: flex;
 				height: 40px;
-				margin-top: 20px;
 				justify-content: space-between;
 				img {
 					width: 83px;
 					height: 40px;
 				}
+				p {
+					color: #04142a;
+					font-size: 18px;
+				}
+			}
+
+			.vip-info {
+				display: flex;
+				height: 40px;
+				margin-top: 20px;
+				justify-content: space-between;
+
 				.process {
-					width: 248px;
+					width: 315px;
 					height: 10px;
 					margin-top: 19px;
 					::v-deep(.el-progress-bar__inner) {
