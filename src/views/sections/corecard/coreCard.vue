@@ -8,7 +8,9 @@
 							<div class="lv-box">
 								<img :src="vipIcon" />
 							</div>
-							<a class="help"><img src="@/assets/core-card/help.png" alt="" /></a>
+							<a class="help"
+								><img src="@/assets/core-card/help.png" alt=""
+							/></a>
 						</div>
 						<div class="daily">
 							<p>{{ $t('coreCard.ticketsWeek') }}</p>
@@ -18,16 +20,28 @@
 				</div>
 				<!-- <core-card-wrapper :bindData="state.bindData" @handleSelect="handleSelect"
 					:initLevel="state.initLevel"></core-card-wrapper> -->
-				<coreCardView ref="coreCardViewRef" @handleSelect="handleSelect" />
-				<core-card-process :myCards="state.myCards" :bindData="state.bindData"
-					@handleUpgrade="handleUpgradeDialog"></core-card-process>
+				<coreCardView
+					ref="coreCardViewRef"
+					@handleSelect="handleSelect"
+				/>
+				<core-card-process
+					:myCards="state.myCards"
+					:bindData="state.bindData"
+					@handleUpgrade="handleUpgradeDialog"
+				></core-card-process>
 			</div>
 		</div>
-		<core-card-level :cardConfigList="state.cardConfigList"></core-card-level>
+		<core-card-level
+			:cardConfigList="state.cardConfigList"
+		></core-card-level>
 		<h3>{{ $t('coreCard.faq') }}</h3>
 		<core-card-FAQ></core-card-FAQ>
-		<upgrade-dialog :bindData="state.bindData" :isShowUpgradeDialog="state.isShowUpgradeDialog"
-			@handleClosed="handleUpgradeDialog" @handleReload="handleReload"></upgrade-dialog>
+		<upgrade-dialog
+			:bindData="state.bindData"
+			:isShowUpgradeDialog="state.isShowUpgradeDialog"
+			@handleClosed="handleUpgradeDialog"
+			@handleReload="handleReload"
+		></upgrade-dialog>
 	</div>
 </template>
 
@@ -87,7 +101,7 @@ watch(
 	}
 );
 
-function handleScroll () {
+function handleScroll() {
 	let scrollTop = document.documentElement.scrollTop;
 	if (scrollTop) {
 		if (scrollTop > 3) {
@@ -149,15 +163,6 @@ const getCoreCardList = () => {
 	});
 };
 
-// const getUserBindData = () => {
-// 	if (state.token) {
-// 		proxy.$api('corecard.bindCard').then((res) => {
-// 			proxy.$tools.checkResponse(res);
-// 			state.bindData = res.debug;
-// 		});
-// 	}
-// };
-
 const getUserStatus = () => {
 	if (state.connect) {
 		proxy.$api('corecard.myCards').then((res) => {
@@ -167,33 +172,17 @@ const getUserStatus = () => {
 				state.bindData = state.myCards.filter((item) => {
 					return item.pledge === 1;
 				});
-				console.log(state.bindData)
+				console.log(state.bindData);
 				if (state.bindData.length > 0) {
-					coreCardViewRef.value.setViewIndex(state.bindData[0].level)
+					handleSelect(state.bindData[0].level);
+					coreCardViewRef.value.setViewIndex(state.bindData[0].level);
+				} else {
+					coreCardViewRef.value.setViewIndex(0);
 				}
-				else {
-					coreCardViewRef.value.setViewIndex(0)
-				}
-				getUserinfo();
+				proxy.$store.dispatch('authinfo');
 			}
 		});
 	}
-};
-
-const getUserinfo = () => {
-	let params = {
-		address: state.user.coinbase,
-	};
-	proxy.$api('user.info', params).then((res) => {
-		if (proxy.$tools.checkResponse(res)) {
-			let _data = Object.assign({}, res.debug, {
-				address: state.user.coinbase,
-			});
-			proxy.$store.commit('USERINFO', _data);
-		} else {
-			proxy.$tools.message(res.errmsg);
-		}
-	});
 };
 
 onMounted(() => {
@@ -201,7 +190,7 @@ onMounted(() => {
 	handleScroll();
 	getCoreCardList();
 	getUserStatus();
-	getUserinfo();
+	proxy.$store.dispatch('authinfo');
 });
 
 onBeforeUnmount(() => {
@@ -237,9 +226,11 @@ onBeforeUnmount(() => {
 			top: 180px;
 			.info-shadow {
 				border-radius: 16px;
-				background: radial-gradient(60.15% 135.83% at 100% 0%,
-						rgba(255, 255, 255, 0.45) 0%,
-						rgba(255, 255, 255, 0) 100%);
+				background: radial-gradient(
+					60.15% 135.83% at 100% 0%,
+					rgba(255, 255, 255, 0.45) 0%,
+					rgba(255, 255, 255, 0) 100%
+				);
 			}
 			.info-box {
 				width: 240px;
