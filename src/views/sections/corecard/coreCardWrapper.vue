@@ -10,16 +10,23 @@
 	</div>
 </template>
 <script setup>
-import { onMounted, defineEmits, ref, reactive ,computed,getCurrentInstance,watch} from 'vue';
+import { onMounted, defineEmits, defineProps,ref, reactive ,computed,getCurrentInstance,watch} from 'vue';
 
 
 let selectedIndex = ref(null);
 const emits = defineEmits(['handleSelect']);
+const props = defineProps({
+  bindData: {
+    type: Array,
+    default: []
+  }
+})
 const state = reactive({
 	connect: computed(() => proxy.$store.state.connected),
 	token: computed(() => proxy.$store.state.token),
   user: computed(() => proxy.$store.state.user),
 	bindData: {},
+  count:0,
 });
 
 const { proxy } = getCurrentInstance();
@@ -27,9 +34,47 @@ const { proxy } = getCurrentInstance();
 watch(
 	() => state.token,
 	(n) => {
-		getUserStatus();
+    debugger
+    state.count+=1;
+		// getUserStatus();
 	}
 );
+
+watch(
+  ()=>[props.bindData[0],state.token],
+  (n,o)=>{
+    let watchCount = 0;
+    state.count+=1;
+    debugger
+    if(n[0] && state.count == 1){
+      watchCount++;
+      getUserStatus();
+    }
+    if(o[1] == o[1] && state.count == 3){
+      watchCount+=1;
+      getUserStatus();
+    } 
+    if(o[0] && o[0] && state.count == 7){
+      watchCount+=1;
+      getUserStatus();
+    } 
+    // if(o[0] && o[1] && state.count == 6){
+    //   getUserStatus();
+    // } 
+    // if(n[1] == o[1] && state.count == 4){
+    //   watchCount+=1;
+    //   getUserStatus();
+    // }
+    // if(n[0]) {
+    //   console.log(n);
+    //   getUserStatus();
+    // }
+    // if( n && o ){
+    // console.log(n);
+    // getUserStatus();
+    // }
+  }
+)
 
 function handleSelect (index) {
 	emits('handleSelect', index);
@@ -47,9 +92,10 @@ const getUserStatus = () => {
     proxy.$api('corecard.bindCard').then((res) => {
       proxy.$tools.checkResponse(res);
       state.bindData = res.debug;
-      // selectedIndex.value = state.bindData ?  state.bindData["level"] : 0;
-      // wrapper();
-      // handleSelect(selectedIndex.value);
+      selectedIndex.value = state.bindData ?  state.bindData["level"] : 0;
+      // state.count = 0;
+      wrapper();
+      handleSelect(selectedIndex.value);
     });
 };
 
@@ -133,6 +179,7 @@ ZoomPic.prototype = {
 		var i = 0;
 		for (i = 0; i < this.aSort.length; i++)
 			this.oUl.appendChild(this.aSort[i]);
+      console.log(selectedIndex.value);
 		for (i = 0; i < this.aSort.length; i++) {
 			this.aSort[i].index = i;
 			if (i < 7) {
@@ -253,9 +300,9 @@ function wrapper () {
 
 onMounted(() => {
   selectedIndex.value = 0;
-  getUserStatus();
-  wrapper();
-  handleSelect(selectedIndex.value);
+  // getUserStatus();
+  // wrapper();
+  // handleSelect(selectedIndex.value);
 });
 
 </script>
