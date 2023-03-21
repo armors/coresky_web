@@ -33,7 +33,7 @@
 		<core-card-level
 			:cardConfigList="state.cardConfigList"
 		></core-card-level>
-		<h3>FAQ</h3>
+		<h3>{{ $t('coreCard.faq') }}</h3>
 		<core-card-FAQ></core-card-FAQ>
 		<upgrade-dialog
 			:bindData="state.bindData"
