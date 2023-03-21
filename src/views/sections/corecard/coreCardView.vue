@@ -15,7 +15,7 @@
 			</div>
 			<div class="card-item" :class="getClassIndex(2)">
 				<img :src="require(`@/assets/core-card/v2.png`)" v-if="getClassIndex(2) !== 'card-0'">
-				<img :src="require(`@/assets/core-card/v1.webp`)" v-else alt="">
+				<img :src="require(`@/assets/core-card/v2.webp`)" v-else alt="">
 			</div>
 			<div class="card-item" :class="getClassIndex(3)">
 				<img :src="require(`@/assets/core-card/v3.png`)" v-if="getClassIndex(3) !== 'card-0'">
