@@ -6,7 +6,7 @@ import util_web3 from "@/util/web3/index.js";
 import { getLocalStorage, removeLocalStorage } from "@/util/local-storage.js";
 import BigNumber from "bignumber.js";
 
-function getActiveNetwork(result, networks) {
+function getActiveNetwork (result, networks) {
   let network = null;
   for (var i = 0; i < networks.length; i++) {
     let _network = networks[i];
@@ -19,7 +19,7 @@ function getActiveNetwork(result, networks) {
 }
 
 export default {
-  config({ state, commit }) {
+  config ({ state, commit }) {
     return new Promise((resolve, reject) => {
       api("config.fetch").then((res) => {
         if (tools.checkResponse(res)) {
@@ -29,7 +29,7 @@ export default {
       });
     });
   },
-  gasTracker({state, commit}){
+  gasTracker ({ state, commit }) {
     return new Promise((resolve, reject) => {
       api("config.gasTracker").then((res) => {
         if (tools.checkResponse(res)) {
@@ -39,12 +39,12 @@ export default {
       });
     });
   },
-  reload({ state, commit, dispatch }) {
-    return new Promise(function(resolve, reject) {
+  reload ({ state, commit, dispatch }) {
+    return new Promise(function (resolve, reject) {
       var items = getLocalStorage(state.useAuthorization);
       if (items[state.useAuthorization] && items[state.useAuthorization] !== 'undefined' && items[state.useAuthorization] !== undefined) {
         api("user.reload")
-          .then(async function(response) {
+          .then(async function (response) {
             if (tools.checkResponse(response)) {
               if (
                 state.user.coinbase !=
@@ -71,7 +71,7 @@ export default {
       }
     });
   },
-  updatePayToken({ state, commit, dispatch }, payToken) {
+  updatePayToken ({ state, commit, dispatch }, payToken) {
     return new Promise((resolve, reject) => {
       if (payToken.address == sdk.NULL_ADDRESS()) {
         dispatch("ethBalance");
@@ -80,7 +80,7 @@ export default {
       }
     });
   },
-  payTokens({ state, commit, dispatch }) {
+  payTokens ({ state, commit, dispatch }) {
     return new Promise((resolve, reject) => {
       api("paytoken.list").then((res) => {
         if (tools.checkResponse(res)) {
@@ -91,7 +91,7 @@ export default {
       });
     });
   },
-  categorys({ state, commit }) {
+  categorys ({ state, commit }) {
     return new Promise((resolve, reject) => {
       api("category.list").then((res) => {
         if (tools.checkResponse(res)) {
@@ -101,14 +101,14 @@ export default {
       });
     });
   },
-  logout({ state, commit }) {
+  logout ({ state, commit }) {
     return new Promise((resolve, reject) => {
       commit("LOGOUT");
       resolve();
     });
   },
-  unreadNotice({ state, commit, getters }) {
-    return new Promise(function(resolve, reject) {
+  unreadNotice ({ state, commit, getters }) {
+    return new Promise(function (resolve, reject) {
       api("notice.unread").then((res) => {
         if (tools.checkResponse(res)) {
           commit("NOTICE_UNREAD", res.data);
@@ -116,8 +116,8 @@ export default {
       });
     });
   },
-  allBalance({ state, commit, getters, dispatch }) {
-    return new Promise(async function(resolve, reject) {
+  allBalance ({ state, commit, getters, dispatch }) {
+    return new Promise(async function (resolve, reject) {
       for (var i = 0; i < state.payTokens.length; i++) {
         let token = state.payTokens[i];
         if (token.address == sdk.NULL_ADDRESS()) {
@@ -128,8 +128,8 @@ export default {
       }
     });
   },
-  ethBalance({ state, commit, getters }) {
-    return new Promise(async function(resolve, reject) {
+  ethBalance ({ state, commit, getters }) {
+    return new Promise(async function (resolve, reject) {
       let asset = {
         address: sdk.NULL_ADDRESS(),
       };
@@ -141,8 +141,8 @@ export default {
       resolve();
     });
   },
-  erc20Balance({ state, commit, getters }, payToken) {
-    return new Promise(async function(resolve, reject) {
+  erc20Balance ({ state, commit, getters }, payToken) {
+    return new Promise(async function (resolve, reject) {
       let asset = {
         address: payToken.address,
       };
@@ -158,7 +158,7 @@ export default {
       resolve();
     });
   },
-  authinfo({ state, commit, dispatch }) {
+  authinfo ({ state, commit, dispatch }) {
     return new Promise((resolve, reject) => {
       let data = {
         address: state.user.coinbase,
@@ -175,7 +175,7 @@ export default {
       });
     });
   },
-  heartbeat({ state, commit, dispatch }) {
+  heartbeat ({ state, commit, dispatch }) {
     // if (state.heartbeatTimer) {
     //   clearTimeout(state.heartbeatTimer);
     //   commit("HEARTBEAT", null);
@@ -190,14 +190,14 @@ export default {
     //   commit("HEARTBEAT", timer);
     // });
   },
-  monitorWeb3({ state, commit, dispatch }) {
-    return new Promise(async function(resolve, reject) {
+  monitorWeb3 ({ state, commit, dispatch }) {
+    return new Promise(async function (resolve, reject) {
       await util_web3.monitorWeb3();
       resolve();
     });
   },
-  connect({ state, commit, dispatch }, isInit) {
-    return new Promise(async function(resolve, reject) {
+  connect ({ state, commit, dispatch }, isInit) {
+    return new Promise(async function (resolve, reject) {
       var result = await util_web3.connectWallet();
       if (result.error) {
         if (!isInit) {
@@ -215,8 +215,8 @@ export default {
       resolve(true);
     });
   },
-  signLogin({ state, commit, dispatch }, payload) {
-    return new Promise(async function(resolve, reject) {
+  signLogin ({ state, commit, dispatch }, payload) {
+    return new Promise(async function (resolve, reject) {
       let user = payload;
       if (!user || !user.coinbase) user = state.user;
 
@@ -230,7 +230,8 @@ export default {
         ...{
           "address": user.coinbase
         },
-        ...signature
+        ...signature,
+        refCode: localStorage.getItem('inviteCode') || ''
       };
       console.log(data)
       console.log(JSON.stringify(data))
@@ -259,8 +260,8 @@ export default {
 
     });
   },
-  connectAndSign({ state, commit, dispatch }, type) {
-    return new Promise(async function(resolve, reject) {
+  connectAndSign ({ state, commit, dispatch }, type) {
+    return new Promise(async function (resolve, reject) {
       let result = await util_web3.connectWallet(type);
       if (result.error) {
         tools.message(result.error);
@@ -288,13 +289,13 @@ export default {
         }
       }
       var items = getLocalStorage(state.useAuthorization);
-      console.log('items.'+ state.useAuthorization, items[state.useAuthorization])
+      console.log('items.' + state.useAuthorization, items[state.useAuthorization])
       const ethPrice = await sdk.getEthPrice()
       await dispatch("updateEthPrice", ethPrice)
       if (type !== 'init' && (!items[state.useAuthorization] || items[state.useAuthorization] === 'undefined' || items[state.useAuthorization] === undefined)) {
         result = await dispatch("signLogin", data);
         resolve(result);
-      }else {
+      } else {
         console.log('await dispatch("authinfo")')
         await dispatch("authinfo");
       }
@@ -303,8 +304,8 @@ export default {
   updateEthPrice ({ state, commit }, payload) {
     commit("ETH_PRICE", payload);
   },
-  countNotices({ state, commit }) {
-    return new Promise(function(resolve, reject) {
+  countNotices ({ state, commit }) {
+    return new Promise(function (resolve, reject) {
       if (!state.connected) resolve();
       let data = {
         address: state.user.coinbase,
@@ -317,8 +318,8 @@ export default {
       });
     });
   },
-  unreadNoticeByAddress({ state, commit }) {
-    return new Promise(function(resolve, reject) {
+  unreadNoticeByAddress ({ state, commit }) {
+    return new Promise(function (resolve, reject) {
       let data = {
         address: state.user.coinbase,
       };
@@ -330,17 +331,17 @@ export default {
       });
     });
   },
-  disconnect({ state, commit }) {
+  disconnect ({ state, commit }) {
     return new Promise((resolve, reject) => {
       commit("DISCONNECT");
       resolve();
     });
   },
-  setCurrentView({ commit }, newRoute) {
+  setCurrentView ({ commit }, newRoute) {
     commit("setCurrentView", newRoute);
   },
   //改变当前路由
-  changeCurrentRouteTo({ commit }, newRoute) {
+  changeCurrentRouteTo ({ commit }, newRoute) {
     commit("changeCurrentRouteTo", newRoute);
   },
 };

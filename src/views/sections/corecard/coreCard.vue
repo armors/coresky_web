@@ -66,7 +66,7 @@ const { proxy } = getCurrentInstance();
 const state = reactive({
 	isShowUpgradeDialog: false,
 	cardConfigList: [],
-	daily: 4,
+	daily: 0,
 	connect: computed(() => proxy.$store.state.connected),
 	token: computed(() => proxy.$store.state.token),
 	user: computed(() => proxy.$store.state.user),

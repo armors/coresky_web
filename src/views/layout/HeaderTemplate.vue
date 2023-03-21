@@ -21,7 +21,7 @@
 			</div>
 
 			<div class="head-navs">
-				<router-link class="nav-link" to="/reward" v-if="connected && token">
+				<router-link class="nav-link" to="/reward">
 					<svg-icon icon-class="fire" style="width:24px" />
 					{{ $t("navigation.rewards") }}
 				</router-link>
