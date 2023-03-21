@@ -194,6 +194,15 @@ export default {
     },
     async cardMint () {
       this.isMinting = true
+      if (this.viplevel > 0) {
+        let res = await this.$api("corecard.reserve", { level: this.viplevel })
+        if (res.debug === false) {
+          this.$tools.notification('', this.$t('corecard.coreCardMintErr'), 'error');
+          this.isMinting = false
+          return
+        }
+      }
+      this.isMinting = true
       let result = null
       result = await ERC721Template.selfMint(this.user.coinbase)
       if (result && result.status === true && result.blockHash) {

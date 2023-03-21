@@ -492,5 +492,9 @@ export default {
 			url: '/corecard/cardConfigs',
 			method: 'post',
 		},
+		reserve:{
+			url: '/corecard/reserve',
+			method: 'post',
+		}
 	},
 };

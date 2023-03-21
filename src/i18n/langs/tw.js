@@ -45,6 +45,7 @@ module.exports = {
 		coreCardTip1: '查看是否有CoreCard空投？',
 		coreCardTip2: '恭喜您獲得“ V{name}”',
 		coreCardBindCheck: '只能綁定一張CoreCard。請解綁重試',
+		coreCardMintErr: '當前頁面停留太久，請刷新頁面重新鑄造'
 	},
 	navigation: {
 		searchTip: '搜索NFT或合集',
