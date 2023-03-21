@@ -194,6 +194,12 @@ const routes = [
 			import(/* webpackChunkName: "launch" */ '../views/sections/launch'),
 	},
 	{
+		path: '/referral/:code',
+		name: 'referral',
+		component: () =>
+			import(/* webpackChunkName: "referral" */ '../views/sections/referral'),
+	},
+	{
 		path: '/:pathMatch(.*)',
 		name: 'NoFound',
 		redirect: '/404',
