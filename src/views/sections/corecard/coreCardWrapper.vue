@@ -10,75 +10,27 @@
 	</div>
 </template>
 <script setup>
-import { onMounted, 
-  defineEmits,
-  defineProps, 
-  ref,
-  reactive,
-  computed,
-  getCurrentInstance,
-  watch,
-  watchEffect
-} from 'vue';
+import { onMounted, defineEmits, ref, reactive ,computed,getCurrentInstance,watch} from 'vue';
+
+
 let selectedIndex = ref(null);
 const emits = defineEmits(['handleSelect']);
-const props = defineProps({
-  bindData: {
-		type: Array,
-		default: [],
-	},
-  initLevel: {
-    type: Number,
-    default: 0,
-  }
-})
-
 const state = reactive({
 	connect: computed(() => proxy.$store.state.connected),
 	token: computed(() => proxy.$store.state.token),
   user: computed(() => proxy.$store.state.user),
-  init: false,
+	bindData: {},
 });
 
 const { proxy } = getCurrentInstance();
 
-watch([
-    () => props.bindData[0],
-    () => state.token,
-  ],(n,o)=>{
-    // 1. 切换路由
-    // 2. 页面刷新
-    // 3. 切换钱包
-    // 4. 默认选0
-    if(n[1] === o[1]) {
-      state.init = 'init'
-      selectedIndex.value = n[0].level;
-    } 
-    let new_n = n.every((item)=>{
-      return item !== null && item !== undefined
-    });
-    let new_o = o.every((item)=>{
-      return item !== null && item !== undefined
-    });
-    if(new_n && new_o){
-      if(n[1] == o[1]){
-        state.init = true;
-        selectedIndex.value = n[0].level;
-      } 
-    }
-  })
+watch(
+	() => state.token,
+	(n) => {
+		getUserStatus();
+	}
+);
 
-  watch(
-   () => selectedIndex.value,
-   (val) => {
-    setWrapper(val);
-   }
-  )
-
-function setWrapper(val) {
-  wrapper();
-  handleSelect(val)
-}
 function handleSelect (index) {
 	emits('handleSelect', index);
 }
@@ -95,9 +47,9 @@ const getUserStatus = () => {
     proxy.$api('corecard.bindCard').then((res) => {
       proxy.$tools.checkResponse(res);
       state.bindData = res.debug;
-      selectedIndex.value = state.bindData ?  state.bindData["level"] : 0;
-      wrapper();
-      handleSelect(selectedIndex.value);
+      // selectedIndex.value = state.bindData ?  state.bindData["level"] : 0;
+      // wrapper();
+      // handleSelect(selectedIndex.value);
     });
 };
 
@@ -132,9 +84,8 @@ ZoomPic.prototype = {
 		for (var i = 0; i < this.aLi.length; i++) this.aSort[i] = this.aLi[i];
 		let defalutIndex = selectedIndex.value;
 		let forIndex = 3;
-    debugger
 		if ((3 - defalutIndex) > 0) {
-			forIndex = 3 - defalutIndex 
+			forIndex = 3 - defalutIndex
 		}
 		else {
 			forIndex = 3 - defalutIndex + 6
@@ -302,7 +253,9 @@ function wrapper () {
 
 onMounted(() => {
   selectedIndex.value = 0;
-  // setWrapper(0);
+  getUserStatus();
+  wrapper();
+  handleSelect(selectedIndex.value);
 });
 
 </script>
