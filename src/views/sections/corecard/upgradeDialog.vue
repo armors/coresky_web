@@ -18,7 +18,10 @@
 			</template>
 			<div class="content">
 				<div class="img-box">
-					<img :src="B.avatarFrame" alt="" />
+					<img
+						:src="require(`@/assets/core-card/v${B.level}.png`)"
+						alt=""
+					/>
 				</div>
 				<div class="info">
 					<p>{{ B.name }}</p>

@@ -38,7 +38,12 @@
 		</div>
 		<div v-else :set="(B = props.bindData[0])">
 			<div class="level-info">
-				<img :src="B.avatarFrame" alt="" />
+				<img
+					:src="
+						require(`@/assets/core-card/v${props.bindData[0].level}.png`)
+					"
+					alt=""
+				/>
 				<div class="info-right">
 					<p>{{ B.name }}</p>
 					<span
