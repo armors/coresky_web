@@ -218,7 +218,7 @@
                 </template>
                 <el-button type="primary" class="btnBuy"
                   v-if="(ckOrdersEntityList.length > 0 && !isSelf && tokenInfo.contractType === 0) || (tokenInfo.contractType === 1 && isSellSelfNft1155)"
-                  @click="showBuyNftNow">Buy Now
+                  @click="showBuyNftNow">{{ $t('nftDetail.Buy') }}
                 </el-button>
                 <!--              <el-button class="btnBlack" v-if="!isSelf && !isCart" :disabled="!(!isSelf && !isCart) || !tokenInfo.contract || !tokenInfo.state"-->
 
@@ -359,7 +359,7 @@
                           @click="cancelSell(v, true)">{{ $t('nftDetail.Cancel') }}</el-button>
                         <el-button type="primary" class="btnAccept" v-else
                           :disabled="isSelf1155(v.maker.address) || isExpired(v.expirationTime)"
-                          :loading="acceptDialogBtnLoading" @click="showBuyNft(v, true)">Buy</el-button>
+                          :loading="acceptDialogBtnLoading" @click="showBuyNft(v, true)">{{ $t('nftDetail.Buy') }}</el-button>
                       </div>
                       <div class="list-th th25 center">
                         <el-button type="primary" class="btnAccept"
