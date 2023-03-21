@@ -26,7 +26,7 @@ module.exports = {
 	},
 	messageTip: {
 		openseaWarnTip:
-			'This transaction is from Opensea, cannot trade mining on Coresky.',
+			'這筆交易來自Opensea，不參與Coresky交易挖礦。',
 		PurchaseComplete: '購買成功',
 		PurchaseFailed: '購買失敗',
 		ListingSucceeded: '掛單成功',
@@ -44,7 +44,7 @@ module.exports = {
 			'每個平臺僅支持一次報價，請取消{name}平臺掛單後重新掛售',
 		addedCart: '已經加入購物車',
 		coreCardTip1: '查看是否有CoreCard空投？',
-		coreCardTip2: '恭喜您獲得CoreCard“CoreCard V{name}”',
+		coreCardTip2: '恭喜您獲得“CoreCard V{name}”',
 		coreCardBindCheck: '只能綁定一張CoreCard。請解綁重試',
 	},
 	navigation: {
@@ -55,7 +55,7 @@ module.exports = {
 		connectWallet: '連接錢包',
 	},
 	home: {
-		topTitle: 'Welcome to Coresky！',
+		topTitle: '歡迎來到Coresky！',
 		MoreDetails: '查看更多',
 		topSubTitle: 'A New Generation of Community-based NFT Marketplace',
 		topBtn: '開始交易',
