@@ -8,9 +8,7 @@
 							<div class="lv-box">
 								<img :src="vipIcon" />
 							</div>
-							<a class="help"
-								><img src="@/assets/core-card/help.png" alt=""
-							/></a>
+							<a class="help"><img src="@/assets/core-card/help.png" alt="" /></a>
 						</div>
 						<div class="daily">
 							<p>{{ $t('coreCard.ticketsWeek') }}</p>
@@ -18,29 +16,18 @@
 						</div>
 					</div>
 				</div>
-				<core-card-wrapper
-					:bindData="state.bindData"
-					@handleSelect="handleSelect"
-					:initLevel="state.initLevel"
-				></core-card-wrapper>
-				<core-card-process
-					:myCards="state.myCards"
-					:bindData="state.bindData"
-					@handleUpgrade="handleUpgradeDialog"
-				></core-card-process>
+				<!-- <core-card-wrapper :bindData="state.bindData" @handleSelect="handleSelect"
+					:initLevel="state.initLevel"></core-card-wrapper> -->
+				<coreCardView ref="coreCardViewRef" @handleSelect="handleSelect" />
+				<core-card-process :myCards="state.myCards" :bindData="state.bindData"
+					@handleUpgrade="handleUpgradeDialog"></core-card-process>
 			</div>
 		</div>
-		<core-card-level
-			:cardConfigList="state.cardConfigList"
-		></core-card-level>
+		<core-card-level :cardConfigList="state.cardConfigList"></core-card-level>
 		<h3>{{ $t('coreCard.faq') }}</h3>
 		<core-card-FAQ></core-card-FAQ>
-		<upgrade-dialog
-			:bindData="state.bindData"
-			:isShowUpgradeDialog="state.isShowUpgradeDialog"
-			@handleClosed="handleUpgradeDialog"
-			@handleReload="handleReload"
-		></upgrade-dialog>
+		<upgrade-dialog :bindData="state.bindData" :isShowUpgradeDialog="state.isShowUpgradeDialog"
+			@handleClosed="handleUpgradeDialog" @handleReload="handleReload"></upgrade-dialog>
 	</div>
 </template>
 
@@ -55,6 +42,8 @@ import {
 } from 'vue';
 import { useStore } from 'vuex';
 import coreCardWrapper from './coreCardWrapper.vue';
+import coreCardView from './coreCardView.vue';
+
 import coreCardLevel from './coreCardLevel.vue';
 import coreCardFAQ from './coreCardFAQ.vue';
 import coreCardProcess from './coreCardProcess.vue';
@@ -79,6 +68,7 @@ const bgColor = ref('#C4CCD5');
 const bgBanner = ref('url(' + require(`@/assets/core-card/bg-3.webp`) + ')');
 const vipIcon = ref(require(`@/assets/core-card/vip0.png`));
 let isScrollTop = false;
+const coreCardViewRef = ref(null);
 
 watch(
 	() => state.connect,
@@ -97,7 +87,7 @@ watch(
 	}
 );
 
-function handleScroll() {
+function handleScroll () {
 	let scrollTop = document.documentElement.scrollTop;
 	if (scrollTop) {
 		if (scrollTop > 3) {
@@ -177,6 +167,13 @@ const getUserStatus = () => {
 				state.bindData = state.myCards.filter((item) => {
 					return item.pledge === 1;
 				});
+				console.log(state.bindData)
+				if (state.bindData.length > 0) {
+					coreCardViewRef.value.setViewIndex(state.bindData[0].level)
+				}
+				else {
+					coreCardViewRef.value.setViewIndex(0)
+				}
 				getUserinfo();
 			}
 		});
@@ -240,11 +237,9 @@ onBeforeUnmount(() => {
 			top: 180px;
 			.info-shadow {
 				border-radius: 16px;
-				background: radial-gradient(
-					60.15% 135.83% at 100% 0%,
-					rgba(255, 255, 255, 0.45) 0%,
-					rgba(255, 255, 255, 0) 100%
-				);
+				background: radial-gradient(60.15% 135.83% at 100% 0%,
+						rgba(255, 255, 255, 0.45) 0%,
+						rgba(255, 255, 255, 0) 100%);
 			}
 			.info-box {
 				width: 240px;
