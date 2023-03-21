@@ -66,13 +66,13 @@ export default {
 			const params = {
 				networkName: process.env.VUE_APP_CHAINID === '1' ? Network.Main : Network.Goerli,
 				gasPrice: new BigNumber(gasPrice * 1.5),
-				// apiBaseUrl: process.env.VUE_APP_OPENSEA_BASE_URL
+				apiBaseUrl: process.env.VUE_APP_OPENSEA_BASE_URL
 				// networkName: Network.Main,
 				// apiKey: process.env.VUE_APP_OPENSEA_KEY
 			}
-			if (process.env.VUE_APP_CHAINID === '1') {
-				params.apiKey = process.env.VUE_APP_OPENSEA_KEY
-			}
+			// if (process.env.VUE_APP_CHAINID === '1') {
+			// 	params.apiKey = process.env.VUE_APP_OPENSEA_KEY
+			// }
 			window.openseaSDK = new OpenSeaSDK(window.web3.currentProvider, params)
 		}
 		return window.openseaSDK
