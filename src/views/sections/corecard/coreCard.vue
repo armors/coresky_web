@@ -97,6 +97,7 @@ watch(
 watch(
 	() => state.token,
 	() => {
+		proxy.$store.dispatch('authinfo');
 		getUserStatus();
 	}
 );
