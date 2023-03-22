@@ -295,6 +295,10 @@ export default {
         obj[this.cartNameOpensea] = JSON.stringify(this.openseaCart)
         setLocalStorage(obj)
         this.$store.commit('initShoppingCart')
+        if (!isCheckOrder) {
+          await this.checkOrderOpensea(true)
+        }
+        this.$store.commit('initShoppingCart')
       } else {
         this.openseaCart = []
         this.$store.commit('initShoppingCart')
@@ -360,6 +364,48 @@ export default {
           return res
         }
       } catch (e) {
+        return {
+          error: e.error,
+          code: 500
+        }
+      }
+    },
+    async checkOrderOpensea(isInitCart = false) {
+      const shoppingOpenseaCartList = this.shoppingOpenseaCartList
+      try {
+        const openseaSDK = await this.$sdk.initOpenSea()
+        const newCheck = []
+        for(let i = 0; i < shoppingOpenseaCartList.length; i++) {
+          let order = shoppingOpenseaCartList[i]
+          if (order.expirationTime > (new Date().getTime() / 1000)) {
+            const res = await openseaSDK.seaport.getOrderStatus(order.orderHash)
+            console.log(res)
+            if (!res.isCancelled && !res.isValidated) {
+              newCheck.push(order)
+            }
+          }
+        }
+        if (newCheck.length !== shoppingOpenseaCartList.length) {
+          if (!isInitCart) {
+            this.$tools.message(this.$t('messageTip.ReconfirmPurchase'));
+          }
+          if (newCheck.length < 1) {
+            removeLocalStorage([this.cartNameOpensea])
+            this.$store.commit('initShoppingCart')
+          } else {
+            let obj = []
+            obj[this.cartNameOpensea] = JSON.stringify(newCheck)
+            setLocalStorage(obj)
+            this.getCartInfo(true)
+          }
+        } else {
+          return newCheck
+        }
+        // console.log(openseaSDK)
+        // const newOpenseaList = await openseaSDK.seaport.validate(orders, this.user.coinbase)
+        // console.log(await newOpenseaList.callStatic())
+      } catch (e) {
+        console.log(e)
         return {
           error: e.error,
           code: 500
@@ -612,6 +658,11 @@ export default {
         //   await moreBuyAction.executeAllActions()
         //   return
         // }
+        await this.checkOrderOpensea()
+        if (this.openseaCart.length < 1) {
+          this.buyOpenseaBtnLoading= false
+          return
+        }
         const transactionHash = await openseaSDK.fulfillOrder({
           order: this.openseaCart[0],
           accountAddress: this.user.coinbase
