@@ -34,11 +34,11 @@
 						<svg-icon class="platform-logo" icon-class="logo" />
 						<span class="name">Coresky</span>
 					</div>
-					<div class="item" :class="{ 'active': platformList.find(el => el.name === 'Opensea') }"
+					<!-- <div class="item" :class="{ 'active': platformList.find(el => el.name === 'Opensea') }"
 						@click="togglePlatform('Opensea')">
 						<svg-icon class="platform-logo" icon-class="os-logo" />
 						<span class="name">Opensea</span>
-					</div>
+					</div> -->
 				</div>
 				<div class="flex-com" style="">
 					<div class="item">
@@ -337,17 +337,17 @@ export default {
 					lastSale: '--',
 					proceeds: undefined
 				},
-				{
-					name: 'Opensea',
-					logo: 'os-logo',
-					coin: 'eth',
-					listPrice: undefined,
-					fee: '--',
-					Royalties: '--',
-					floorPrice: '--',
-					lastSale: '--',
-					proceeds: undefined
-				}
+				// {
+				// 	name: 'Opensea',
+				// 	logo: 'os-logo',
+				// 	coin: 'eth',
+				// 	listPrice: undefined,
+				// 	fee: '--',
+				// 	Royalties: '--',
+				// 	floorPrice: '--',
+				// 	lastSale: '--',
+				// 	proceeds: undefined
+				// }
 			],
 			isSamePrice: false,
 			samePrice: undefined,

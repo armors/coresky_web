@@ -1132,7 +1132,7 @@ export default {
         // setTimeout(() => {
         this.loading = false
         // }, 3000)
-        await this.getOrdersAndOffers()
+        // await this.getOrdersAndOffers()
         if (this.ckOrdersEntityList.length > 0) {
           this.countDown()
         } else {
@@ -1487,7 +1487,7 @@ export default {
         if (res.code !== 200) {
           this.$tools.message(this.$t('messageTip.refreshDataErr'), 'warning');
         }
-        else{
+        else {
           this.getTokenInfo()
         }
         this.refreshDataLoading = false

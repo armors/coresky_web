@@ -18,9 +18,9 @@
         <el-badge :hidden="items == 0" :value="items" class="item">
           <el-menu-item index="1">CoreSky</el-menu-item>
         </el-badge>
-        <el-badge :hidden="shoppingOpenseaCartList.length == 0" :value="shoppingOpenseaCartList.length" class="item">
+        <!-- <el-badge :hidden="shoppingOpenseaCartList.length == 0" :value="shoppingOpenseaCartList.length" class="item">
           <el-menu-item index="2"> {{ $t('shoppingCart.other') }}</el-menu-item>
-        </el-badge>
+        </el-badge> -->
       </el-menu>
       <div class="right" @click="clearCart">
         <!-- <img src="@/assets/images/icons/icon_clearcart.svg" class="icon-clear" alt=""> -->
