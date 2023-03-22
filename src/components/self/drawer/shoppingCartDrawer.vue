@@ -692,6 +692,7 @@ export default {
         console.log(e)
         this.$tools.message(this.$filters.filterMsgOpenseaErr(e), 'warning');
         this.buyOpenseaBtnLoading = false
+        await this.checkOrderOpensea()
       }
     }
   },
