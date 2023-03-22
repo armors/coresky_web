@@ -197,7 +197,7 @@ export default {
       if (this.viplevel > 0) {
         let res = await this.$api("corecard.reserve", { level: this.viplevel })
         if (res.debug === false) {
-          this.$tools.notification('', this.$t('corecard.coreCardMintErr'), 'error');
+          this.$tools.notification('', this.$t('messageTip.coreCardMintErr'), 'error');
           this.isMinting = false
           return
         }

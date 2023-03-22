@@ -422,6 +422,10 @@ export default {
 			url: '/token/price',
 			method: 'post',
 		},
+		refresh: {
+			url: '/token/refresh',
+			method: 'post',
+		}
 	},
 	collections: {
 		type: {
@@ -492,7 +496,7 @@ export default {
 			url: '/corecard/cardConfigs',
 			method: 'post',
 		},
-		reserve:{
+		reserve: {
 			url: '/corecard/reserve',
 			method: 'post',
 		}
