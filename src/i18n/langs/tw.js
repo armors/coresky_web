@@ -45,7 +45,7 @@ module.exports = {
 		coreCardTip1: '查看是否有CoreCard空投？',
 		coreCardTip2: '恭喜您獲得“CoreCard V{name}”',
 		coreCardBindCheck: '只能綁定一張CoreCard。請解綁重試',
-		coreCardMintErr: '當前頁面停留太久，請刷新頁面重新鑄造',
+		coreCardMintErr: '當前等級CoreCard已被鑄造完，請刷新頁面',
 		refreshDataErr: '重繪請求已提交，請1分鐘後再試',
 	},
 	navigation: {

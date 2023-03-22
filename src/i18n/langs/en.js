@@ -48,7 +48,7 @@ module.exports = {
 		coreCardTip2: 'Congratulations! You got a "CoreCard V{name}"',
 		coreCardBindCheck:
 			'Only one CoreCard can be bound. Please unbind and try again',
-		coreCardMintErr: 'The current page has stayed too long. Please refresh the page and try again Mint',
+		coreCardMintErr: 'This level of CoreCard Mint ends, refresh page',
 		refreshDataErr: 'Refresh request submitted, check back in a minute.',
 	},
 	// 头部导航
