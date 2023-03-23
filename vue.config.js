@@ -68,7 +68,8 @@ module.exports = defineConfig({
     config.output.filename('./js/[name].[chunkhash:8].js');
     config.output.chunkFilename('./js/[name].[chunkhash:8].js');
     if (process.env.VUE_APP_MODE === 'production') {
-      config.optimization.minimizer[0].options.terserOptions.compress.drop_console = true;	//生产环境去掉console.log
+      // 执行报错 先注掉
+      // config.optimization.minimizer[0].options.terserOptions.compress.drop_console = true;	//生产环境去掉console.log
     }
     config.optimization.runtimeChunk('single');
     config.plugin('CompressionWebpackPlugin')

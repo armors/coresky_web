@@ -369,7 +369,7 @@ export default {
     async cartBuy () {
       const resSign = await this.$sdk.checkSignatureAccount()
       console.log(resSign)
-      if(resSign.code !== 200) {
+      if (resSign.code !== 200) {
         return
       }
       this.buyBtnLoading = true
@@ -577,7 +577,7 @@ export default {
     async cartBuyOpensea () {
       const resSign = await this.$sdk.checkSignatureAccount()
       console.log(resSign)
-      if(resSign.code !== 200) {
+      if (resSign.code !== 200) {
         return
       }
       // isOrderFulfillable
@@ -654,6 +654,9 @@ export default {
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08);
   border-radius: 16px;
   // height: 740px !important;
+  &.el-drawer.rtl {
+    height: calc(100% - $headerHeight - 50px);
+  }
 
   .el-drawer__body {
     padding: 20px 0 !important;
@@ -683,9 +686,7 @@ export default {
 
 .coresky-drawer {
   width: 406px;
-  &.el-drawer.rtl {
-    height: calc(100% - $headerHeight - 50px);
-  }
+
   margin-top: $headerHeight;
 
   .el-drawer__body {

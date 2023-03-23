@@ -126,6 +126,7 @@ module.exports = {
   },
   profile: {
     editProfile: "常规设置",
+    userCardList: '管理CoreCard',
     Username: '昵称',
     placeholderName: '请输入你的用户名',
     UploadCover: '上传封面',
@@ -143,7 +144,7 @@ module.exports = {
     subTitle: '公测期间，在Coresky交易NFT可获得CT积分奖励！',
     HotActivities: '热门活动',
     MyRewards: '我的奖励',
-    CTScore: 'CT积分',
+    CTScore: 'Coresky 积分',
     RewardsHistory: '奖励记录',
     Time: '时间',
     Event: '事件',

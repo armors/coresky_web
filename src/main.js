@@ -1,67 +1,65 @@
-import { createApp } from "vue";
-import App from "./App.vue";
-import router from "./router";
-import i18n from "./i18n/i18n.js";
-import store from "./store";
+import { createApp } from 'vue';
+import App from './App.vue';
+import router from './router';
+import i18n from './i18n/i18n.js';
+import store from './store';
+import directive from './directive'; // directive
 // import "lib-flexible/flexible";
-import api from "@/api/index.js";
-import tools from "@/util/tools.js";
-import web3 from "@/util/web3/index.js";
-import NoContent from "@/components/NoContent";
-import NFTItem from "@/components/NFTItem";
-import imageBox from "@/components/self/imageBox";
-import NFTItemLoad from "@/components/self/nftList/NFTItemLoad";
-import FollowLoad from "@/components/loading/FollowLoad";
-import LoadStatus from "@/components/LoadStatus";
-import Avatar from "@/components/Avatar";
-import sdk from "@/util/sdk/index.js";
+import api from '@/api/index.js';
+import tools from '@/util/tools.js';
+import web3 from '@/util/web3/index.js';
+import NoContent from '@/components/NoContent';
+import NFTItem from '@/components/NFTItem';
+import imageBox from '@/components/self/imageBox';
+import NFTItemLoad from '@/components/self/nftList/NFTItemLoad';
+import FollowLoad from '@/components/loading/FollowLoad';
+import LoadStatus from '@/components/LoadStatus';
+import Avatar from '@/components/Avatar';
+import sdk from '@/util/sdk/index.js';
 // import Window from "@/components/Window.vue";
 // import 'element-plus/theme-chalk/dark/css-vars.css'
-var Web3 = require("web3");
+var Web3 = require('web3');
 
+import ProfilePopover from '@/components/ProfilePopover';
+import Placeholder from '@/components/Placeholder';
 
-import ProfilePopover from "@/components/ProfilePopover";
-import Placeholder from "@/components/Placeholder";
+import SaleDialog from '@/components/dialogs/Sale';
+import CancelSaleDialog from '@/components/dialogs/CancelSale';
+import BuyDialog from '@/components/dialogs/Buy';
 
-import SaleDialog from "@/components/dialogs/Sale";
-import CancelSaleDialog from "@/components/dialogs/CancelSale";
-import BuyDialog from "@/components/dialogs/Buy";
+import BidDialog from '@/components/dialogs/Bid';
+import CancelBidDialog from '@/components/dialogs/CancelBid';
+import AcceptDialog from '@/components/dialogs/Accept';
 
-import BidDialog from "@/components/dialogs/Bid";
-import CancelBidDialog from "@/components/dialogs/CancelBid";
-import AcceptDialog from "@/components/dialogs/Accept";
-
-import TransferDialog from "@/components/dialogs/Transfer";
-import BurnDialog from "@/components/dialogs/Burn";
-import NoFound from "@/components/NoFound";
+import TransferDialog from '@/components/dialogs/Transfer';
+import BurnDialog from '@/components/dialogs/Burn';
+import NoFound from '@/components/NoFound';
 
 // import "@/styles/myicon/iconfont.css";
 // import "@/styles/font_icon/iconfont.css";
-import "element-plus/dist/index.css";
+import 'element-plus/dist/index.css';
 
-import { VueClipboard } from "@soerenmartius/vue3-clipboard";
-import * as filters from "@/filters";
+import { VueClipboard } from '@soerenmartius/vue3-clipboard';
+import * as filters from '@/filters';
 
-import ElementPlus from "element-plus";
-import "./permission";
+import ElementPlus from 'element-plus';
+import './permission';
 // import "../theme/index.css";
-import "./assets/icons"; // icon
+import './assets/icons'; // icon
 
-import '@/assets/icons'  // 导入图标资源
-import SvgIcon from '@/components/SvgIcon'// svg component
+import '@/assets/icons'; // 导入图标资源
+import SvgIcon from '@/components/SvgIcon'; // svg component
 
+import '@/styles/index.scss';
 
+import '@/assets/font/font.css';
 
-import "@/styles/index.scss";
-
-import "@/assets/font/font.css";
-
-import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import * as ElementPlusIconsVue from '@element-plus/icons-vue';
 import UniswapVue from 'uniswap-vue';
 
 const app = createApp(App); // 创建实例
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-	app.component(key, component)
+	app.component(key, component);
 }
 app.config.globalProperties.$web3 = web3;
 app.config.globalProperties.$Web3 = Web3;
@@ -73,38 +71,37 @@ app.config.globalProperties.$filters = filters;
 // https://market.hellonft.vip
 
 app.use(UniswapVue);
-
+app.use(directive);
 app.use(VueClipboard);
 app.use(ElementPlus);
 
-app.component('svg-icon', SvgIcon)
+app.component('svg-icon', SvgIcon);
 
-app.component("Avatar", Avatar);
+app.component('Avatar', Avatar);
 // app.component("popup-window", Window);
-app.component("no-content", NoContent);
-app.component("nft-item", NFTItem);
-app.component("image-box", imageBox);
-app.component("nft-item-load", NFTItemLoad);
-app.component("follow-load", FollowLoad);
-app.component("load-status", LoadStatus);
-app.component("sale-dialog", SaleDialog);
-app.component("cancel-sale-dialog", CancelSaleDialog);
-app.component("buy-dialog", BuyDialog);
-app.component("bid-dialog", BidDialog);
-app.component("cancel-bid-dialog", CancelBidDialog);
-app.component("accept-dialog", AcceptDialog);
-app.component("transfer-dialog", TransferDialog);
-app.component("burn-dialog", BurnDialog);
-app.component("profile-popover", ProfilePopover);
+app.component('no-content', NoContent);
+app.component('nft-item', NFTItem);
+app.component('image-box', imageBox);
+app.component('nft-item-load', NFTItemLoad);
+app.component('follow-load', FollowLoad);
+app.component('load-status', LoadStatus);
+app.component('sale-dialog', SaleDialog);
+app.component('cancel-sale-dialog', CancelSaleDialog);
+app.component('buy-dialog', BuyDialog);
+app.component('bid-dialog', BidDialog);
+app.component('cancel-bid-dialog', CancelBidDialog);
+app.component('accept-dialog', AcceptDialog);
+app.component('transfer-dialog', TransferDialog);
+app.component('burn-dialog', BurnDialog);
+app.component('profile-popover', ProfilePopover);
 
-app.component("placeholder", Placeholder);
+app.component('placeholder', Placeholder);
 
-app.component("no-found", NoFound);
+app.component('no-found', NoFound);
 
-app
-  .use(store)
-  .use(router)
-  .use(i18n)
-  .mount("#app");
+app.use(store)
+	.use(router)
+	.use(i18n)
+	.mount('#app');
 
 export default app;
