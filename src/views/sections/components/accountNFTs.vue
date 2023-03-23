@@ -3,7 +3,7 @@
     :infinite-scroll-distance="50">
     <div class="filter-wrap" v-if="showFilterBox">
       <div class="filter-head">
-        <span class="left btnfilter" @click="showFilterBox=!showFilterBox">
+        <span class="left btnfilter" @click="showFilterBox = !showFilterBox">
           <el-icon>
             <img src="../../../assets/images/icons/icon_filter_open.svg" alt="">
           </el-icon>{{ $t('common.Filter') }}
@@ -23,7 +23,7 @@
       <div class="filter-item border">
         <div class="flex filter-box">
           <span class="left">{{ $t('common.Price') }}</span>
-          <span class="right" @click="isOpenPriceFilter=!isOpenPriceFilter">
+          <span class="right" @click="isOpenPriceFilter = !isOpenPriceFilter">
             <el-icon style="font-size:16px" :class="{ 'down': isOpenPriceFilter }">
               <!-- <img src="../../../assets/images/icons/icon_filter_up.svg" alt=""> -->
             </el-icon>
@@ -41,14 +41,14 @@
             <el-input-number v-model="queryParams.maxPrice" :placeholder="$t('common.Max')" :controls="false"
               :precision="4" :min="0.0001" :max="100000000000000" class="input-number" />
           </div>
-          <div class="btn-apply" @click="searchClick">{{$t('common.Application')  }}</div>
+          <div class="btn-apply" @click="searchClick">{{ $t('common.Application') }}</div>
         </template>
       </div>
       <div class="filter-line"></div>
       <div class="filter-item">
         <div class="flex select-title">
-          <span class="left">{{$t('common.Collection')  }}</span>
-          <span class="right" @click="isOpenSearchCollection=!isOpenSearchCollection">
+          <span class="left">{{ $t('common.Collection') }}</span>
+          <span class="right" @click="isOpenSearchCollection = !isOpenSearchCollection">
             <el-icon style="font-size:16px">
               <!-- <ArrowUp /> -->
             </el-icon>
@@ -62,14 +62,14 @@
             </template>
           </el-input>
           <div class="list-wrap">
-            <router-link :to="`/collection/${item.contract}`" class="list-item" v-for="(item,index) in collectionList"
+            <router-link :to="`/collection/${item.contract}`" class="list-item" v-for="(item, index) in collectionList"
               :key="index">
               <div class="head-img">
                 <image-box :src="item.image"></image-box>
                 <img class="tag" src="../../../assets/images/icons/icon_tag.svg" alt="">
               </div>
               <div class="head-txt">
-                {{item.name}}
+                {{ item.name }}
               </div>
             </router-link>
           </div>
@@ -78,7 +78,7 @@
     </div>
     <div class="right-content">
       <div class="list-search-wrap">
-        <div class="btnfilter" v-if="!showFilterBox" @click="showFilterBox=!showFilterBox">
+        <div class="btnfilter" v-if="!showFilterBox" @click="showFilterBox = !showFilterBox">
           <img src="../../../assets/images/icons/icon_filter_close.svg" alt="">
           {{ $t('common.Filter') }}
         </div>
@@ -102,9 +102,9 @@
           <span class="icon-wrap icon_filter02" :class="{'active':viewType===2}" @click="viewType=2"></span>
         </div> -->
       </div>
-      <div >
+      <div>
         <div class="nft-list">
-          <card-item :item=item v-for="(item,index) in nftList" :key="index"></card-item>
+          <card-item :item=item v-for="(item, index) in nftList" :key="index"></card-item>
         </div>
         <div v-if="loadStatus === 'loading'">
           <p class="loading-txt">
@@ -120,7 +120,6 @@
       </div>
     </div>
   </div>
-
 </template>
 
 <script>
@@ -193,6 +192,7 @@ export default {
         page: 1,
         order: 2,
         limit: 6,
+        followAddressByContract: this.address
       }
       this.$api("collect.query", params).then((res) => {
         if (this.$tools.checkResponse(res)) {
@@ -206,7 +206,7 @@ export default {
       this.$api("token.query", this.queryParams).then((res) => {
         this.loadStatus = 'over'
         if (this.$tools.checkResponse(res)) {
-          this.nftList = this.nftList.concat( res.debug.listData)
+          this.nftList = this.nftList.concat(res.debug.listData)
           this.queryParams.page = res.debug.curPage
           this.listCount = res.debug.listCount
         } else {
@@ -217,7 +217,7 @@ export default {
     searchClick () {
       this.init()
     },
-    loadMoreData() {
+    loadMoreData () {
       this.queryParams.page += 1
       this.pageHandle()
     },

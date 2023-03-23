@@ -1,8 +1,5 @@
 <template>
-	<router-link
-		:to="`/detail/${item.contract}/${item.tokenId}`"
-		class="nft-card"
-	>
+	<router-link :to="`/detail/${item.contract}/${item.tokenId}`" class="nft-card">
 		<div class="item">
 			<div class="nft-content">
 				<div class="card-top">
@@ -14,23 +11,15 @@
 					<div class="nft-txt">
 						{{ item.name ? item.name : '#' + item.tokenId }}
 					</div>
-					<div
-						class="nft-price"
-						v-if="item.basePrice && item.basePrice !== '0'"
-					>
-						<img
-							class="token-icon"
-							src="@/assets/images/icons/token/token_eth2.svg"
-							alt=""
-						/>
+					<div class="nft-price" v-if="item.basePrice && item.basePrice !== '0'">
+						<img class="token-icon" src="@/assets/images/icons/token/token_eth2.svg" alt="" />
 						<span class="price">
 							{{
 								!!item.basePrice
-									? nftPrice(item.basePrice)
-									: '-- '
+								? nftPrice(item.basePrice)
+								: '-- '
 							}}
-							ETH</span
-						>
+							ETH</span>
 					</div>
 				</div>
 			</div>
@@ -76,6 +65,9 @@ const oriImage = () => {
 	&:hover {
 		box-shadow: 0 7px 16px -8px rgba(0, 0, 0, 0.15);
 		transform: translateY(-5px);
+	}
+	.item {
+		height: 100%;
 	}
 	.nft-content {
 		display: flex;
