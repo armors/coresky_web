@@ -68,7 +68,7 @@
       </div>
     </div>
     <div class="right-content">
-      <el-table :data="dataList" :header-cell-style="{
+      <el-table :data="dataList" v-loading="loadStatus == 'loading'" :header-cell-style="{
         color: '#717A83'
       }" style="width: 100%">
         <el-table-column prop="date" :label="$t('activities.Activities')" width="180">
@@ -82,7 +82,7 @@
         <el-table-column prop="Item" :label="$t('activities.Items')" width="200" :show-overflow-tooltip="true">
           <template #default="props">
             <image-box v-if="props.row.image != null" :src="props.row.image" />
-            <span class="item-name">{{ props.row.name || '--' }}</span>
+            <span class="item-name">{{ props.row.name || ('#' + props.row.tokenId) }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="address" :label="$t('activities.Price')">
@@ -103,7 +103,8 @@
         </el-table-column>
         <el-table-column prop="address" :label="$t('activities.To')" width="140">
           <template #default="props">
-            <a class="link">{{ $filters.ellipsisAddress(props.row.toAddress, 4) }}</a>
+            <a class="link" v-if="props.row.toAddress === '0x0000000000000000000000000000000000000000'">NullAddress</a>
+            <a class="link" v-else>{{ $filters.ellipsisAddress(props.row.toAddress, 4) }}</a>
           </template>
         </el-table-column>
         <el-table-column prop="address" :label="$t('activities.Date')">
@@ -113,7 +114,7 @@
         </el-table-column>
         <template #empty>
           <div class="empty-wrap">
-            <p class="txt">No Data</p>
+            <p class=" txt">No Data</p>
             <img src="@/assets/images/no-data.png" alt="">
           </div>
         </template>
@@ -155,8 +156,7 @@ export default {
   },
   data () {
     return {
-      dataList: [
-      ],
+      dataList: [],
       checkList: [],
       queryParams: {
         page: 1,
@@ -166,6 +166,7 @@ export default {
       },
       listCount: 0,
       allDataList: [],
+      loadStatus: ''
     }
   },
   methods: {
@@ -173,22 +174,7 @@ export default {
       return this.$filters.keepMaxPoint(this.$Web3.utils.fromWei(basePrice.toString()))
     },
     changeChecked () {
-      console.log(this.checkList)
       this.searchClick()
-      // if (this.checkList === undefined || this.checkList.length == 0) {
-      //   this.dataList = this.allDataList
-      //   return
-      // }
-      // let datalist = this.allDataList.filter(el => {
-      //   let obj = this.checkList.find(item => item === el.activity)
-      //   if (obj) {
-      //     return true
-      //   }
-      //   else {
-      //     return false
-      //   }
-      // })
-      // this.dataList = datalist
     },
     goExplore (address, isTx = false) {
       if (address !== null) {
@@ -240,6 +226,7 @@ export default {
 }
 .type-wrap {
   width: 285px;
+  flex-shrink: 0;
   .gruop-wrap {
     margin-top: 0;
 
