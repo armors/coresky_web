@@ -54,6 +54,10 @@
         <img class="icon" src="@/assets/images/icons/icon_transaction.svg" alt="">
         <span>Activities</span>
       </div> -->
+      <div class="nav-item" @click="goCoreCard">
+        <img class="icon" src="@/assets/images/icons/icon_class_card.svg" alt="">
+        {{ $t('userCenter.MyCoreCard') }}
+      </div>
       <div class="nav-item" @click="goProfile">
         <img class="icon" src="@/assets/images/icons/icon_class_setting.svg" alt="">
         {{ $t('userCenter.setting') }}
@@ -76,51 +80,68 @@
             ETH
           </div>
           <div class="price-box">
-            <div class="num">{{ (balanceETH < 0.0001 && balanceETH > 0 ) ? '<0.0001': $filters.milliFormat(balanceETH) }}</div>
-            <div class="num2" v-if="$filters.ethToUsdt(balanceETH) !== '--' && balanceETH >= 0.0001">${{ $filters.milliFormat($filters.ethToUsdt(balanceETH)) }}</div>
+            <div class="num">{{ (balanceETH < 0.0001 && balanceETH > 0) ? '<0.0001' : $filters.milliFormat(balanceETH)
+            }}</div>
+                  <div class="num2" v-if="$filters.ethToUsdt(balanceETH) !== '--' && balanceETH >= 0.0001">${{
+                    $filters.milliFormat($filters.ethToUsdt(balanceETH)) }}</div>
+            </div>
+            <div class="swap-icon" @click="showUniswap('ETH')"><img src="../../../assets/images/icons/icon_swap.svg"
+                alt="">
+            </div>
           </div>
-          <div class="swap-icon" @click="showUniswap('ETH')"><img src="../../../assets/images/icons/icon_swap.svg" alt="">
+          <div class="wallet-line">
+            <div class="w-line"></div>
+          </div>
+          <div class="wallet-item">
+            <div class="coin-box">
+              <img src="../../../assets/images/icons/token/token_eth.svg" alt="">
+            </div>
+            <div class="coin-name">
+              WETH
+            </div>
+            <div class="price-box">
+              <div class="num">{{ (balanceWETH < 0.0001 && balanceWETH > 0) ? '<0.0001' : $filters.milliFormat(balanceWETH)
+              }}</div>
+                    <div class="num2" v-if="$filters.ethToUsdt(balanceWETH) !== '--' && balanceWETH >= 0.0001">${{
+                      $filters.milliFormat($filters.ethToUsdt(balanceWETH)) }}</div>
+              </div>
+              <div class="swap-icon" @click="showUniswap('WETH')"><img src="../../../assets/images/icons/icon_swap.svg"
+                  alt="">
+              </div>
+            </div>
           </div>
         </div>
-        <div class="wallet-line">
-          <div class="w-line"></div>
-        </div>
-        <div class="wallet-item">
-          <div class="coin-box">
-            <img src="../../../assets/images/icons/token/token_eth.svg" alt="">
+        <div class="drawer-wallet" style="margin-top:30px;">
+          <div class="drawer-wallet-content">
+            <div class="wallet-item" style="border-bottom: 2px solid #E6E8EC;">
+              <div class="coin-box">
+                <img src="../../../assets/images/icons/score.svg" alt="">
+              </div>
+              <div class="coin-name">
+                {{ $t('userCenter.score') }}
+              </div>
+              <div class="price-box">
+                <div class="num">{{ user && user.score }}</div>
+              </div>
+            </div>
+            <div class="wallet-item" style="border-bottom: 2px solid #E6E8EC;">
+              <div class="coin-box">
+                <img src="../../../assets/images/icons/score.svg" alt="">
+              </div>
+              <div class="coin-name">
+                {{ $t('userCenter.rewards') }}
+              </div>
+              <div class="price-box">
+                <div class="num">{{ user && user.rewards }}</div>
+              </div>
+            </div>
+            <div class="wallet-item" style="background-color: #FAFCFE;">
+              <el-link :underline="false" type="primary" @click="goView('/reward')" class="btnDetail">
+                {{ $t('userCenter.details') }}</el-link>
+            </div>
           </div>
-          <div class="coin-name">
-            WETH
-          </div>
-          <div class="price-box">
-            <div class="num">{{ (balanceWETH < 0.0001 && balanceWETH > 0) ? '<0.0001' : $filters.milliFormat(balanceWETH)}}</div>
-            <div class="num2" v-if="$filters.ethToUsdt(balanceWETH) !== '--' && balanceWETH >= 0.0001">${{ $filters.milliFormat($filters.ethToUsdt(balanceWETH)) }}</div>
-          </div>
-          <div class="swap-icon" @click="showUniswap('WETH')"><img src="../../../assets/images/icons/icon_swap.svg"
-              alt="">
-          </div>
         </div>
-      </div>
-
-
-    </div>
-    <div v-if="false" class="drawer-wallet" style="margin-top:30px;">\
-      <div class="wallet-item">
-        <!-- <div class="coin-box">
-        </div> -->
-        <div class="coin-name">
-          {{ $t('userCenter.score') }}:
-        </div>
-        <div class="price-box">
-          <div class="num">{{ user && user.score }}</div>
-        </div>
-      </div>
-      <div class="wallet-item">
-        <el-link :underline="false" type="primary" @click="goView('/reward')" class="btnDetail">
-          {{ $t('userCenter.details') }}</el-link>
-      </div>
-    </div>
-    <uniswapDialog ref="uniswapDialog"></uniswapDialog>
+        <uniswapDialog ref="uniswapDialog"></uniswapDialog>
   </el-drawer>
 </template>
 
@@ -140,7 +161,7 @@ export default {
     uniswapDialog
   },
   watch: {
-    show() {
+    show () {
       this.visible = this.show;
       if (this.visible) {
         this.initGetBalance()
@@ -150,7 +171,7 @@ export default {
       this.initGetBalance()
     }
   },
-  data() {
+  data () {
     return {
       loading: true,
       visible: false,
@@ -158,22 +179,22 @@ export default {
       balanceWETH: '--',
     };
   },
-  created() {
+  created () {
 
   },
-  mounted() {
+  mounted () {
 
   },
   computed: {
-    user() {
+    user () {
       return this.$store.state.user;
     },
   },
   methods: {
-    showUniswap(type) {
+    showUniswap (type) {
       this.$refs.uniswapDialog.showUniswap(type)
     },
-    async initGetBalance() {
+    async initGetBalance () {
       console.log('initGetBalance')
       const balanceETH = await this.$sdk.getBalance({
         address: this.$sdk.NULL_ADDRESS()
@@ -186,27 +207,32 @@ export default {
           address: process.env.VUE_APP_WETH
         }, this.user.coinbase)
         console.log(balanceWETH)
-        this.balanceWETH = parseFloat(this.$sdk.fromWeiNum(balanceWETH, parseFloat(keepPoint(balanceWETH, balanceWETH < 0.0001 ? 8 : 4))? 8 : 4))
+        this.balanceWETH = parseFloat(this.$sdk.fromWeiNum(balanceWETH, parseFloat(keepPoint(balanceWETH, balanceWETH < 0.0001 ? 8 : 4)) ? 8 : 4))
         console.log('this.balanceWETH', this.balanceWETH)
       } catch (err) {
         console.log('this.balanceWETH', err)
       }
       console.log(this.user)
     },
-    logout() {
+    logout () {
       this.$web3.disconnect();
       this.handleClose()
     },
-    goProfile() {
+    goProfile () {
       this.visible = false
       this.$router.push({ path: '/profile' });
       this.handleClose()
     },
-    goView(path) {
+    goCoreCard () {
+      this.visible = false
+      this.$router.push('/profile?tab=usercardlist');
+      this.handleClose()
+    },
+    goView (path) {
       this.$router.push(path)
       this.handleClose()
     },
-    handleClose() {
+    handleClose () {
       this.$emit('update:show', false)
     }
   },
@@ -219,7 +245,7 @@ export default {
   margin-top: calc($headerHeight + 10px) !important;
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08);
   border-radius: 16px;
-  height: 530px !important;
+  height: 720px !important;
 
   .el-drawer__body {
     padding: 20px 0 !important;
@@ -228,7 +254,6 @@ export default {
 
 .coresky-drawer {
 
-  // height: calc(100% - $headerHeight) !important;
   .account-close {
     width: 15px;
     height: 15px;
@@ -237,8 +262,6 @@ export default {
     top: 24px;
     cursor: pointer;
   }
-
-
 
   .drawer-top {
     display: flex;
@@ -358,11 +381,11 @@ export default {
     .drawer-wallet-content {
       border: 2px solid #E6E8EC;
       border-radius: 10px;
+      overflow: hidden;
     }
 
     .wallet-line {
       padding: 0 10px;
-
       .w-line {
         height: 2px;
         margin: auto;
@@ -374,8 +397,6 @@ export default {
       display: flex;
       padding: 16px;
       align-items: center;
-
-
 
       .coin-box {
         width: 12px;
@@ -436,8 +457,8 @@ export default {
       .btnDetail {
         margin: 0 auto;
         font-size: 16px;
-        color: #7d47ff;
       }
     }
   }
-}</style>
+}
+</style>

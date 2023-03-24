@@ -120,6 +120,9 @@
           <div class="nft-name">
             <span> {{ tokenInfo.name ? tokenInfo.name : ('#' + tokenInfo.tokenId) }}</span>
             <div class="icon_shoucang" :class="{ active: tokenInfo.followStatus }" alt="" @click="followNft" />
+            <el-icon class="icon-refresh " :class="{ 'loading': refreshDataLoading }" @click="refreshData()">
+              <Refresh />
+            </el-icon>
           </div>
           <div class="nft-address" v-if="tokenInfo.contractType === 0">
             <div class="flex-owner">
@@ -176,8 +179,9 @@
                   <div class="box-val">
                     <span class="value">{{ nftPrice }}</span>
                     <span class="value">ETH</span>
-                    <span class="value-u" v-if="nftPrice && $filters.milliFormat($filters.ethToUsdt(nftPrice)) !== '--'"> ${{
-                      $filters.milliFormat($filters.ethToUsdt(nftPrice)) }}</span>
+                    <span class="value-u" v-if="nftPrice && $filters.milliFormat($filters.ethToUsdt(nftPrice)) !== '--'">
+                      ${{
+                        $filters.milliFormat($filters.ethToUsdt(nftPrice)) }}</span>
                   </div>
                 </div>
                 <div class="box-flex-line" v-if="bestPrice && bestPrice !== '--'"></div>
@@ -189,8 +193,9 @@
                   <div class="box-val">
                     <span class="value">{{ bestPrice }}</span>
                     <span class="value">ETH</span>
-                    <span class="value-u" v-if="bestPrice && $filters.milliFormat($filters.ethToUsdt(bestPrice)) !== '--'"> ${{
-                      $filters.milliFormat($filters.ethToUsdt(bestPrice)) }}</span>
+                    <span class="value-u"
+                      v-if="bestPrice && $filters.milliFormat($filters.ethToUsdt(bestPrice)) !== '--'"> ${{
+                        $filters.milliFormat($filters.ethToUsdt(bestPrice)) }}</span>
                   </div>
                 </div>
               </div>
@@ -218,7 +223,7 @@
                 </template>
                 <el-button type="primary" class="btnBuy"
                   v-if="(ckOrdersEntityList.length > 0 && !isSelf && tokenInfo.contractType === 0) || (tokenInfo.contractType === 1 && isSellSelfNft1155)"
-                  @click="showBuyNftNow">Buy Now
+                  @click="showBuyNftNow">{{ $t('nftDetail.Buy') }}
                 </el-button>
                 <!--              <el-button class="btnBlack" v-if="!isSelf && !isCart" :disabled="!(!isSelf && !isCart) || !tokenInfo.contract || !tokenInfo.state"-->
 
@@ -359,7 +364,8 @@
                           @click="cancelSell(v, true)">{{ $t('nftDetail.Cancel') }}</el-button>
                         <el-button type="primary" class="btnAccept" v-else
                           :disabled="isSelf1155(v.maker.address) || isExpired(v.expirationTime)"
-                          :loading="acceptDialogBtnLoading" @click="showBuyNft(v, true)">Buy</el-button>
+                          :loading="acceptDialogBtnLoading" @click="showBuyNft(v, true)">{{ $t('nftDetail.Buy')
+                          }}</el-button>
                       </div>
                       <div class="list-th th25 center">
                         <el-button type="primary" class="btnAccept"
@@ -555,7 +561,7 @@
     <NFTDialogSell ref="NFTDialogSell" @sellCreateSuccess="sellCreateSuccess"></NFTDialogSell>
     <NFTDialogMakeOffer ref="NFTDialogMakeOffer" @makeOfferSuccess="makeOfferSuccess"></NFTDialogMakeOffer>
     <NFTDialogAcceptOffer ref="NFTDialogAcceptOffer" @acceptOfferSuccess="acceptOfferSuccess" />
-    <NFTDialogTransfer ref="NFTDialogTransfer" @transferSuccess="transferSuccess" ></NFTDialogTransfer>
+    <NFTDialogTransfer ref="NFTDialogTransfer" @transferSuccess="transferSuccess"></NFTDialogTransfer>
     <div class="web-loading" v-if="loading" v-loading.fullscreen.lock="loading"></div>
   </div>
 </template>
@@ -570,6 +576,7 @@ import NFTDialogTransfer from '../../components/self/NFTDialogTransfer'
 import { setLocalStorage, getLocalStorage, removeLocalStorage } from "@/util/local-storage";
 import BigNumber from 'bignumber.js'
 import * as echarts from "echarts";
+import { thisExpression } from '@babel/types'
 
 export default {
   name: "NFTDetail",
@@ -647,7 +654,8 @@ export default {
       countDownTime: null,
       countDownFn: '',
       isMakeOffer: false,
-      asset: {}
+      asset: {},
+      refreshDataLoading: false
     };
   },
   created () {
@@ -1007,7 +1015,7 @@ export default {
     },
     async addCartOpensea (v) {
       const res = await this.$sdk.checkSignatureAccount()
-      if(res.code !== 200) {
+      if (res.code !== 200) {
         return
       }
       if (!v) {
@@ -1044,7 +1052,7 @@ export default {
     },
     async addCartList (id) {
       const res = await this.$sdk.checkSignatureAccount()
-      if(res.code !== 200) {
+      if (res.code !== 200) {
         return
       }
       if (this.tokenInfo.contractType === 0) {
@@ -1122,7 +1130,7 @@ export default {
         this.bestPrice = this.ckAuctionEntityList.length > 0 ? this.nftPriceFun(this.ckAuctionEntityList[0].basePrice) : '--'
         this.nftPrice = this.ckOrdersEntityList.length > 0 ? this.nftPriceFun(this.ckOrdersEntityList[0].basePrice) : '--'
         // setTimeout(() => {
-          this.loading = false
+        this.loading = false
         // }, 3000)
         await this.getOrdersAndOffers()
         if (this.ckOrdersEntityList.length > 0) {
@@ -1214,7 +1222,7 @@ export default {
     },
     async showSellNft () {
       const res = await this.$sdk.checkSignatureAccount()
-      if(res.code !== 200) {
+      if (res.code !== 200) {
         return
       }
       if (this.isSellCoresky && this.isSellOpensea) {
@@ -1232,7 +1240,7 @@ export default {
     },
     async cancelMakeOffer (v, isOpensea = false) {
       const res = await this.$sdk.checkSignatureAccount()
-      if(res.code !== 200) {
+      if (res.code !== 200) {
         return
       }
       this.cancelIdOrHash = isOpensea ? v.orderHash : v.id
@@ -1275,8 +1283,8 @@ export default {
       }
     },
     async cancelSell (cancelItem = null, isOpensea = false) {
-      const res =await this.$sdk.checkSignatureAccount()
-      if(res.code !== 200) {
+      const res = await this.$sdk.checkSignatureAccount()
+      if (res.code !== 200) {
         return
       }
       this.cancelIdOrHash = isOpensea ? cancelItem.orderHash : cancelItem.id
@@ -1354,8 +1362,8 @@ export default {
       this.showBuyNft()
     },
     async showBuyNft (v = null, isOpensea = false) {
-      const res =await this.$sdk.checkSignatureAccount()
-      if(res.code !== 200) {
+      const res = await this.$sdk.checkSignatureAccount()
+      if (res.code !== 200) {
         return
       }
       if (v === null) {
@@ -1414,7 +1422,7 @@ export default {
     async showMakeOfferNFT () {
       const res = await this.$sdk.checkSignatureAccount()
       console.log(res)
-      if(res.code !== 200) {
+      if (res.code !== 200) {
         return
       }
       this.$refs.NFTDialogMakeOffer.showMakeOffer(this.tokenInfo)
@@ -1449,7 +1457,7 @@ export default {
       // }
       // this.acceptDialogBtnLoading = false
       const res = await this.$sdk.checkSignatureAccount()
-      if(res.code !== 200) {
+      if (res.code !== 200) {
         return
       }
       this.$refs.NFTDialogAcceptOffer.show(this.tokenInfo, v, 1, isOpensea)
@@ -1457,7 +1465,7 @@ export default {
     async followNft () {
       const res = await this.$sdk.checkSignatureAccount()
       console.log(res)
-      if(res.code !== 200) {
+      if (res.code !== 200) {
         return
       }
       if (!this.tokenInfo.contract || !this.tokenInfo.tokenId) return
@@ -1469,6 +1477,22 @@ export default {
         this.tokenInfo.followStatus = !this.tokenInfo.followStatus
       })
     },
+    refreshData () {
+      this.refreshDataLoading = true
+      let data = {
+        "contract": this.tokenInfo.contract,
+        "tokenId": this.tokenInfo.tokenId
+      }
+      this.$api("token.refresh", data).then(res => {
+        if (res.code !== 200) {
+          this.$tools.message(this.$t('messageTip.refreshDataErr'), 'warning');
+        }
+        else{
+          this.getTokenInfo()
+        }
+        this.refreshDataLoading = false
+      })
+    }
   },
 };
 </script>
@@ -1567,6 +1591,24 @@ export default {
         background-image: url('@/assets/images/icons/icon_shoucang.svg');
         &.active {
           background-image: url('@/assets/images/icons/icon_shoucang_active.svg');
+        }
+      }
+      .icon-refresh {
+        font-size: 24px;
+        color: #04142A;
+        cursor: pointer;
+        margin-left: 10px;
+        &.loading {
+          animation: icon-loading 2s infinite linear;
+        }
+        @keyframes icon-loading {
+          0% {
+            transform: rotate(0deg);
+          }
+
+          to {
+            transform: rotate(1turn);
+          }
         }
       }
     }
