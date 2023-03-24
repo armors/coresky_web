@@ -154,8 +154,10 @@ export default {
         ? (parseFloat(keepPoint(this.nftPrice * 100 / this.tokenInfo.ckCollectionsInfoEntity.foolPrice, 2)) + '%')
         : '--'
       let basePrice = new BigNumber(this.$sdk.fromWeiNumOrigin(this.acceptInfo.basePrice))
-      let creatorFee = basePrice.multipliedBy(this.tokenInfo.ckCollectionsInfoEntity.royalty / 10000)
-      let serviceFee = basePrice.multipliedBy((parseInt(this.config.protocolFee)) / 10000)
+      // let creatorFee = basePrice.multipliedBy(this.tokenInfo.ckCollectionsInfoEntity.royalty / 10000)
+      let creatorFee = basePrice.multipliedBy(this.acceptInfo.takerRelayerFee / 10000)
+      // let serviceFee = basePrice.multipliedBy((parseInt(this.config.protocolFee)) / 10000)
+      let serviceFee = basePrice.multipliedBy(this.acceptInfo.takerProtocolFee / 10000)
       console.log(basePrice.minus(creatorFee).minus(serviceFee).valueOf())
       this.totalRevenue = keepPoint(basePrice.minus(creatorFee).minus(serviceFee).valueOf(), 6)
     },
@@ -174,7 +176,7 @@ export default {
         const royalty = assetInfo.assetContract.openseaSellerFeeBasisPoints
         const fee = assetInfo.assetContract.sellerFeeBasisPoints
         this.protocolFee = this.$filters.feeFormat(assetInfo.assetContract.sellerFeeBasisPoints)
-        this.royaltyFee = this.$filters.feeFormat(assetInfo.assetContract.openseaSellerFeeBasisPoints)
+        // this.royaltyFee = this.$filters.feeFormat(assetInfo.assetContract.openseaSellerFeeBasisPoints)
         this.floorDiff = this.tokenInfo.ckCollectionsInfoEntity.foolPrice !== 0
           ? (parseFloat(keepPoint(this.nftPrice * 100 / this.tokenInfo.ckCollectionsInfoEntity.foolPrice, 2)) + '%')
           : '--'
@@ -276,7 +278,9 @@ export default {
           nftAddress: buyer.contract,
           side: 1,
           tokenId: buyer.tokenId,
-          RelayerFee: this.tokenInfo.ckCollectionsInfoEntity.royalty,
+          // RelayerFee: this.tokenInfo.ckCollectionsInfoEntity.royalty,
+          RelayerFee: buyer.takerRelayerFee,
+          buyMakerProtocolFee: buyer.takerProtocolFee,
           feeType: 2,
           contractType: this.tokenInfo.contractType,
           value: this.acceptInfo.amount
@@ -290,7 +294,9 @@ export default {
           tokenId: buyer.tokenId,
           isMaker: true,
           buyerAddress: buyer.maker,
-          RelayerFee: this.tokenInfo.ckCollectionsInfoEntity.royalty,
+          // RelayerFee: this.tokenInfo.ckCollectionsInfoEntity.royalty,
+          RelayerFee: buyer.takerRelayerFee,
+          buyMakerProtocolFee: buyer.takerProtocolFee,
           feeType: 2,
           contractType: this.tokenInfo.contractType,
           value: this.acceptInfo.amount

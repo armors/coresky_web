@@ -2,8 +2,7 @@ import Web3 from "web3";
 import store from "@/store";
 import i18n from "@/i18n/i18n";
 import tools from "@/util/tools.js";
-import {removeLocalStorage} from "@/util/local-storage.js";
-import {providers, getDefaultProvider} from 'ethers'
+import {providers} from 'ethers'
 let isLoginWalleting = false
 const promisify = (inner) =>
 	new Promise((resolve, reject) =>
@@ -82,32 +81,6 @@ export default {
 			if (window.provider) {
 				window.provider.disconnect();
 			}
-		}
-	},
-	async getTransaction(tx) {
-		let web3 = this.getWeb3();
-		try {
-			return await promisify((cb) => web3.eth.getTransaction(tx, cb));
-		} catch (e) {
-			return {error: e.message};
-		}
-	},
-	async getTransactionReceipt(tx) {
-		let web3 = this.getWeb3();
-		try {
-			return await promisify((cb) => web3.eth.getTransactionReceipt(tx, cb));
-		} catch (e) {
-			return {error: e.message};
-		}
-	},
-	async decodeLog(inputs, hexString, options) {
-		let web3 = this.getWeb3();
-		try {
-			return await promisify((cb) =>
-				web3.eth.abi.decodeLog(inputs, hexString, options, cb)
-			);
-		} catch (e) {
-			return {error: e.message};
 		}
 	},
 	getWeb3() {
@@ -210,18 +183,5 @@ export default {
 				}
 			}
 		}
-	},
-	async addToken(token) {
-		let wasAdded = await window.ethereum.request({
-			method: "wallet_watchAsset",
-			params: {
-				type: "ERC20",
-				options: {
-					address: token.address,
-					symbol: token.symbol,
-					decimals: token.decimals,
-				},
-			},
-		});
 	},
 };

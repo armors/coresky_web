@@ -584,6 +584,7 @@ export default {
 	/**
 	 * 订单数据结构初始化
 	 * @param exchangeAddress // 操作合约
+	 * @param buyMakerProtocolFee
 	 * @param sender // 当前钱包地址
 	 * @param nftAddress nft合约地址
 	 * @param side 0 买家 1 卖家
@@ -598,7 +599,7 @@ export default {
 	 * @param value 此项目中表示交易的nft的数量
 	 * @returns {{howToCall: number, side: number, salt: number, staticExtradata: string, _sender: *, listingTime: number, maker: *, makerRelayerFee: number, takerProtocolFee: number, target: *, paymentToken: string, staticTarget: string, takerRelayerFee: number, calldata: *, expirationTime: number, extra: number, exchange: *, saleKind: number, taker: string, makerProtocolFee: number, feeRecipient: string, feeMethod: number, replacementPattern: (string), basePrice: BigNumber}}
 	 */
-	makeOrder({exchangeAddress, sender, nftAddress, side = 0, tokenId = null, isMaker=false, buyerAddress = '', feeType = 1, RelayerFee = 100, feeRecipient = ZERO_ADDRESS, taker = ZERO_ADDRESS, contractType = 0, value = 1}) {
+	makeOrder({exchangeAddress, buyMakerProtocolFee = 0, sender, nftAddress, side = 0, tokenId = null, isMaker=false, buyerAddress = '', feeType = 1, RelayerFee = 100, feeRecipient = ZERO_ADDRESS, taker = ZERO_ADDRESS, contractType = 0, value = 1}) {
 		let calldata = null
 		let replacementPattern = null
 		if (isMaker) { // 是否是挂单
@@ -634,7 +635,11 @@ export default {
 			makerRelayerFee = 0                   // 版税  default: 0 挂单版税卖家出在此设置
 			takerRelayerFee = RelayerFee                            // 版税  default: 0
 			makerProtocolFee = 0  // 手续费  default: 0 挂单手续费卖家出在此设置
-			takerProtocolFee = parseInt(store.state.config.protocolFee)                           // 手续费  default: 0
+			if (side === 1) {
+				takerProtocolFee = buyMakerProtocolFee                         // 手续费  default: 0
+			} else {
+				takerProtocolFee = parseInt(store.state.config.protocolFee)                           // 手续费  default: 0
+			}
 		}
 		return {
 			exchange: exchangeAddress,                     // 当前 exhcnage 合约地址 default : exchangeAddress
@@ -1250,13 +1255,6 @@ export default {
 			};
 			return ecSignature;
 		}
-	},
-	getAssetType(asset) {
-		switch (asset.type) {
-			case "ERC721":
-				return 3;
-		}
-		return 0;
 	},
 	keyOrderType(value) {
 		return types.keyOrderType(value);
