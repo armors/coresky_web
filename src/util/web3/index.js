@@ -32,7 +32,7 @@ export default {
 					error = "MetaMask enable Error";
 					return {error};
 				}
-				var web3 = new Web3(window.ethereum);
+				var web3 = new Web3(window.web3.currentProvider);
 				window.wallet = web3;
 				window.walletLibrary = new providers.Web3Provider(window.web3.currentProvider)
 				var networkId = await promisify((cb) => web3.eth.getChainId(cb));
