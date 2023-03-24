@@ -211,14 +211,14 @@ export default {
           contractType: this.tokenInfo.contractType,
           value: Number(this.form.quantity)
         })
-        if (this.tokenInfo.contractType === 0) {
-          buyer = {
-            ...buyer,
-            ...{
-              taker: this.tokenInfo.ownersEntityList[0].address
-            }
-          }
-        }
+        // if (this.tokenInfo.contractType === 0) {
+        //   buyer = {
+        //     ...buyer,
+        //     ...{
+        //       taker: this.tokenInfo.ownersEntityList[0].address
+        //     }
+        //   }
+        // }
       } else { // 集合报价
         buyer = this.$sdk.makeOrder({
           exchangeAddress: process.env.VUE_APP_MARKET_EXCHANGE,
