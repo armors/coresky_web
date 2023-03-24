@@ -593,6 +593,7 @@ export default {
 	 * @param feeType 费用类型2 为报价 接受报价
 	 * @param RelayerFee 版税费率
 	 * @param feeRecipient 版税 接收账户 default: 0x0 买方和买方必须有一个是零地址
+	 * @param taker
 	 * @param contractType 合约类型 0是ERC721    1是ERC1155
 	 * @param value 此项目中表示交易的nft的数量
 	 * @returns {{howToCall: number, side: number, salt: number, staticExtradata: string, _sender: *, listingTime: number, maker: *, makerRelayerFee: number, takerProtocolFee: number, target: *, paymentToken: string, staticTarget: string, takerRelayerFee: number, calldata: *, expirationTime: number, extra: number, exchange: *, saleKind: number, taker: string, makerProtocolFee: number, feeRecipient: string, feeMethod: number, replacementPattern: (string), basePrice: BigNumber}}
