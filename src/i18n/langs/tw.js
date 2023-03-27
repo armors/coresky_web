@@ -301,8 +301,8 @@ module.exports = {
 		connect: '連接',
 		bindtoTwitter: '綁定Twitter',
 		bind: '綁定',
-		retweetTwitter: '轉發Twitter',
-		retweet: '轉發',
+		retweetTwitter: '發佈這條推文',
+		retweet: '發佈',
 		mint: '鑄造',
 	},
 	userCardList: {
