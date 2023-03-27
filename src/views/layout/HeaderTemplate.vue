@@ -1,17 +1,29 @@
 <template>
 	<HeaderTip ref="headerTipRef" />
-	<div class="home-head" :class="{ 'homeIndex': isScrollTop && isHomeIndex }">
-		<div class="home-head-mask">
-		</div>
+	<div class="home-head" :class="{ homeIndex: isScrollTop && isHomeIndex }">
+		<div class="home-head-mask"></div>
 		<div class="home-head-content">
 			<router-link to="/" class="head-logo header-margin-r">
-				<img fit="contain" v-if="isScrollTop && isHomeIndex" class="logo-image aa"
-					:src="require('../../assets/images/logo_white_new.svg')" />
-				<img fit="contain" v-else class="logo-image" :src="require('../../assets/images/bottom_logo.svg')" />
+				<img
+					fit="contain"
+					v-if="isScrollTop && isHomeIndex"
+					class="logo-image aa"
+					:src="require('../../assets/images/logo_white_new.svg')"
+				/>
+				<img
+					fit="contain"
+					v-else
+					class="logo-image"
+					:src="require('../../assets/images/bottom_logo.svg')"
+				/>
 			</router-link>
 			<div class="header-search">
-				<el-input class="search-input-wrap" v-model="keyword" @keyup.enter="searchClick"
-					:placeholder="$t('navigation.searchTip')">
+				<el-input
+					class="search-input-wrap"
+					v-model="keyword"
+					@keyup.enter="searchClick"
+					:placeholder="$t('navigation.searchTip')"
+				>
 					<template #prefix>
 						<div class="img-search">
 							<!-- <img src="../../assets/images/icons/icon_search_w.svg" alt=""> -->
@@ -23,28 +35,40 @@
 			<div class="head-navs">
 				<router-link class="nav-link" to="/reward">
 					<svg-icon icon-class="fire" style="width:24px" />
-					{{ $t("navigation.rewards") }}
+					{{ $t('navigation.rewards') }}
 				</router-link>
 				<router-link class="nav-link" to="/markterplace">
-					{{ $t("navigation.marketplace") }}
+					{{ $t('navigation.marketplace') }}
 				</router-link>
 				<router-link class="nav-link" to="/allcollection">
-					{{ $t("navigation.collection") }}
+					{{ $t('navigation.collection') }}
 				</router-link>
-				<router-link class="nav-link" to="/coreCard">
+				<router-link class="nav-link" to="/corecard">
 					CoreCard
 				</router-link>
-				<el-popover placement="bottom" trigger="click" :show-arrow="false" width="200" popper-class="nav-popover"
-					:offset="15">
+				<el-popover
+					placement="bottom"
+					trigger="click"
+					:show-arrow="false"
+					width="200"
+					popper-class="nav-popover"
+					:offset="15"
+				>
 					<template #reference>
 						<div class="nav-link-chain" to="/erc721">
-							<svg-icon class="head-icon mr8" icon-class="eth_01" />
+							<svg-icon
+								class="head-icon mr8"
+								icon-class="eth_01"
+							/>
 							<!-- Ethereum -->
 						</div>
 					</template>
 					<div>
 						<div class="chain-item active">
-							<svg-icon class="head-icon mr8" icon-class="chain_eth" />
+							<svg-icon
+								class="head-icon mr8"
+								icon-class="chain_eth"
+							/>
 							<div class="item-txt">Ethereum</div>
 							<div class="item-dot"></div>
 						</div>
@@ -55,19 +79,33 @@
             </div> -->
 					</div>
 				</el-popover>
-				<el-popover placement="bottom" trigger="click" :show-arrow="false" width="180" popper-class="nav-popover"
-					:offset="15">
+				<el-popover
+					placement="bottom"
+					trigger="click"
+					:show-arrow="false"
+					width="180"
+					popper-class="nav-popover"
+					:offset="15"
+				>
 					<template #reference>
 						<div class="nav-link" to="/erc721">
 							<svg-icon class="head-icon" icon-class="yuyan" />
 						</div>
 					</template>
 					<div>
-						<div class="chain-item two" @click="languageSelect('en')" :class="{ 'active': language == 'en' }">
+						<div
+							class="chain-item two"
+							@click="languageSelect('en')"
+							:class="{ active: language == 'en' }"
+						>
 							<div class="item-txt">English</div>
 							<div class="item-dot"></div>
 						</div>
-						<div class="chain-item two" @click="languageSelect('tw')" :class="{ 'active': language == 'tw' }">
+						<div
+							class="chain-item two"
+							@click="languageSelect('tw')"
+							:class="{ active: language == 'tw' }"
+						>
 							<div class="item-txt">繁体</div>
 							<div class="item-dot"></div>
 						</div>
@@ -77,18 +115,51 @@
             </div> -->
 					</div>
 				</el-popover>
-				<div class="nav-link shopping-cart" @click="showShoppingCartDrawer = true; showUserDrawer = false">
-					<div class="notify-num"
-						v-if="shoppingCartList && shoppingCartList.length > 0 || shoppingOpenseaCartList && shoppingOpenseaCartList.length > 0">
-						{{ shoppingCartList.length + shoppingOpenseaCartList.length }}</div>
+				<div
+					class="nav-link shopping-cart"
+					@click="
+						showShoppingCartDrawer = true;
+						showUserDrawer = false;
+					"
+				>
+					<div
+						class="notify-num"
+						v-if="
+							(shoppingCartList && shoppingCartList.length > 0) ||
+								(shoppingOpenseaCartList &&
+									shoppingOpenseaCartList.length > 0)
+						"
+					>
+						{{
+							shoppingCartList.length +
+								shoppingOpenseaCartList.length
+						}}
+					</div>
 					<svg-icon class="head-icon" icon-class="gouwuche" />
 				</div>
-				<div class="head-connect display-flex box-center" v-if="!connected || !token" @click="login">
-					{{ $t("navigation.connectWallet") }}
+				<div
+					class="head-connect display-flex box-center"
+					v-if="!connected || !token"
+					@click="login"
+				>
+					{{ $t('navigation.connectWallet') }}
 				</div>
-				<div class="nav-link" @click="showUserDrawer = true; showShoppingCartDrawer = false" v-else>
+				<div
+					class="nav-link"
+					@click="
+						showUserDrawer = true;
+						showShoppingCartDrawer = false;
+					"
+					v-else
+				>
 					<div class="avatar-img">
-						<img :src="user.avatar || $filters.fullImageUrl(user.avatar)" alt="">
+						<img
+							:src="
+								user.avatar ||
+									$filters.fullImageUrl(user.avatar)
+							"
+							alt=""
+						/>
 					</div>
 					<!--          <avatar class="avatar-img" :imageUrl="user.avatar || $filters.fullImageUrl(user.avatar)"-->
 					<!--            :address="user.coinbase" shape="circular">-->
@@ -96,23 +167,28 @@
 				</div>
 			</div>
 		</div>
-		<follow-popup :show="showFollowing" ftype="following" @close="showFollowing = false" v-if="connected"
-			:address="user.coinbase">
+		<follow-popup
+			:show="showFollowing"
+			ftype="following"
+			@close="showFollowing = false"
+			v-if="connected"
+			:address="user.coinbase"
+		>
 		</follow-popup>
 		<userCenterDrawer v-model:show="showUserDrawer" />
 		<shoppingCartDrawer v-model:show="showShoppingCartDrawer" />
 	</div>
 </template>
 <script>
-import FollowPopup from "@/components/FollowPopup";
-import userCenterDrawer from "@/components/self/drawer/userCenterDrawer";
-import shoppingCartDrawer from "@/components/self/drawer/shoppingCartDrawer";
+import FollowPopup from '@/components/FollowPopup';
+import userCenterDrawer from '@/components/self/drawer/userCenterDrawer';
+import shoppingCartDrawer from '@/components/self/drawer/shoppingCartDrawer';
 import HeaderTip from './HeaderTip';
 
-import { useDark, useToggle } from '@vueuse/core'
+import { useDark, useToggle } from '@vueuse/core';
 
 export default {
-	name: "HeaderTemplate",
+	name: 'HeaderTemplate',
 	components: {
 		FollowPopup,
 		userCenterDrawer,
@@ -121,18 +197,18 @@ export default {
 	},
 	watch: {
 		token: {
-			handler (val) {
+			handler(val) {
 				this.getTipMessage();
 			},
-		}
+		},
 	},
-	data: function () {
+	data: function() {
 		return {
 			showUserDrawer: false,
 			showShoppingCartDrawer: false,
 			isDark: false,
 			style: {
-				backgroundColor: "",
+				backgroundColor: '',
 			},
 			keyword: this.$route.query.keyword,
 			showFollowing: false,
@@ -144,57 +220,59 @@ export default {
 		};
 	},
 	computed: {
-		notice () {
+		notice() {
 			return this.$store.state.notice;
 		},
-		connected () {
+		connected() {
 			return this.$store.state.connected;
 		},
-		token () {
-			console.log('this.$store.state.token', this.$store.state.token)
+		token() {
+			console.log('this.$store.state.token', this.$store.state.token);
 			return this.$store.state.token;
 		},
-		user: function () {
+		user: function() {
 			var user = this.$store.state.user;
 			return user;
 		},
-		message () {
+		message() {
 			return this.$store.state.message;
 		},
-		language () {
-			console.log(this.$store.state.language)
+		language() {
+			console.log(this.$store.state.language);
 			return this.$store.state.language;
 		},
-		shoppingCartList () {
+		shoppingCartList() {
 			return this.$store.state.shoppingCartList;
 		},
-		shoppingOpenseaCartList () {
+		shoppingOpenseaCartList() {
 			return this.$store.state.shoppingOpenseaCartList;
 		},
-		isHomeIndex () {
-			return this.$route.name === 'home' || this.$route.name === 'coreCard'
+		isHomeIndex() {
+			return (
+				this.$route.name === 'home' || this.$route.name === 'corecard'
+			);
 		},
-		isScrollTop () {
+		isScrollTop() {
 			return this.$store.state.isScrollTop;
-		}
+		},
 	},
-	created () {
-		this.isDark = useDark()
+	created() {
+		this.isDark = useDark();
 	},
-	mounted () {
+	mounted() {
 		// this.login()
-		this.getCartInfo()
+		this.getCartInfo();
 		this.getTipMessage();
 	},
 	methods: {
-		getCartInfo () {
-			this.$store.commit('initShoppingCart')
+		getCartInfo() {
+			this.$store.commit('initShoppingCart');
 		},
-		async login (value = 'metamask') {
-			console.log('header connectSign')
-			this.$store.dispatch("connectAndSign", value).then(res => {
+		async login(value = 'metamask') {
+			console.log('header connectSign');
+			this.$store.dispatch('connectAndSign', value).then((res) => {
 				if (res && this.$tools.checkResponse(res)) {
-					console.log(res)
+					console.log(res);
 					// var query = this.$route.query;
 					// if (query && query.redirect) {
 					//   this.$router.push(query.redirect);
@@ -204,57 +282,65 @@ export default {
 				}
 			});
 		},
-		toggleDark () {
-			console.log('toggleDark')
-			const isDark = useDark()
-			useToggle(isDark)
-			this.isDark = !this.isDark
+		toggleDark() {
+			console.log('toggleDark');
+			const isDark = useDark();
+			useToggle(isDark);
+			this.isDark = !this.isDark;
 		},
-		async searchClick () {
-			this.$router.push({ name: "Search", query: { keyword: this.keyword } });
+		async searchClick() {
+			this.$router.push({
+				name: 'Search',
+				query: { keyword: this.keyword },
+			});
 		},
-		goProfile () {
+		goProfile() {
 			if (!this.$tools.needLogin()) return;
-			this.$router.push("/profile");
+			this.$router.push('/profile');
 		},
-		goItems () {
-			this.$router.push({ name: "Items" });
+		goItems() {
+			this.$router.push({ name: 'Items' });
 		},
-		logout () {
+		logout() {
 			this.$web3.disconnect();
 		},
-		languageSelect (parameter) {
+		languageSelect(parameter) {
 			this.$store.state.language = parameter;
-			if (parameter == "en") {
-				localStorage.setItem("locale", "en");
-				this.$i18n.locale = localStorage.getItem("locale");
-			} else if (parameter == "zh") {
-				localStorage.setItem("locale", "zh");
-				this.$i18n.locale = localStorage.getItem("locale");
-			} else if (parameter == "tw") {
-				localStorage.setItem("locale", "tw");
-				this.$i18n.locale = localStorage.getItem("locale");
+			if (parameter == 'en') {
+				localStorage.setItem('locale', 'en');
+				this.$i18n.locale = localStorage.getItem('locale');
+			} else if (parameter == 'zh') {
+				localStorage.setItem('locale', 'zh');
+				this.$i18n.locale = localStorage.getItem('locale');
+			} else if (parameter == 'tw') {
+				localStorage.setItem('locale', 'tw');
+				this.$i18n.locale = localStorage.getItem('locale');
 			}
 			this.languagePopover = false;
 		},
-		getTipMessage () {
+		getTipMessage() {
 			if (localStorage.getItem('coresky-card-tip') === '1') return;
 			if (this.token) {
-				console.log(this.$api)
-				this.$api("corecard.availableCard", this.queryParams).then((res) => {
-					let viplevel = 0
-					if (res.code === 200 && res.debug !== null) {
-						viplevel = res.debug.level
+				console.log(this.$api);
+				this.$api('corecard.availableCard', this.queryParams).then(
+					(res) => {
+						let viplevel = 0;
+						if (res.code === 200 && res.debug !== null) {
+							viplevel = res.debug.level;
+						}
+						let option = {
+							message: () =>
+								this.$t('messageTip.coreCardTip2', {
+									name: viplevel,
+								}),
+							linkTxt: () => this.$t('common.See'),
+							linkClose: true,
+							closeHandle: () => this.tipClose(),
+							callBack: () => this.goCoreCard(),
+						};
+						this.$refs.headerTipRef.show(option);
 					}
-					let option = {
-						message: () => this.$t('messageTip.coreCardTip2', { name: viplevel }),
-						linkTxt: () => this.$t('common.See'),
-						linkClose: true,
-						closeHandle: () => this.tipClose(),
-						callBack: () => this.goCoreCard(),
-					};
-					this.$refs.headerTipRef.show(option);
-				})
+				);
 			} else {
 				let option = {
 					message: () => this.$t('messageTip.coreCardTip1'),
@@ -266,20 +352,19 @@ export default {
 				this.$refs.headerTipRef.show(option);
 			}
 		},
-		closeTip () {
+		closeTip() {
 			this.showCradTip = false;
 		},
-		goCoreCard () {
+		goCoreCard() {
 			this.tipClose();
 			this.$router.push('/coreCardMint');
 		},
-		tipClose () {
+		tipClose() {
 			localStorage.setItem('coresky-card-tip', 1);
 		},
 	},
 };
 </script>
-
 
 <style lang="scss" scoped>
 .home-head {
@@ -477,7 +562,7 @@ export default {
 	height: 24px;
 	border-radius: 50%;
 	border: 2px solid #ffffff;
-	background-color: #2249D6;
+	background-color: #2249d6;
 	display: flex;
 	justify-content: center;
 	align-items: center;

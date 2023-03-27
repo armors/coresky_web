@@ -165,7 +165,7 @@ const routes = [
 	},
 	{
 		path: '/corecard',
-		name: 'coreCard',
+		name: 'corecard',
 		component: () =>
 			import(
 				/* webpackChunkName: "reward" */ '../views/sections/corecard/coreCard'
@@ -197,7 +197,9 @@ const routes = [
 		path: '/referral/:code',
 		name: 'referral',
 		component: () =>
-			import(/* webpackChunkName: "referral" */ '../views/sections/referral'),
+			import(
+				/* webpackChunkName: "referral" */ '../views/sections/referral'
+			),
 	},
 	{
 		path: '/:pathMatch(.*)',
