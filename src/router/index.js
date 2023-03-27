@@ -168,7 +168,7 @@ const routes = [
 		name: 'corecard',
 		component: () =>
 			import(
-				/* webpackChunkName: "reward" */ '../views/sections/corecard/coreCard'
+				/* webpackChunkName: "corecard" */ '../views/sections/corecard/coreCard'
 			),
 	},
 	{
@@ -180,11 +180,11 @@ const routes = [
 			),
 	},
 	{
-		path: '/coreCardMint',
-		name: 'coreCardMint',
+		path: '/corecardmint',
+		name: 'corecardmint',
 		component: () =>
 			import(
-				/* webpackChunkName: "coreCardMint" */ '../views/sections/coreCardMint'
+				/* webpackChunkName: "corecardmint" */ '../views/sections/coreCardMint'
 			),
 	},
 	{

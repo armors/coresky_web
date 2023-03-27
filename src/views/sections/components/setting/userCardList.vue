@@ -73,7 +73,7 @@
 					<el-button
 						class="vip-btn-0"
 						type="primary"
-						@click="$router.push('/coreCardMint')"
+						@click="$router.push('/corecardmint')"
 						>{{ $t('userCardList.Mint0') }}</el-button
 					>
 				</div>

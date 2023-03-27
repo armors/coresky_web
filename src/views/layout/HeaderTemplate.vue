@@ -357,7 +357,7 @@ export default {
 		},
 		goCoreCard() {
 			this.tipClose();
-			this.$router.push('/coreCardMint');
+			this.$router.push('/corecardmint');
 		},
 		tipClose() {
 			localStorage.setItem('coresky-card-tip', 1);

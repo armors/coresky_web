@@ -36,7 +36,7 @@
           <img src="@/assets/core-card/vip_m_0.png" class="vip-img-0" alt="">
           <div>
             <div class="vip-txt-0">Mint Corecard VIP-0</div>
-            <el-button class="vip-btn-0" type="primary" @click="$router.push('/coreCardMint')">Mint</el-button>
+            <el-button class="vip-btn-0" type="primary" @click="$router.push('/corecardmint')">Mint</el-button>
           </div>
         </div>
       </div>
