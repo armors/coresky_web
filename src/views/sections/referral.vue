@@ -29,6 +29,12 @@ export default {
   },
   created () {
     localStorage.setItem('inviteCode', this.$route.params.code)
+    if (this.$route.query.do) {
+      if (this.$route.query.do.toLocaleLowerCase() === 'corecardmint') {
+        this.$router.replace('/corecardmint')
+        return
+      }
+    }
     this.$router.replace('/')
   },
   mounted () { },
