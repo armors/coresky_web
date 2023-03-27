@@ -165,10 +165,10 @@ const routes = [
 	},
 	{
 		path: '/corecard',
-		name: 'coreCard',
+		name: 'corecard',
 		component: () =>
 			import(
-				/* webpackChunkName: "reward" */ '../views/sections/corecard/coreCard'
+				/* webpackChunkName: "corecard" */ '../views/sections/corecard/coreCard'
 			),
 	},
 	{
@@ -180,11 +180,11 @@ const routes = [
 			),
 	},
 	{
-		path: '/coreCardMint',
-		name: 'coreCardMint',
+		path: '/corecardmint',
+		name: 'corecardmint',
 		component: () =>
 			import(
-				/* webpackChunkName: "coreCardMint" */ '../views/sections/coreCardMint'
+				/* webpackChunkName: "corecardmint" */ '../views/sections/coreCardMint'
 			),
 	},
 	{
@@ -197,7 +197,9 @@ const routes = [
 		path: '/referral/:code',
 		name: 'referral',
 		component: () =>
-			import(/* webpackChunkName: "referral" */ '../views/sections/referral'),
+			import(
+				/* webpackChunkName: "referral" */ '../views/sections/referral'
+			),
 	},
 	{
 		path: '/:pathMatch(.*)',

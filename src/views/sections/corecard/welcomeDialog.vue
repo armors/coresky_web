@@ -60,7 +60,7 @@ const emits = defineEmits(['handleClose']);
 const goMint = () => {
 	localStorage.setItem('userFirst', false);
 	router.push({
-		path: '/coreCardMint',
+		path: '/corecardmint',
 	});
 	closed();
 };

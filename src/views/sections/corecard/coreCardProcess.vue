@@ -148,7 +148,7 @@ const cssLeft = (val) => {
 
 const goMint = () => {
 	router.push({
-		path: '/coreCardMint',
+		path: '/corecardmint',
 	});
 };
 
