@@ -245,7 +245,7 @@ export default {
   margin-top: calc($headerHeight + 10px) !important;
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08);
   border-radius: 16px;
-  height: 720px !important;
+  height: 780px !important;
 
   .el-drawer__body {
     padding: 20px 0 !important;
