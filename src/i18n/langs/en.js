@@ -56,6 +56,7 @@ module.exports = {
 		searchTip: 'Search items or collections',
 		rewards: 'Rewards',
 		marketplace: 'Marketplace',
+		launchpads: 'Launchpads',
 		collection: 'Collection',
 		connectWallet: 'Connect Wallet',
 	},

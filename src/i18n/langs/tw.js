@@ -52,6 +52,7 @@ module.exports = {
 		searchTip: '搜索NFT或合集',
 		rewards: '獎勵',
 		marketplace: '市場',
+		launchpads: 'Launchpads',
 		collection: '合集',
 		connectWallet: '連接錢包',
 	},
